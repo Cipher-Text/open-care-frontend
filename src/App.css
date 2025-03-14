@@ -1,40 +1,28 @@
+/* App.css - Main application styles */
+
+/* Reset the default root styles from Vite */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
 }
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Layout components */
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.site-layout-content {
+  background: #fff;
+  padding: 24px;
+  min-height: 280px;
+  margin-top: 20px;
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
+/* Logo styling */
 .logo {
   width: 120px;
   height: 31px;
@@ -43,8 +31,77 @@
   float: left;
 }
 
-.site-layout-content {
-  background: #fff;
-  padding: 24px;
-  min-height: 280px;
+/* Header styles */
+.ant-layout-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  padding: 0 50px;
+  display: flex;
+  align-items: center;
+}
+
+/* Content container */
+.ant-layout-content {
+  padding: 0 50px;
+  width: 100%;
+}
+
+/* Page containers */
+.doctors-container,
+.hospitals-container,
+.institutes-container,
+.profile-container,
+.home-container {
+  padding: 24px 0;
+}
+
+/* Responsive media queries */
+@media (max-width: 768px) {
+  .desktop-view {
+    display: none;
+  }
+  
+  .mobile-view {
+    display: block;
+  }
+  
+  .ant-layout-header {
+    padding: 0 15px;
+  }
+  
+  .ant-layout-content {
+    padding: 0 15px;
+  }
+}
+
+@media (min-width: 769px) {
+  .desktop-view {
+    display: block;
+  }
+  
+  .mobile-view {
+    display: none;
+  }
+}
+
+/* Mobile menu */
+.mobile-menu {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu {
+    display: block;
+  }
+  
+  .desktop-menu {
+    display: none;
+  }
+}
+
+/* Filter container styling */
+.filter-container {
+  margin-bottom: 24px;
 }

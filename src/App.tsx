@@ -1,49 +1,40 @@
-import React, { useState } from "react";
-import { Button, Layout, Menu, Typography } from "antd";
-import { HomeOutlined, UserOutlined, SettingOutlined } from "@ant-design/icons";
+// src/App.tsx
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Layout } from "antd";
+import AppHeader from "./components/AppHeader";
+import Home from "./pages/Home";
+import Doctors from "./pages/Doctors";
+import Hospitals from "./pages/Hospitals";
+import Institutes from "./pages/Institutes";
+import Profile from "./pages/Profile";
 import "./App.css";
 
-const { Header, Content, Footer } = Layout;
-const { Title } = Typography;
+const { Content, Footer } = Layout;
 
-function App() {
-  const [count, setCount] = useState<number>(0);
-
+const App: React.FC = () => {
   return (
-    <Layout className="layout">
-      <Header style={{ display: "flex", alignItems: "center" }}>
-        <div className="logo" />
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={["1"]}
-          items={[
-            { key: "1", icon: <HomeOutlined />, label: "Home" },
-            { key: "2", icon: <UserOutlined />, label: "Profile" },
-            { key: "3", icon: <SettingOutlined />, label: "Settings" },
-          ]}
-        />
-      </Header>
-      <Content style={{ padding: "0 50px", marginTop: 40 }}>
-        <div
-          className="site-layout-content"
-          style={{ padding: 24, minHeight: 280 }}
-        >
-          <Title level={2}>Hello Ant Design!</Title>
-          <p>Welcome to your new React app with TypeScript and Ant Design</p>
-
-          <div style={{ marginTop: 16 }}>
-            <Button type="primary" onClick={() => setCount(count + 1)}>
-              Count: {count}
-            </Button>
+    <Router>
+      <Layout className="layout" style={{ minHeight: "100vh" }}>
+        <AppHeader />
+        <Content style={{ padding: "0 50px", marginTop: 64 }}>
+          <div className="site-layout-content">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/doctors" element={<Doctors />} />
+              <Route path="/hospitals" element={<Hospitals />} />
+              <Route path="/institutes" element={<Institutes />} />
+              <Route path="/profile" element={<Profile />} />
+            </Routes>
           </div>
-        </div>
-      </Content>
-      <Footer style={{ textAlign: "center" }}>
-        Ant Design ©2023 Created with Vite and React
-      </Footer>
-    </Layout>
+        </Content>
+        <Footer style={{ textAlign: "center" }}>
+          Medical Information Portal ©{new Date().getFullYear()} Created with
+          Ant Design
+        </Footer>
+      </Layout>
+    </Router>
   );
-}
+};
 
 export default App;
