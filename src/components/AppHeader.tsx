@@ -1,37 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
+import { Layout, Menu } from "antd";
 import { Link, useLocation } from "react-router-dom";
-import { Layout, Menu, Button, Drawer } from "antd";
-import {
-  MenuOutlined,
-  HomeOutlined,
-  UserOutlined,
-  MedicineBoxOutlined,
-  BankOutlined,
-  ReadOutlined,
-} from "@ant-design/icons";
-import "../App.css";
 
 const { Header } = Layout;
 
 const AppHeader: React.FC = () => {
-  const [visible, setVisible] = useState(false);
   const location = useLocation();
-
-  const showDrawer = () => {
-    setVisible(true);
-  };
-
-  const onClose = () => {
-    setVisible(false);
-  };
-
-  const menuItems = [
-    { key: "/", icon: <HomeOutlined />, label: "Home" },
-    { key: "/doctors", icon: <MedicineBoxOutlined />, label: "Doctors" },
-    { key: "/hospitals", icon: <BankOutlined />, label: "Hospitals" },
-    { key: "/institutes", icon: <ReadOutlined />, label: "Institutes" },
-    { key: "/profile", icon: <UserOutlined />, label: "Profile" },
-  ];
 
   return (
     <Header
@@ -44,49 +18,60 @@ const AppHeader: React.FC = () => {
         justifyContent: "space-between",
       }}
     >
-      <div className="logo" />
-
-      {/* Mobile menu button */}
-      <div className="mobile-menu">
-        <Button
-          type="text"
-          icon={<MenuOutlined />}
-          onClick={showDrawer}
-          style={{ color: "white" }}
-        />
-        <Drawer
-          title="Menu"
-          placement="right"
-          closable={true}
-          onClose={onClose}
-          visible={visible}
-          bodyStyle={{ padding: 0 }}
-        >
-          <Menu
-            theme="light"
-            mode="vertical"
-            selectedKeys={[location.pathname]}
-            items={menuItems.map((item) => ({
-              ...item,
-              label: <Link to={item.key}>{item.label}</Link>,
-            }))}
-          />
-        </Drawer>
+      <div className="brand-name">
+        <Link to="/">
+          <h1
+            style={{
+              color: "white",
+              margin: 0,
+              fontSize: 24,
+              fontWeight: 600,
+              fontFamily: "'Poppins', sans-serif",
+              letterSpacing: "0.5px",
+              background: "linear-gradient(90deg, #1890ff, #40a9ff)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Open Care
+          </h1>
+        </Link>
       </div>
 
-      {/* Desktop menu */}
-      <div className="desktop-menu">
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          selectedKeys={[location.pathname]}
-          style={{ flex: 1, minWidth: 0 }}
-          items={menuItems.map((item) => ({
-            ...item,
-            label: <Link to={item.key}>{item.label}</Link>,
-          }))}
-        />
-      </div>
+      <Menu
+        theme="dark"
+        mode="horizontal"
+        selectedKeys={[
+          location.pathname === "/"
+            ? "1"
+            : location.pathname === "/doctors"
+            ? "2"
+            : location.pathname === "/hospitals"
+            ? "3"
+            : location.pathname === "/institutes"
+            ? "4"
+            : location.pathname === "/profile"
+            ? "5"
+            : "",
+        ]}
+        style={{ lineHeight: "64px" }}
+      >
+        <Menu.Item key="1">
+          <Link to="/">Home</Link>
+        </Menu.Item>
+        <Menu.Item key="2">
+          <Link to="/doctors">Doctors</Link>
+        </Menu.Item>
+        <Menu.Item key="3">
+          <Link to="/hospitals">Hospitals</Link>
+        </Menu.Item>
+        <Menu.Item key="4">
+          <Link to="/institutes">Institutes</Link>
+        </Menu.Item>
+        <Menu.Item key="5">
+          <Link to="/profile">Profile</Link>
+        </Menu.Item>
+      </Menu>
     </Header>
   );
 };
