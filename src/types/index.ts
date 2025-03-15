@@ -1,5 +1,5 @@
 export interface Doctor {
-  id: string;
+  id: number;
   name: string;
   specialization: string;
   experience: number;
@@ -7,22 +7,28 @@ export interface Doctor {
   image: string;
   hospitalId?: string;
   contact: string;
+  rating: number;
+  reviewCount: number;
 }
 
 export interface Hospital {
-  id: string;
+  id: number;
+  type: string;
   name: string;
   address: string;
   contact: string;
   image: string;
   specialties: string[];
   rating: number;
+  beds: number;
+  doctors: string[];
 }
 
 export interface Institute {
-  id: string;
+  id: number;
   name: string;
   address: string;
+  location: string;
   contact: string;
   image: string;
   courses: string[];
@@ -35,4 +41,24 @@ export interface User {
   email: string;
   role: string;
   image?: string;
+}
+
+export interface BlogPost {
+  id: number;
+  title: string;
+  image: string;
+  category: string;
+  description: string;
+}
+
+export interface FeaturedData {
+  doctors: Doctor[];
+  hospitals: Hospital[];
+  institutes: Institute[];
+  stats: {
+    totalDoctors: number;
+    totalHospitals: number;
+    totalInstitutes: number;
+    totalPatientsCared: number;
+  };
 }

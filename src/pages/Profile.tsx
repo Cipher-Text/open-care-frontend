@@ -10,14 +10,20 @@ import {
   Tabs,
   List,
   message,
+  Space,
+  Form,
+  Row,
+  Col,
+  Input,
+  Empty,
 } from "antd";
 import {
   UserOutlined,
   MailOutlined,
-  PhoneOutlined,
   EditOutlined,
   SaveOutlined,
   CloseOutlined,
+  BankOutlined,
 } from "@ant-design/icons";
 import { fetchUserProfile } from "../services/api";
 import { User } from "../types";
@@ -30,6 +36,7 @@ const Profile: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState<User | null>(null);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -52,6 +59,7 @@ const Profile: React.FC = () => {
     if (isEditing) {
       // Discard changes
       setEditedUser(user);
+      form.resetFields();
     }
     setIsEditing(!isEditing);
   };
@@ -138,7 +146,7 @@ const Profile: React.FC = () => {
         </div>
 
         {isEditing ? (
-          <Form layout="vertical">
+          <Form form={form} layout="vertical">
             <Row gutter={16}>
               <Col xs={24} sm={12}>
                 <Form.Item label="Name">

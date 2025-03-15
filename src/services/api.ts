@@ -1,6 +1,6 @@
 import axios from "axios";
 import config from "../config";
-import { Doctor, Hospital, Institute, User } from "../types";
+import { BlogPost, Doctor, Hospital, Institute, User } from "../types";
 
 const apiClient = axios.create({
   baseURL: config.apiUrl,
@@ -41,5 +41,12 @@ export const fetchUserProfile = async () => {
 
 export const fetchFeaturedData = async () => {
   const response = await apiClient.get("/featured");
+  return response.data;
+};
+
+export const fetchLatestBlogs = async () => {
+  const response = await apiClient.get<{ data: BlogPost[]; total: number }>(
+    "/blogs"
+  );
   return response.data;
 };
