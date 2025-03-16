@@ -11,7 +11,7 @@ const apiClient = axios.create({
 
 export const fetchDoctors = async (page = 1, limit = config.itemsPerPage) => {
   const response = await apiClient.get<{ data: Doctor[]; total: number }>(
-    `/doctors?page=${page}&limit=${limit}`
+    `/api/doctors?page=${page}&size=${limit}`
   );
   return response.data;
 };
