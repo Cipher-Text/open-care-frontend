@@ -1,4 +1,3 @@
-// src/pages/Doctors.tsx
 import React, { useEffect, useState } from "react";
 import {
   Typography,
@@ -13,10 +12,10 @@ import {
   Row,
   Col,
 } from "antd";
-import { SearchOutlined, FilterOutlined } from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import { fetchDoctors } from "../services/api";
-import { Doctor } from "../types";
 import config from "../config";
+import { DoctorResponse, Doctor } from "../types";
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -31,20 +30,18 @@ const Doctors: React.FC = () => {
     total: 0,
   });
   const [searchQuery, setSearchQuery] = useState("");
-  const [specialization, setSpecialization] = useState<string | undefined>(
-    undefined
-  );
 
-  const fetchData = async (page = 1, query = "", specialization = "") => {
+  const fetchData = async (page = 1, query = "") => {
     setLoading(true);
     try {
-      // In a real app, you would pass query and specialization as parameters
+      // In a real app, you would pass query as parameter
       const response = await fetchDoctors(page);
-      setDoctors(response.data);
+      // Update to match your API response structure
+      setDoctors(response.doctors);
       setPagination({
         ...pagination,
         current: page,
-        total: response.total,
+        total: response.totalItems,
       });
     } catch (error) {
       console.error("Failed to fetch doctors:", error);
@@ -58,74 +55,74 @@ const Doctors: React.FC = () => {
   }, []);
 
   const handleTableChange = (pagination: any) => {
-    fetchData(pagination.current, searchQuery, specialization);
+    fetchData(pagination.current, searchQuery);
   };
 
   const handleSearch = (value: string) => {
     setSearchQuery(value);
-    fetchData(1, value, specialization);
+    fetchData(1, value);
   };
 
-  const handleSpecializationChange = (value: string) => {
-    setSpecialization(value);
-    fetchData(1, searchQuery, value);
-  };
-
+  // Updated columns to match your requirements
   const columns = [
     {
-      title: "Doctor",
+      title: "Name",
       dataIndex: "name",
       key: "name",
       render: (text: string, record: Doctor) => (
         <Space>
-          <Avatar src={record.image} size={48} />
+          <Avatar
+            src={record.image || "https://via.placeholder.com/48"}
+            size={48}
+          />
           <span>{text}</span>
         </Space>
       ),
     },
     {
-      title: "Specialization",
-      dataIndex: "specialization",
-      key: "specialization",
-      render: (text: string) => <Tag color="blue">{text}</Tag>,
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
+      render: (text: string) => {
+        const color = text === "MALE" ? "blue" : "pink";
+        return <Tag color={color}>{text}</Tag>;
+      },
     },
     {
-      title: "Experience",
-      dataIndex: "experience",
-      key: "experience",
+      title: "BMDC No",
+      dataIndex: "bmdcNo",
+      key: "bmdcNo",
+      render: (text: string) => text || "Not Available",
+    },
+    {
+      title: "Years of Experience",
+      dataIndex: "yearOfExperience",
+      key: "yearOfExperience",
       render: (years: number) => `${years} years`,
-    },
-    {
-      title: "Education",
-      dataIndex: "education",
-      key: "education",
-    },
-    {
-      title: "Contact",
-      dataIndex: "contact",
-      key: "contact",
     },
   ];
 
-  // For mobile view
+  // Updated for mobile view
   const renderMobileCard = (doctor: Doctor) => (
     <Card key={doctor.id} style={{ marginBottom: 16 }}>
       <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
-        <Avatar src={doctor.image} size={64} />
+        <Avatar
+          src={doctor.image || "https://via.placeholder.com/64"}
+          size={64}
+        />
         <div style={{ marginLeft: 16 }}>
           <h3>{doctor.name}</h3>
-          <Tag color="blue">{doctor.specialization}</Tag>
+          <Tag color={doctor.gender === "MALE" ? "blue" : "pink"}>
+            {doctor.gender}
+          </Tag>
         </div>
       </div>
       <div>
         <p>
-          <strong>Experience:</strong> {doctor.experience} years
+          <strong>BMDC No:</strong> {doctor.bmdcNo || "Not Available"}
         </p>
         <p>
-          <strong>Education:</strong> {doctor.education}
-        </p>
-        <p>
-          <strong>Contact:</strong> {doctor.contact}
+          <strong>Experience:</strong> {doctor.yearOfExperience} years
         </p>
       </div>
     </Card>
@@ -144,20 +141,6 @@ const Doctors: React.FC = () => {
               style={{ width: "100%" }}
               enterButton
             />
-          </Col>
-          <Col xs={24} sm={12} md={8} lg={6}>
-            <Select
-              placeholder="Filter by specialization"
-              style={{ width: "100%" }}
-              onChange={handleSpecializationChange}
-              allowClear
-            >
-              <Option value="Cardiology">Cardiology</Option>
-              <Option value="Neurology">Neurology</Option>
-              <Option value="Orthopedics">Orthopedics</Option>
-              <Option value="Pediatrics">Pediatrics</Option>
-              <Option value="Dermatology">Dermatology</Option>
-            </Select>
           </Col>
         </Row>
       </div>

@@ -18,7 +18,7 @@ export const fetchDoctors = async (page = 1, limit = config.itemsPerPage) => {
 
 export const fetchHospitals = async (page = 1, limit = config.itemsPerPage) => {
   const response = await apiClient.get<{ data: Hospital[]; total: number }>(
-    `/hospitals?page=${page}&limit=${limit}`
+    `/hospitals?page=${page}&size=${limit}`
   );
   return response.data;
 };
@@ -28,7 +28,7 @@ export const fetchInstitutes = async (
   limit = config.itemsPerPage
 ) => {
   const response = await apiClient.get<{ data: Institute[]; total: number }>(
-    `/institutes?page=${page}&limit=${limit}`
+    `/institutes?page=${page}&size=${limit}`
   );
   return response.data;
 };

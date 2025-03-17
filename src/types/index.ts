@@ -1,14 +1,24 @@
+// Update the Doctor type to match your API response
 export interface Doctor {
   id: number;
   name: string;
-  specialization: string;
-  experience: number;
-  education: string;
-  image: string;
-  hospitalId?: string;
-  contact: string;
-  rating: number;
-  reviewCount: number;
+  bnName: string;
+  gender: string;
+  bmdcNo: string;
+  phone: string | null;
+  email: string | null;
+  address: string | null;
+  yearOfExperience: number;
+  description: string | null;
+  image: string | null;
+  startDate: string | null;
+  isActive: boolean;
+  userId: number | null;
+}
+
+export interface DoctorResponse {
+  totalItems: number;
+  doctors: Doctor[];
 }
 
 export interface Hospital {
