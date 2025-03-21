@@ -10,44 +10,90 @@ import {
   Card,
   Row,
   Col,
-  Rate,
   Tag,
+  Button,
 } from "antd";
+import { EnvironmentOutlined, LinkOutlined } from "@ant-design/icons";
+import { apiClient, fetchHospitals } from "../services/api";
 import {
-  SearchOutlined,
-  EnvironmentOutlined,
-  PhoneOutlined,
-} from "@ant-design/icons";
-import { fetchHospitals } from "../services/api";
-import { Hospital } from "../types";
+  District,
+  Hospital,
+  HospitalResponse,
+  HospitalType,
+  OrganizationType,
+} from "../types";
 import config from "../config";
 
-const { Title, Paragraph } = Typography;
-const { Search } = Input;
+const { Title } = Typography;
 const { Option } = Select;
 
 const Hospitals: React.FC = () => {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [organizationTypes, setOrganizationTypes] = useState<
+    OrganizationType[]
+  >([]);
+  const [hospitalTypes, setHospitalTypes] = useState<HospitalType[]>([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({
     current: 1,
-    pageSize: config.itemsPerPage,
+    pageSize: config.itemsPerPage || 5,
     total: 0,
   });
-  const [searchQuery, setSearchQuery] = useState("");
-  const [specialty, setSpecialty] = useState<string | undefined>(undefined);
 
-  const fetchData = async (page = 1, query = "", specialty = "") => {
+  // Filter states
+  const [selectedDistrict, setSelectedDistrict] = useState<number | undefined>(
+    undefined
+  );
+  const [selectedHospitalType, setSelectedHospitalType] = useState<
+    string | undefined
+  >(undefined);
+  const [selectedOrgType, setSelectedOrgType] = useState<string | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    // Fetch all filter data
+    const fetchFilterData = async () => {
+      try {
+        const [districtRes, orgTypeRes, hospitalTypeRes] = await Promise.all([
+          apiClient.get<District[]>("/districts"),
+          apiClient.get<OrganizationType[]>("/organization-types"),
+          apiClient.get<HospitalType[]>("/hospital-types"),
+        ]);
+
+        setDistricts(districtRes.data);
+        setOrganizationTypes(orgTypeRes.data);
+        setHospitalTypes(hospitalTypeRes.data);
+      } catch (error) {
+        console.error("Failed to fetch filter data:", error);
+      }
+    };
+
+    fetchFilterData();
+  }, []);
+
+  useEffect(() => {
+    fetchHospitalList(1); // Reset to page 1 on filter change
+  }, [selectedDistrict, selectedHospitalType, selectedOrgType]);
+
+  const fetchHospitalList = async (page = pagination.current) => {
     setLoading(true);
     try {
-      // In a real app, you would pass query and specialty as parameters
-      const response = await fetchHospitals(page);
-      setHospitals(response.data);
-      setPagination({
-        ...pagination,
-        current: page,
-        total: response.total,
-      });
+      const response = await fetchHospitals(
+        page - 1, // API expects 0-based index
+        pagination.pageSize,
+        selectedDistrict,
+        selectedHospitalType,
+        selectedOrgType
+      );
+
+      setHospitals(response.hospitals);
+      setPagination((prev) => ({
+        ...prev,
+        current: page, // Ensure current page is updated
+        total: response.totalElements || 0,
+      }));
     } catch (error) {
       console.error("Failed to fetch hospitals:", error);
     } finally {
@@ -55,118 +101,116 @@ const Hospitals: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const handleTableChange = (pagination: any) => {
-    fetchData(pagination.current, searchQuery, specialty);
+  const handleTableChange = (newPagination: any) => {
+    fetchHospitalList(newPagination.current);
   };
 
-  const handleSearch = (value: string) => {
-    setSearchQuery(value);
-    fetchData(1, value, specialty);
+  const handleDistrictChange = (value: number | undefined) => {
+    setSelectedDistrict(value);
+    setPagination({ ...pagination, current: 1 });
   };
 
-  const handleSpecialtyChange = (value: string) => {
-    setSpecialty(value);
-    fetchData(1, searchQuery, value);
+  const handleHospitalTypeChange = (value: string | undefined) => {
+    setSelectedHospitalType(value);
+    setPagination({ ...pagination, current: 1 });
+  };
+
+  const handleOrgTypeChange = (value: string | undefined) => {
+    setSelectedOrgType(value);
+    setPagination({ ...pagination, current: 1 });
   };
 
   const columns = [
     {
-      title: "Hospital",
+      title: "Name",
       dataIndex: "name",
       key: "name",
-      render: (text: string, record: Hospital) => (
-        <Space direction="vertical" size={0}>
-          <span style={{ fontWeight: "bold" }}>{text}</span>
-          <Rate
-            disabled
-            defaultValue={record.rating}
-            style={{ fontSize: "14px" }}
-          />
-        </Space>
+      render: (text: string) => (
+        <span style={{ fontWeight: "bold" }}>{text}</span>
       ),
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
+      title: "Organization Type",
+      dataIndex: "organizationType",
+      key: "organizationType",
+      render: (text: string) => (
+        <Tag
+          color={
+            text === "GOVERNMENT"
+              ? "blue"
+              : text === "MILITARY"
+              ? "red"
+              : "green"
+          }
+        >
+          {text}
+        </Tag>
+      ),
+    },
+    {
+      title: "Hospital Type",
+      dataIndex: "hospitalType",
+      key: "hospitalType",
+      render: (text: string) => (
+        <Tag
+          color={
+            text === "GENERAL"
+              ? "purple"
+              : text === "CANCER"
+              ? "magenta"
+              : "orange"
+          }
+        >
+          {text}
+        </Tag>
+      ),
+    },
+    {
+      title: "District",
+      dataIndex: ["district", "name"],
+      key: "district",
       render: (text: string) => (
         <Space>
           <EnvironmentOutlined />
-          <span>{text}</span>
+          {text}
         </Space>
       ),
     },
     {
-      title: "Contact",
-      dataIndex: "contact",
-      key: "contact",
-      render: (text: string) => (
-        <Space>
-          <PhoneOutlined />
-          <span>{text}</span>
-        </Space>
-      ),
+      title: "Website",
+      dataIndex: "url",
+      key: "url",
+      render: (url: string | null) =>
+        url ? (
+          <a href={url} target="_blank" rel="noopener noreferrer">
+            <LinkOutlined /> Visit
+          </a>
+        ) : (
+          "N/A"
+        ),
     },
     {
-      title: "Specialties",
-      dataIndex: "specialties",
-      key: "specialties",
-      render: (specialties: string[]) => (
-        <Space wrap>
-          {specialties.map((specialty) => (
-            <Tag key={specialty} color="green">
-              {specialty}
-            </Tag>
-          ))}
-        </Space>
-      ),
+      title: "Location",
+      dataIndex: "lat",
+      key: "location",
+      render: (_: any, record: Hospital) =>
+        record.lat && record.lon ? (
+          <Button
+            type="primary"
+            onClick={() =>
+              window.open(
+                `https://www.google.com/maps?q=${record.lat},${record.lon}`,
+                "_blank"
+              )
+            }
+          >
+            View Map
+          </Button>
+        ) : (
+          "N/A"
+        ),
     },
   ];
-
-  // For mobile view
-  const renderMobileCard = (hospital: Hospital) => (
-    <Card key={hospital.id} style={{ marginBottom: 16 }}>
-      <div style={{ textAlign: "center", marginBottom: 16 }}>
-        <img
-          src={hospital.image}
-          alt={hospital.name}
-          style={{
-            width: "100%",
-            maxHeight: 200,
-            objectFit: "cover",
-            borderRadius: "4px",
-          }}
-        />
-      </div>
-      <div style={{ marginBottom: 8 }}>
-        <Title level={4}>{hospital.name}</Title>
-        <Rate
-          disabled
-          defaultValue={hospital.rating}
-          style={{ fontSize: "14px" }}
-        />
-      </div>
-      <Paragraph>
-        <EnvironmentOutlined /> {hospital.address}
-      </Paragraph>
-      <Paragraph>
-        <PhoneOutlined /> {hospital.contact}
-      </Paragraph>
-      <div>
-        <Space wrap>
-          {hospital.specialties.map((specialty) => (
-            <Tag key={specialty} color="green">
-              {specialty}
-            </Tag>
-          ))}
-        </Space>
-      </div>
-    </Card>
-  );
 
   return (
     <div className="hospitals-container">
@@ -174,26 +218,50 @@ const Hospitals: React.FC = () => {
 
       <div className="filter-container" style={{ marginBottom: 24 }}>
         <Row gutter={[16, 16]} align="middle">
-          <Col xs={24} sm={12} md={8} lg={6}>
-            <Search
-              placeholder="Search hospitals"
-              onSearch={handleSearch}
-              style={{ width: "100%" }}
-              enterButton
-            />
-          </Col>
-          <Col xs={24} sm={12} md={8} lg={6}>
+          <Col xs={24} sm={12} md={8}>
             <Select
-              placeholder="Filter by specialty"
+              placeholder="Filter by District"
               style={{ width: "100%" }}
-              onChange={handleSpecialtyChange}
+              onChange={handleDistrictChange}
+              allowClear
+              showSearch
+              optionFilterProp="children"
+            >
+              {districts.map((district) => (
+                <Option key={district.id} value={district.id}>
+                  {district.name}
+                </Option>
+              ))}
+            </Select>
+          </Col>
+
+          <Col xs={24} sm={12} md={8}>
+            <Select
+              placeholder="Filter by Hospital Type"
+              style={{ width: "100%" }}
+              onChange={handleHospitalTypeChange}
               allowClear
             >
-              <Option value="Cardiology">Cardiology</Option>
-              <Option value="Neurology">Neurology</Option>
-              <Option value="Orthopedics">Orthopedics</Option>
-              <Option value="Pediatrics">Pediatrics</Option>
-              <Option value="Oncology">Oncology</Option>
+              {hospitalTypes.map((type) => (
+                <Option key={type.name} value={type.name}>
+                  {type.name}
+                </Option>
+              ))}
+            </Select>
+          </Col>
+
+          <Col xs={24} sm={12} md={8}>
+            <Select
+              placeholder="Filter by Organization Type"
+              style={{ width: "100%" }}
+              onChange={handleOrgTypeChange}
+              allowClear
+            >
+              {organizationTypes.map((type) => (
+                <Option key={type.name} value={type.name}>
+                  {type.name}
+                </Option>
+              ))}
             </Select>
           </Col>
         </Row>
@@ -204,42 +272,18 @@ const Hospitals: React.FC = () => {
           <Spin size="large" />
         </div>
       ) : (
-        <>
-          {/* Desktop view */}
-          <div className="desktop-view">
-            <Table
-              columns={columns}
-              dataSource={hospitals}
-              rowKey="id"
-              pagination={{
-                current: pagination.current,
-                pageSize: pagination.pageSize,
-                total: pagination.total,
-                showSizeChanger: false,
-              }}
-              onChange={handleTableChange}
-            />
-          </div>
-
-          {/* Mobile view */}
-          <div className="mobile-view">
-            {hospitals.map(renderMobileCard)}
-            <div style={{ textAlign: "center", margin: "20px 0" }}>
-              <Table
-                pagination={{
-                  current: pagination.current,
-                  pageSize: pagination.pageSize,
-                  total: pagination.total,
-                  showSizeChanger: false,
-                }}
-                onChange={handleTableChange}
-                showHeader={false}
-                dataSource={[]}
-                columns={[]}
-              />
-            </div>
-          </div>
-        </>
+        <Table
+          columns={columns}
+          dataSource={hospitals}
+          rowKey="id"
+          pagination={{
+            current: pagination.current,
+            pageSize: pagination.pageSize,
+            total: pagination.total,
+            showSizeChanger: false,
+          }}
+          onChange={handleTableChange}
+        />
       )}
     </div>
   );

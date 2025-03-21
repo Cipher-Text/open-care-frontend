@@ -21,17 +21,67 @@ export interface DoctorResponse {
   doctors: Doctor[];
 }
 
+export interface Division {
+  id: number;
+  name: string;
+  bnName: string;
+  url: string | null;
+}
+
+export interface District {
+  id: number;
+  division: Division;
+  name: string;
+  bnName: string;
+  lat: string;
+  lon: string;
+  url: string;
+}
+
+export interface Upazila {
+  id: number;
+  district: District;
+  name: string;
+  bnName: string;
+  url: string | null;
+}
+
+export interface Union {
+  id: number;
+  upazila: Upazila;
+  name: string;
+  bnName: string;
+  url: string | null;
+}
+
 export interface Hospital {
   id: number;
-  type: string;
   name: string;
-  address: string;
-  contact: string;
-  image: string;
-  specialties: string[];
-  rating: number;
-  beds: number;
-  doctors: string[];
+  bnName: string | null;
+  numberOfBed: number;
+  district: District;
+  upazila: Upazila | null;
+  union: Union | null;
+  hospitalType: string; // "GENERAL", "CANCER", "CHEST_DISEASE"
+  organizationType: string; // "GOVERNMENT", "MILITARY", "PRIVATE"
+  lat: string | null;
+  lon: string | null;
+  url: string | null;
+}
+
+export interface HospitalResponse {
+  hospitals: Hospital[];
+  totalElements?: number; // Add this if API provides total count
+}
+
+export interface OrganizationType {
+  name: string;
+  bnName: string;
+}
+
+export interface HospitalType {
+  name: string;
+  bnName: string;
 }
 
 export interface Institute {

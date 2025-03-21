@@ -1,25 +1,43 @@
 import axios from "axios";
 import config from "../config";
-import { BlogPost, Doctor, Hospital, Institute, User } from "../types";
+import { BlogPost, Doctor, Institute, User } from "../types";
 
-const apiClient = axios.create({
+export const apiClient = axios.create({
   baseURL: config.apiUrl,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-export const fetchDoctors = async (page = 1, limit = config.itemsPerPage) => {
+export const fetchDoctors = async (page = 1, size = config.itemsPerPage) => {
   const response = await apiClient.get<{ data: Doctor[]; total: number }>(
-    `/api/doctors?page=${page}&size=${limit}`
+    `/api/doctors?page=${page}&size=${size}`
   );
   return response.data;
 };
 
-export const fetchHospitals = async (page = 1, limit = config.itemsPerPage) => {
-  const response = await apiClient.get<{ data: Hospital[]; total: number }>(
-    `/hospitals?page=${page}&size=${limit}`
-  );
+export const fetchHospitals = async (
+  page = 0,
+  size = config.itemsPerPage,
+  districtIds?: number,
+  hospitalTypes?: string,
+  organizationType?: string
+) => {
+  let url = `/api/hospitals?page=${page}&size=${size}`;
+
+  if (districtIds) {
+    url += `&districtIds=${districtIds}`;
+  }
+
+  if (hospitalTypes) {
+    url += `&hospitalTypes=${hospitalTypes}`;
+  }
+
+  if (organizationType) {
+    url += `&organizationType=${organizationType}`;
+  }
+
+  const response = await apiClient.get(url);
   return response.data;
 };
 
