@@ -10,6 +10,7 @@ import {
   Col,
   Tag,
   Button,
+  Pagination,
 } from "antd";
 import { EnvironmentOutlined, LinkOutlined } from "@ant-design/icons";
 import { apiClient, fetchHospitals } from "../services/api";
@@ -69,11 +70,11 @@ const Hospitals: React.FC = () => {
     fetchHospitalList(1); // Reset to page 1 on filter change
   }, [selectedDistrict, selectedHospitalType, selectedOrgType]);
 
-  const fetchHospitalList = async (page = pagination.current) => {
+  const fetchHospitalList = async (page: number) => {
     setLoading(true);
     try {
       const response = await fetchHospitals(
-        page - 1, // API expects 0-based index
+        page - 1, // Convert 1-based to 0-based for the API
         pagination.pageSize,
         selectedDistrict,
         selectedHospitalType,
@@ -83,7 +84,7 @@ const Hospitals: React.FC = () => {
       setHospitals(response.hospitals);
       setPagination({
         ...pagination,
-        current: page,
+        current: page, // Keep 1-based for the UI
         total: response.totalElements || 0,
       });
     } catch (error) {
@@ -100,17 +101,17 @@ const Hospitals: React.FC = () => {
 
   const handleDistrictChange = (value: number | undefined) => {
     setSelectedDistrict(value);
-    setPagination({ ...pagination, current: 1 });
+    fetchHospitalList(1); // Reset to page 1
   };
 
   const handleHospitalTypeChange = (value: string | undefined) => {
     setSelectedHospitalType(value);
-    setPagination({ ...pagination, current: 1 });
+    fetchHospitalList(1); // Reset to page 1
   };
 
   const handleOrgTypeChange = (value: string | undefined) => {
     setSelectedOrgType(value);
-    setPagination({ ...pagination, current: 1 });
+    fetchHospitalList(1); // Reset to page 1
   };
 
   const getOrgTypeColor = (type: string) => {
@@ -333,17 +334,11 @@ const Hospitals: React.FC = () => {
           <div className="mobile-view" style={{ display: "none" }}>
             {hospitals.map(renderMobileCard)}
             <div style={{ textAlign: "center", margin: "20px 0" }}>
-              <Table
-                pagination={{
-                  current: pagination.current,
-                  pageSize: pagination.pageSize,
-                  total: pagination.total,
-                  showSizeChanger: false,
-                }}
-                onChange={handleTableChange}
-                showHeader={false}
-                dataSource={[]}
-                columns={[]}
+              <Pagination
+                current={pagination.current}
+                pageSize={pagination.pageSize}
+                total={pagination.total}
+                onChange={(page) => fetchHospitalList(page)}
               />
             </div>
           </div>

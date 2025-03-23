@@ -17,7 +17,7 @@ export const fetchDoctors = async (page = 1, size = config.itemsPerPage) => {
 };
 
 export const fetchHospitals = async (
-  page = 0,
+  page = 0, // 0-based page index
   size = config.itemsPerPage,
   districtIds?: number,
   hospitalTypes?: string,
@@ -37,7 +37,10 @@ export const fetchHospitals = async (
     url += `&organizationType=${organizationType}`;
   }
 
-  const response = await apiClient.get(url);
+  const response = await apiClient.get<{
+    hospitals: Hospital[];
+    totalElements: number;
+  }>(url);
   return response.data;
 };
 
@@ -46,7 +49,7 @@ export const fetchInstitutes = async (
   limit = config.itemsPerPage
 ) => {
   const response = await apiClient.get<{ data: Institute[]; total: number }>(
-    `/institutes?page=${page}&size=${limit}`
+    `/api/institutes?page=${page}&size=${limit}`
   );
   return response.data;
 };
