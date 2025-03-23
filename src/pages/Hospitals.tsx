@@ -1,9 +1,7 @@
-// src/pages/Hospitals.tsx
 import React, { useEffect, useState } from "react";
 import {
   Typography,
   Table,
-  Input,
   Select,
   Space,
   Spin,
@@ -15,13 +13,7 @@ import {
 } from "antd";
 import { EnvironmentOutlined, LinkOutlined } from "@ant-design/icons";
 import { apiClient, fetchHospitals } from "../services/api";
-import {
-  District,
-  Hospital,
-  HospitalResponse,
-  HospitalType,
-  OrganizationType,
-} from "../types";
+import { District, Hospital, HospitalType, OrganizationType } from "../types";
 import config from "../config";
 
 const { Title } = Typography;
@@ -57,9 +49,9 @@ const Hospitals: React.FC = () => {
     const fetchFilterData = async () => {
       try {
         const [districtRes, orgTypeRes, hospitalTypeRes] = await Promise.all([
-          apiClient.get<District[]>("/districts"),
-          apiClient.get<OrganizationType[]>("/organization-types"),
-          apiClient.get<HospitalType[]>("/hospital-types"),
+          apiClient.get<District[]>("/api/districts"),
+          apiClient.get<OrganizationType[]>("/api/organization-types"),
+          apiClient.get<HospitalType[]>("/api/hospital-types"),
         ]);
 
         setDistricts(districtRes.data);
@@ -89,11 +81,11 @@ const Hospitals: React.FC = () => {
       );
 
       setHospitals(response.hospitals);
-      setPagination((prev) => ({
-        ...prev,
-        current: page, // Ensure current page is updated
+      setPagination({
+        ...pagination,
+        current: page,
         total: response.totalElements || 0,
-      }));
+      });
     } catch (error) {
       console.error("Failed to fetch hospitals:", error);
     } finally {
@@ -102,6 +94,7 @@ const Hospitals: React.FC = () => {
   };
 
   const handleTableChange = (newPagination: any) => {
+    setPagination(newPagination);
     fetchHospitalList(newPagination.current);
   };
 
@@ -120,6 +113,30 @@ const Hospitals: React.FC = () => {
     setPagination({ ...pagination, current: 1 });
   };
 
+  const getOrgTypeColor = (type: string) => {
+    switch (type) {
+      case "GOVERNMENT":
+        return "blue";
+      case "MILITARY":
+        return "red";
+      case "PRIVATE":
+        return "green";
+      default:
+        return "default";
+    }
+  };
+
+  const getHospitalTypeColor = (type: string) => {
+    switch (type) {
+      case "GENERAL":
+        return "purple";
+      case "CANCER":
+        return "magenta";
+      default:
+        return "orange";
+    }
+  };
+
   const columns = [
     {
       title: "Name",
@@ -133,36 +150,14 @@ const Hospitals: React.FC = () => {
       title: "Organization Type",
       dataIndex: "organizationType",
       key: "organizationType",
-      render: (text: string) => (
-        <Tag
-          color={
-            text === "GOVERNMENT"
-              ? "blue"
-              : text === "MILITARY"
-              ? "red"
-              : "green"
-          }
-        >
-          {text}
-        </Tag>
-      ),
+      render: (text: string) => <Tag color={getOrgTypeColor(text)}>{text}</Tag>,
     },
     {
       title: "Hospital Type",
       dataIndex: "hospitalType",
       key: "hospitalType",
       render: (text: string) => (
-        <Tag
-          color={
-            text === "GENERAL"
-              ? "purple"
-              : text === "CANCER"
-              ? "magenta"
-              : "orange"
-          }
-        >
-          {text}
-        </Tag>
+        <Tag color={getHospitalTypeColor(text)}>{text}</Tag>
       ),
     },
     {
@@ -211,6 +206,51 @@ const Hospitals: React.FC = () => {
         ),
     },
   ];
+
+  // Render mobile card for each hospital
+  const renderMobileCard = (hospital: Hospital) => (
+    <Card key={hospital.id} style={{ marginBottom: 16 }}>
+      <div style={{ marginBottom: 12 }}>
+        <h3 style={{ fontWeight: "bold", marginBottom: 8 }}>{hospital.name}</h3>
+        <Space direction="vertical" size="small">
+          <div>
+            <Tag color={getOrgTypeColor(hospital.organizationType)}>
+              {hospital.organizationType}
+            </Tag>
+            <Tag color={getHospitalTypeColor(hospital.hospitalType)}>
+              {hospital.hospitalType}
+            </Tag>
+          </div>
+          <div>
+            <EnvironmentOutlined /> {hospital.district?.name}
+          </div>
+          {hospital.url ? (
+            <a href={hospital.url} target="_blank" rel="noopener noreferrer">
+              <LinkOutlined /> Visit Website
+            </a>
+          ) : (
+            <div>Website: N/A</div>
+          )}
+          {hospital.lat && hospital.lon ? (
+            <Button
+              type="primary"
+              size="small"
+              onClick={() =>
+                window.open(
+                  `https://www.google.com/maps?q=${hospital.lat},${hospital.lon}`,
+                  "_blank"
+                )
+              }
+            >
+              View on Map
+            </Button>
+          ) : (
+            <div>Location: N/A</div>
+          )}
+        </Space>
+      </div>
+    </Card>
+  );
 
   return (
     <div className="hospitals-container">
@@ -272,18 +312,54 @@ const Hospitals: React.FC = () => {
           <Spin size="large" />
         </div>
       ) : (
-        <Table
-          columns={columns}
-          dataSource={hospitals}
-          rowKey="id"
-          pagination={{
-            current: pagination.current,
-            pageSize: pagination.pageSize,
-            total: pagination.total,
-            showSizeChanger: false,
-          }}
-          onChange={handleTableChange}
-        />
+        <>
+          {/* Desktop view */}
+          <div className="desktop-view" style={{ display: "block" }}>
+            <Table
+              columns={columns}
+              dataSource={hospitals}
+              rowKey="id"
+              pagination={{
+                current: pagination.current,
+                pageSize: pagination.pageSize,
+                total: pagination.total,
+                showSizeChanger: false,
+              }}
+              onChange={handleTableChange}
+            />
+          </div>
+
+          {/* Mobile view */}
+          <div className="mobile-view" style={{ display: "none" }}>
+            {hospitals.map(renderMobileCard)}
+            <div style={{ textAlign: "center", margin: "20px 0" }}>
+              <Table
+                pagination={{
+                  current: pagination.current,
+                  pageSize: pagination.pageSize,
+                  total: pagination.total,
+                  showSizeChanger: false,
+                }}
+                onChange={handleTableChange}
+                showHeader={false}
+                dataSource={[]}
+                columns={[]}
+              />
+            </div>
+          </div>
+
+          {/* CSS for responsive display */}
+          <style jsx>{`
+            @media (max-width: 768px) {
+              .desktop-view {
+                display: none !important;
+              }
+              .mobile-view {
+                display: block !important;
+              }
+            }
+          `}</style>
+        </>
       )}
     </div>
   );
