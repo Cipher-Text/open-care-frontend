@@ -1,6 +1,6 @@
 import axios from "axios";
 import config from "../config";
-import { BlogPost, Doctor, Institute, User } from "../types";
+import { BlogPost, Doctor, Institute, User, Hospital } from "../types";
 
 export const apiClient = axios.create({
   baseURL: config.apiUrl,
@@ -44,13 +44,32 @@ export const fetchHospitals = async (
   return response.data;
 };
 
-export const fetchInstitutes = async (
-  page = 1,
-  limit = config.itemsPerPage
+export const fetchInstitutions = async (
+  page = 0, // 0-based page index
+  size = config.itemsPerPage,
+  districtIds?: number,
+  hospitalTypes?: string,
+  organizationType?: string
 ) => {
-  const response = await apiClient.get<{ data: Institute[]; total: number }>(
-    `/api/institutes?page=${page}&size=${limit}`
-  );
+  let url = `/api/institutions?page=${page}&size=${size}`;
+
+  if (districtIds) {
+    url += `&districtIds=${districtIds}`;
+  }
+
+  if (hospitalTypes) {
+    url += `&hospitalTypes=${hospitalTypes}`;
+  }
+
+  if (organizationType) {
+    url += `&organizationType=${organizationType}`;
+  }
+
+  const response = await apiClient.get<{
+    institutes: Institute[];
+    totalElements: number;
+  }>(url);
+
   return response.data;
 };
 

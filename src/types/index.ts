@@ -87,12 +87,16 @@ export interface HospitalType {
 export interface Institute {
   id: number;
   name: string;
-  address: string;
-  location: string;
-  contact: string;
-  image: string;
-  courses: string[];
-  established: number;
+  bnName: string | null;
+  numberOfBed: number;
+  district: District;
+  upazila: Upazila | null;
+  union: Union | null;
+  hospitalType: string;
+  organizationType: string;
+  lat: string | null;
+  lon: string | null;
+  url: string | null;
 }
 
 export interface User {
