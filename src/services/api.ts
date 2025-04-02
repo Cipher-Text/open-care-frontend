@@ -1,92 +1,92 @@
 import axios from "axios";
 import config from "../config";
-import { BlogPost, Doctor, Institute, User, Hospital } from "../types";
+import {
+	BlogPost,
+	Doctor,
+	User,
+	HospitalResponse,
+	InstitutionResponse,
+} from "../types";
 
 export const apiClient = axios.create({
-  baseURL: config.apiUrl,
-  headers: {
-    "Content-Type": "application/json",
-  },
+	baseURL: config.apiUrl,
+	headers: {
+		"Content-Type": "application/json",
+	},
 });
 
 export const fetchDoctors = async (page = 1, size = config.itemsPerPage) => {
-  const response = await apiClient.get<{ data: Doctor[]; total: number }>(
-    `/api/doctors?page=${page}&size=${size}`
-  );
-  return response.data;
+	const response = await apiClient.get<{ data: Doctor[]; total: number }>(
+		`/api/doctors?page=${page}&size=${size}`
+	);
+	return response.data;
 };
 
 export const fetchHospitals = async (
-  page = 0, // 0-based page index
-  size = config.itemsPerPage,
-  districtIds?: number,
-  hospitalTypes?: string,
-  organizationType?: string
+	page = 0, // 0-based page index
+	size = config.itemsPerPage,
+	districtIds?: number,
+	hospitalTypes?: string,
+	organizationType?: string
 ) => {
-  let url = `/api/hospitals?page=${page}&size=${size}`;
+	let url = `/api/hospitals?page=${page}&size=${size}`;
 
-  if (districtIds) {
-    url += `&districtIds=${districtIds}`;
-  }
+	if (districtIds) {
+		url += `&districtIds=${districtIds}`;
+	}
 
-  if (hospitalTypes) {
-    url += `&hospitalTypes=${hospitalTypes}`;
-  }
+	if (hospitalTypes) {
+		url += `&hospitalTypes=${hospitalTypes}`;
+	}
 
-  if (organizationType) {
-    url += `&organizationType=${organizationType}`;
-  }
+	if (organizationType) {
+		url += `&organizationType=${organizationType}`;
+	}
 
-  const response = await apiClient.get<{
-    hospitals: Hospital[];
-    totalElements: number;
-  }>(url);
-  return response.data;
+	const response = await apiClient.get<HospitalResponse>(url);
+	return response.data;
 };
 
 export const fetchInstitutions = async (
-  page = 0, // 0-based page index
-  size = config.itemsPerPage,
-  districtIds?: number,
-  hospitalTypes?: string,
-  organizationType?: string
+	page = 0, // 0-based page index
+	size = config.itemsPerPage,
+	districtIds?: number,
+	hospitalTypes?: string,
+	organizationType?: string
 ) => {
-  let url = `/api/institutions?page=${page}&size=${size}`;
+	let url = `/api/institutions?page=${page}&size=${size}`;
 
-  if (districtIds) {
-    url += `&districtIds=${districtIds}`;
-  }
+	if (districtIds) {
+		url += `&districtIds=${districtIds}`;
+	}
 
-  if (hospitalTypes) {
-    url += `&hospitalTypes=${hospitalTypes}`;
-  }
+	if (hospitalTypes) {
+		url += `&hospitalTypes=${hospitalTypes}`;
+	}
 
-  if (organizationType) {
-    url += `&organizationType=${organizationType}`;
-  }
+	if (organizationType) {
+		url += `&organizationType=${organizationType}`;
+	}
 
-  const response = await apiClient.get<{
-    institutes: Institute[];
-    totalElements: number;
-  }>(url);
+	const response = await apiClient.get<InstitutionResponse>(url);
 
-  return response.data;
+	return response.data;
 };
 
 export const fetchUserProfile = async () => {
-  // Assuming you have some authentication mechanism
-  const response = await apiClient.get<User>("/profile");
-  return response.data;
+	// Assuming you have some authentication mechanism
+	const response = await apiClient.get<User>("/profile");
+	return response.data;
 };
 
 export const fetchFeaturedData = async () => {
-  const response = await apiClient.get("/featured");
-  return response.data;
+	const response = await apiClient.get("/featured");
+	return response.data;
 };
 
 export const fetchLatestBlogs = async () => {
-  const response = await apiClient.get<{ data: BlogPost[]; total: number }>(
-    "/blogs"
-  );
-  return response.data;
+	const response = await apiClient.get<{ data: BlogPost[]; total: number }>(
+		"/blogs"
+	);
+	return response.data;
 };
