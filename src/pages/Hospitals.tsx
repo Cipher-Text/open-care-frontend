@@ -18,7 +18,7 @@ import {
   InfoCircleOutlined,
 } from "@ant-design/icons";
 import { apiClient, fetchHospitals } from "../services/api";
-import { District, Hospital, HospitalType, OrganizationType } from "../types";
+import { District, Hospital, HospitalResponse } from "../types";
 import config from "../config";
 import { useNavigate } from "react-router-dom";
 
@@ -29,43 +29,29 @@ const Hospitals: React.FC = () => {
   const navigate = useNavigate();
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
-  const [organizationTypes, setOrganizationTypes] = useState<
-    OrganizationType[]
-  >([]);
-  const [hospitalTypes, setHospitalTypes] = useState<HospitalType[]>([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({
     current: 1,
-    pageSize: config.itemsPerPage || 5,
+    pageSize: config.itemsPerPage || 10,
     total: 0,
   });
 
   // Filter states
-  const [selectedDistrict, setSelectedDistrict] = useState<number | undefined>(
-    undefined
-  );
+  const [selectedDistrict, setSelectedDistrict] = useState<
+    number | undefined
+  >();
   const [selectedHospitalType, setSelectedHospitalType] = useState<
     string | undefined
-  >(undefined);
-  const [selectedOrgType, setSelectedOrgType] = useState<string | undefined>(
-    undefined
-  );
+  >();
+  const [selectedOrgType, setSelectedOrgType] = useState<string | undefined>();
 
   useEffect(() => {
-    // Fetch all filter data
     const fetchFilterData = async () => {
       try {
-        const [districtRes, orgTypeRes, hospitalTypeRes] = await Promise.all([
-          apiClient.get<District[]>("/api/districts"),
-          apiClient.get<OrganizationType[]>("/api/organization-types"),
-          apiClient.get<HospitalType[]>("/api/hospital-types"),
-        ]);
-
+        const districtRes = await apiClient.get<District[]>("/api/districts");
         setDistricts(districtRes.data);
-        setOrganizationTypes(orgTypeRes.data);
-        setHospitalTypes(hospitalTypeRes.data);
       } catch (error) {
-        console.error("Failed to fetch filter data:", error);
+        console.error("Failed to fetch districts:", error);
       }
     };
 
@@ -73,14 +59,14 @@ const Hospitals: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    fetchHospitalList(1); // Reset to page 1 on filter change
+    fetchHospitalList(1);
   }, [selectedDistrict, selectedHospitalType, selectedOrgType]);
 
   const fetchHospitalList = async (page: number) => {
     setLoading(true);
     try {
       const response = await fetchHospitals(
-        page - 1, // Convert 1-based to 0-based for the API
+        page - 1,
         pagination.pageSize,
         selectedDistrict,
         selectedHospitalType,
@@ -90,8 +76,8 @@ const Hospitals: React.FC = () => {
       setHospitals(response.hospitals);
       setPagination({
         ...pagination,
-        current: page, // Keep 1-based for the UI
-        total: response.totalItems || 0,
+        current: page,
+        total: response.totalItems,
       });
     } catch (error) {
       console.error("Failed to fetch hospitals:", error);
@@ -127,11 +113,11 @@ const Hospitals: React.FC = () => {
 
   const getOrgTypeColor = (type: string) => {
     switch (type) {
-      case "GOVERNMENT":
+      case "Government":
         return "blue";
-      case "MILITARY":
+      case "Military":
         return "red";
-      case "PRIVATE":
+      case "Private":
         return "green";
       default:
         return "default";
@@ -140,9 +126,9 @@ const Hospitals: React.FC = () => {
 
   const getHospitalTypeColor = (type: string) => {
     switch (type) {
-      case "GENERAL":
+      case "College":
         return "purple";
-      case "CANCER":
+      case "Specialized":
         return "magenta";
       default:
         return "orange";
@@ -160,13 +146,13 @@ const Hospitals: React.FC = () => {
     },
     {
       title: "Organization Type",
-      dataIndex: "organizationType",
+      dataIndex: ["organizationType", "name"],
       key: "organizationType",
       render: (text: string) => <Tag color={getOrgTypeColor(text)}>{text}</Tag>,
     },
     {
       title: "Hospital Type",
-      dataIndex: "hospitalType",
+      dataIndex: ["hospitalType", "englishName"],
       key: "hospitalType",
       render: (text: string) => (
         <Tag color={getHospitalTypeColor(text)}>{text}</Tag>
@@ -184,10 +170,16 @@ const Hospitals: React.FC = () => {
       ),
     },
     {
+      title: "Beds",
+      dataIndex: "numberOfBed",
+      key: "beds",
+      render: (number: number) => number.toLocaleString(),
+    },
+    {
       title: "Website",
-      dataIndex: "url",
-      key: "url",
-      render: (url: string | null) =>
+      dataIndex: "websiteUrl",
+      key: "website",
+      render: (url: string) =>
         url ? (
           <a href={url} target="_blank" rel="noopener noreferrer">
             <LinkOutlined /> Visit
@@ -226,25 +218,31 @@ const Hospitals: React.FC = () => {
     },
   ];
 
-  // Render mobile card for each hospital
   const renderMobileCard = (hospital: Hospital) => (
     <Card key={hospital.id} style={{ marginBottom: 16 }}>
       <div style={{ marginBottom: 12 }}>
         <h3 style={{ fontWeight: "bold", marginBottom: 8 }}>{hospital.name}</h3>
         <Space direction="vertical" size="small">
           <div>
-            <Tag color={getOrgTypeColor(hospital.organizationType)}>
-              {hospital.organizationType}
+            <Tag color={getOrgTypeColor(hospital.organizationType.name)}>
+              {hospital.organizationType.name}
             </Tag>
-            <Tag color={getHospitalTypeColor(hospital.hospitalType)}>
-              {hospital.hospitalType}
+            <Tag
+              color={getHospitalTypeColor(hospital.hospitalType.englishName)}
+            >
+              {hospital.hospitalType.englishName}
             </Tag>
           </div>
           <div>
-            <EnvironmentOutlined /> {hospital.district?.name}
+            <EnvironmentOutlined /> {hospital.district.name}
           </div>
-          {hospital.url ? (
-            <a href={hospital.url} target="_blank" rel="noopener noreferrer">
+          <div>Beds: {hospital.numberOfBed.toLocaleString()}</div>
+          {hospital.websiteUrl ? (
+            <a
+              href={hospital.websiteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <LinkOutlined /> Visit Website
             </a>
           ) : (
@@ -309,11 +307,8 @@ const Hospitals: React.FC = () => {
               onChange={handleHospitalTypeChange}
               allowClear
             >
-              {hospitalTypes.map((type) => (
-                <Option key={type.name} value={type.name}>
-                  {type.name}
-                </Option>
-              ))}
+              <Option value="College">College</Option>
+              <Option value="Specialized">Specialized</Option>
             </Select>
           </Col>
 
@@ -324,24 +319,10 @@ const Hospitals: React.FC = () => {
               onChange={handleOrgTypeChange}
               allowClear
             >
-              {organizationTypes.map((type) => (
-                <Option key={type.name} value={type.name}>
-                  {type.name}
-                </Option>
-              ))}
+              <Option value="Government">Government</Option>
+              <Option value="Military">Military</Option>
+              <Option value="Private">Private</Option>
             </Select>
-          </Col>
-        </Row>
-
-        <Row style={{ marginTop: 16 }}>
-          <Col span={24}>
-            <Button
-              type="primary"
-              onClick={() => fetchHospitalList(1)}
-              loading={loading}
-            >
-              Apply Filters
-            </Button>
           </Col>
         </Row>
       </div>
@@ -352,7 +333,6 @@ const Hospitals: React.FC = () => {
         </div>
       ) : (
         <>
-          {/* Desktop view */}
           <div className="desktop-view" style={{ display: "block" }}>
             <Table
               columns={columns}
@@ -368,7 +348,6 @@ const Hospitals: React.FC = () => {
             />
           </div>
 
-          {/* Mobile view */}
           <div className="mobile-view" style={{ display: "none" }}>
             {hospitals.map(renderMobileCard)}
             <div style={{ textAlign: "center", margin: "20px 0" }}>
@@ -381,17 +360,16 @@ const Hospitals: React.FC = () => {
             </div>
           </div>
 
-          {/* CSS for responsive display */}
           <style>{`
-						@media (max-width: 768px) {
-							.desktop-view {
-								display: none !important;
-							}
-							.mobile-view {
-								display: block !important;
-							}
-						}
-					`}</style>
+            @media (max-width: 768px) {
+              .desktop-view {
+                display: none !important;
+              }
+              .mobile-view {
+                display: block !important;
+              }
+            }
+          `}</style>
         </>
       )}
     </div>
