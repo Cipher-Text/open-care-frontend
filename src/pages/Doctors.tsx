@@ -36,11 +36,10 @@ const Doctors: React.FC = () => {
     try {
       // In a real app, you would pass query as parameter
       const response = await fetchDoctors(page);
-      // Update to match your API response structure
       setDoctors(response.doctors);
       setPagination({
         ...pagination,
-        current: page,
+        current: response.currentPage,
         total: response.totalItems,
       });
     } catch (error) {
@@ -63,16 +62,15 @@ const Doctors: React.FC = () => {
     fetchData(1, value);
   };
 
-  // Updated columns to match your requirements
   const columns = [
     {
       title: "Name",
-      dataIndex: "name",
+      dataIndex: ["profile", "name"],
       key: "name",
       render: (text: string, record: Doctor) => (
         <Space>
           <Avatar
-            src={record.image || "https://via.placeholder.com/48"}
+            src={record.profile.photo || "https://via.placeholder.com/48"}
             size={48}
           />
           <span>{text}</span>
@@ -81,7 +79,7 @@ const Doctors: React.FC = () => {
     },
     {
       title: "Gender",
-      dataIndex: "gender",
+      dataIndex: ["profile", "gender"],
       key: "gender",
       render: (text: string) => {
         const color = text === "MALE" ? "blue" : "pink";
@@ -95,25 +93,41 @@ const Doctors: React.FC = () => {
       render: (text: string) => text || "Not Available",
     },
     {
-      title: "Years of Experience",
-      dataIndex: "yearOfExperience",
-      key: "yearOfExperience",
-      render: (years: number) => `${years} years`,
+      title: "Status",
+      dataIndex: "isActive",
+      key: "status",
+      render: (isActive: boolean) => (
+        <Tag color={isActive ? "green" : "red"}>
+          {isActive ? "Active" : "Inactive"}
+        </Tag>
+      ),
+    },
+    {
+      title: "Contact",
+      key: "contact",
+      render: (record: Doctor) => (
+        <div>
+          <div>{record.profile.phone || "No phone"}</div>
+          <div>{record.profile.email || "No email"}</div>
+        </div>
+      ),
     },
   ];
 
-  // Updated for mobile view
   const renderMobileCard = (doctor: Doctor) => (
     <Card key={doctor.id} style={{ marginBottom: 16 }}>
       <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
         <Avatar
-          src={doctor.image || "https://via.placeholder.com/64"}
+          src={doctor.profile.photo || "https://via.placeholder.com/64"}
           size={64}
         />
         <div style={{ marginLeft: 16 }}>
-          <h3>{doctor.name}</h3>
-          <Tag color={doctor.gender === "MALE" ? "blue" : "pink"}>
-            {doctor.gender}
+          <h3>{doctor.profile.name}</h3>
+          <Tag color={doctor.profile.gender === "MALE" ? "blue" : "pink"}>
+            {doctor.profile.gender}
+          </Tag>
+          <Tag color={doctor.isActive ? "green" : "red"}>
+            {doctor.isActive ? "Active" : "Inactive"}
           </Tag>
         </div>
       </div>
@@ -122,7 +136,10 @@ const Doctors: React.FC = () => {
           <strong>BMDC No:</strong> {doctor.bmdcNo || "Not Available"}
         </p>
         <p>
-          <strong>Experience:</strong> {doctor.yearOfExperience} years
+          <strong>Phone:</strong> {doctor.profile.phone || "Not Available"}
+        </p>
+        <p>
+          <strong>Email:</strong> {doctor.profile.email || "Not Available"}
         </p>
       </div>
     </Card>

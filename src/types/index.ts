@@ -1,23 +1,33 @@
-export interface Doctor {
+// types/index.ts
+export interface Profile {
   id: number;
   name: string;
   bnName: string;
   gender: string;
-  bmdcNo: string;
+  dateOfBirth: string | null;
+  address: string | null;
   phone: string | null;
   email: string | null;
-  address: string | null;
-  yearOfExperience: number;
-  description: string | null;
-  image: string | null;
+  photo: string | null;
+  // ... other profile fields
+}
+
+export interface Doctor {
+  id: number;
+  bmdcNo: string;
   startDate: string | null;
+  degrees: string | null;
+  specializations: string | null;
+  description: string | null;
   isActive: boolean;
-  userId: number | null;
+  profile: Profile;
 }
 
 export interface DoctorResponse {
   totalItems: number;
   doctors: Doctor[];
+  totalPages: number;
+  currentPage: number;
 }
 
 export interface Division {

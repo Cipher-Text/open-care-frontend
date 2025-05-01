@@ -6,6 +6,7 @@ import {
   User,
   HospitalResponse,
   InstitutionResponse,
+  DoctorResponse,
 } from "../types";
 
 export const apiClient = axios.create({
@@ -15,8 +16,11 @@ export const apiClient = axios.create({
   },
 });
 
-export const fetchDoctors = async (page = 1, size = config.itemsPerPage) => {
-  const response = await apiClient.get<{ data: Doctor[]; total: number }>(
+export const fetchDoctors = async (
+  page = 1,
+  size = config.itemsPerPage
+): Promise<DoctorResponse> => {
+  const response = await apiClient.get<DoctorResponse>(
     `/api/doctors?page=${page}&size=${size}`
   );
   return response.data;
