@@ -53,19 +53,30 @@ export interface Union {
   url: string | null;
 }
 
+export interface HospitalType {
+  banglaName: string;
+  englishName: string;
+}
+
+export interface OrganizationType {
+  name: string;
+  banglaName: string;
+  description: string;
+}
+
 export interface Hospital {
   id: number;
   name: string;
-  bnName: string | null;
+  bnName: string;
   numberOfBed: number;
   district: District;
-  upazila: Upazila | null;
-  union: Union | null;
-  hospitalType: string; // "GENERAL", "CANCER", "CHEST_DISEASE"
-  organizationType: string; // "GOVERNMENT", "MILITARY", "PRIVATE"
+  upazila: null;
+  union: null;
+  hospitalType: HospitalType;
+  organizationType: OrganizationType;
   lat: string | null;
   lon: string | null;
-  url: string | null;
+  websiteUrl: string;
 }
 
 export interface HospitalResponse {
