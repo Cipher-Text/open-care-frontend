@@ -3,7 +3,6 @@ import {
   Typography,
   Table,
   Input,
-  Select,
   Space,
   Spin,
   Avatar,
@@ -12,14 +11,12 @@ import {
   Row,
   Col,
 } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
 import { fetchDoctors } from "../services/api";
 import config from "../config";
-import { DoctorResponse, Doctor } from "../types";
+import { Doctor } from "../types";
 
 const { Title } = Typography;
 const { Search } = Input;
-const { Option } = Select;
 
 const Doctors: React.FC = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -34,14 +31,12 @@ const Doctors: React.FC = () => {
   const fetchData = async (page = 1, query = "") => {
     setLoading(true);
     try {
-      // In a real app, you would pass query as parameter
-      const response = await fetchDoctors(page);
-      // Update to match your API response structure
-      setDoctors(response.doctors);
+      const response = await fetchDoctors(page, query); // Ensure fetchDoctors accepts query
+      setDoctors(response.data); // Assuming API returns { data: Doctor[], total: number }
       setPagination({
-        ...pagination,
         current: page,
-        total: response.totalItems,
+        pageSize: config.itemsPerPage,
+        total: response.total,
       });
     } catch (error) {
       console.error("Failed to fetch doctors:", error);
@@ -63,7 +58,6 @@ const Doctors: React.FC = () => {
     fetchData(1, value);
   };
 
-  // Updated columns to match your requirements
   const columns = [
     {
       title: "Name",
@@ -102,7 +96,6 @@ const Doctors: React.FC = () => {
     },
   ];
 
-  // Updated for mobile view
   const renderMobileCard = (doctor: Doctor) => (
     <Card key={doctor.id} style={{ marginBottom: 16 }}>
       <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
@@ -151,7 +144,6 @@ const Doctors: React.FC = () => {
         </div>
       ) : (
         <>
-          {/* Desktop view */}
           <div className="desktop-view">
             <Table
               columns={columns}
@@ -167,24 +159,7 @@ const Doctors: React.FC = () => {
             />
           </div>
 
-          {/* Mobile view */}
-          <div className="mobile-view">
-            {doctors.map(renderMobileCard)}
-            <div style={{ textAlign: "center", margin: "20px 0" }}>
-              <Table
-                pagination={{
-                  current: pagination.current,
-                  pageSize: pagination.pageSize,
-                  total: pagination.total,
-                  showSizeChanger: false,
-                }}
-                onChange={handleTableChange}
-                showHeader={false}
-                dataSource={[]}
-                columns={[]}
-              />
-            </div>
-          </div>
+          <div className="mobile-view">{doctors.map(renderMobileCard)}</div>
         </>
       )}
     </div>
