@@ -6,6 +6,8 @@ import {
   User,
   HospitalResponse,
   InstitutionResponse,
+  DoctorResponse,
+  Hospital,
 } from "../types";
 
 export const apiClient = axios.create({
@@ -15,9 +17,27 @@ export const apiClient = axios.create({
   },
 });
 
-export const fetchDoctors = async (page = 1, size = config.itemsPerPage) => {
-  const response = await apiClient.get<{ data: Doctor[]; total: number }>(
-    `/api/doctors?page=${page}&size=${size}`
+export const fetchDoctors = async (
+  page = 0,
+  size = config.itemsPerPage,
+  filters = {}
+) => {
+  // Build query string from filters
+  const queryParams = new URLSearchParams();
+
+  // Add pagination parameters
+  queryParams.append("page", page.toString());
+  queryParams.append("size", size.toString());
+
+  // Add filter parameters if they exist
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      queryParams.append(key, value.toString());
+    }
+  });
+
+  const response = await apiClient.get<DoctorResponse>(
+    `/api/doctors?${queryParams.toString()}`
   );
   return response.data;
 };
@@ -27,9 +47,14 @@ export const fetchHospitals = async (
   size = config.itemsPerPage,
   districtIds?: number,
   hospitalTypes?: string,
-  organizationType?: string
+  organizationType?: string,
+  name?: string
 ) => {
   let url = `/api/hospitals?page=${page}&size=${size}`;
+
+  if (name) {
+    url += `&name=${encodeURIComponent(name)}`;
+  }
 
   if (districtIds) {
     url += `&districtIds=${districtIds}`;
@@ -44,6 +69,18 @@ export const fetchHospitals = async (
   }
 
   const response = await apiClient.get<HospitalResponse>(url);
+  return response.data;
+};
+
+// Get all available degrees
+export const fetchDegrees = async () => {
+  const response = await apiClient.get("/api/degrees");
+  return response.data;
+};
+
+// Get all medical specialities
+export const fetchMedicalSpecialities = async () => {
+  const response = await apiClient.get("/api/medical-specialities");
   return response.data;
 };
 

@@ -10,10 +10,11 @@ import {
   Card,
   Row,
   Col,
+  TablePaginationConfig,
 } from "antd";
 import { fetchDoctors } from "../services/api";
 import config from "../config";
-import { Doctor } from "../types";
+import { Doctor, Profile } from "../types";
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -31,8 +32,8 @@ const Doctors: React.FC = () => {
   const fetchData = async (page = 1, query = "") => {
     setLoading(true);
     try {
-      const response = await fetchDoctors(page, query); // Ensure fetchDoctors accepts query
-      setDoctors(response.data); // Assuming API returns { data: Doctor[], total: number }
+      const response = await fetchDoctors(page, query);
+      setDoctors(response.data);
       setPagination({
         current: page,
         pageSize: config.itemsPerPage,
@@ -49,7 +50,7 @@ const Doctors: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleTableChange = (pagination: any) => {
+  const handleTableChange = (pagination: TablePaginationConfig) => {
     fetchData(pagination.current, searchQuery);
   };
 
@@ -61,25 +62,25 @@ const Doctors: React.FC = () => {
   const columns = [
     {
       title: "Name",
-      dataIndex: "name",
+      dataIndex: "profile",
       key: "name",
-      render: (text: string, record: Doctor) => (
+      render: (profile: Profile) => (
         <Space>
           <Avatar
-            src={record.image || "https://via.placeholder.com/48"}
+            src={profile.photo || "https://via.placeholder.com/48"}
             size={48}
           />
-          <span>{text}</span>
+          <span>{profile.name}</span>
         </Space>
       ),
     },
     {
       title: "Gender",
-      dataIndex: "gender",
+      dataIndex: "profile",
       key: "gender",
-      render: (text: string) => {
-        const color = text === "MALE" ? "blue" : "pink";
-        return <Tag color={color}>{text}</Tag>;
+      render: (profile: Profile) => {
+        const color = profile.gender === "MALE" ? "blue" : "pink";
+        return <Tag color={color}>{profile.gender}</Tag>;
       },
     },
     {
@@ -100,13 +101,13 @@ const Doctors: React.FC = () => {
     <Card key={doctor.id} style={{ marginBottom: 16 }}>
       <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
         <Avatar
-          src={doctor.image || "https://via.placeholder.com/64"}
+          src={doctor.profile.photo || "https://via.placeholder.com/64"}
           size={64}
         />
         <div style={{ marginLeft: 16 }}>
-          <h3>{doctor.name}</h3>
-          <Tag color={doctor.gender === "MALE" ? "blue" : "pink"}>
-            {doctor.gender}
+          <h3>{doctor.profile.name}</h3>
+          <Tag color={doctor.profile.gender === "MALE" ? "blue" : "pink"}>
+            {doctor.profile.gender}
           </Tag>
         </div>
       </div>

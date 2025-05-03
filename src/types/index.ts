@@ -13,6 +13,7 @@ export interface Profile {
 export interface Doctor {
   id: number;
   bmdcNo: string;
+  yearOfExperience?: number;
   startDate: string | null;
   degrees: string | null;
   specializations: string | null;
