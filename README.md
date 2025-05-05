@@ -45,7 +45,7 @@ src/
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-repo/open-care-frontend.git
+   git clone https://github.com/Cipher-Text/open-care-frontend.git
    cd open-care-frontend
    ```
 
