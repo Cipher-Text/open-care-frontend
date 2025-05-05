@@ -27,12 +27,8 @@ import config from "../config";
 
 const { Title, Text } = Typography;
 
-interface DoctorDetailsParams {
-  id: string;
-}
-
 const DoctorDetails: React.FC = () => {
-  const { id } = useParams<DoctorDetailsParams>();
+  const { id } = useParams();
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -99,7 +95,7 @@ const DoctorDetails: React.FC = () => {
                       {new Date(item.endDateTime).getFullYear()}
                     </p>
                   )}
-                  {item.degreeType && (
+                  {item.degree.degreeType && (
                     <p>
                       <strong>Type:</strong> {item.degree.degreeType}
                     </p>
