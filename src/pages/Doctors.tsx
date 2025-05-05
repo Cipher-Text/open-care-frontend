@@ -14,11 +14,8 @@ import {
   Button,
   Pagination,
 } from "antd";
-import {
-  SearchOutlined,
-  FilterOutlined,
-  ClearOutlined,
-} from "@ant-design/icons";
+import { FilterOutlined, ClearOutlined, EyeOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import {
   fetchDoctors,
   fetchHospitals,
@@ -32,6 +29,7 @@ const { Title } = Typography;
 const { Option } = Select;
 
 const Doctors: React.FC = () => {
+  const navigate = useNavigate();
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
   const [hospitals, setHospitals] = useState<any[]>([]);
@@ -127,7 +125,12 @@ const Doctors: React.FC = () => {
     fetchData(0, resetFilters);
   };
 
-  // Updated columns to match your requirements
+  // Function to navigate to doctor details page
+  const navigateToDetails = (doctorId: number) => {
+    navigate(`/doctors/${doctorId}`);
+  };
+
+  // Updated columns with the function call instead of Link
   const columns = [
     {
       title: "Photo",
@@ -159,9 +162,23 @@ const Doctors: React.FC = () => {
       render: (years: number | undefined) =>
         years ? `${years} years` : "Not specified",
     },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_: any, record: Doctor) => (
+        <Button
+          type="primary"
+          icon={<EyeOutlined />}
+          size="small"
+          onClick={() => navigateToDetails(record.id)}
+        >
+          Details
+        </Button>
+      ),
+    },
   ];
 
-  // Updated for mobile view
+  // Updated mobile view with function call instead of Link
   const renderMobileCard = (doctor: Doctor) => (
     <Card key={doctor.id} style={{ marginBottom: 16 }}>
       <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
@@ -188,6 +205,15 @@ const Doctors: React.FC = () => {
             : "Not specified"}
         </p>
       </div>
+      <div style={{ marginTop: 16, textAlign: "right" }}>
+        <Button
+          type="primary"
+          icon={<EyeOutlined />}
+          onClick={() => navigateToDetails(doctor.id)}
+        >
+          View Details
+        </Button>
+      </div>
     </Card>
   );
 
@@ -205,10 +231,7 @@ const Doctors: React.FC = () => {
           <Row gutter={[16, 16]}>
             <Col xs={24} sm={12} md={8} lg={6}>
               <Form.Item name="name" label="Doctor Name">
-                <Input
-                  placeholder="Search by name"
-                  prefix={<SearchOutlined />}
-                />
+                <Input placeholder="Search by name" />
               </Form.Item>
             </Col>
             <Col xs={24} sm={12} md={8} lg={6}>

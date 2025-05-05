@@ -505,7 +505,9 @@ const Home: React.FC = () => {
                       </div>
                     }
                     actions={[
-                      <Link to={`/doctors/${doctor.id}`}>View Profile</Link>,
+                      <Link to={`/api/doctors/${doctor.id}`}>
+                        View Profile
+                      </Link>,
                       <Button type="text">Book Appointment</Button>,
                     ]}
                   >
