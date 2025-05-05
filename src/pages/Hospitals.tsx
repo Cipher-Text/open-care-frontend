@@ -18,7 +18,7 @@ import {
   InfoCircleOutlined,
 } from "@ant-design/icons";
 import { apiClient, fetchHospitals } from "../services/api";
-import { District, Hospital, HospitalResponse } from "../types";
+import { District, Hospital } from "../types";
 import config from "../config";
 import { useNavigate } from "react-router-dom";
 

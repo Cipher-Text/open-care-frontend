@@ -15,7 +15,7 @@ import {
   Pagination,
 } from "antd";
 import { FilterOutlined, ClearOutlined, EyeOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   fetchDoctors,
   fetchHospitals,
@@ -29,6 +29,7 @@ const { Title } = Typography;
 const { Option } = Select;
 
 const Doctors: React.FC = () => {
+  const navigate = useNavigate();
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
   const [hospitals, setHospitals] = useState<any[]>([]);
@@ -124,7 +125,12 @@ const Doctors: React.FC = () => {
     fetchData(0, resetFilters);
   };
 
-  // Updated columns to match your requirements and add details button
+  // Function to navigate to doctor details page
+  const navigateToDetails = (doctorId: number) => {
+    navigate(`/doctors/${doctorId}`);
+  };
+
+  // Updated columns with the function call instead of Link
   const columns = [
     {
       title: "Photo",
@@ -160,16 +166,19 @@ const Doctors: React.FC = () => {
       title: "Actions",
       key: "actions",
       render: (_: any, record: Doctor) => (
-        <Link to={`/api/doctors/${record.id}`}>
-          <Button type="primary" icon={<EyeOutlined />} size="small">
-            Details
-          </Button>
-        </Link>
+        <Button
+          type="primary"
+          icon={<EyeOutlined />}
+          size="small"
+          onClick={() => navigateToDetails(record.id)}
+        >
+          Details
+        </Button>
       ),
     },
   ];
 
-  // Updated for mobile view with details button
+  // Updated mobile view with function call instead of Link
   const renderMobileCard = (doctor: Doctor) => (
     <Card key={doctor.id} style={{ marginBottom: 16 }}>
       <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
@@ -197,11 +206,13 @@ const Doctors: React.FC = () => {
         </p>
       </div>
       <div style={{ marginTop: 16, textAlign: "right" }}>
-        <Link to={`/api/doctors/${doctor.id}`}>
-          <Button type="primary" icon={<EyeOutlined />}>
-            View Details
-          </Button>
-        </Link>
+        <Button
+          type="primary"
+          icon={<EyeOutlined />}
+          onClick={() => navigateToDetails(doctor.id)}
+        >
+          View Details
+        </Button>
       </div>
     </Card>
   );

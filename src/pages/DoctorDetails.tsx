@@ -36,7 +36,7 @@ const DoctorDetails: React.FC = () => {
     const fetchDoctorDetails = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${config.apiUrl}/api/doctors/${id}`);
+        const response = await axios.get(`${config.apiUrl}api/doctors/${id}`);
         setDoctor(response.data);
       } catch (error) {
         console.error("Failed to fetch doctor details:", error);

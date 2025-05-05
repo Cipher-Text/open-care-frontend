@@ -11,6 +11,7 @@ import Institutes from "./pages/Institutes";
 import Profile from "./pages/Profile";
 import "./App.css";
 import ErrorBoundary from "antd/es/alert/ErrorBoundary";
+import DoctorDetails from "./pages/DoctorDetails";
 
 const { Content, Footer } = Layout;
 
@@ -25,6 +26,7 @@ const App: React.FC = () => {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/doctors" element={<Doctors />} />
+                <Route path="/doctors/:id" element={<DoctorDetails />} />
                 <Route path="/hospitals" element={<Hospitals />} />
                 <Route path="/hospitals/:id" element={<HospitalDetails />} />
                 <Route path="/institutes" element={<Institutes />} />
