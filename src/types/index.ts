@@ -8,6 +8,51 @@ export interface Profile {
   phone: string | null;
   email: string | null;
   photo: string | null;
+  username: string | null;
+  userType: string;
+  keycloakUserId: string | null;
+  district: District | null;
+  upazila: Upazila | null;
+  union: Union | null;
+}
+
+export interface Degree {
+  id: number;
+  name: string;
+  abbreviation: string;
+  degreeType: string;
+}
+
+export interface MedicalSpeciality {
+  id: number;
+  parentId: number | null;
+  name: string;
+  bnName: string;
+  description: string | null;
+}
+
+export interface DoctorDegree {
+  id: number;
+  doctor: Doctor;
+  degree: Degree;
+  medicalSpeciality: MedicalSpeciality | null;
+  institution: Institution | null;
+  startDateTime: string | null;
+  endDateTime: string | null;
+  grade: string | null;
+  description: string | null;
+}
+
+export interface DoctorWorkplace {
+  id: number;
+  doctor: Doctor;
+  doctorPosition: string | null;
+  teacherPosition: string | null;
+  medicalSpeciality: MedicalSpeciality | null;
+  institution: Institution | null;
+  hospital: Hospital | null;
+  startDate: string | null;
+  endDate: string | null;
 }
 
 export interface Doctor {
@@ -19,7 +64,10 @@ export interface Doctor {
   specializations: string | null;
   description: string | null;
   isActive: boolean;
+  isDeleted: boolean | null;
   profile: Profile;
+  doctorDegrees: DoctorDegree[] | null;
+  doctorWorkplaces: DoctorWorkplace[] | null;
 }
 
 export interface DoctorResponse {
@@ -105,7 +153,7 @@ export interface HospitalType {
   bnName: string;
 }
 
-export interface Institute {
+export interface Institution {
   id: number;
   name: string;
   bnName: string | null;
@@ -139,17 +187,17 @@ export interface BlogPost {
 export interface FeaturedData {
   doctors: Doctor[];
   hospitals: Hospital[];
-  institutes: Institute[];
+  institutions: Institution[];
   stats: {
     totalDoctors: number;
     totalHospitals: number;
-    totalInstitutes: number;
+    totalInstitutions: number;
     totalPatientsCared: number;
   };
 }
 
 export interface InstitutionResponse {
-  institutions: Institute[];
+  institutions: Institution[];
   currentPage: number;
   totalPages: number;
   totalItems: number;

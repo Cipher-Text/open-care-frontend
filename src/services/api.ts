@@ -42,6 +42,11 @@ export const fetchDoctors = async (
   return response.data;
 };
 
+export const fetchDoctorById = async (id: string | number) => {
+  const response = await apiClient.get<Doctor>(`/api/doctors/${id}`);
+  return response.data;
+};
+
 export const fetchHospitals = async (
   page = 0, // 0-based page index
   size = config.itemsPerPage,

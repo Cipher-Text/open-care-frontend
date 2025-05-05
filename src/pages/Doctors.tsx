@@ -14,11 +14,8 @@ import {
   Button,
   Pagination,
 } from "antd";
-import {
-  SearchOutlined,
-  FilterOutlined,
-  ClearOutlined,
-} from "@ant-design/icons";
+import { FilterOutlined, ClearOutlined, EyeOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 import {
   fetchDoctors,
   fetchHospitals,
@@ -127,7 +124,7 @@ const Doctors: React.FC = () => {
     fetchData(0, resetFilters);
   };
 
-  // Updated columns to match your requirements
+  // Updated columns to match your requirements and add details button
   const columns = [
     {
       title: "Photo",
@@ -159,9 +156,20 @@ const Doctors: React.FC = () => {
       render: (years: number | undefined) =>
         years ? `${years} years` : "Not specified",
     },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_: any, record: Doctor) => (
+        <Link to={`/api/doctors/${record.id}`}>
+          <Button type="primary" icon={<EyeOutlined />} size="small">
+            Details
+          </Button>
+        </Link>
+      ),
+    },
   ];
 
-  // Updated for mobile view
+  // Updated for mobile view with details button
   const renderMobileCard = (doctor: Doctor) => (
     <Card key={doctor.id} style={{ marginBottom: 16 }}>
       <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
@@ -188,6 +196,13 @@ const Doctors: React.FC = () => {
             : "Not specified"}
         </p>
       </div>
+      <div style={{ marginTop: 16, textAlign: "right" }}>
+        <Link to={`/api/doctors/${doctor.id}`}>
+          <Button type="primary" icon={<EyeOutlined />}>
+            View Details
+          </Button>
+        </Link>
+      </div>
     </Card>
   );
 
@@ -205,10 +220,7 @@ const Doctors: React.FC = () => {
           <Row gutter={[16, 16]}>
             <Col xs={24} sm={12} md={8} lg={6}>
               <Form.Item name="name" label="Doctor Name">
-                <Input
-                  placeholder="Search by name"
-                  prefix={<SearchOutlined />}
-                />
+                <Input placeholder="Search by name" />
               </Form.Item>
             </Col>
             <Col xs={24} sm={12} md={8} lg={6}>

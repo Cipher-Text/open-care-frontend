@@ -321,7 +321,7 @@ const HospitalDetails: React.FC = () => {
                       extra={
                         <Button
                           type="primary"
-                          onClick={() => navigate(`/doctors/${doctor.id}`)}
+                          onClick={() => navigate(`/api/doctors/${doctor.id}`)}
                         >
                           View Profile
                         </Button>
@@ -336,7 +336,11 @@ const HospitalDetails: React.FC = () => {
                           />
                         }
                         title={
-                          <a onClick={() => navigate(`/doctors/${doctor.id}`)}>
+                          <a
+                            onClick={() =>
+                              navigate(`/api/doctors/${doctor.id}`)
+                            }
+                          >
                             {doctor.name}
                           </a>
                         }
