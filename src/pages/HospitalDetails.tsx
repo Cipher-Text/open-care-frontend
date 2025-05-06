@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   Typography,
   Card,
@@ -106,7 +106,7 @@ const HospitalDetails: React.FC = () => {
   };
 
   const getOrgTypeColor = (type: string) => {
-    switch (type) {
+    switch (type.toUpperCase()) {
       case "GOVERNMENT":
         return "blue";
       case "MILITARY":
@@ -119,13 +119,15 @@ const HospitalDetails: React.FC = () => {
   };
 
   const getHospitalTypeColor = (type: string) => {
-    switch (type) {
+    switch (type.toUpperCase()) {
       case "GENERAL":
         return "purple";
       case "CANCER":
         return "magenta";
       case "CHEST_DISEASE":
         return "gold";
+      case "COLLEGE":
+        return "cyan";
       default:
         return "orange";
     }
@@ -161,15 +163,30 @@ const HospitalDetails: React.FC = () => {
     );
   }
 
+  // Safe access to object properties
+  const organizationTypeName = hospital.organizationType?.name || "Unknown";
+  const hospitalTypeName = hospital.hospitalType?.englishName || "Unknown";
+
+  // Convert breadcrumb to use items
+  const breadcrumbItems = [
+    {
+      title: (
+        <Link to="/">
+          <HomeOutlined />
+        </Link>
+      ),
+    },
+    {
+      title: <Link to="/hospitals">Hospitals</Link>,
+    },
+    {
+      title: hospital.name,
+    },
+  ];
+
   return (
     <div className="hospital-details-container">
-      <Breadcrumb style={{ marginBottom: 16 }}>
-        <Breadcrumb.Item href="/">
-          <HomeOutlined />
-        </Breadcrumb.Item>
-        <Breadcrumb.Item href="/hospitals">Hospitals</Breadcrumb.Item>
-        <Breadcrumb.Item>{hospital.name}</Breadcrumb.Item>
-      </Breadcrumb>
+      <Breadcrumb items={breadcrumbItems} style={{ marginBottom: 16 }} />
 
       <Button
         icon={<ArrowLeftOutlined />}
@@ -186,21 +203,21 @@ const HospitalDetails: React.FC = () => {
             {hospital.bnName && <Text type="secondary">{hospital.bnName}</Text>}
 
             <Space style={{ marginTop: 16 }}>
-              <Tag color={getOrgTypeColor(hospital.organizationType)}>
-                {hospital.organizationType}
+              <Tag color={getOrgTypeColor(organizationTypeName)}>
+                {organizationTypeName}
               </Tag>
-              <Tag color={getHospitalTypeColor(hospital.hospitalType)}>
-                {hospital.hospitalType}
+              <Tag color={getHospitalTypeColor(hospitalTypeName)}>
+                {hospitalTypeName}
               </Tag>
             </Space>
           </Col>
 
           <Col xs={24} md={8} style={{ textAlign: "right" }}>
             <Space direction="vertical">
-              {hospital.url && (
+              {hospital.websiteUrl && (
                 <Button
                   type="link"
-                  href={hospital.url}
+                  href={hospital.websiteUrl}
                   target="_blank"
                   icon={<LinkOutlined />}
                 >
@@ -241,13 +258,13 @@ const HospitalDetails: React.FC = () => {
                 {hospital.numberOfBed}
               </Descriptions.Item>
               <Descriptions.Item label="Organization Type">
-                <Tag color={getOrgTypeColor(hospital.organizationType)}>
-                  {hospital.organizationType}
+                <Tag color={getOrgTypeColor(organizationTypeName)}>
+                  {organizationTypeName}
                 </Tag>
               </Descriptions.Item>
               <Descriptions.Item label="Hospital Type">
-                <Tag color={getHospitalTypeColor(hospital.hospitalType)}>
-                  {hospital.hospitalType}
+                <Tag color={getHospitalTypeColor(hospitalTypeName)}>
+                  {hospitalTypeName}
                 </Tag>
               </Descriptions.Item>
               <Descriptions.Item label="District">
@@ -269,14 +286,14 @@ const HospitalDetails: React.FC = () => {
                   {hospital.union.name}
                 </Descriptions.Item>
               )}
-              {hospital.url && (
+              {hospital.websiteUrl && (
                 <Descriptions.Item label="Website">
                   <a
-                    href={hospital.url}
+                    href={hospital.websiteUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <LinkOutlined /> {hospital.url}
+                    <LinkOutlined /> {hospital.websiteUrl}
                   </a>
                 </Descriptions.Item>
               )}
@@ -303,25 +320,27 @@ const HospitalDetails: React.FC = () => {
                     <List.Item
                       key={doctor.id}
                       actions={[
-                        doctor.phone && (
-                          <Space>
-                            <PhoneOutlined /> {doctor.phone}
+                        doctor.profile && doctor.profile.phone && (
+                          <Space key="phone">
+                            <PhoneOutlined /> {doctor.profile.phone}
                           </Space>
                         ),
-                        doctor.email && (
-                          <Space>
-                            <MailOutlined /> {doctor.email}
+                        doctor.profile && doctor.profile.email && (
+                          <Space key="email">
+                            <MailOutlined /> {doctor.profile.email}
                           </Space>
                         ),
-                        <Space>
-                          <UserOutlined /> Experience: {doctor.yearOfExperience}{" "}
-                          years
-                        </Space>,
+                        doctor.yearOfExperience && (
+                          <Space key="experience">
+                            <UserOutlined /> Experience:{" "}
+                            {doctor.yearOfExperience} years
+                          </Space>
+                        ),
                       ].filter(Boolean)}
                       extra={
                         <Button
                           type="primary"
-                          onClick={() => navigate(`/api/doctors/${doctor.id}`)}
+                          onClick={() => navigate(`/doctors/${doctor.id}`)}
                         >
                           View Profile
                         </Button>
@@ -330,29 +349,33 @@ const HospitalDetails: React.FC = () => {
                       <List.Item.Meta
                         avatar={
                           <Avatar
-                            src={doctor.image || undefined}
+                            src={doctor.profile?.photo || undefined}
                             size={64}
-                            icon={!doctor.image && <UserOutlined />}
+                            icon={!doctor.profile?.photo && <UserOutlined />}
                           />
                         }
                         title={
-                          <a
-                            onClick={() =>
-                              navigate(`/api/doctors/${doctor.id}`)
-                            }
-                          >
-                            {doctor.name}
-                          </a>
+                          <Link to={`/doctors/${doctor.id}`}>
+                            {doctor.profile?.name}
+                          </Link>
                         }
                         description={
                           <Space direction="vertical">
-                            {doctor.bnName && <span>{doctor.bnName}</span>}
+                            {doctor.profile?.bnName && (
+                              <span>{doctor.profile.bnName}</span>
+                            )}
                             <span>BMDC No: {doctor.bmdcNo}</span>
-                            <Tag
-                              color={doctor.gender === "MALE" ? "blue" : "pink"}
-                            >
-                              {doctor.gender}
-                            </Tag>
+                            {doctor.profile?.gender && (
+                              <Tag
+                                color={
+                                  doctor.profile.gender === "MALE"
+                                    ? "blue"
+                                    : "pink"
+                                }
+                              >
+                                {doctor.profile.gender}
+                              </Tag>
+                            )}
                           </Space>
                         }
                       />
