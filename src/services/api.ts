@@ -104,7 +104,7 @@ export const fetchDoctorsByHospital = async (
   const response = await apiClient.get<{
     doctors: Doctor[];
     totalItems: number;
-  }>(`/api/hospitals/${hospitalId}/doctors?page=${page}&size=${size}`);
+  }>(`/api/doctors?hospitalId=${hospitalId}&page=${page}&size=${size}`);
   return response.data;
 };
 
