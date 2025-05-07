@@ -7,7 +7,6 @@ import {
   Avatar,
   Row,
   Col,
-  Descriptions,
   Tag,
   Divider,
   Button,
@@ -20,10 +19,13 @@ import {
   BookOutlined,
   MedicineBoxOutlined,
   HomeOutlined,
+  EnvironmentOutlined,
+  PhoneOutlined,
+  MailOutlined,
+  IdcardOutlined,
 } from "@ant-design/icons";
 import { Doctor } from "../types";
-import axios from "axios";
-import config from "../config";
+import { fetchDoctorById } from "../services/api";
 
 const { Title, Text } = Typography;
 
@@ -36,8 +38,10 @@ const DoctorDetails: React.FC = () => {
     const fetchDoctorDetails = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${config.apiUrl}api/doctors/${id}`);
-        setDoctor(response.data);
+        if (id) {
+          const data = await fetchDoctorById(id);
+          setDoctor(data);
+        }
       } catch (error) {
         console.error("Failed to fetch doctor details:", error);
       } finally {
@@ -45,9 +49,7 @@ const DoctorDetails: React.FC = () => {
       }
     };
 
-    if (id) {
-      fetchDoctorDetails();
-    }
+    fetchDoctorDetails();
   }, [id]);
 
   if (loading) {
@@ -76,33 +78,35 @@ const DoctorDetails: React.FC = () => {
 
     return (
       <List
-        itemLayout="horizontal"
+        itemLayout="vertical"
         dataSource={doctor.doctorDegrees}
         renderItem={(item) => (
           <List.Item>
-            <List.Item.Meta
-              title={`${item.degree.abbreviation} - ${item.degree.name}`}
-              description={
-                <div>
-                  <p>
-                    <strong>Institution:</strong>{" "}
-                    {item.institution?.name || "N/A"}
-                  </p>
-                  {item.startDateTime && item.endDateTime && (
-                    <p>
-                      <strong>Period:</strong>{" "}
-                      {new Date(item.startDateTime).getFullYear()} -{" "}
-                      {new Date(item.endDateTime).getFullYear()}
-                    </p>
-                  )}
-                  {item.degree.degreeType && (
-                    <p>
-                      <strong>Type:</strong> {item.degree.degreeType}
-                    </p>
-                  )}
-                </div>
-              }
-            />
+            <Card size="small" style={{ width: "100%" }}>
+              <Title level={5}>
+                {item.degree.abbreviation} - {item.degree.name}
+              </Title>
+              {item.medicalSpeciality && (
+                <Text type="secondary" style={{ display: "block" }}>
+                  Speciality: {item.medicalSpeciality.name}
+                </Text>
+              )}
+              {item.institution && (
+                <Text style={{ display: "block" }}>
+                  <strong>Institution:</strong> {item.institution.name}
+                </Text>
+              )}
+              {item.startDateTime && item.endDateTime && (
+                <Text style={{ display: "block" }}>
+                  <strong>Period:</strong>{" "}
+                  {new Date(item.startDateTime).getFullYear()} -{" "}
+                  {new Date(item.endDateTime).getFullYear()}
+                </Text>
+              )}
+              <Text type="secondary" style={{ display: "block" }}>
+                Type: {item.degree.degreeType}
+              </Text>
+            </Card>
           </List.Item>
         )}
       />
@@ -116,41 +120,42 @@ const DoctorDetails: React.FC = () => {
 
     return (
       <List
-        itemLayout="horizontal"
+        itemLayout="vertical"
         dataSource={doctor.doctorWorkplaces}
         renderItem={(workplace) => (
           <List.Item>
-            <List.Item.Meta
-              title={
-                <span>
-                  {workplace.hospital?.name ||
-                    workplace.institution?.name ||
-                    "Unknown"}
-                </span>
-              }
-              description={
-                <div>
-                  <p>
-                    <strong>Position:</strong>{" "}
-                    {workplace.doctorPosition ||
-                      workplace.teacherPosition ||
-                      "N/A"}
-                  </p>
-                  {workplace.medicalSpeciality && (
-                    <p>
-                      <strong>Speciality:</strong>{" "}
-                      {workplace.medicalSpeciality.name}
-                    </p>
-                  )}
-                  {workplace.startDate && (
-                    <p>
-                      <strong>Since:</strong>{" "}
-                      {new Date(workplace.startDate).toLocaleDateString()}
-                    </p>
-                  )}
-                </div>
-              }
-            />
+            <Card size="small" style={{ width: "100%" }}>
+              <Title level={5}>
+                {workplace.hospital?.name ||
+                  workplace.institution?.name ||
+                  "Unknown"}
+              </Title>
+              {workplace.doctorPosition && (
+                <Text strong style={{ display: "block" }}>
+                  Position: {workplace.doctorPosition}
+                </Text>
+              )}
+              {workplace.teacherPosition && (
+                <Text strong style={{ display: "block" }}>
+                  Academic Position: {workplace.teacherPosition}
+                </Text>
+              )}
+              {workplace.medicalSpeciality && (
+                <Text style={{ display: "block" }}>
+                  Speciality: {workplace.medicalSpeciality.name}
+                </Text>
+              )}
+              {workplace.startDate && (
+                <Text type="secondary" style={{ display: "block" }}>
+                  Since: {new Date(workplace.startDate).toLocaleDateString()}
+                </Text>
+              )}
+              {workplace.hospital?.district && (
+                <Text type="secondary" style={{ display: "block" }}>
+                  <EnvironmentOutlined /> {workplace.hospital.district.name}
+                </Text>
+              )}
+            </Card>
           </List.Item>
         )}
       />
@@ -171,81 +176,207 @@ const DoctorDetails: React.FC = () => {
         <Breadcrumb.Item>{doctor.profile.name}</Breadcrumb.Item>
       </Breadcrumb>
 
-      <Card>
-        <Row gutter={[24, 24]}>
-          <Col xs={24} sm={8} md={6} style={{ textAlign: "center" }}>
-            <Avatar
-              src={doctor.profile.photo || undefined}
-              icon={<UserOutlined />}
-              size={200}
-              style={{ marginBottom: 16 }}
-            />
-            <Title level={3}>{doctor.profile.name}</Title>
-            <Tag
-              color={doctor.profile.gender === "MALE" ? "blue" : "pink"}
-              style={{ marginBottom: 8 }}
-            >
-              {doctor.profile.gender}
-            </Tag>
-            <Text style={{ display: "block", marginBottom: 8 }}>
-              BMDC No: {doctor.bmdcNo || "N/A"}
-            </Text>
-            {doctor.yearOfExperience && (
-              <Text style={{ display: "block", marginBottom: 8 }}>
-                Experience: {doctor.yearOfExperience} years
-              </Text>
-            )}
-          </Col>
+      <Row gutter={[24, 24]}>
+        {/* Left Column - Doctor Profile */}
+        <Col xs={24} md={10} lg={8}>
+          <Card>
+            <div style={{ textAlign: "center", marginBottom: 20 }}>
+              <Avatar
+                src={doctor.profile.photo || undefined}
+                icon={<UserOutlined />}
+                size={150}
+                style={{ marginBottom: 16 }}
+              />
+              <Title level={3}>{doctor.profile.name}</Title>
+              {doctor.profile.bnName &&
+                doctor.profile.bnName !== doctor.profile.name && (
+                  <Title level={5} type="secondary">
+                    {doctor.profile.bnName}
+                  </Title>
+                )}
+              <Tag color="blue">{doctor.profile.gender}</Tag>
+            </div>
 
-          <Col xs={24} sm={16} md={18}>
-            <Descriptions
-              title="Personal Information"
-              bordered
-              layout="vertical"
-            >
-              <Descriptions.Item label="Full Name" span={3}>
-                {doctor.profile.name}
-              </Descriptions.Item>
-              {doctor.profile.bnName && (
-                <Descriptions.Item label="Name (Bangla)" span={3}>
-                  {doctor.profile.bnName}
-                </Descriptions.Item>
+            <Divider />
+
+            {/* Professional Information Section */}
+            <div style={{ marginBottom: 20 }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: 16,
+                }}
+              >
+                <IdcardOutlined style={{ fontSize: 20, marginRight: 10 }} />
+                <Title level={5} style={{ margin: 0 }}>
+                  BMDC Registration: {doctor.bmdcNo || "N/A"}
+                </Title>
+              </div>
+
+              {doctor.yearOfExperience && (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: 16,
+                  }}
+                >
+                  <MedicineBoxOutlined
+                    style={{ fontSize: 20, marginRight: 10 }}
+                  />
+                  <div>
+                    <Text strong>Experience</Text>
+                    <div>
+                      <Tag
+                        color="green"
+                        style={{ fontSize: 14, padding: "4px 8px" }}
+                      >
+                        {doctor.yearOfExperience} years
+                      </Tag>
+                    </div>
+                  </div>
+                </div>
               )}
-              <Descriptions.Item label="Gender" span={1}>
-                {doctor.profile.gender}
-              </Descriptions.Item>
-              <Descriptions.Item label="Email" span={2}>
-                {doctor.profile.email || "N/A"}
-              </Descriptions.Item>
-              <Descriptions.Item label="Phone" span={3}>
-                {doctor.profile.phone || "N/A"}
-              </Descriptions.Item>
-              {doctor.profile.address && (
-                <Descriptions.Item label="Address" span={3}>
-                  {doctor.profile.address}
-                </Descriptions.Item>
+
+              {doctor.degrees && (
+                <div style={{ display: "flex", marginBottom: 16 }}>
+                  <BookOutlined
+                    style={{ fontSize: 20, marginRight: 10, marginTop: 4 }}
+                  />
+                  <div>
+                    <Text strong style={{ display: "block", marginBottom: 8 }}>
+                      Degrees
+                    </Text>
+                    <div>
+                      {doctor.degrees.split(", ").map((degree, index) => (
+                        <Tag
+                          key={index}
+                          color="blue"
+                          style={{
+                            margin: "0 4px 8px 0",
+                            fontSize: 14,
+                            padding: "4px 8px",
+                            borderRadius: "16px",
+                          }}
+                        >
+                          {degree}
+                        </Tag>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               )}
-            </Descriptions>
 
-            <Divider orientation="left">
-              <BookOutlined /> Educational Qualifications
-            </Divider>
-            {renderDegrees()}
+              {doctor.specializations && (
+                <div style={{ display: "flex", marginBottom: 16 }}>
+                  <MedicineBoxOutlined
+                    style={{ fontSize: 20, marginRight: 10, marginTop: 4 }}
+                  />
+                  <div>
+                    <Text strong style={{ display: "block", marginBottom: 8 }}>
+                      Specializations
+                    </Text>
+                    <div>
+                      {doctor.specializations
+                        .split(", ")
+                        .map((specialization, index) => (
+                          <Tag
+                            key={index}
+                            color="purple"
+                            style={{
+                              margin: "0 4px 8px 0",
+                              fontSize: 14,
+                              padding: "4px 8px",
+                              borderRadius: "16px",
+                            }}
+                          >
+                            {specialization}
+                          </Tag>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
 
-            <Divider orientation="left">
-              <MedicineBoxOutlined /> Workplaces
-            </Divider>
-            {renderWorkplaces()}
+            <Divider />
+
+            {/* Contact Information Section */}
+            <div style={{ marginBottom: 20 }}>
+              <Title level={5} style={{ marginBottom: 16 }}>
+                Contact Information
+              </Title>
+
+              <List itemLayout="horizontal" size="small">
+                {doctor.profile.phone && (
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={<PhoneOutlined />}
+                      title="Phone"
+                      description={doctor.profile.phone}
+                    />
+                  </List.Item>
+                )}
+
+                {doctor.profile.email && (
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={<MailOutlined />}
+                      title="Email"
+                      description={doctor.profile.email}
+                    />
+                  </List.Item>
+                )}
+
+                {doctor.profile.address && (
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={<EnvironmentOutlined />}
+                      title="Address"
+                      description={doctor.profile.address}
+                    />
+                  </List.Item>
+                )}
+              </List>
+            </div>
 
             {doctor.description && (
               <>
-                <Divider orientation="left">About</Divider>
-                <Text>{doctor.description}</Text>
+                <Divider />
+                <div>
+                  <Title level={5}>About</Title>
+                  <Text>{doctor.description}</Text>
+                </div>
               </>
             )}
-          </Col>
-        </Row>
-      </Card>
+          </Card>
+        </Col>
+
+        {/* Right Column - Degrees and Workplaces */}
+        <Col xs={24} md={14} lg={16}>
+          <Card
+            title={
+              <Title level={4}>
+                <BookOutlined /> Educational Qualifications
+              </Title>
+            }
+          >
+            {renderDegrees()}
+          </Card>
+
+          <Card
+            title={
+              <Title level={4}>
+                <MedicineBoxOutlined /> Work Experience
+              </Title>
+            }
+            style={{ marginTop: 24 }}
+          >
+            {renderWorkplaces()}
+          </Card>
+        </Col>
+      </Row>
 
       <div style={{ textAlign: "center", margin: "24px 0" }}>
         <Button type="primary">
