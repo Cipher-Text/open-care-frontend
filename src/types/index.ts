@@ -181,6 +181,7 @@ export interface Institution {
   id: number;
   acronym: string | null;
   establishedYear: string | null;
+  enroll: number | null;
   name: string;
   bnName: string | null;
   numberOfBed: number;
