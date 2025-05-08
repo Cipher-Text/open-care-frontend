@@ -127,8 +127,8 @@ export interface Hospital {
   bnName: string;
   numberOfBed: number;
   district: District;
-  upazila: null;
-  union: null;
+  upazila: Upazila;
+  union: Union;
   hospitalType: HospitalType;
   organizationType: OrganizationType;
   lat: string | null;
@@ -151,6 +151,30 @@ export interface OrganizationType {
 export interface HospitalType {
   name: string;
   bnName: string;
+}
+
+export interface MedicalTest {
+  id: number;
+  parentId: number | null;
+  name: string;
+  bnName: string;
+  alternativeNames: string | null;
+  description: string | null;
+}
+
+export interface HospitalMedicalTest {
+  id: number;
+  hospital: Hospital;
+  medicalTest: MedicalTest;
+  price: number;
+  isActive: boolean;
+}
+
+export interface HospitalMedicalTestResponse {
+  totalItems: number;
+  totalPages: number;
+  hospitalMedicalTests: HospitalMedicalTest[];
+  currentPage: number;
 }
 
 export interface Institution {

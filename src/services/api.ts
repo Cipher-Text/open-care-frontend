@@ -8,6 +8,7 @@ import {
   InstitutionResponse,
   DoctorResponse,
   Hospital,
+  HospitalMedicalTestResponse,
 } from "../types";
 
 export const apiClient = axios.create({
@@ -105,6 +106,17 @@ export const fetchDoctorsByHospital = async (
     doctors: Doctor[];
     totalItems: number;
   }>(`/api/doctors?hospitalId=${hospitalId}&page=${page}&size=${size}`);
+  return response.data;
+};
+
+export const fetchHospitalMedicalTests = async (
+  hospitalId: number,
+  page = 0,
+  size = config.itemsPerPage
+) => {
+  const response = await apiClient.get<HospitalMedicalTestResponse>(
+    `/api/hospital-medical-tests?hospitalId=${hospitalId}&page=${page}&size=${size}`
+  );
   return response.data;
 };
 

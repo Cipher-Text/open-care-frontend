@@ -18,6 +18,7 @@ import {
   Tabs,
   message,
   Breadcrumb,
+  Table,
 } from "antd";
 import {
   EnvironmentOutlined,
@@ -28,8 +29,12 @@ import {
   UserOutlined,
   ArrowLeftOutlined,
 } from "@ant-design/icons";
-import { fetchHospitalById, fetchDoctorsByHospital } from "../services/api";
-import { Hospital, Doctor } from "../types";
+import {
+  fetchHospitalById,
+  fetchDoctorsByHospital,
+  fetchHospitalMedicalTests,
+} from "../services/api";
+import { Hospital, Doctor, HospitalMedicalTest } from "../types";
 import config from "../config";
 
 const { Title, Text } = Typography;
@@ -40,9 +45,16 @@ const HospitalDetails: React.FC = () => {
   const navigate = useNavigate();
   const [hospital, setHospital] = useState<Hospital | null>(null);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [medicalTests, setMedicalTests] = useState<HospitalMedicalTest[]>([]);
   const [loading, setLoading] = useState(true);
   const [doctorsLoading, setDoctorsLoading] = useState(true);
+  const [testsLoading, setTestsLoading] = useState(true);
   const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: config.itemsPerPage || 5,
+    total: 0,
+  });
+  const [testsPagination, setTestsPagination] = useState({
     current: 1,
     pageSize: config.itemsPerPage || 5,
     total: 0,
@@ -78,6 +90,16 @@ const HospitalDetails: React.FC = () => {
     }
   }, [hospitalId]);
 
+  useEffect(() => {
+    if (hospitalId) {
+      loadMedicalTests(1);
+    }
+  }, [hospitalId]);
+
+  const handleTestsPageChange = (page: number) => {
+    loadMedicalTests(page);
+  };
+
   const loadDoctors = async (page: number) => {
     try {
       setDoctorsLoading(true);
@@ -98,6 +120,55 @@ const HospitalDetails: React.FC = () => {
       message.error("Failed to load doctors information");
     } finally {
       setDoctorsLoading(false);
+    }
+  };
+
+  const testColumns = [
+    {
+      title: "Test Name",
+      dataIndex: ["medicalTest", "name"],
+      key: "name",
+      render: (text: string, record: HospitalMedicalTest) => (
+        <span>
+          {text}
+          {record.medicalTest.bnName && (
+            <div>
+              <small style={{ color: "rgba(0, 0, 0, 0.45)" }}>
+                {record.medicalTest.bnName}
+              </small>
+            </div>
+          )}
+        </span>
+      ),
+    },
+    {
+      title: "Price (BDT)",
+      dataIndex: "price",
+      key: "price",
+      render: (price: number) => `৳ ${price}`,
+    },
+  ];
+
+  const loadMedicalTests = async (page: number) => {
+    try {
+      setTestsLoading(true);
+      const data = await fetchHospitalMedicalTests(
+        hospitalId,
+        page - 1, // API uses 0-based indexing
+        testsPagination.pageSize
+      );
+
+      setMedicalTests(data.hospitalMedicalTests);
+      setTestsPagination({
+        ...testsPagination,
+        current: page,
+        total: data.totalItems,
+      });
+    } catch (error) {
+      console.error("Failed to fetch medical tests:", error);
+      message.error("Failed to load medical tests information");
+    } finally {
+      setTestsLoading(false);
     }
   };
 
@@ -396,6 +467,39 @@ const HospitalDetails: React.FC = () => {
             ) : (
               <Empty
                 description="No doctors found for this hospital"
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+              />
+            )}
+          </TabPane>
+
+          <TabPane tab={<span>Available Tests</span>} key="tests">
+            {testsLoading ? (
+              <div style={{ textAlign: "center", padding: "40px 0" }}>
+                <Spin />
+                <p>Loading available tests...</p>
+              </div>
+            ) : medicalTests.length > 0 ? (
+              <>
+                <Table
+                  dataSource={medicalTests}
+                  columns={testColumns}
+                  rowKey="id"
+                  pagination={false}
+                  bordered
+                />
+                <div style={{ textAlign: "center", marginTop: 24 }}>
+                  <Pagination
+                    current={testsPagination.current}
+                    pageSize={testsPagination.pageSize}
+                    total={testsPagination.total}
+                    onChange={handleTestsPageChange}
+                    showSizeChanger={false}
+                  />
+                </div>
+              </>
+            ) : (
+              <Empty
+                description="No medical tests available for this hospital"
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
               />
             )}
