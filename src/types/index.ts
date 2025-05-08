@@ -179,17 +179,26 @@ export interface HospitalMedicalTestResponse {
 
 export interface Institution {
   id: number;
+  acronym: string | null;
+  establishedYear: string | null;
   name: string;
   bnName: string | null;
   numberOfBed: number;
   district: District;
   upazila: Upazila | null;
   union: Union | null;
-  hospitalType: string;
-  organizationType: string;
+  hospitalType: HospitalType;
+  organizationType: OrganizationType;
   lat: string | null;
   lon: string | null;
-  url: string | null;
+  websiteUrl: string;
+}
+
+export interface InstitutionResponse {
+  institutions: Institution[];
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
 }
 
 export interface User {
@@ -218,11 +227,4 @@ export interface FeaturedData {
     totalInstitutions: number;
     totalPatientsCared: number;
   };
-}
-
-export interface InstitutionResponse {
-  institutions: Institution[];
-  currentPage: number;
-  totalPages: number;
-  totalItems: number;
 }

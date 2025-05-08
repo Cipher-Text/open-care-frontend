@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import "./App.css";
 import ErrorBoundary from "antd/es/alert/ErrorBoundary";
 import DoctorDetails from "./pages/DoctorDetails";
+import InstituteDetails from "./pages/InstituteDetails";
 
 const { Content, Footer } = Layout;
 
@@ -30,6 +31,7 @@ const App: React.FC = () => {
                 <Route path="/hospitals" element={<Hospitals />} />
                 <Route path="/hospitals/:id" element={<HospitalDetails />} />
                 <Route path="/institutes" element={<Institutes />} />
+                <Route path="/institutes/:id" element={<InstituteDetails />} />
                 <Route path="/profile" element={<Profile />} />
               </Routes>
             </ErrorBoundary>
