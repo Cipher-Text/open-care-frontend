@@ -127,8 +127,8 @@ export interface Hospital {
   bnName: string;
   numberOfBed: number;
   district: District;
-  upazila: null;
-  union: null;
+  upazila: Upazila;
+  union: Union;
   hospitalType: HospitalType;
   organizationType: OrganizationType;
   lat: string | null;
@@ -153,19 +153,52 @@ export interface HospitalType {
   bnName: string;
 }
 
+export interface MedicalTest {
+  id: number;
+  parentId: number | null;
+  name: string;
+  bnName: string;
+  alternativeNames: string | null;
+  description: string | null;
+}
+
+export interface HospitalMedicalTest {
+  id: number;
+  hospital: Hospital;
+  medicalTest: MedicalTest;
+  price: number;
+  isActive: boolean;
+}
+
+export interface HospitalMedicalTestResponse {
+  totalItems: number;
+  totalPages: number;
+  hospitalMedicalTests: HospitalMedicalTest[];
+  currentPage: number;
+}
+
 export interface Institution {
   id: number;
+  acronym: string | null;
+  establishedYear: string | null;
   name: string;
   bnName: string | null;
   numberOfBed: number;
   district: District;
   upazila: Upazila | null;
   union: Union | null;
-  hospitalType: string;
-  organizationType: string;
+  hospitalType: HospitalType;
+  organizationType: OrganizationType;
   lat: string | null;
   lon: string | null;
-  url: string | null;
+  websiteUrl: string;
+}
+
+export interface InstitutionResponse {
+  institutions: Institution[];
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
 }
 
 export interface User {
@@ -194,11 +227,4 @@ export interface FeaturedData {
     totalInstitutions: number;
     totalPatientsCared: number;
   };
-}
-
-export interface InstitutionResponse {
-  institutions: Institution[];
-  currentPage: number;
-  totalPages: number;
-  totalItems: number;
 }

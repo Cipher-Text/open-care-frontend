@@ -8,6 +8,7 @@ import {
   InstitutionResponse,
   DoctorResponse,
   Hospital,
+  HospitalMedicalTestResponse,
 } from "../types";
 
 export const apiClient = axios.create({
@@ -22,14 +23,11 @@ export const fetchDoctors = async (
   size = config.itemsPerPage,
   filters = {}
 ) => {
-  // Build query string from filters
   const queryParams = new URLSearchParams();
 
-  // Add pagination parameters
   queryParams.append("page", page.toString());
   queryParams.append("size", size.toString());
 
-  // Add filter parameters if they exist
   Object.entries(filters).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
       queryParams.append(key, value.toString());
@@ -77,19 +75,15 @@ export const fetchHospitals = async (
   return response.data;
 };
 
-// Get all available degrees
 export const fetchDegrees = async () => {
   const response = await apiClient.get("/api/degrees");
   return response.data;
 };
 
-// Get all medical specialities
 export const fetchMedicalSpecialities = async () => {
   const response = await apiClient.get("/api/medical-specialities");
   return response.data;
 };
-
-// Add these functions to your services/api.ts file
 
 export const fetchHospitalById = async (id: number) => {
   const response = await apiClient.get<Hospital>(`/api/hospitals/${id}`);
@@ -104,7 +98,18 @@ export const fetchDoctorsByHospital = async (
   const response = await apiClient.get<{
     doctors: Doctor[];
     totalItems: number;
-  }>(`/api/hospitals/${hospitalId}/doctors?page=${page}&size=${size}`);
+  }>(`/api/doctors?hospitalId=${hospitalId}&page=${page}&size=${size}`);
+  return response.data;
+};
+
+export const fetchHospitalMedicalTests = async (
+  hospitalId: number,
+  page = 0,
+  size = config.itemsPerPage
+) => {
+  const response = await apiClient.get<HospitalMedicalTestResponse>(
+    `/api/hospital-medical-tests?hospitalId=${hospitalId}&page=${page}&size=${size}`
+  );
   return response.data;
 };
 
