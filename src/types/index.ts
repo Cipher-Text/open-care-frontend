@@ -126,9 +126,11 @@ export interface Hospital {
   name: string;
   bnName: string;
   numberOfBed: number;
-  district: District;
-  upazila: Upazila;
-  union: Union;
+  imageUrl: string | null;
+  address: string | null;
+  district: District | null;
+  upazila: Upazila | null;
+  union: Union | null;
   hospitalType: HospitalType;
   organizationType: OrganizationType;
   lat: string | null;

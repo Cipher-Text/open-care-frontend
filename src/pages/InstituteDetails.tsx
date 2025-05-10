@@ -29,7 +29,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { apiClient } from "../services/api";
-import { Hospital, Institution, Doctor, DoctorResponse } from "../types";
+import { Institution, Doctor, DoctorResponse } from "../types";
 
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
@@ -65,7 +65,7 @@ const InstituteDetail: React.FC = () => {
 
       try {
         setLoading(true);
-        const response = await apiClient.get<Hospital>(
+        const response = await apiClient.get<Institution>(
           `/api/institutions/${instituteId}`
         );
         setInstitute(response.data);
@@ -171,7 +171,7 @@ const InstituteDetail: React.FC = () => {
   const renderDoctorList = (
     doctors: Doctor[],
     loading: boolean,
-    pagination: any,
+    pagination: { current: number; pageSize: number; total: number },
     handlePageChange: (page: number) => void
   ) => {
     if (loading) {

@@ -234,7 +234,13 @@ const Hospitals: React.FC = () => {
             </Tag>
           </div>
           <div>
-            <EnvironmentOutlined /> {hospital.district.name}
+            {hospital.district ? (
+              <>
+                <EnvironmentOutlined /> {hospital.district.name}
+              </>
+            ) : (
+              "District not available"
+            )}
           </div>
           <div>Beds: {hospital.numberOfBed.toLocaleString()}</div>
           {hospital.websiteUrl ? (
