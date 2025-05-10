@@ -82,6 +82,6 @@ jobs:
             sudo docker stop open-care-frontend || true
             sudo docker rm open-care-frontend || true
             sudo docker system prune -af
-            sudo docker run -d --name open-care-frontend -p 5173:5173 --restart always \
+            sudo docker run -d --name open-care-frontend -p 5175:5173 --restart always \
               --env-file /home/alwyzon/open-care-frontend/.env.${{ env.ENV_NAME }} \
               ${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ env.ENV_NAME }}-latest
