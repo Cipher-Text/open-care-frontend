@@ -12,6 +12,8 @@ import {
   Button,
   Pagination,
 } from "antd";
+import type { TablePaginationConfig } from "antd/es/table";
+import type { FilterValue, SorterResult } from "antd/es/table/interface";
 import {
   EnvironmentOutlined,
   LinkOutlined,
@@ -86,13 +88,19 @@ const Hospitals: React.FC = () => {
     }
   };
 
-  const handleTableChange = (newPagination: {
-    current: number;
-    pageSize: number;
-    total: number;
-  }) => {
-    setPagination(newPagination);
-    fetchHospitalList(newPagination.current);
+  const handleTableChange = (
+    newPagination: TablePaginationConfig,
+    _filters: Record<string, FilterValue | null>,
+    _sorter: SorterResult<Hospital> | SorterResult<Hospital>[],
+    _extra: any
+  ) => {
+    const current = newPagination.current || 1;
+    setPagination({
+      ...pagination,
+      current,
+      pageSize: newPagination.pageSize || pagination.pageSize,
+    });
+    fetchHospitalList(current);
   };
 
   const handleDistrictChange = (value: number | undefined) => {

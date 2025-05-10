@@ -11,6 +11,7 @@ import {
   Tag,
   Button,
   Pagination,
+  TablePaginationConfig,
 } from "antd";
 import {
   EnvironmentOutlined,
@@ -26,12 +27,11 @@ import {
 } from "../types";
 import config from "../config";
 import { useNavigate } from "react-router-dom";
-
-interface TablePagination {
-  current: number;
-  pageSize: number;
-  total: number;
-}
+import {
+  FilterValue,
+  SorterResult,
+  TableCurrentDataSource,
+} from "antd/lib/table/interface";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -112,9 +112,16 @@ const Institutes: React.FC = () => {
     }
   };
 
-  const handleTableChange = (newPagination: TablePagination): void => {
-    setPagination(newPagination);
-    fetchInstituteList(newPagination.current);
+  // Updated to match Ant Design's Table onChange type
+  const handleTableChange = (
+    newPagination: TablePaginationConfig,
+    _filters: Record<string, FilterValue | null>,
+    _sorter: SorterResult<Institution> | SorterResult<Institution>[],
+    _extra: TableCurrentDataSource<Institution>
+  ): void => {
+    const { current = 1 } = newPagination;
+    setPagination({ ...pagination, current });
+    fetchInstituteList(current);
   };
 
   const handleDistrictChange = (value: number | undefined) => {
