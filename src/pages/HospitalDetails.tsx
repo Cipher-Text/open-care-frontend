@@ -341,11 +341,11 @@ const HospitalDetails: React.FC = () => {
               <Descriptions.Item label="District">
                 <Space>
                   <EnvironmentOutlined />
-                  {hospital.district.name}
+                  {hospital.district?.name || "Unknown"}
                 </Space>
               </Descriptions.Item>
               <Descriptions.Item label="Division">
-                {hospital.district.division.name}
+                {hospital.district?.division?.name || "Unknown"}
               </Descriptions.Item>
               {hospital.upazila && (
                 <Descriptions.Item label="Upazila">
