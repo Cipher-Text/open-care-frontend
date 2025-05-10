@@ -83,6 +83,5 @@ jobs:
             docker rm open-care-frontend || true
             docker system prune -af
             docker run -d --name open-care-frontend -p 5173:5173 --restart always \
-              --env-file /home/abid/open-care-frontend/.env.${{ env.ENV_NAME }} \
-              -v /home/abid/open-care-files/:/data/open-care-files/ \
+              --env-file /home/alwyzon/open-care-frontend/.env.${{ env.ENV_NAME }} \
               ${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ env.ENV_NAME }}-latest
