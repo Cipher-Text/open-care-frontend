@@ -326,7 +326,7 @@ const Doctors: React.FC = () => {
           {/* Desktop view */}
           <div
             className="desktop-view"
-            style={{ display: { xs: "none", sm: "none", md: "block" } }}
+            style={{ display: window.innerWidth >= 768 ? "block" : "none" }}
           >
             <Table
               columns={columns}
@@ -345,7 +345,7 @@ const Doctors: React.FC = () => {
           {/* Mobile view */}
           <div
             className="mobile-view"
-            style={{ display: { xs: "block", sm: "block", md: "none" } }}
+            style={{ display: window.innerWidth < 768 ? "block" : "none" }}
           >
             {doctors.length > 0 ? (
               doctors.map(renderMobileCard)
