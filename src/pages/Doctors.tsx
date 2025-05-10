@@ -32,9 +32,15 @@ const Doctors: React.FC = () => {
   const navigate = useNavigate();
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
-  const [hospitals, setHospitals] = useState<any[]>([]);
-  const [degrees, setDegrees] = useState<any[]>([]);
-  const [specialities, setSpecialities] = useState<any[]>([]);
+  const [hospitals, setHospitals] = useState<{ id: number; name: string }[]>(
+    []
+  );
+  const [degrees, setDegrees] = useState<
+    { id: number; name: string; abbreviation: string }[]
+  >([]);
+  const [specialities, setSpecialities] = useState<
+    { id: number; name: string }[]
+  >([]);
   const [loadingFilters, setLoadingFilters] = useState(true);
   const [pagination, setPagination] = useState({
     current: 0, // API uses 0-based indexing
@@ -106,7 +112,7 @@ const Doctors: React.FC = () => {
     fetchData(paginationInfo.current - 1);
   };
 
-  const handleFilterSubmit = (values: any) => {
+  const handleFilterSubmit = (values: typeof filters) => {
     const newFilters = { ...values };
     setFilters(newFilters);
     fetchData(0, newFilters); // Reset to first page with new filters
@@ -320,7 +326,7 @@ const Doctors: React.FC = () => {
           {/* Desktop view */}
           <div
             className="desktop-view"
-            style={{ display: { xs: "none", sm: "none", md: "block" } }}
+            style={{ display: window.innerWidth >= 768 ? "block" : "none" }}
           >
             <Table
               columns={columns}
@@ -339,7 +345,7 @@ const Doctors: React.FC = () => {
           {/* Mobile view */}
           <div
             className="mobile-view"
-            style={{ display: { xs: "block", sm: "block", md: "none" } }}
+            style={{ display: window.innerWidth < 768 ? "block" : "none" }}
           >
             {doctors.length > 0 ? (
               doctors.map(renderMobileCard)

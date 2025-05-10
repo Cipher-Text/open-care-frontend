@@ -14,23 +14,45 @@ import {
   Breadcrumb,
   Space,
   message,
+  Tabs,
+  List,
+  Avatar,
+  Pagination,
 } from "antd";
 import {
   EnvironmentOutlined,
   LinkOutlined,
   HomeOutlined,
   ArrowLeftOutlined,
+  PhoneOutlined,
+  MailOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { apiClient } from "../services/api";
-import { Hospital, Institution } from "../types";
+import { Institution, Doctor, DoctorResponse } from "../types";
 
 const { Title, Text } = Typography;
+const { TabPane } = Tabs;
 
 const InstituteDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [institute, setInstitute] = useState<Institution | null>(null);
   const [loading, setLoading] = useState(true);
+  const [teachers, setTeachers] = useState<Doctor[]>([]);
+  const [graduates, setGraduates] = useState<Doctor[]>([]);
+  const [teachersLoading, setTeachersLoading] = useState(true);
+  const [graduatesLoading, setGraduatesLoading] = useState(true);
+  const [teachersPagination, setTeachersPagination] = useState({
+    current: 1,
+    pageSize: 5,
+    total: 0,
+  });
+  const [graduatesPagination, setGraduatesPagination] = useState({
+    current: 1,
+    pageSize: 5,
+    total: 0,
+  });
 
   const instituteId = parseInt(id || "0");
 
@@ -43,7 +65,7 @@ const InstituteDetail: React.FC = () => {
 
       try {
         setLoading(true);
-        const response = await apiClient.get<Hospital>(
+        const response = await apiClient.get<Institution>(
           `/api/institutions/${instituteId}`
         );
         setInstitute(response.data);
@@ -57,6 +79,67 @@ const InstituteDetail: React.FC = () => {
 
     fetchInstituteData();
   }, [instituteId, navigate]);
+
+  useEffect(() => {
+    if (instituteId) {
+      loadTeachers(1);
+      loadGraduates(1);
+    }
+  }, [instituteId]);
+
+  const loadTeachers = async (page: number) => {
+    try {
+      setTeachersLoading(true);
+      const response = await apiClient.get<DoctorResponse>(
+        `/api/doctors?isCurrentWorkplace=true&workInstitutionId=${instituteId}&page=${
+          page - 1
+        }&size=${teachersPagination.pageSize}`
+      );
+
+      setTeachers(response.data.doctors);
+      setTeachersPagination({
+        ...teachersPagination,
+        current: page,
+        total: response.data.totalItems,
+      });
+    } catch (error) {
+      console.error("Failed to fetch teachers:", error);
+      message.error("Failed to load teachers information");
+    } finally {
+      setTeachersLoading(false);
+    }
+  };
+
+  const loadGraduates = async (page: number) => {
+    try {
+      setGraduatesLoading(true);
+      const response = await apiClient.get<DoctorResponse>(
+        `/api/doctors?studyInstitutionId=${instituteId}&page=${page - 1}&size=${
+          graduatesPagination.pageSize
+        }`
+      );
+
+      setGraduates(response.data.doctors);
+      setGraduatesPagination({
+        ...graduatesPagination,
+        current: page,
+        total: response.data.totalItems,
+      });
+    } catch (error) {
+      console.error("Failed to fetch graduates:", error);
+      message.error("Failed to load graduates information");
+    } finally {
+      setGraduatesLoading(false);
+    }
+  };
+
+  const handleTeachersPageChange = (page: number) => {
+    loadTeachers(page);
+  };
+
+  const handleGraduatesPageChange = (page: number) => {
+    loadGraduates(page);
+  };
 
   const getOrgTypeColor = (type: string) => {
     switch (type) {
@@ -82,6 +165,113 @@ const InstituteDetail: React.FC = () => {
       default:
         return "default";
     }
+  };
+
+  // Render doctor list for both teachers and graduates
+  const renderDoctorList = (
+    doctors: Doctor[],
+    loading: boolean,
+    pagination: { current: number; pageSize: number; total: number },
+    handlePageChange: (page: number) => void
+  ) => {
+    if (loading) {
+      return (
+        <div style={{ textAlign: "center", padding: "40px 0" }}>
+          <Spin />
+          <p>Loading doctors...</p>
+        </div>
+      );
+    }
+
+    if (doctors.length === 0) {
+      return (
+        <Empty
+          description="No doctors found"
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+        />
+      );
+    }
+
+    return (
+      <>
+        <List
+          itemLayout="vertical"
+          dataSource={doctors}
+          renderItem={(doctor) => (
+            <List.Item
+              key={doctor.id}
+              actions={[
+                doctor.profile && doctor.profile.phone && (
+                  <Space key="phone">
+                    <PhoneOutlined /> {doctor.profile.phone}
+                  </Space>
+                ),
+                doctor.profile && doctor.profile.email && (
+                  <Space key="email">
+                    <MailOutlined /> {doctor.profile.email}
+                  </Space>
+                ),
+                doctor.yearOfExperience && (
+                  <Space key="experience">
+                    <UserOutlined /> Experience: {doctor.yearOfExperience} years
+                  </Space>
+                ),
+              ].filter(Boolean)}
+              extra={
+                <Button
+                  type="primary"
+                  onClick={() => navigate(`/doctors/${doctor.id}`)}
+                >
+                  View Profile
+                </Button>
+              }
+            >
+              <List.Item.Meta
+                avatar={
+                  <Avatar
+                    src={doctor.profile?.photo || undefined}
+                    size={64}
+                    icon={!doctor.profile?.photo && <UserOutlined />}
+                  />
+                }
+                title={
+                  <Link to={`/doctors/${doctor.id}`}>
+                    {doctor.profile?.name}
+                  </Link>
+                }
+                description={
+                  <Space direction="vertical">
+                    {doctor.profile?.bnName && (
+                      <span>{doctor.profile.bnName}</span>
+                    )}
+                    <span>BMDC No: {doctor.bmdcNo}</span>
+                    {doctor.profile?.gender && (
+                      <Tag
+                        color={
+                          doctor.profile.gender === "MALE" ? "blue" : "pink"
+                        }
+                      >
+                        {doctor.profile.gender}
+                      </Tag>
+                    )}
+                  </Space>
+                }
+              />
+              {doctor.description && <p>{doctor.description}</p>}
+            </List.Item>
+          )}
+        />
+        <div style={{ textAlign: "center", marginTop: 24 }}>
+          <Pagination
+            current={pagination.current}
+            pageSize={pagination.pageSize}
+            total={pagination.total}
+            onChange={handlePageChange}
+            showSizeChanger={false}
+          />
+        </div>
+      </>
+    );
   };
 
   if (loading) {
@@ -196,70 +386,92 @@ const InstituteDetail: React.FC = () => {
 
         <Divider />
 
-        <Descriptions
-          bordered
-          column={{ xs: 1, sm: 2, md: 3 }}
-          layout="vertical"
-        >
-          <Descriptions.Item label="Institute Name">
-            {institute.name}
-          </Descriptions.Item>
-          {institute.acronym && (
-            <Descriptions.Item label="Acronym">
-              {institute.acronym}
-            </Descriptions.Item>
-          )}
-          {institute.establishedYear && (
-            <Descriptions.Item label="Established Year">
-              {institute.establishedYear}
-            </Descriptions.Item>
-          )}
-          {institute.enroll !== undefined && (
-            <Descriptions.Item label="Enrollment Capacity">
-              {institute.enroll}
-            </Descriptions.Item>
-          )}
-          {institute.numberOfBed !== undefined && (
-            <Descriptions.Item label="Number of Beds">
-              {institute.numberOfBed}
-            </Descriptions.Item>
-          )}
-          <Descriptions.Item label="Organization Type">
-            <Tag color={getOrgTypeColor(organizationTypeName)}>
-              {organizationTypeName}
-            </Tag>
-          </Descriptions.Item>
-          <Descriptions.Item label="Institute Type">
-            <Tag color={getHospitalTypeColor(hospitalTypeName)}>
-              {hospitalTypeName}
-            </Tag>
-          </Descriptions.Item>
-          <Descriptions.Item label="District">
-            <Space>
-              <EnvironmentOutlined />
-              {institute.district.name}
-            </Space>
-          </Descriptions.Item>
-          <Descriptions.Item label="Division">
-            {institute.district.division.name}
-          </Descriptions.Item>
-          {institute.websiteUrl && (
-            <Descriptions.Item label="Website">
-              <a
-                href={institute.websiteUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <LinkOutlined /> {institute.websiteUrl}
-              </a>
-            </Descriptions.Item>
-          )}
-          {institute.lat && institute.lon && (
-            <Descriptions.Item label="GPS Coordinates">
-              Lat: {institute.lat}, Lon: {institute.lon}
-            </Descriptions.Item>
-          )}
-        </Descriptions>
+        <Tabs defaultActiveKey="info">
+          <TabPane tab="Institute Information" key="info">
+            <Descriptions
+              bordered
+              column={{ xs: 1, sm: 2, md: 3 }}
+              layout="vertical"
+            >
+              <Descriptions.Item label="Institute Name">
+                {institute.name}
+              </Descriptions.Item>
+              {institute.acronym && (
+                <Descriptions.Item label="Acronym">
+                  {institute.acronym}
+                </Descriptions.Item>
+              )}
+              {institute.establishedYear && (
+                <Descriptions.Item label="Established Year">
+                  {institute.establishedYear}
+                </Descriptions.Item>
+              )}
+              {institute.enroll !== undefined && (
+                <Descriptions.Item label="Enrollment Capacity">
+                  {institute.enroll}
+                </Descriptions.Item>
+              )}
+              {institute.numberOfBed !== undefined && (
+                <Descriptions.Item label="Number of Beds">
+                  {institute.numberOfBed}
+                </Descriptions.Item>
+              )}
+              <Descriptions.Item label="Organization Type">
+                <Tag color={getOrgTypeColor(organizationTypeName)}>
+                  {organizationTypeName}
+                </Tag>
+              </Descriptions.Item>
+              <Descriptions.Item label="Institute Type">
+                <Tag color={getHospitalTypeColor(hospitalTypeName)}>
+                  {hospitalTypeName}
+                </Tag>
+              </Descriptions.Item>
+              <Descriptions.Item label="District">
+                <Space>
+                  <EnvironmentOutlined />
+                  {institute.district.name}
+                </Space>
+              </Descriptions.Item>
+              <Descriptions.Item label="Division">
+                {institute.district.division.name}
+              </Descriptions.Item>
+              {institute.websiteUrl && (
+                <Descriptions.Item label="Website">
+                  <a
+                    href={institute.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <LinkOutlined /> {institute.websiteUrl}
+                  </a>
+                </Descriptions.Item>
+              )}
+              {institute.lat && institute.lon && (
+                <Descriptions.Item label="GPS Coordinates">
+                  Lat: {institute.lat}, Lon: {institute.lon}
+                </Descriptions.Item>
+              )}
+            </Descriptions>
+          </TabPane>
+
+          <TabPane tab="Teachers" key="teachers">
+            {renderDoctorList(
+              teachers,
+              teachersLoading,
+              teachersPagination,
+              handleTeachersPageChange
+            )}
+          </TabPane>
+
+          <TabPane tab="Graduates" key="graduates">
+            {renderDoctorList(
+              graduates,
+              graduatesLoading,
+              graduatesPagination,
+              handleGraduatesPageChange
+            )}
+          </TabPane>
+        </Tabs>
       </Card>
     </div>
   );

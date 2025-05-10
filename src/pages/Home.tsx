@@ -20,9 +20,11 @@ import {
   SearchOutlined,
   TeamOutlined,
   ClockCircleOutlined,
-  PlusOutlined,
   StarFilled,
   RightOutlined,
+  CalendarOutlined,
+  EnvironmentOutlined,
+  GlobalOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { BlogPost, FeaturedData } from "../types";
@@ -37,116 +39,334 @@ const staticFeaturedData: FeaturedData = {
   doctors: [
     {
       id: 1,
-      name: "Dr. John Smith",
-      specialization: "Cardiology",
-      experience: 15,
-      image: "https://via.placeholder.com/300x200?text=Dr.+John+Smith",
-      rating: 4.9,
-      reviewCount: 156,
-      education: "",
-      contact: "",
+      bmdcNo: "A-12345",
+      yearOfExperience: 15,
+      startDate: "2008-06-01",
+      degrees: "MD, FCPS",
+      specializations: "Cardiology",
+      description: "Experienced cardiologist specializing in heart conditions",
+      isActive: true,
+      isDeleted: false,
+      profile: {
+        id: 1,
+        name: "Dr. John Smith",
+        bnName: "ডা. জন স্মিথ",
+        gender: "Male",
+        dateOfBirth: "1975-03-15",
+        address: "123 Medical Plaza, Cityville",
+        phone: "+1234567890",
+        email: "dr.smith@example.com",
+        photo: "https://via.placeholder.com/300x200?text=Dr.+John+Smith",
+        username: "drjsmith",
+        userType: "DOCTOR",
+        keycloakUserId: "uid123",
+        district: null,
+        upazila: null,
+        union: null,
+      },
+      doctorDegrees: null,
+      doctorWorkplaces: null,
     },
     {
       id: 2,
-      name: "Dr. Sarah Johnson",
-      specialization: "Pediatrics",
-      experience: 12,
-      image: "https://via.placeholder.com/300x200?text=Dr.+Sarah+Johnson",
-      rating: 4.8,
-      reviewCount: 132,
-      education: "",
-      contact: "",
+      bmdcNo: "B-23456",
+      yearOfExperience: 12,
+      startDate: "2011-09-01",
+      degrees: "MD, FCPS",
+      specializations: "Pediatrics",
+      description: "Caring pediatrician with focus on child development",
+      isActive: true,
+      isDeleted: false,
+      profile: {
+        id: 2,
+        name: "Dr. Sarah Johnson",
+        bnName: "ডা. সারা জনসন",
+        gender: "Female",
+        dateOfBirth: "1982-07-22",
+        address: "456 Healthcare Ave, Riverside",
+        phone: "+1987654321",
+        email: "dr.johnson@example.com",
+        photo: "https://via.placeholder.com/300x200?text=Dr.+Sarah+Johnson",
+        username: "drsjohnson",
+        userType: "DOCTOR",
+        keycloakUserId: "uid456",
+        district: null,
+        upazila: null,
+        union: null,
+      },
+      doctorDegrees: null,
+      doctorWorkplaces: null,
     },
     {
       id: 3,
-      name: "Dr. Michael Chang",
-      specialization: "Neurology",
-      experience: 20,
-      image: "https://via.placeholder.com/300x200?text=Dr.+Michael+Chang",
-      rating: 4.7,
-      reviewCount: 94,
-      education: "",
-      contact: "",
+      bmdcNo: "C-34567",
+      yearOfExperience: 20,
+      startDate: "2003-05-15",
+      degrees: "MD, DM, FACC",
+      specializations: "Neurology",
+      description: "Specialist in neurological disorders and stroke management",
+      isActive: true,
+      isDeleted: false,
+      profile: {
+        id: 3,
+        name: "Dr. Michael Chang",
+        bnName: "ডা. মাইকেল চ্যাং",
+        gender: "Male",
+        dateOfBirth: "1970-11-08",
+        address: "789 Medical Center Rd, Townsville",
+        phone: "+1567891234",
+        email: "dr.chang@example.com",
+        photo: "https://via.placeholder.com/300x200?text=Dr.+Michael+Chang",
+        username: "drmchang",
+        userType: "DOCTOR",
+        keycloakUserId: "uid789",
+        district: null,
+        upazila: null,
+        union: null,
+      },
+      doctorDegrees: null,
+      doctorWorkplaces: null,
     },
     {
       id: 4,
-      name: "Dr. Emily Rodriguez",
-      specialization: "Dermatology",
-      experience: 8,
-      image: "https://via.placeholder.com/300x200?text=Dr.+Emily+Rodriguez",
-      rating: 4.6,
-      reviewCount: 87,
-      education: "",
-      contact: "",
+      bmdcNo: "D-45678",
+      yearOfExperience: 8,
+      startDate: "2015-03-10",
+      degrees: "MD, FAAD",
+      specializations: "Dermatology",
+      description: "Specializing in skin conditions and cosmetic dermatology",
+      isActive: true,
+      isDeleted: false,
+      profile: {
+        id: 4,
+        name: "Dr. Emily Rodriguez",
+        bnName: "ডা. এমিলি রদ্রিগেজ",
+        gender: "Female",
+        dateOfBirth: "1988-09-25",
+        address: "321 Skin Health Blvd, Meadowville",
+        phone: "+1321654987",
+        email: "dr.rodriguez@example.com",
+        photo: "https://via.placeholder.com/300x200?text=Dr.+Emily+Rodriguez",
+        username: "drerodriguez",
+        userType: "DOCTOR",
+        keycloakUserId: "uid321",
+        district: null,
+        upazila: null,
+        union: null,
+      },
+      doctorDegrees: null,
+      doctorWorkplaces: null,
     },
   ],
   hospitals: [
     {
       id: 1,
       name: "City General Hospital",
+      bnName: "সিটি জেনারেল হাসপাতাল",
+      numberOfBed: 500,
+      imageUrl:
+        "https://via.placeholder.com/300x200?text=City+General+Hospital",
       address: "123 Main St, Cityville",
-      image: "https://via.placeholder.com/300x200?text=City+General+Hospital",
-      type: "Multi-Specialty",
-      beds: 500,
-      contact: "",
-      specialties: [],
-      rating: 0,
-      doctors: [],
+      district: null, // You'll need to add proper district or update the type definition
+      upazila: null, // You'll need to add proper upazila
+      union: null, // You'll need to add proper union or update the type definition
+      hospitalType: {
+        name: "Multi-Specialty",
+        bnName: "মাল্টি-স্পেশালিটি",
+        banglaName: "",
+        englishName: "",
+      },
+      organizationType: {
+        name: "Public",
+        bnName: "পাবলিক",
+        description: "",
+        banglaName: "",
+      },
+      lat: null,
+      lon: null,
+      websiteUrl: "",
     },
     {
       id: 2,
       name: "Riverside Medical Center",
-      address: "456 River Rd, Riverside",
-      image:
+      bnName: "রিভারসাইড মেডিকেল সেন্টার",
+      numberOfBed: 350,
+      imageUrl:
         "https://via.placeholder.com/300x200?text=Riverside+Medical+Center",
-      type: "Cardiac Care",
-      beds: 350,
-      contact: "",
-      specialties: [],
-      rating: 0,
-      doctors: [],
+      address: "456 River Rd, Riverside",
+      district: null,
+      upazila: null,
+      union: null,
+      hospitalType: {
+        name: "Cardiac Care",
+        bnName: "হার্ট কেয়ার",
+        banglaName: "",
+        englishName: "",
+      },
+      organizationType: {
+        name: "Private",
+        bnName: "প্রাইভেট",
+        description: "",
+        banglaName: "",
+      },
+      lat: null,
+      lon: null,
+      websiteUrl: "",
     },
     {
       id: 3,
       name: "Sunshine Children's Hospital",
-      address: "789 Sun Ave, Sunnydale",
-      image:
+      bnName: "সানশাইন চিলড্রেন হাসপাতাল",
+      numberOfBed: 250,
+      imageUrl:
         "https://via.placeholder.com/300x200?text=Sunshine+Children's+Hospital",
-      type: "Pediatric",
-      beds: 250,
-      contact: "",
-      specialties: [],
-      rating: 0,
-      doctors: [],
+      address: "789 Sun Ave, Sunnydale",
+      district: null,
+      upazila: null,
+      union: null,
+      hospitalType: {
+        name: "Pediatric",
+        bnName: "শিশু রোগ",
+        banglaName: "",
+        englishName: "",
+      },
+      organizationType: {
+        name: "Non-profit",
+        bnName: "নন-প্রফিট",
+        description: "",
+        banglaName: "",
+      },
+      lat: null,
+      lon: null,
+      websiteUrl: "",
     },
   ],
-  institutes: [
+  institutions: [
     {
       id: 1,
+      acronym: "NMC",
+      establishedYear: "1965",
+      enroll: 500,
       name: "National Medical College",
-      location: "Cityville",
-      image:
-        "https://via.placeholder.com/300x200?text=National+Medical+College",
-      address: "",
-      contact: "",
-      courses: [],
-      established: 0,
+      bnName: "ন্যাশনাল মেডিকেল কলেজ",
+      numberOfBed: 350,
+      district: {
+        id: 1,
+        division: {
+          id: 1,
+          name: "Dhaka",
+          bnName: "ঢাকা",
+          url: null,
+        },
+        name: "Dhaka",
+        bnName: "ঢাকা",
+        lat: "23.7104",
+        lon: "90.4074",
+        url: "dhaka",
+      },
+      upazila: null,
+      union: null,
+      hospitalType: {
+        name: "Teaching Hospital",
+        bnName: "শিক্ষণ হাসপাতাল",
+        banglaName: "শিক্ষণ হাসপাতাল",
+        englishName: "Teaching Hospital",
+      },
+      organizationType: {
+        name: "Public",
+        bnName: "পাবলিক",
+        description: "Government funded institution",
+        banglaName: "পাবলিক",
+      },
+      lat: "23.7225",
+      lon: "90.4078",
+      websiteUrl: "https://nmc.edu.bd",
     },
     {
       id: 2,
+      acronym: "RIM",
+      establishedYear: "1978",
+      enroll: 450,
       name: "Riverside Institute of Medicine",
-      location: "Riverside",
-      image: "https://via.placeholder.com/300x200?text=Riverside+Institute",
-      address: "",
-      contact: "",
-      courses: [],
-      established: 0,
+      bnName: "রিভারসাইড ইনস্টিটিউট অফ মেডিসিন",
+      numberOfBed: 275,
+      district: {
+        id: 2,
+        division: {
+          id: 2,
+          name: "Chittagong",
+          bnName: "চট্টগ্রাম",
+          url: null,
+        },
+        name: "Chittagong",
+        bnName: "চট্টগ্রাম",
+        lat: "22.3569",
+        lon: "91.7832",
+        url: "chittagong",
+      },
+      upazila: null,
+      union: null,
+      hospitalType: {
+        name: "Medical College",
+        bnName: "মেডিকেল কলেজ",
+        banglaName: "মেডিকেল কলেজ",
+        englishName: "Medical College",
+      },
+      organizationType: {
+        name: "Private",
+        bnName: "প্রাইভেট",
+        description: "Privately funded institution",
+        banglaName: "প্রাইভেট",
+      },
+      lat: "22.3593",
+      lon: "91.8318",
+      websiteUrl: "https://rim.edu.bd",
+    },
+    {
+      id: 3,
+      acronym: "SIHS",
+      establishedYear: "1995",
+      enroll: 325,
+      name: "Sylhet Institute of Health Sciences",
+      bnName: "সিলেট ইনস্টিটিউট অফ হেলথ সায়েন্সেস",
+      numberOfBed: 200,
+      district: {
+        id: 3,
+        division: {
+          id: 3,
+          name: "Sylhet",
+          bnName: "সিলেট",
+          url: null,
+        },
+        name: "Sylhet",
+        bnName: "সিলেট",
+        lat: "24.8949",
+        lon: "91.8687",
+        url: "sylhet",
+      },
+      upazila: null,
+      union: null,
+      hospitalType: {
+        name: "Medical University",
+        bnName: "মেডিকেল বিশ্ববিদ্যালয়",
+        banglaName: "মেডিকেল বিশ্ববিদ্যালয়",
+        englishName: "Medical University",
+      },
+      organizationType: {
+        name: "Public",
+        bnName: "পাবলিক",
+        description: "Government funded institution",
+        banglaName: "পাবলিক",
+      },
+      lat: "24.9042",
+      lon: "91.8644",
+      websiteUrl: "https://sihs.edu.bd",
     },
   ],
   stats: {
     totalDoctors: 5367,
     totalHospitals: 432,
-    totalInstitutes: 128,
+    totalInstitutions: 128,
     totalPatientsCared: 250000,
   },
 };
@@ -399,16 +619,16 @@ const Home: React.FC = () => {
                   <ReadOutlined style={{ fontSize: 36, marginBottom: 8 }} />
                   <Title level={2} style={{ color: "#fff", margin: 0 }}>
                     <CountUp
-                      end={featuredData.stats.totalInstitutes}
+                      end={featuredData.stats.totalInstitutions}
                       separator=","
                       duration={2.5}
                     />
                   </Title>
                   <Text style={{ color: "#fff", fontSize: 16 }}>
-                    Medical Institutes
+                    Medical institutions
                   </Text>
                 </div>
-                <Link to="/institutes">
+                <Link to="/institutions">
                   <Button
                     type="link"
                     style={{
@@ -494,8 +714,11 @@ const Home: React.FC = () => {
                         }}
                       >
                         <img
-                          alt={doctor.name}
-                          src={doctor.image}
+                          alt={doctor.profile.name}
+                          src={
+                            doctor.profile.photo ||
+                            "https://via.placeholder.com/300x200"
+                          }
                           style={{
                             width: "100%",
                             height: "100%",
@@ -512,21 +735,27 @@ const Home: React.FC = () => {
                     ]}
                   >
                     <Meta
-                      avatar={<Avatar src={doctor.image} size="large" />}
-                      title={doctor.name}
+                      avatar={
+                        <Avatar
+                          src={
+                            doctor.profile.photo ||
+                            "https://via.placeholder.com/64"
+                          }
+                          size="large"
+                        />
+                      }
+                      title={doctor.profile.name}
                       description={
                         <Space direction="vertical" size={0}>
-                          <Text type="secondary">{doctor.specialization}</Text>
+                          <Text type="secondary">{doctor.specializations}</Text>
                           <Space>
                             <StarFilled style={{ color: "#faad14" }} />
-                            <Text>{doctor.rating || "4.8"}</Text>
-                            <Text type="secondary">
-                              ({doctor.reviewCount || "124"} reviews)
-                            </Text>
+                            <Text>4.8</Text>
+                            <Text type="secondary">(124 reviews)</Text>
                           </Space>
                           <Text>
-                            <ClockCircleOutlined /> {doctor.experience} years
-                            experience
+                            <ClockCircleOutlined /> {doctor.yearOfExperience}{" "}
+                            years experience
                           </Text>
                         </Space>
                       }
@@ -535,18 +764,11 @@ const Home: React.FC = () => {
                 </Badge.Ribbon>
               </Col>
             ))}
-            <Col xs={24} style={{ textAlign: "center", marginTop: 16 }}>
-              <Link to="/doctors">
-                <Button type="primary" size="large" icon={<PlusOutlined />}>
-                  See All Doctors
-                </Button>
-              </Link>
-            </Col>
           </Row>
 
-          {/* Top Hospitals - Enhanced */}
+          {/* Hospitals Section */}
           <Title level={2} style={{ marginBottom: 24 }}>
-            Leading Medical Facilities
+            Top Hospitals
           </Title>
           <Row gutter={[16, 16]} style={{ marginBottom: 48 }}>
             {featuredData.hospitals.map((hospital) => (
@@ -555,13 +777,24 @@ const Home: React.FC = () => {
                   hoverable
                   className="hospital-card"
                   cover={
-                    <div style={{ position: "relative" }}>
+                    <div
+                      style={{
+                        height: 200,
+                        overflow: "hidden",
+                        position: "relative",
+                      }}
+                    >
                       <img
                         alt={hospital.name}
-                        src={hospital.image}
+                        src={
+                          hospital.imageUrl ||
+                          `https://via.placeholder.com/300x200?text=${encodeURIComponent(
+                            hospital.name
+                          )}`
+                        }
                         style={{
-                          height: 200,
                           width: "100%",
+                          height: "100%",
                           objectFit: "cover",
                         }}
                       />
@@ -584,29 +817,261 @@ const Home: React.FC = () => {
                     </div>
                   }
                 >
-                  <Space direction="vertical" size={0}>
-                    <Text type="secondary">{hospital.address}</Text>
-                    <Space style={{ marginTop: 8 }}>
-                      <Tag color="blue">
-                        {hospital.type || "Multi-Specialty"}
-                      </Tag>
-                      <Tag color="green">{hospital.beds || "200+"} Beds</Tag>
-                    </Space>
-                    <div style={{ marginTop: 12 }}>
+                  <div style={{ minHeight: "180px" }}>
+                    <Meta
+                      title={
+                        <div>
+                          {hospital.bnName && (
+                            <Text
+                              type="secondary"
+                              style={{ display: "block", fontSize: 14 }}
+                            >
+                              {hospital.bnName}
+                            </Text>
+                          )}
+                        </div>
+                      }
+                      description={
+                        <Space
+                          direction="vertical"
+                          size={2}
+                          style={{ width: "100%", marginTop: 8 }}
+                        >
+                          {hospital.hospitalType && (
+                            <Tag color="blue">{hospital.hospitalType.name}</Tag>
+                          )}
+
+                          {hospital.organizationType && (
+                            <Tag color="green">
+                              {hospital.organizationType.name}
+                            </Tag>
+                          )}
+
+                          {hospital.address && (
+                            <div>
+                              <EnvironmentOutlined style={{ marginRight: 4 }} />
+                              <Text type="secondary">{hospital.address}</Text>
+                            </div>
+                          )}
+
+                          {hospital.numberOfBed > 0 && (
+                            <div>
+                              <MedicineBoxOutlined style={{ marginRight: 4 }} />
+                              <Text type="secondary">
+                                {hospital.numberOfBed} beds
+                              </Text>
+                            </div>
+                          )}
+
+                          {hospital.district && (
+                            <div>
+                              <EnvironmentOutlined style={{ marginRight: 4 }} />
+                              <Text type="secondary">
+                                {hospital.district.name}
+                              </Text>
+                            </div>
+                          )}
+                        </Space>
+                      }
+                    />
+
+                    <div
+                      style={{
+                        marginTop: 16,
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
                       <Link to={`/hospitals/${hospital.id}`}>
-                        <Button type="primary" size="small">
-                          View Details
+                        <Button
+                          type="primary"
+                          size="small"
+                          icon={<RightOutlined />}
+                        >
+                          Details
                         </Button>
                       </Link>
+
+                      {hospital.websiteUrl && (
+                        <Button
+                          type="link"
+                          size="small"
+                          icon={<GlobalOutlined />}
+                          href={hospital.websiteUrl}
+                          target="_blank"
+                        >
+                          Website
+                        </Button>
+                      )}
                     </div>
-                  </Space>
+                  </div>
                 </Card>
               </Col>
             ))}
             <Col xs={24} style={{ textAlign: "center", marginTop: 16 }}>
               <Link to="/hospitals">
-                <Button type="primary" size="large" icon={<PlusOutlined />}>
-                  See All Hospitals
+                <Button
+                  type="primary"
+                  size="large"
+                  icon={<MedicineBoxOutlined />}
+                >
+                  Explore All Hospitals
+                </Button>
+              </Link>
+            </Col>
+          </Row>
+
+          {/* Medical Institutions Section */}
+          <Title level={2} style={{ marginBottom: 24 }}>
+            Top Medical Institutions
+          </Title>
+          <Row gutter={[16, 16]} style={{ marginBottom: 48 }}>
+            {featuredData.institutions.map((institution) => (
+              <Col xs={24} sm={12} md={8} key={institution.id}>
+                <Card
+                  hoverable
+                  className="institution-card"
+                  cover={
+                    <div
+                      style={{
+                        height: 200,
+                        overflow: "hidden",
+                        position: "relative",
+                      }}
+                    >
+                      <img
+                        alt={institution.name}
+                        src={`https://via.placeholder.com/300x200?text=${encodeURIComponent(
+                          institution.acronym || institution.name
+                        )}`}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                      {institution.acronym && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: 12,
+                            right: 12,
+                            background: "#1890ff",
+                            color: "white",
+                            padding: "3px 8px",
+                            borderRadius: "4px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {institution.acronym}
+                        </div>
+                      )}
+                    </div>
+                  }
+                >
+                  <div style={{ minHeight: "180px" }}>
+                    <Meta
+                      title={
+                        <div>
+                          <Text strong style={{ fontSize: 16 }}>
+                            {institution.name}
+                          </Text>
+                          {institution.bnName && (
+                            <Text
+                              type="secondary"
+                              style={{ display: "block", fontSize: 14 }}
+                            >
+                              {institution.bnName}
+                            </Text>
+                          )}
+                        </div>
+                      }
+                      description={
+                        <Space
+                          direction="vertical"
+                          size={2}
+                          style={{ width: "100%", marginTop: 8 }}
+                        >
+                          {institution.hospitalType && (
+                            <Tag color="blue">
+                              {institution.hospitalType.name}
+                            </Tag>
+                          )}
+
+                          {institution.district && (
+                            <div>
+                              <EnvironmentOutlined style={{ marginRight: 4 }} />
+                              <Text type="secondary">
+                                {institution.district.name}
+                              </Text>
+                            </div>
+                          )}
+
+                          {institution.establishedYear && (
+                            <div>
+                              <CalendarOutlined style={{ marginRight: 4 }} />
+                              <Text type="secondary">
+                                Est. {institution.establishedYear}
+                              </Text>
+                            </div>
+                          )}
+
+                          {institution.numberOfBed > 0 && (
+                            <div>
+                              <MedicineBoxOutlined style={{ marginRight: 4 }} />
+                              <Text type="secondary">
+                                {institution.numberOfBed} beds
+                              </Text>
+                            </div>
+                          )}
+
+                          {institution.enroll && (
+                            <div>
+                              <TeamOutlined style={{ marginRight: 4 }} />
+                              <Text type="secondary">
+                                {institution.enroll} students/year
+                              </Text>
+                            </div>
+                          )}
+                        </Space>
+                      }
+                    />
+
+                    <div
+                      style={{
+                        marginTop: 16,
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Button
+                        type="primary"
+                        size="small"
+                        icon={<RightOutlined />}
+                      >
+                        Details
+                      </Button>
+
+                      {institution.websiteUrl && (
+                        <Button
+                          type="link"
+                          size="small"
+                          icon={<GlobalOutlined />}
+                          href={institution.websiteUrl}
+                          target="_blank"
+                        >
+                          Website
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </Card>
+              </Col>
+            ))}
+            <Col xs={24} style={{ textAlign: "center", marginTop: 16 }}>
+              <Link to="/institutions">
+                <Button type="primary" size="large" icon={<ReadOutlined />}>
+                  Explore All Medical Institutions
                 </Button>
               </Link>
             </Col>
