@@ -16,6 +16,24 @@ export interface Profile {
   union: Union | null;
 }
 
+export interface User {
+  id: number;
+  username: string;
+  userType: string;
+  keycloakUserId: string;
+  photo: string | null;
+  phone: string;
+  email: string;
+  name: string;
+  bnName: string;
+  gender: string;
+  dateOfBirth: string | null;
+  address: string | null;
+  district: District;
+  upazila: Upazila | null;
+  union: Union | null;
+}
+
 export interface Degree {
   id: number;
   name: string;
@@ -205,7 +223,7 @@ export interface InstitutionResponse {
 }
 
 export interface User {
-  id: string;
+  id: number;
   name: string;
   email: string;
   role: string;

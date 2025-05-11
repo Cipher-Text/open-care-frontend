@@ -15,7 +15,8 @@ import {
   Row,
   Col,
   Input,
-  Empty,
+  Timeline,
+  Tag,
 } from "antd";
 import {
   UserOutlined,
@@ -24,14 +25,20 @@ import {
   SaveOutlined,
   CloseOutlined,
   BankOutlined,
+  HeartOutlined,
+  MedicineBoxOutlined,
+  CalendarOutlined,
+  FileTextOutlined,
 } from "@ant-design/icons";
 import { fetchUserProfile } from "../services/api";
 import { User } from "../types";
+import { useAuth } from "../contexts/AuthContext";
 
 const { Title } = Typography;
 const { TabPane } = Tabs;
 
 const Profile: React.FC = () => {
+  useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -90,14 +97,43 @@ const Profile: React.FC = () => {
   }
 
   // Mock data for favorite items
-  const favoriteDoctors = [
-    { id: "1", name: "Dr. John Smith", specialization: "Cardiology" },
-    { id: "2", name: "Dr. Sarah Johnson", specialization: "Neurology" },
+
+  // Mock medical history data
+  const medicalHistory = [
+    {
+      date: "2024-03-15",
+      type: "Check-up",
+      doctor: "Dr. John Smith",
+      diagnosis: "Regular health check-up",
+      prescription: "Vitamin D supplements",
+    },
+    {
+      date: "2024-02-20",
+      type: "Consultation",
+      doctor: "Dr. Sarah Johnson",
+      diagnosis: "Seasonal allergies",
+      prescription: "Antihistamines",
+    },
   ];
 
-  const favoriteHospitals = [
-    { id: "1", name: "Central Hospital", address: "123 Main St" },
-    { id: "2", name: "City Medical Center", address: "456 Park Ave" },
+  // Mock upcoming appointments
+  const upcomingAppointments = [
+    {
+      id: "1",
+      date: "2024-04-10",
+      time: "10:00 AM",
+      doctor: "Dr. Michael Chang",
+      specialization: "Cardiology",
+      hospital: "Central Hospital",
+    },
+    {
+      id: "2",
+      date: "2024-04-15",
+      time: "2:30 PM",
+      doctor: "Dr. Emily Rodriguez",
+      specialization: "Dermatology",
+      hospital: "City Medical Center",
+    },
   ];
 
   return (
@@ -190,38 +226,122 @@ const Profile: React.FC = () => {
 
       <Card>
         <Tabs defaultActiveKey="1">
-          <TabPane tab="Favorite Doctors" key="1">
+          <TabPane
+            tab={
+              <span>
+                <CalendarOutlined />
+                Upcoming Appointments
+              </span>
+            }
+            key="1"
+          >
             <List
               itemLayout="horizontal"
-              dataSource={favoriteDoctors}
+              dataSource={upcomingAppointments}
               renderItem={(item) => (
-                <List.Item>
+                <List.Item
+                  actions={[
+                    <Button type="link">Reschedule</Button>,
+                    <Button type="link" danger>
+                      Cancel
+                    </Button>,
+                  ]}
+                >
                   <List.Item.Meta
                     avatar={<Avatar icon={<UserOutlined />} />}
-                    title={item.name}
-                    description={item.specialization}
+                    title={item.doctor}
+                    description={
+                      <>
+                        <div>
+                          <CalendarOutlined /> {item.date} at {item.time}
+                        </div>
+                        <div>
+                          <BankOutlined /> {item.hospital}
+                        </div>
+                        <div>
+                          <MedicineBoxOutlined /> {item.specialization}
+                        </div>
+                      </>
+                    }
                   />
                 </List.Item>
               )}
             />
           </TabPane>
-          <TabPane tab="Favorite Hospitals" key="2">
-            <List
-              itemLayout="horizontal"
-              dataSource={favoriteHospitals}
-              renderItem={(item) => (
-                <List.Item>
-                  <List.Item.Meta
-                    avatar={<Avatar icon={<BankOutlined />} />}
-                    title={item.name}
-                    description={item.address}
-                  />
-                </List.Item>
-              )}
-            />
+
+          <TabPane
+            tab={
+              <span>
+                <FileTextOutlined />
+                Medical History
+              </span>
+            }
+            key="2"
+          >
+            <Timeline mode="left">
+              {medicalHistory.map((record, index) => (
+                <Timeline.Item key={index} label={record.date} color="blue">
+                  <Card size="small" style={{ marginBottom: 16 }}>
+                    <p>
+                      <strong>Type:</strong> {record.type}
+                    </p>
+                    <p>
+                      <strong>Doctor:</strong> {record.doctor}
+                    </p>
+                    <p>
+                      <strong>Diagnosis:</strong> {record.diagnosis}
+                    </p>
+                    <p>
+                      <strong>Prescription:</strong> {record.prescription}
+                    </p>
+                  </Card>
+                </Timeline.Item>
+              ))}
+            </Timeline>
           </TabPane>
-          <TabPane tab="Appointments" key="3">
-            <Empty description="No appointments found" />
+
+          <TabPane
+            tab={
+              <span>
+                <HeartOutlined />
+                Health Records
+              </span>
+            }
+            key="3"
+          >
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={12}>
+                <Card title="Vital Signs">
+                  <Descriptions column={1}>
+                    <Descriptions.Item label="Blood Pressure">
+                      120/80 mmHg
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Heart Rate">
+                      72 bpm
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Temperature">
+                      98.6°F
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Blood Group">
+                      <Tag color="red">O+</Tag>
+                    </Descriptions.Item>
+                  </Descriptions>
+                </Card>
+              </Col>
+              <Col xs={24} sm={12}>
+                <Card title="Allergies">
+                  <List
+                    size="small"
+                    dataSource={["Pollen", "Penicillin"]}
+                    renderItem={(item) => (
+                      <List.Item>
+                        <Tag color="orange">{item}</Tag>
+                      </List.Item>
+                    )}
+                  />
+                </Card>
+              </Col>
+            </Row>
           </TabPane>
         </Tabs>
       </Card>

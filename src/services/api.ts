@@ -18,6 +18,14 @@ export const apiClient = axios.create({
   },
 });
 
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export const fetchDoctors = async (
   page = 0,
   size = config.itemsPerPage,
@@ -140,8 +148,7 @@ export const fetchInstitutions = async (
 };
 
 export const fetchUserProfile = async () => {
-  // Assuming you have some authentication mechanism
-  const response = await apiClient.get<User>("/profile");
+  const response = await apiClient.get<User>("/api/user/profile");
   return response.data;
 };
 
