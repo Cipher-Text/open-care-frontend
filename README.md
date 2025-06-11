@@ -58,7 +58,7 @@ src/
 3. Create a `.env` file in the root directory and configure the following variables:
 
    ```properties
-   VITE_API_URL=http://46.102.157.211:6500/
+   VITE_API_URL=http://46.102.157.211:6700/
    VITE_ITEMS_PER_PAGE=10
    ```
 
