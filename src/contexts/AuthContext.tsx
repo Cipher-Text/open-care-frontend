@@ -39,7 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const login = async (email: string, password: string) => {
     try {
       const response = await fetch(
-        "http://46.102.157.211:6500/api/auth/login",
+        "http://46.102.157.211:6700/api/auth/login",
         {
           method: "POST",
           headers: {
