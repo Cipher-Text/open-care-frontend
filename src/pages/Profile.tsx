@@ -1,4 +1,3 @@
-// src/pages/Profile.tsx
 import React, { useEffect, useState } from "react";
 import {
   Typography,
@@ -17,6 +16,9 @@ import {
   Input,
   Timeline,
   Tag,
+  Select,
+  DatePicker,
+  Divider,
 } from "antd";
 import {
   UserOutlined,
@@ -29,16 +31,22 @@ import {
   MedicineBoxOutlined,
   CalendarOutlined,
   FileTextOutlined,
+  IdcardOutlined,
+  PhoneOutlined,
+  HomeOutlined,
+  EnvironmentOutlined,
 } from "@ant-design/icons";
 import { fetchUserProfile } from "../services/api";
 import { User } from "../types";
 import { useAuth } from "../contexts/AuthContext";
+import moment from "moment";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { TabPane } = Tabs;
+const { Option } = Select;
 
 const Profile: React.FC = () => {
-  useAuth();
+  const { user: authUser } = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -79,7 +87,7 @@ const Profile: React.FC = () => {
     message.success("Profile updated successfully");
   };
 
-  const handleInputChange = (field: keyof User, value: string) => {
+  const handleInputChange = (field: keyof User, value: any) => {
     if (editedUser) {
       setEditedUser({
         ...editedUser,
@@ -95,8 +103,6 @@ const Profile: React.FC = () => {
       </div>
     );
   }
-
-  // Mock data for favorite items
 
   // Mock medical history data
   const medicalHistory = [
@@ -138,94 +144,348 @@ const Profile: React.FC = () => {
 
   return (
     <div className="profile-container">
-      <Title level={2}>My Profile</Title>
+      <div
+        style={{
+          marginBottom: 24,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Title level={2}>My Profile</Title>
+        {!isEditing ? (
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={handleEditToggle}
+          >
+            Edit Profile
+          </Button>
+        ) : (
+          <Space>
+            <Button
+              icon={<SaveOutlined />}
+              type="primary"
+              onClick={handleSaveProfile}
+            >
+              Save Changes
+            </Button>
+            <Button icon={<CloseOutlined />} onClick={handleEditToggle}>
+              Cancel
+            </Button>
+          </Space>
+        )}
+      </div>
 
       <Card
-        style={{ marginBottom: 24 }}
-        extra={
-          isEditing ? (
-            <Space>
-              <Button
-                icon={<SaveOutlined />}
-                type="primary"
-                onClick={handleSaveProfile}
-              >
-                Save
-              </Button>
-              <Button icon={<CloseOutlined />} onClick={handleEditToggle}>
-                Cancel
-              </Button>
-            </Space>
-          ) : (
-            <Button icon={<EditOutlined />} onClick={handleEditToggle}>
-              Edit Profile
-            </Button>
-          )
-        }
+        bordered={false}
+        className="profile-card"
+        style={{ marginBottom: 24, boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)" }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginBottom: 24,
-          }}
-        >
-          <Avatar
-            size={100}
-            src={user?.image}
-            icon={<UserOutlined />}
-            style={{ marginBottom: 16 }}
-          />
-          <Title level={3}>{user?.name}</Title>
-          <Typography.Text type="secondary">{user?.role}</Typography.Text>
-        </div>
+        <Row gutter={[24, 24]}>
+          {/* Left column - Profile picture */}
+          <Col xs={24} md={8}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Avatar
+                size={180}
+                src={user?.photo}
+                icon={<UserOutlined />}
+                style={{
+                  marginBottom: 16,
+                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                  backgroundColor: "#1890ff",
+                }}
+              />
+              <Title level={3} style={{ margin: "16px 0 4px 0" }}>
+                {user?.name}
+              </Title>
+              <Tag color="blue" style={{ marginBottom: 8 }}>
+                {user?.userType}
+              </Tag>
+              <Text type="secondary">
+                {user?.district?.name}, {user?.district?.division?.name}
+              </Text>
+            </div>
+          </Col>
 
-        {isEditing ? (
-          <Form form={form} layout="vertical">
-            <Row gutter={16}>
-              <Col xs={24} sm={12}>
-                <Form.Item label="Name">
-                  <Input
-                    value={editedUser?.name}
-                    onChange={(e) => handleInputChange("name", e.target.value)}
-                    prefix={<UserOutlined />}
-                  />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={12}>
-                <Form.Item label="Email">
-                  <Input
-                    value={editedUser?.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    prefix={<MailOutlined />}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col xs={24} sm={12}>
-                <Form.Item label="Role">
-                  <Input
-                    value={editedUser?.role}
-                    onChange={(e) => handleInputChange("role", e.target.value)}
-                    disabled
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-        ) : (
-          <Descriptions bordered column={{ xs: 1, sm: 2 }}>
-            <Descriptions.Item label="Name">{user?.name}</Descriptions.Item>
-            <Descriptions.Item label="Email">{user?.email}</Descriptions.Item>
-            <Descriptions.Item label="Role">{user?.role}</Descriptions.Item>
-          </Descriptions>
-        )}
+          {/* Right column - User information */}
+          <Col xs={24} md={16}>
+            <div style={{ height: "100%" }}>
+              <Title level={4} style={{ marginBottom: 24 }}>
+                Personal Information
+              </Title>
+
+              {isEditing ? (
+                <Form
+                  form={form}
+                  layout="vertical"
+                  initialValues={editedUser || {}}
+                >
+                  <Row gutter={16}>
+                    <Col xs={24} sm={12}>
+                      <Form.Item
+                        label="Full Name"
+                        name="name"
+                        rules={[
+                          { required: true, message: "Please enter your name" },
+                        ]}
+                      >
+                        <Input
+                          value={editedUser?.name}
+                          onChange={(e) =>
+                            handleInputChange("name", e.target.value)
+                          }
+                          prefix={<UserOutlined />}
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col xs={24} sm={12}>
+                      <Form.Item
+                        label="Email Address"
+                        name="email"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter your email",
+                          },
+                          {
+                            type: "email",
+                            message: "Please enter a valid email",
+                          },
+                        ]}
+                      >
+                        <Input
+                          value={editedUser?.email}
+                          onChange={(e) =>
+                            handleInputChange("email", e.target.value)
+                          }
+                          prefix={<MailOutlined />}
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+
+                  <Row gutter={16}>
+                    <Col xs={24} sm={12}>
+                      <Form.Item label="Gender" name="gender">
+                        <Select
+                          value={editedUser?.gender}
+                          onChange={(value) =>
+                            handleInputChange("gender", value)
+                          }
+                        >
+                          <Option value="MALE">Male</Option>
+                          <Option value="FEMALE">Female</Option>
+                          <Option value="OTHER">Other</Option>
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col xs={24} sm={12}>
+                      <Form.Item label="Date of Birth" name="dateOfBirth">
+                        <DatePicker
+                          style={{ width: "100%" }}
+                          value={
+                            editedUser?.dateOfBirth
+                              ? moment(editedUser.dateOfBirth)
+                              : null
+                          }
+                          onChange={(date) =>
+                            handleInputChange(
+                              "dateOfBirth",
+                              date?.format("YYYY-MM-DD")
+                            )
+                          }
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+
+                  <Row gutter={16}>
+                    <Col xs={24} sm={12}>
+                      <Form.Item label="Phone Number" name="phone">
+                        <Input
+                          value={editedUser?.phone}
+                          onChange={(e) =>
+                            handleInputChange("phone", e.target.value)
+                          }
+                          prefix={<PhoneOutlined />}
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col xs={24} sm={12}>
+                      <Form.Item label="Blood Group" name="bloodGroup">
+                        <Select
+                          value={editedUser?.bloodGroup}
+                          onChange={(value) =>
+                            handleInputChange("bloodGroup", value)
+                          }
+                        >
+                          <Option value="A+">A+</Option>
+                          <Option value="A-">A-</Option>
+                          <Option value="B+">B+</Option>
+                          <Option value="B-">B-</Option>
+                          <Option value="AB+">AB+</Option>
+                          <Option value="AB-">AB-</Option>
+                          <Option value="O+">O+</Option>
+                          <Option value="O-">O-</Option>
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                  </Row>
+
+                  <Form.Item label="Address" name="address">
+                    <Input.TextArea
+                      value={editedUser?.address}
+                      onChange={(e) =>
+                        handleInputChange("address", e.target.value)
+                      }
+                      rows={2}
+                    />
+                  </Form.Item>
+                </Form>
+              ) : (
+                <div className="user-info">
+                  <Row gutter={[24, 24]}>
+                    <Col xs={24} sm={12}>
+                      <div className="info-item">
+                        <UserOutlined className="info-icon" />
+                        <div>
+                          <Text type="secondary">Full Name</Text>
+                          <div>
+                            <Text strong>{user?.name || "Not provided"}</Text>
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Col xs={24} sm={12}>
+                      <div className="info-item">
+                        <MailOutlined className="info-icon" />
+                        <div>
+                          <Text type="secondary">Email</Text>
+                          <div>
+                            <Text strong>{user?.email || "Not provided"}</Text>
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Col xs={24} sm={12}>
+                      <div className="info-item">
+                        <IdcardOutlined className="info-icon" />
+                        <div>
+                          <Text type="secondary">Gender</Text>
+                          <div>
+                            <Text strong>
+                              {user?.gender
+                                ? user.gender.charAt(0) +
+                                  user.gender.slice(1).toLowerCase()
+                                : "Not provided"}
+                            </Text>
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Col xs={24} sm={12}>
+                      <div className="info-item">
+                        <CalendarOutlined className="info-icon" />
+                        <div>
+                          <Text type="secondary">Date of Birth</Text>
+                          <div>
+                            <Text strong>
+                              {user?.dateOfBirth
+                                ? moment(user.dateOfBirth).format(
+                                    "MMMM D, YYYY"
+                                  )
+                                : "Not provided"}
+                            </Text>
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Col xs={24} sm={12}>
+                      <div className="info-item">
+                        <PhoneOutlined className="info-icon" />
+                        <div>
+                          <Text type="secondary">Phone</Text>
+                          <div>
+                            <Text strong>{user?.phone || "Not provided"}</Text>
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Col xs={24} sm={12}>
+                      <div className="info-item">
+                        <HeartOutlined className="info-icon" />
+                        <div>
+                          <Text type="secondary">Blood Group</Text>
+                          <div>
+                            {user?.bloodGroup ? (
+                              <Tag color="red">{user.bloodGroup}</Tag>
+                            ) : (
+                              <Text strong>Not provided</Text>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+
+                    {user?.district && (
+                      <Col xs={24}>
+                        <div className="info-item">
+                          <EnvironmentOutlined className="info-icon" />
+                          <div>
+                            <Text type="secondary">Location</Text>
+                            <div>
+                              <Text strong>
+                                {[
+                                  user.district.name,
+                                  user.district.division?.name,
+                                ]
+                                  .filter(Boolean)
+                                  .join(", ")}
+                              </Text>
+                            </div>
+                          </div>
+                        </div>
+                      </Col>
+                    )}
+
+                    {user?.address && (
+                      <Col xs={24}>
+                        <div className="info-item">
+                          <HomeOutlined className="info-icon" />
+                          <div>
+                            <Text type="secondary">Address</Text>
+                            <div>
+                              <Text strong>{user.address}</Text>
+                            </div>
+                          </div>
+                        </div>
+                      </Col>
+                    )}
+                  </Row>
+                </div>
+              )}
+            </div>
+          </Col>
+        </Row>
       </Card>
 
-      <Card>
-        <Tabs defaultActiveKey="1">
+      <Card
+        bordered={false}
+        style={{ boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)" }}
+      >
+        <Tabs defaultActiveKey="1" type="card">
           <TabPane
             tab={
               <span>
@@ -253,13 +513,16 @@ const Profile: React.FC = () => {
                     description={
                       <>
                         <div>
-                          <CalendarOutlined /> {item.date} at {item.time}
+                          <CalendarOutlined style={{ marginRight: 8 }} />
+                          {item.date} at {item.time}
                         </div>
                         <div>
-                          <BankOutlined /> {item.hospital}
+                          <BankOutlined style={{ marginRight: 8 }} />
+                          {item.hospital}
                         </div>
                         <div>
-                          <MedicineBoxOutlined /> {item.specialization}
+                          <MedicineBoxOutlined style={{ marginRight: 8 }} />
+                          {item.specialization}
                         </div>
                       </>
                     }
@@ -311,7 +574,7 @@ const Profile: React.FC = () => {
           >
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={12}>
-                <Card title="Vital Signs">
+                <Card title="Vital Signs" bordered={false}>
                   <Descriptions column={1}>
                     <Descriptions.Item label="Blood Pressure">
                       120/80 mmHg
@@ -323,13 +586,15 @@ const Profile: React.FC = () => {
                       98.6°F
                     </Descriptions.Item>
                     <Descriptions.Item label="Blood Group">
-                      <Tag color="red">O+</Tag>
+                      <Tag color="red">
+                        {user?.bloodGroup || "Not provided"}
+                      </Tag>
                     </Descriptions.Item>
                   </Descriptions>
                 </Card>
               </Col>
               <Col xs={24} sm={12}>
-                <Card title="Allergies">
+                <Card title="Allergies" bordered={false}>
                   <List
                     size="small"
                     dataSource={["Pollen", "Penicillin"]}
@@ -345,6 +610,26 @@ const Profile: React.FC = () => {
           </TabPane>
         </Tabs>
       </Card>
+
+      {/* Add CSS for better styling */}
+      <style jsx>{`
+        .profile-card {
+          overflow: hidden;
+        }
+
+        .info-item {
+          display: flex;
+          align-items: flex-start;
+          margin-bottom: 8px;
+        }
+
+        .info-icon {
+          font-size: 16px;
+          color: #1890ff;
+          margin-right: 12px;
+          margin-top: 4px;
+        }
+      `}</style>
     </div>
   );
 };
