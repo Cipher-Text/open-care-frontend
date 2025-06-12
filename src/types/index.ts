@@ -20,6 +20,7 @@ export interface User {
   id: number;
   username: string;
   userType: string;
+  image?: string;
   keycloakUserId: string;
   photo: string | null;
   phone: string;

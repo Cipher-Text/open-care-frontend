@@ -340,7 +340,7 @@ const Profile: React.FC = () => {
 
                   <Form.Item label="Address" name="address">
                     <Input.TextArea
-                      value={editedUser?.address}
+                      value={editedUser?.address ?? ""}
                       onChange={(e) =>
                         handleInputChange("address", e.target.value)
                       }
@@ -611,7 +611,7 @@ const Profile: React.FC = () => {
       </Card>
 
       {/* Add CSS for better styling */}
-      <style jsx>{`
+      <style>{`
         .profile-card {
           overflow: hidden;
         }
