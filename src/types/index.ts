@@ -27,6 +27,7 @@ export interface User {
   name: string;
   bnName: string;
   gender: string;
+  bloodGroup: string;
   dateOfBirth: string | null;
   address: string | null;
   district: District;
@@ -222,13 +223,13 @@ export interface InstitutionResponse {
   totalItems: number;
 }
 
-export interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-  image?: string;
-}
+// export interface User {
+//   id: number;
+//   name: string;
+//   email: string;
+//   role: string;
+//   image?: string;
+// }
 
 export interface BlogPost {
   id: number;

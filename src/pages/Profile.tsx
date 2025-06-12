@@ -18,7 +18,6 @@ import {
   Tag,
   Select,
   DatePicker,
-  Divider,
 } from "antd";
 import {
   UserOutlined,
@@ -46,7 +45,7 @@ const { TabPane } = Tabs;
 const { Option } = Select;
 
 const Profile: React.FC = () => {
-  const { user: authUser } = useAuth();
+  useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
