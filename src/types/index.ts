@@ -156,6 +156,8 @@ export interface Hospital {
   lat: string | null;
   lon: string | null;
   websiteUrl: string;
+  email: string | null;
+  phone: string | null;
 }
 
 export interface HospitalResponse {

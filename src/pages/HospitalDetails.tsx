@@ -317,63 +317,105 @@ const HospitalDetails: React.FC = () => {
 
         <Tabs defaultActiveKey="info">
           <TabPane tab="Hospital Information" key="info">
-            <Descriptions
-              bordered
-              column={{ xs: 1, sm: 2, md: 3 }}
-              layout="vertical"
-            >
-              <Descriptions.Item label="Hospital Name">
-                {hospital.name}
-              </Descriptions.Item>
-              <Descriptions.Item label="Number of Beds">
-                {hospital.numberOfBed}
-              </Descriptions.Item>
-              <Descriptions.Item label="Organization Type">
-                <Tag color={getOrgTypeColor(organizationTypeName)}>
-                  {organizationTypeName}
-                </Tag>
-              </Descriptions.Item>
-              <Descriptions.Item label="Hospital Type">
-                <Tag color={getHospitalTypeColor(hospitalTypeName)}>
-                  {hospitalTypeName}
-                </Tag>
-              </Descriptions.Item>
-              <Descriptions.Item label="District">
-                <Space>
-                  <EnvironmentOutlined />
-                  {hospital.district?.name || "Unknown"}
-                </Space>
-              </Descriptions.Item>
-              <Descriptions.Item label="Division">
-                {hospital.district?.division?.name || "Unknown"}
-              </Descriptions.Item>
-              {hospital.upazila && (
-                <Descriptions.Item label="Upazila">
-                  {hospital.upazila.name}
-                </Descriptions.Item>
-              )}
-              {hospital.union && (
-                <Descriptions.Item label="Union">
-                  {hospital.union.name}
-                </Descriptions.Item>
-              )}
-              {hospital.websiteUrl && (
-                <Descriptions.Item label="Website">
-                  <a
-                    href={hospital.websiteUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <LinkOutlined /> {hospital.websiteUrl}
-                  </a>
-                </Descriptions.Item>
-              )}
-              {hospital.lat && hospital.lon && (
-                <Descriptions.Item label="GPS Coordinates">
-                  Lat: {hospital.lat}, Lon: {hospital.lon}
-                </Descriptions.Item>
-              )}
-            </Descriptions>
+            <Row gutter={[0, 24]}>
+              {/* Hospital Information - Full width */}
+              <Col xs={24}>
+                <Card
+                  title={<Title level={4}>Hospital Information</Title>}
+                  bordered={false}
+                  className="hospital-info-card"
+                >
+                  <Descriptions column={1} layout="horizontal" bordered>
+                    <Descriptions.Item label="Hospital Name">
+                      {hospital.name}
+                      {hospital.bnName && (
+                        <div>
+                          <small style={{ color: "rgba(0, 0, 0, 0.45)" }}>
+                            {hospital.bnName}
+                          </small>
+                        </div>
+                      )}
+                    </Descriptions.Item>
+
+                    <Descriptions.Item label="Organization Type">
+                      <Tag color={getOrgTypeColor(organizationTypeName)}>
+                        {organizationTypeName}
+                      </Tag>
+                    </Descriptions.Item>
+
+                    <Descriptions.Item label="Hospital Type">
+                      <Tag color={getHospitalTypeColor(hospitalTypeName)}>
+                        {hospitalTypeName}
+                      </Tag>
+                    </Descriptions.Item>
+
+                    <Descriptions.Item label="Number of Beds">
+                      {hospital.numberOfBed || "N/A"}
+                    </Descriptions.Item>
+
+                    <Descriptions.Item label="Division/District">
+                      <Space>
+                        <EnvironmentOutlined />
+                        {hospital.district?.division?.name || "Unknown"} /{" "}
+                        {hospital.district?.name || "Unknown"}
+                      </Space>
+                    </Descriptions.Item>
+
+                    {hospital.upazila && (
+                      <Descriptions.Item label="Upazila">
+                        {hospital.upazila.name}
+                      </Descriptions.Item>
+                    )}
+
+                    {hospital.union && (
+                      <Descriptions.Item label="Union">
+                        {hospital.union.name}
+                      </Descriptions.Item>
+                    )}
+
+                    {hospital.address && (
+                      <Descriptions.Item label="Address">
+                        {hospital.address}
+                      </Descriptions.Item>
+                    )}
+
+                    {hospital.phone && (
+                      <Descriptions.Item label="Phone">
+                        <a href={`tel:${hospital.phone}`}>
+                          <PhoneOutlined /> {hospital.phone}
+                        </a>
+                      </Descriptions.Item>
+                    )}
+
+                    {hospital.email && (
+                      <Descriptions.Item label="Email">
+                        <a href={`mailto:${hospital.email}`}>
+                          <MailOutlined /> {hospital.email}
+                        </a>
+                      </Descriptions.Item>
+                    )}
+
+                    {hospital.websiteUrl && (
+                      <Descriptions.Item label="Website">
+                        <a
+                          href={hospital.websiteUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <LinkOutlined /> {hospital.websiteUrl}
+                        </a>
+                      </Descriptions.Item>
+                    )}
+
+                    {hospital.lat && hospital.lon && (
+                      <Descriptions.Item label="GPS Coordinates">
+                        Lat: {hospital.lat}, Lon: {hospital.lon}
+                      </Descriptions.Item>
+                    )}
+                  </Descriptions>
+                </Card>
+              </Col>
+            </Row>
           </TabPane>
 
           <TabPane tab="Doctors" key="doctors">
