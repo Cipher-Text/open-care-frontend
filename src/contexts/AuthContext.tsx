@@ -2,6 +2,9 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { User } from "../types";
 import { fetchUserProfile } from "../services/api";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://46.102.157.211:6700";
+
 interface AuthContextType {
   user: User | null;
   loading: boolean;
@@ -38,17 +41,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await fetch(
-        "http://46.102.157.211:6700/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            accept: "*/*",
-          },
-          body: JSON.stringify({ username: email, password }),
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          accept: "*/*",
+        },
+        body: JSON.stringify({ username: email, password }),
+      });
 
       if (!response.ok) {
         throw new Error("Login failed");
