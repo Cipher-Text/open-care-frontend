@@ -70,9 +70,11 @@ const Hospitals: React.FC = () => {
       const response = await fetchHospitals(
         page - 1,
         pagination.pageSize,
-        selectedDistrict,
-        selectedHospitalType,
-        selectedOrgType
+        {
+          districtIds: selectedDistrict,
+          hospitalTypes: selectedHospitalType,
+          organizationType: selectedOrgType
+        }
       );
 
       setHospitals(response.hospitals);

@@ -94,9 +94,11 @@ const Institutes: React.FC = () => {
       const response = await fetchInstitutions(
         page - 1, // Convert 1-based to 0-based for the API
         pagination.pageSize,
-        selectedDistrict,
-        selectedHospitalType,
-        selectedOrgType
+        {
+          districtIds: selectedDistrict,
+          hospitalTypes: selectedHospitalType,
+          organizationType: selectedOrgType
+        }
       );
 
       setInstitutes(response.institutions);

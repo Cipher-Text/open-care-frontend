@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError, AxiosInstance } from "axios";
 import config from "../config";
 import {
   BlogPost,
@@ -9,157 +9,292 @@ import {
   DoctorResponse,
   Hospital,
   HospitalMedicalTestResponse,
+  Degree,
+  MedicalSpeciality,
+  FeaturedData,
 } from "../types";
 
-export const apiClient = axios.create({
-  baseURL: config.apiUrl,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+// Create a custom error class for API errors
+export class ApiError extends Error {
+  constructor(
+    public status: number,
+    public message: string,
+    public data?: any
+  ) {
+    super(message);
+    this.name = 'ApiError';
   }
-  return config;
-});
+}
 
-export const fetchDoctors = async (
-  page = 0,
-  size = config.itemsPerPage,
-  filters = {}
-) => {
+// Create API client with better configuration
+export const createApiClient = (): AxiosInstance => {
+  const client = axios.create({
+    baseURL: config.apiUrl,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    timeout: 10000, // 10 seconds timeout
+  });
+
+  // Request interceptor
+  client.interceptors.request.use(
+    (config) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+
+  // Response interceptor
+  client.interceptors.response.use(
+    (response) => response,
+    (error: AxiosError) => {
+      if (error.response) {
+        const errorMessage = typeof error.response.data === 'object' && error.response.data !== null
+          ? (error.response.data as any).message || 'An error occurred'
+          : 'An error occurred';
+        
+        throw new ApiError(
+          error.response.status,
+          errorMessage,
+          error.response.data
+        );
+      }
+      throw new ApiError(0, 'Network error occurred');
+    }
+  );
+
+  return client;
+};
+
+export const apiClient = createApiClient();
+
+// Type for query parameters
+interface QueryParams {
+  [key: string]: string | number | boolean | undefined | null;
+}
+
+// Helper function to build query string
+const buildQueryString = (params: QueryParams): string => {
   const queryParams = new URLSearchParams();
-
-  queryParams.append("page", page.toString());
-  queryParams.append("size", size.toString());
-
-  Object.entries(filters).forEach(([key, value]) => {
+  
+  Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
       queryParams.append(key, value.toString());
     }
   });
-
-  const response = await apiClient.get<DoctorResponse>(
-    `/api/doctors?${queryParams.toString()}`
-  );
-  return response.data;
+  
+  return queryParams.toString();
 };
 
-export const fetchDoctorById = async (id: string | number) => {
-  const response = await apiClient.get<Doctor>(`/api/doctors/${id}`);
-  return response.data;
+export const fetchDoctors = async (
+  page = 0,
+  size = config.itemsPerPage,
+  filters: QueryParams = {}
+): Promise<DoctorResponse> => {
+  try {
+    const queryString = buildQueryString({
+      page,
+      size,
+      ...filters
+    });
+    
+    const response = await apiClient.get<DoctorResponse>(`/api/doctors?${queryString}`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, 'Failed to fetch doctors');
+  }
+};
+
+export const fetchDoctorById = async (id: string | number): Promise<Doctor> => {
+  try {
+    const response = await apiClient.get<Doctor>(`/api/doctors/${id}`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, 'Failed to fetch doctor details');
+  }
 };
 
 export const fetchHospitals = async (
-  page = 0, // 0-based page index
+  page = 0,
   size = config.itemsPerPage,
-  districtIds?: number,
-  hospitalTypes?: string,
-  organizationType?: string,
-  name?: string
-) => {
-  let url = `/api/hospitals?page=${page}&size=${size}`;
-
-  if (name) {
-    url += `&name=${encodeURIComponent(name)}`;
+  filters: {
+    districtIds?: number;
+    hospitalTypes?: string;
+    organizationType?: string;
+    name?: string;
+  } = {}
+): Promise<HospitalResponse> => {
+  try {
+    const queryString = buildQueryString({
+      page,
+      size,
+      ...filters
+    });
+    
+    const response = await apiClient.get<HospitalResponse>(`/api/hospitals?${queryString}`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, 'Failed to fetch hospitals');
   }
-
-  if (districtIds) {
-    url += `&districtIds=${districtIds}`;
-  }
-
-  if (hospitalTypes) {
-    url += `&hospitalTypes=${hospitalTypes}`;
-  }
-
-  if (organizationType) {
-    url += `&organizationType=${organizationType}`;
-  }
-
-  const response = await apiClient.get<HospitalResponse>(url);
-  return response.data;
 };
 
-export const fetchDegrees = async () => {
-  const response = await apiClient.get("/api/degrees");
-  return response.data;
+export const fetchDegrees = async (): Promise<Degree[]> => {
+  try {
+    const response = await apiClient.get<Degree[]>("/api/degrees");
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, 'Failed to fetch degrees');
+  }
 };
 
-export const fetchMedicalSpecialities = async () => {
-  const response = await apiClient.get("/api/medical-specialities");
-  return response.data;
+export const fetchMedicalSpecialities = async (): Promise<MedicalSpeciality[]> => {
+  try {
+    const response = await apiClient.get<MedicalSpeciality[]>("/api/medical-specialities");
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, 'Failed to fetch medical specialities');
+  }
 };
 
-export const fetchHospitalById = async (id: number) => {
-  const response = await apiClient.get<Hospital>(`/api/hospitals/${id}`);
-  return response.data;
+export const fetchHospitalById = async (id: number): Promise<Hospital> => {
+  try {
+    const response = await apiClient.get<Hospital>(`/api/hospitals/${id}`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, 'Failed to fetch hospital details');
+  }
 };
 
 export const fetchDoctorsByHospital = async (
   hospitalId: number,
   page = 0,
   size = config.itemsPerPage
-) => {
-  const response = await apiClient.get<{
-    doctors: Doctor[];
-    totalItems: number;
-  }>(`/api/doctors?hospitalId=${hospitalId}&page=${page}&size=${size}`);
-  return response.data;
+): Promise<{ doctors: Doctor[]; totalItems: number }> => {
+  try {
+    const queryString = buildQueryString({
+      hospitalId,
+      page,
+      size
+    });
+    
+    const response = await apiClient.get<{ doctors: Doctor[]; totalItems: number }>(
+      `/api/doctors?${queryString}`
+    );
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, 'Failed to fetch hospital doctors');
+  }
 };
 
 export const fetchHospitalMedicalTests = async (
   hospitalId: number,
   page = 0,
   size = config.itemsPerPage
-) => {
-  const response = await apiClient.get<HospitalMedicalTestResponse>(
-    `/api/hospital-medical-tests?hospitalId=${hospitalId}&page=${page}&size=${size}`
-  );
-  return response.data;
+): Promise<HospitalMedicalTestResponse> => {
+  try {
+    const queryString = buildQueryString({
+      hospitalId,
+      page,
+      size
+    });
+    
+    const response = await apiClient.get<HospitalMedicalTestResponse>(
+      `/api/hospital-medical-tests?${queryString}`
+    );
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, 'Failed to fetch hospital medical tests');
+  }
 };
 
 export const fetchInstitutions = async (
-  page = 0, // 0-based page index
+  page = 0,
   size = config.itemsPerPage,
-  districtIds?: number,
-  hospitalTypes?: string,
-  organizationType?: string
-) => {
-  let url = `/api/institutions?page=${page}&size=${size}`;
-
-  if (districtIds) {
-    url += `&districtIds=${districtIds}`;
+  filters: {
+    districtIds?: number;
+    hospitalTypes?: string;
+    organizationType?: string;
+  } = {}
+): Promise<InstitutionResponse> => {
+  try {
+    const queryString = buildQueryString({
+      page,
+      size,
+      ...filters
+    });
+    
+    const response = await apiClient.get<InstitutionResponse>(`/api/institutions?${queryString}`);
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, 'Failed to fetch institutions');
   }
-
-  if (hospitalTypes) {
-    url += `&hospitalTypes=${hospitalTypes}`;
-  }
-
-  if (organizationType) {
-    url += `&organizationType=${organizationType}`;
-  }
-
-  const response = await apiClient.get<InstitutionResponse>(url);
-
-  return response.data;
 };
 
-export const fetchUserProfile = async () => {
-  const response = await apiClient.get<User>("/api/user/profile");
-  return response.data;
+export const fetchUserProfile = async (): Promise<User> => {
+  try {
+    const response = await apiClient.get<User>("/api/user/profile");
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, 'Failed to fetch user profile');
+  }
 };
 
-export const fetchFeaturedData = async () => {
-  const response = await apiClient.get("/featured");
-  return response.data;
+export const fetchFeaturedData = async (): Promise<FeaturedData> => {
+  try {
+    const response = await apiClient.get<FeaturedData>("/featured");
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, 'Failed to fetch featured data');
+  }
 };
 
-export const fetchLatestBlogs = async () => {
-  const response = await apiClient.get<{ data: BlogPost[]; total: number }>(
-    "/blogs"
-  );
-  return response.data;
+export const fetchLatestBlogs = async (): Promise<{ data: BlogPost[]; total: number }> => {
+  try {
+    const response = await apiClient.get<{ data: BlogPost[]; total: number }>("/blogs");
+    return response.data;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(500, 'Failed to fetch latest blogs');
+  }
 };
