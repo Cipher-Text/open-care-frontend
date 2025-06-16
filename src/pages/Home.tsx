@@ -167,9 +167,9 @@ const staticFeaturedData: FeaturedData = {
       imageUrl:
         "https://via.placeholder.com/300x200?text=City+General+Hospital",
       address: "123 Main St, Cityville",
-      district: null, // You'll need to add proper district or update the type definition
-      upazila: null, // You'll need to add proper upazila
-      union: null, // You'll need to add proper union or update the type definition
+      district: null,
+      upazila: null,
+      union: null,
       hospitalType: {
         name: "Multi-Specialty",
         bnName: "মাল্টি-স্পেশালিটি",
@@ -185,6 +185,8 @@ const staticFeaturedData: FeaturedData = {
       lat: null,
       lon: null,
       websiteUrl: "",
+      email: "info@citygeneralhospital.com",
+      phone: "+1-123-456-7890",
     },
     {
       id: 2,
@@ -212,6 +214,8 @@ const staticFeaturedData: FeaturedData = {
       lat: null,
       lon: null,
       websiteUrl: "",
+      email: "contact@riversidemedical.com",
+      phone: "+1-234-567-8901",
     },
     {
       id: 3,
@@ -239,6 +243,8 @@ const staticFeaturedData: FeaturedData = {
       lat: null,
       lon: null,
       websiteUrl: "",
+      email: "info@sunshinechildrens.org",
+      phone: "+1-345-678-9012",
     },
   ],
   institutions: [

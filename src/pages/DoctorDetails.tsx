@@ -167,7 +167,7 @@ const DoctorDetails: React.FC = () => {
     }
   };
 
-  const handleDeleteDegree = async (degreeId: string) => {
+  const handleDeleteDegree = async (degreeId: number) => {
     try {
       console.log("Deleting degree:", degreeId);
       message.success("Degree deleted successfully");
@@ -219,7 +219,7 @@ const DoctorDetails: React.FC = () => {
     }
   };
 
-  const handleDeleteWorkplace = async (workplaceId: string) => {
+  const handleDeleteWorkplace = async (workplaceId: number) => {
     try {
       console.log("Deleting workplace:", workplaceId);
       message.success("Workplace deleted successfully");
