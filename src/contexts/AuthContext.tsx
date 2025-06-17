@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { User } from "../types";
 import { fetchUserProfile } from "../services/api";
+import config from "../config";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://46.102.157.211:6700";
+const API_BASE_URL = config.apiUrl;
 
 interface AuthContextType {
   user: User | null;
@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      const response = await fetch(`${API_BASE_URL}api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
