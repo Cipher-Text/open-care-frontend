@@ -141,13 +141,7 @@ const OurStory: React.FC = () => {
         const contributorsMap = new Map<string, Developer>();
 
         // Role mapping based on repository or can be hardcoded if needed
-        const roleMap: Record<string, string> = {
-          imranhossain: "Full Stack Developer",
-          sarahahmed: "UI/UX Designer",
-          mohammadrahman: "Backend Developer",
-          fatimakhan: "DevOps Engineer",
-          // Add more mappings as needed
-        };
+        const roleMap: Record<string, string> = {};
 
         // Default role if not in mapping
         const defaultRole = "Contributor";
