@@ -82,6 +82,8 @@ const AppHeader: React.FC = () => {
               ? "3"
               : location.pathname === "/institutes"
               ? "4"
+              : location.pathname === "/our-story"
+              ? "5"
               : "",
           ]}
         >
@@ -96,6 +98,9 @@ const AppHeader: React.FC = () => {
           </Menu.Item>
           <Menu.Item key="4">
             <Link to="/institutes">Institutes</Link>
+          </Menu.Item>
+          <Menu.Item key="5">
+            <Link to="/our-story">Our Story</Link>
           </Menu.Item>
         </Menu>
       </div>

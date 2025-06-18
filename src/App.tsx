@@ -11,6 +11,7 @@ import Institutes from "./pages/Institutes";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import OurStory from "./pages/OurStory";
 import "./App.css";
 import ErrorBoundary from "antd/es/alert/ErrorBoundary";
 import DoctorDetails from "./pages/DoctorDetails";
@@ -44,6 +45,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/hospitals/:id" element={<HospitalDetails />} />
       <Route path="/institutes" element={<Institutes />} />
       <Route path="/institutes/:id" element={<InstituteDetails />} />
+      <Route path="/our-story" element={<OurStory />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route

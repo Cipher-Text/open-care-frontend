@@ -1500,6 +1500,14 @@ const Home: React.FC = () => {
                 </Input.Group>
               </Col>
             </Row>
+            <div style={{ marginTop: 24 }}>
+              <Text type="secondary">Learn more about our mission and team: </Text>
+              <Link to="/our-story">
+                <Button type="link" style={{ paddingLeft: 8 }}>
+                  Our Story
+                </Button>
+              </Link>
+            </div>
           </div>
         </>
       )}
