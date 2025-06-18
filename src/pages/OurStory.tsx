@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Typography,
   Row,
@@ -13,6 +14,7 @@ import {
   Badge,
   List,
   Collapse,
+  Alert,
 } from "antd";
 import {
   HeartOutlined,
@@ -39,69 +41,10 @@ import {
   ClockCircleOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import { Developer } from "../types";
 
 const { Title, Paragraph, Text } = Typography;
 const { Panel } = Collapse;
-
-// Developer data
-const developers = [
-  {
-    id: 1,
-    name: "Imran Hossain",
-    role: "Full Stack Developer",
-    avatar: "https://via.placeholder.com/150x150?text=IH",
-    bio: "Passionate developer with expertise in React, Node.js, and modern web technologies. Leading the development of Open Care platform.",
-    skills: ["React", "TypeScript", "Node.js", "PostgreSQL", "Docker"],
-    experience: "5+ years",
-    education: "BSc in Computer Science",
-    github: "https://github.com/imranhossain",
-    linkedin: "https://linkedin.com/in/imranhossain",
-    email: "imran@opencare.com",
-    contributions: ["Frontend Architecture", "API Design", "Database Design"],
-  },
-  {
-    id: 2,
-    name: "Sarah Ahmed",
-    role: "UI/UX Designer",
-    avatar: "https://via.placeholder.com/150x150?text=SA",
-    bio: "Creative designer focused on creating intuitive and accessible healthcare interfaces. Committed to improving user experience in medical applications.",
-    skills: ["Figma", "Adobe Creative Suite", "User Research", "Prototyping"],
-    experience: "4+ years",
-    education: "BDes in Interaction Design",
-    github: "https://github.com/sarahahmed",
-    linkedin: "https://linkedin.com/in/sarahahmed",
-    email: "sarah@opencare.com",
-    contributions: ["UI Design", "User Experience", "Design System"],
-  },
-  {
-    id: 3,
-    name: "Mohammad Rahman",
-    role: "Backend Developer",
-    avatar: "https://via.placeholder.com/150x150?text=MR",
-    bio: "Experienced backend developer specializing in scalable healthcare systems. Expert in API development and database optimization.",
-    skills: ["Java", "Spring Boot", "MySQL", "Redis", "AWS"],
-    experience: "6+ years",
-    education: "MSc in Software Engineering",
-    github: "https://github.com/mohammadrahman",
-    linkedin: "https://linkedin.com/in/mohammadrahman",
-    email: "mohammad@opencare.com",
-    contributions: ["Backend API", "Database Design", "Security"],
-  },
-  {
-    id: 4,
-    name: "Fatima Khan",
-    role: "DevOps Engineer",
-    avatar: "https://via.placeholder.com/150x150?text=FK",
-    bio: "DevOps specialist ensuring reliable deployment and monitoring of healthcare applications. Focused on security and compliance.",
-    skills: ["Docker", "Kubernetes", "AWS", "Jenkins", "Prometheus"],
-    experience: "4+ years",
-    education: "BSc in Information Technology",
-    github: "https://github.com/fatimakhan",
-    linkedin: "https://linkedin.com/in/fatimakhan",
-    email: "fatima@opencare.com",
-    contributions: ["CI/CD Pipeline", "Infrastructure", "Monitoring"],
-  },
-];
 
 // Project milestones
 const milestones = [
@@ -178,6 +121,194 @@ const techStack = {
 
 const OurStory: React.FC = () => {
   const [, setActiveTab] = useState("mission");
+  const [developers, setDevelopers] = useState<Developer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // List of repositories to fetch contributors from
+  const repositories = [
+    "Cipher-Text/open-care-frontend",
+    // "Cipher-Text/open-care-backend",
+    "Cipher-Text/opencare",
+  ];
+
+  useEffect(() => {
+    const fetchContributors = async () => {
+      try {
+        setLoading(true);
+
+        // Map of all contributors to combine contributions across repos
+        const contributorsMap = new Map<string, Developer>();
+
+        // Role mapping based on repository or can be hardcoded if needed
+        const roleMap: Record<string, string> = {
+          imranhossain: "Full Stack Developer",
+          sarahahmed: "UI/UX Designer",
+          mohammadrahman: "Backend Developer",
+          fatimakhan: "DevOps Engineer",
+          // Add more mappings as needed
+        };
+
+        // Default role if not in mapping
+        const defaultRole = "Contributor";
+
+        // Fetch contributors from each repository
+        for (const repo of repositories) {
+          const response = await axios.get(
+            `https://api.github.com/repos/${repo}/contributors`
+          );
+
+          // Process each contributor
+          for (const contributor of response.data) {
+            // Skip bots or automated accounts
+            if (contributor.type === "Bot") continue;
+
+            // If contributor already exists in map, add contributions
+            if (contributorsMap.has(contributor.login)) {
+              const dev = contributorsMap.get(contributor.login)!;
+              dev.contributions += contributor.contributions;
+              contributorsMap.set(contributor.login, dev);
+            } else {
+              // Fetch detailed user info
+              const userDetails = await axios.get(
+                `https://api.github.com/users/${contributor.login}`
+              );
+
+              contributorsMap.set(contributor.login, {
+                id: contributor.id,
+                login: contributor.login,
+                name: userDetails.data.name || contributor.login,
+                role: roleMap[contributor.login] || defaultRole,
+                avatar: contributor.avatar_url,
+                bio: userDetails.data.bio || "Project contributor",
+                contributions: contributor.contributions,
+                githubUrl: contributor.html_url,
+                email: userDetails.data.email,
+                linkedin: userDetails.data.blog, // Often LinkedIn URL is in the blog field
+                location: userDetails.data.location,
+              });
+            }
+          }
+        }
+
+        // Convert map to array and sort by contributions
+        const developersList = Array.from(contributorsMap.values()).sort(
+          (a, b) => b.contributions - a.contributions
+        );
+
+        setDevelopers(developersList);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching contributors:", err);
+        setError("Failed to load contributors. Please try again later.");
+        setLoading(false);
+      }
+    };
+
+    fetchContributors();
+  }, []);
+
+  const renderDevelopersSection = () => {
+    if (loading) {
+      return (
+        <div style={{ textAlign: "center", padding: "40px 0" }}>
+          <div className="ant-spin ant-spin-lg ant-spin-spinning">
+            <span className="ant-spin-dot">
+              <i className="ant-spin-dot-item"></i>
+              <i className="ant-spin-dot-item"></i>
+              <i className="ant-spin-dot-item"></i>
+              <i className="ant-spin-dot-item"></i>
+            </span>
+          </div>
+          <p style={{ marginTop: 16 }}>Loading contributors...</p>
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <div style={{ textAlign: "center", padding: "40px 0" }}>
+          <Alert message="Error" description={error} type="error" showIcon />
+        </div>
+      );
+    }
+
+    return (
+      <Row gutter={[24, 24]}>
+        {developers.map((developer) => (
+          <Col xs={24} sm={12} lg={6} key={developer.id}>
+            <Card
+              hoverable
+              style={{ borderRadius: 12, height: "100%" }}
+              cover={
+                <div style={{ padding: 24, textAlign: "center" }}>
+                  <Badge.Ribbon text={developer.role} color="blue">
+                    <Avatar
+                      size={120}
+                      src={developer.avatar}
+                      style={{ border: "4px solid #f0f0f0" }}
+                    />
+                  </Badge.Ribbon>
+                </div>
+              }
+            >
+              <div style={{ textAlign: "center" }}>
+                <Title level={4} style={{ marginBottom: 8 }}>
+                  {developer.name}
+                </Title>
+                <Text
+                  type="secondary"
+                  style={{ display: "block", marginBottom: 12 }}
+                >
+                  {developer.role}
+                </Text>
+                <Paragraph style={{ fontSize: 14, marginBottom: 16 }}>
+                  {developer.bio}
+                </Paragraph>
+
+                {developer.location && (
+                  <div style={{ marginBottom: 16 }}>
+                    <Text strong>Location:</Text> {developer.location}
+                  </div>
+                )}
+
+                <div style={{ marginBottom: 16 }}>
+                  <Text strong>Contributions:</Text> {developer.contributions}
+                </div>
+
+                <Space size={8}>
+                  <Button
+                    type="text"
+                    icon={<GithubOutlined />}
+                    href={developer.githubUrl}
+                    target="_blank"
+                    size="small"
+                  />
+                  {developer.email && (
+                    <Button
+                      type="text"
+                      icon={<MailOutlined />}
+                      href={`mailto:${developer.email}`}
+                      size="small"
+                    />
+                  )}
+                  {developer.linkedin && (
+                    <Button
+                      type="text"
+                      icon={<LinkedinOutlined />}
+                      href={developer.linkedin}
+                      target="_blank"
+                      size="small"
+                    />
+                  )}
+                </Space>
+              </div>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    );
+  };
 
   return (
     <div className="our-story-container" style={{ padding: "24px 0" }}>
@@ -393,97 +524,7 @@ const OurStory: React.FC = () => {
         <Title level={2} style={{ textAlign: "center", marginBottom: 32 }}>
           Meet Our Development Team
         </Title>
-        <Row gutter={[24, 24]}>
-          {developers.map((developer) => (
-            <Col xs={24} sm={12} lg={6} key={developer.id}>
-              <Card
-                hoverable
-                style={{ borderRadius: 12, height: "100%" }}
-                cover={
-                  <div style={{ padding: 24, textAlign: "center" }}>
-                    <Badge.Ribbon text={developer.role} color="blue">
-                      <Avatar
-                        size={120}
-                        src={developer.avatar}
-                        style={{ border: "4px solid #f0f0f0" }}
-                      />
-                    </Badge.Ribbon>
-                  </div>
-                }
-              >
-                <div style={{ textAlign: "center" }}>
-                  <Title level={4} style={{ marginBottom: 8 }}>
-                    {developer.name}
-                  </Title>
-                  <Text
-                    type="secondary"
-                    style={{ display: "block", marginBottom: 12 }}
-                  >
-                    {developer.role}
-                  </Text>
-                  <Paragraph style={{ fontSize: 14, marginBottom: 16 }}>
-                    {developer.bio}
-                  </Paragraph>
-
-                  <div style={{ marginBottom: 16 }}>
-                    <Text strong>Skills:</Text>
-                    <div style={{ marginTop: 8 }}>
-                      {developer.skills.map((skill, index) => (
-                        <Tag
-                          key={index}
-                          color="blue"
-                          style={{ marginBottom: 4 }}
-                        >
-                          {skill}
-                        </Tag>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div style={{ marginBottom: 16 }}>
-                    <Text strong>Experience:</Text> {developer.experience}
-                    <br />
-                    <Text strong>Education:</Text> {developer.education}
-                  </div>
-
-                  <div style={{ marginBottom: 16 }}>
-                    <Text strong>Key Contributions:</Text>
-                    <ul
-                      style={{ textAlign: "left", fontSize: 12, marginTop: 4 }}
-                    >
-                      {developer.contributions.map((contribution, index) => (
-                        <li key={index}>{contribution}</li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <Space size={8}>
-                    <Button
-                      type="text"
-                      icon={<GithubOutlined />}
-                      href={developer.github}
-                      target="_blank"
-                      size="small"
-                    />
-                    <Button
-                      type="text"
-                      icon={<LinkedinOutlined />}
-                      href={developer.linkedin}
-                      target="_blank"
-                      size="small"
-                    />
-                    <Button
-                      type="text"
-                      icon={<MailOutlined />}
-                      href={`mailto:${developer.email}`}
-                      size="small"
-                    />
-                  </Space>
-                </div>
-              </Card>
-            </Col>
-          ))}
-        </Row>
+        {renderDevelopersSection()}
       </div>
 
       {/* Project Timeline */}

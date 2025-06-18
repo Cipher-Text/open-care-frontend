@@ -253,3 +253,32 @@ export interface FeaturedData {
     totalPatientsCared: number;
   };
 }
+
+// GitHub contributor interface
+export interface GitHubContributor {
+  id: number;
+  login: string;
+  avatar_url: string;
+  html_url: string;
+  contributions: number;
+  name?: string;
+  bio?: string;
+  email?: string;
+  blog?: string; // Often contains LinkedIn or personal website
+  location?: string;
+}
+
+// Developer interface with GitHub data
+export interface Developer {
+  id: number;
+  name: string;
+  login: string;
+  role: string;
+  avatar: string;
+  bio: string;
+  contributions: number;
+  githubUrl: string;
+  email?: string;
+  linkedin?: string;
+  location?: string;
+}
