@@ -55,11 +55,10 @@ const getUserRoles = (): string[] => {
 	return ["user"]; // You might have "admin", "doctor", etc.
 };
 
-export default function DoctorDetailsPage({
-	params,
-}: {
-	params: { id: string };
-}) {
+import { useParams } from "next/navigation";
+
+export default function DoctorDetailsPage() {
+	const params = useParams();
 	const [doctor, setDoctor] = useState<Doctor | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [editMode, setEditMode] = useState<string | null>(null); // null, "basic", "workplace", "degree"

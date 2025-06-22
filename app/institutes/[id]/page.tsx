@@ -31,14 +31,13 @@ import {
 	fetchDoctorsByInstitute,
 } from "../../../src/services/api";
 import { Institution, Doctor } from "../../../src/types";
+import { useParams } from "next/navigation";
 
 const { Title, Text } = Typography;
 
-export default function InstituteDetailsPage({
-	params,
-}: {
-	params: { id: string };
-}) {
+export default function InstituteDetailsPage() {
+	const params = useParams<{ id: string }>();
+
 	const [institute, setInstitute] = useState<Institution | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [teachers, setTeachers] = useState<Doctor[]>([]);

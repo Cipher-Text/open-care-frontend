@@ -36,14 +36,12 @@ import {
 } from "../../../src/services/api";
 import { Hospital, Doctor, HospitalMedicalTest } from "../../../src/types";
 import config from "../../../src/config";
+import { useParams } from "next/navigation";
 
 const { Title, Text } = Typography;
 
-export default function HospitalDetailsPage({
-	params,
-}: {
-	params: { id: string };
-}) {
+export default function HospitalDetailsPage() {
+	const params = useParams();
 	const [hospital, setHospital] = useState<Hospital | null>(null);
 	const [doctors, setDoctors] = useState<Doctor[]>([]);
 	const [medicalTests, setMedicalTests] = useState<HospitalMedicalTest[]>([]);
