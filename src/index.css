@@ -1,39 +1,77 @@
 /* index.css - Global styles */
 
 :root {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color: rgba(0, 0, 0, 0.85);
-  background-color: #f0f2f5;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		"Helvetica Neue", Arial, "Noto Sans", sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
+	color: rgba(0, 0, 0, 0.85);
+	background-color: #f0f2f5;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  min-width: 320px;
-  min-height: 100vh;
+	margin: 0;
+	padding: 0;
+	min-width: 320px;
+	min-height: 100vh;
 }
 
 /* Reset default styles */
 * {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 /* Fix for Ant Design tables on mobile */
 .ant-table {
-  overflow-x: auto;
+	overflow-x: auto;
 }
 
 /* Image styling */
 img {
-  max-width: 100%;
+	max-width: 100%;
 }
 
 /* Override dark mode with lighter theme */
 @media (prefers-color-scheme: dark) {
-  :root {
-    color: rgba(0, 0, 0, 0.85);
-    background-color: #f0f2f5;
-  }
+	:root {
+		color: rgba(0, 0, 0, 0.85);
+		background-color: #f0f2f5;
+	}
+}
+
+/* write a class to maintain a container */
+.container {
+	max-width: 100%;
+	margin: 0 auto;
+	padding: 0 1rem;
+}
+
+@media (min-width: 576px) {
+	.container {
+		max-width: 576px;
+	}
+}
+
+@media (min-width: 768px) {
+	.container {
+		max-width: 768px;
+	}
+}
+
+@media (min-width: 992px) {
+	.container {
+		max-width: 992px;
+	}
+}
+
+@media (min-width: 1200px) {
+	.container {
+		max-width: 1200px;
+	}
+
+	@media (min-width: 1400px) {
+		.container {
+			max-width: 1400px;
+		}
+	}
 }
