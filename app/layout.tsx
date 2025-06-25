@@ -2,6 +2,7 @@ import AppHeader from "./components/AppHeader";
 import { Providers } from "./components/Providers";
 import "antd/dist/reset.css"; // Import Ant Design styles
 import "../src/index.css"; // Import global CSS
+import "../src/App.css"; // Import application-specific styles
 import { Layout } from "antd";
 import type { Metadata } from "next";
 

@@ -1,7 +1,5 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import {
 	Typography,
 	Card,
@@ -11,6 +9,7 @@ import {
 	Button,
 	Spin,
 	Descriptions,
+	Divider,
 	Empty,
 	Breadcrumb,
 	Space,
@@ -24,20 +23,23 @@ import {
 	EnvironmentOutlined,
 	LinkOutlined,
 	HomeOutlined,
+	ArrowLeftOutlined,
+	PhoneOutlined,
+	MailOutlined,
 	UserOutlined,
 } from "@ant-design/icons";
-import {
-	fetchInstituteById,
-	fetchDoctorsByInstitute,
-} from "../../../src/services/api";
-import { Institution, Doctor } from "../../../src/types";
-import { useParams } from "next/navigation";
+import { apiClient } from "../../../src/services/api";
+import { Institution, Doctor, DoctorResponse } from "../../../src/types";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 
 const { Title, Text } = Typography;
+const { TabPane } = Tabs;
 
-export default function InstituteDetailsPage() {
-	const params = useParams<{ id: string }>();
+const InstituteDetail: React.FC = () => {
+	const { id } = useParams<{ id: string }>();
 
+	const navigate = useRouter();
 	const [institute, setInstitute] = useState<Institution | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [teachers, setTeachers] = useState<Doctor[]>([]);
@@ -45,25 +47,31 @@ export default function InstituteDetailsPage() {
 	const [teachersLoading, setTeachersLoading] = useState(true);
 	const [graduatesLoading, setGraduatesLoading] = useState(true);
 	const [teachersPagination, setTeachersPagination] = useState({
-		current: 0, // API uses 0-based indexing
+		current: 1,
 		pageSize: 5,
 		total: 0,
 	});
 	const [graduatesPagination, setGraduatesPagination] = useState({
-		current: 0, // API uses 0-based indexing
+		current: 1,
 		pageSize: 5,
 		total: 0,
 	});
-	const [activeTab, setActiveTab] = useState("info");
+
+	const instituteId = parseInt(id || "0");
 
 	useEffect(() => {
 		const fetchInstituteData = async () => {
-			if (!params.id) return;
+			if (!instituteId) {
+				navigate.push("/institutes");
+				return;
+			}
 
-			setLoading(true);
 			try {
-				const data = await fetchInstituteById(Number(params.id));
-				setInstitute(data);
+				setLoading(true);
+				const response = await apiClient.get<Institution>(
+					`/api/institutions/${instituteId}`
+				);
+				setInstitute(response.data);
 			} catch (error) {
 				console.error("Failed to fetch institute details:", error);
 				message.error("Failed to load institute information");
@@ -73,393 +81,403 @@ export default function InstituteDetailsPage() {
 		};
 
 		fetchInstituteData();
-	}, [params.id]);
+	}, [instituteId, navigate]);
 
 	useEffect(() => {
-		if (!params.id || activeTab !== "teachers") return;
+		if (instituteId) {
+			loadTeachers(1);
+			loadGraduates(1);
+		}
+	}, [instituteId]);
 
-		const fetchTeachersData = async () => {
+	const loadTeachers = async (page: number) => {
+		try {
 			setTeachersLoading(true);
-			try {
-				const response = await fetchDoctorsByInstitute(
-					Number(params.id),
-					teachersPagination.current,
-					teachersPagination.pageSize,
-					true
-				);
-				setTeachers(response.doctors || []);
-				setTeachersPagination({
-					...teachersPagination,
-					total: response.totalItems,
-				});
-			} catch (error) {
-				console.error("Failed to fetch teachers:", error);
-			} finally {
-				setTeachersLoading(false);
-			}
-		};
+			const response = await apiClient.get<DoctorResponse>(
+				`/api/doctors?isCurrentWorkplace=true&workInstitutionId=${instituteId}&page=${
+					page - 1
+				}&size=${teachersPagination.pageSize}`
+			);
 
-		fetchTeachersData();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [params.id, activeTab, teachersPagination.current]);
+			setTeachers(response.data.doctors);
+			setTeachersPagination({
+				...teachersPagination,
+				current: page,
+				total: response.data.totalItems,
+			});
+		} catch (error) {
+			console.error("Failed to fetch teachers:", error);
+			message.error("Failed to load teachers information");
+		} finally {
+			setTeachersLoading(false);
+		}
+	};
 
-	useEffect(() => {
-		if (!params.id || activeTab !== "graduates") return;
-
-		const fetchGraduatesData = async () => {
+	const loadGraduates = async (page: number) => {
+		try {
 			setGraduatesLoading(true);
-			try {
-				const response = await fetchDoctorsByInstitute(
-					Number(params.id),
-					graduatesPagination.current,
-					graduatesPagination.pageSize,
-					false
-				);
-				setGraduates(response.doctors || []);
-				setGraduatesPagination({
-					...graduatesPagination,
-					total: response.totalItems,
-				});
-			} catch (error) {
-				console.error("Failed to fetch graduates:", error);
-			} finally {
-				setGraduatesLoading(false);
-			}
-		};
+			const response = await apiClient.get<DoctorResponse>(
+				`/api/doctors?studyInstitutionId=${instituteId}&page=${page - 1}&size=${
+					graduatesPagination.pageSize
+				}`
+			);
 
-		fetchGraduatesData();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [params.id, activeTab, graduatesPagination.current]);
+			setGraduates(response.data.doctors);
+			setGraduatesPagination({
+				...graduatesPagination,
+				current: page,
+				total: response.data.totalItems,
+			});
+		} catch (error) {
+			console.error("Failed to fetch graduates:", error);
+			message.error("Failed to load graduates information");
+		} finally {
+			setGraduatesLoading(false);
+		}
+	};
 
-	const handleTeacherPageChange = (page: number) => {
-		setTeachersPagination({
-			...teachersPagination,
-			current: page - 1, // API uses 0-based indexing
-		});
+	const handleTeachersPageChange = (page: number) => {
+		loadTeachers(page);
 	};
 
 	const handleGraduatesPageChange = (page: number) => {
-		setGraduatesPagination({
-			...graduatesPagination,
-			current: page - 1, // API uses 0-based indexing
-		});
+		loadGraduates(page);
 	};
 
-	const handleTabChange = (key: string) => {
-		setActiveTab(key);
+	const getOrgTypeColor = (type: string) => {
+		switch (type) {
+			case "Government":
+				return "blue";
+			case "Military":
+				return "red";
+			case "Private":
+				return "green";
+			default:
+				return "default";
+		}
+	};
+
+	const getHospitalTypeColor = (type: string) => {
+		switch (type) {
+			case "College":
+				return "purple";
+			case "General":
+				return "magenta";
+			case "Specialized":
+				return "orange";
+			default:
+				return "default";
+		}
+	};
+
+	// Render doctor list for both teachers and graduates
+	const renderDoctorList = (
+		doctors: Doctor[],
+		loading: boolean,
+		pagination: { current: number; pageSize: number; total: number },
+		handlePageChange: (page: number) => void
+	) => {
+		if (loading) {
+			return (
+				<div style={{ textAlign: "center", padding: "40px 0" }}>
+					<Spin />
+					<p>Loading doctors...</p>
+				</div>
+			);
+		}
+
+		if (doctors.length === 0) {
+			return (
+				<Empty
+					description="No doctors found"
+					image={Empty.PRESENTED_IMAGE_SIMPLE}
+				/>
+			);
+		}
+
+		return (
+			<>
+				<List
+					itemLayout="vertical"
+					dataSource={doctors}
+					renderItem={(doctor) => (
+						<List.Item
+							key={doctor.id}
+							actions={[
+								doctor.profile && doctor.profile.phone && (
+									<Space key="phone">
+										<PhoneOutlined /> {doctor.profile.phone}
+									</Space>
+								),
+								doctor.profile && doctor.profile.email && (
+									<Space key="email">
+										<MailOutlined /> {doctor.profile.email}
+									</Space>
+								),
+								doctor.yearOfExperience && (
+									<Space key="experience">
+										<UserOutlined /> Experience: {doctor.yearOfExperience} years
+									</Space>
+								),
+							].filter(Boolean)}
+							extra={
+								<Button
+									type="primary"
+									onClick={() => navigate.push(`/doctors/${doctor.id}`)}
+								>
+									View Profile
+								</Button>
+							}
+						>
+							<List.Item.Meta
+								avatar={
+									<Avatar
+										src={doctor.profile?.photo || undefined}
+										size={64}
+										icon={!doctor.profile?.photo && <UserOutlined />}
+									/>
+								}
+								title={
+									<Link href={`/doctors/${doctor.id}`}>
+										{doctor.profile?.name}
+									</Link>
+								}
+								description={
+									<Space direction="vertical">
+										{doctor.profile?.bnName && (
+											<span>{doctor.profile.bnName}</span>
+										)}
+										<span>BMDC No: {doctor.bmdcNo}</span>
+										{doctor.profile?.gender && (
+											<Tag
+												color={
+													doctor.profile.gender === "MALE" ? "blue" : "pink"
+												}
+											>
+												{doctor.profile.gender}
+											</Tag>
+										)}
+									</Space>
+								}
+							/>
+							{doctor.description && <p>{doctor.description}</p>}
+						</List.Item>
+					)}
+				/>
+				<div style={{ textAlign: "center", marginTop: 24 }}>
+					<Pagination
+						current={pagination.current}
+						pageSize={pagination.pageSize}
+						total={pagination.total}
+						onChange={handlePageChange}
+						showSizeChanger={false}
+					/>
+				</div>
+			</>
+		);
 	};
 
 	if (loading) {
 		return (
-			<div style={{ textAlign: "center", padding: "100px" }}>
+			<div
+				className="loading-container"
+				style={{ textAlign: "center", padding: "100px 0" }}
+			>
 				<Spin size="large" />
-				<div style={{ marginTop: 16 }}>Loading institute information...</div>
+				<p style={{ marginTop: 16 }}>Loading institute information...</p>
 			</div>
 		);
 	}
 
 	if (!institute) {
 		return (
-			<div style={{ textAlign: "center", padding: "100px" }}>
+			<div
+				className="not-found-container"
+				style={{ textAlign: "center", padding: "100px 0" }}
+			>
 				<Empty description="Institute not found" />
-				<Link href="/institutes">
-					<Button type="primary" style={{ marginTop: 16 }}>
-						Back to Institutes List
-					</Button>
-				</Link>
+				<Button
+					type="primary"
+					style={{ marginTop: 16 }}
+					onClick={() => navigate.push("/institutes")}
+				>
+					Back to Institutes
+				</Button>
 			</div>
 		);
 	}
 
-	return (
-		<div className="institute-details-container" style={{ padding: "20px" }}>
-			<Breadcrumb style={{ marginBottom: 16 }}>
-				<Breadcrumb.Item>
-					<Link href="/">
-						<HomeOutlined /> Home
-					</Link>
-				</Breadcrumb.Item>
-				<Breadcrumb.Item>
-					<Link href="/institutes">Institutes</Link>
-				</Breadcrumb.Item>
-				<Breadcrumb.Item>{institute.name}</Breadcrumb.Item>
-			</Breadcrumb>
+	// Get organization type and hospital type safely
+	const organizationTypeName = institute.organizationType?.name || "Unknown";
+	const hospitalTypeName = institute.hospitalType?.englishName || "Unknown";
 
-			<Row gutter={24}>
-				<Col xs={24} lg={16}>
-					<Card className="institute-info-card">
+	const breadcrumbItems = [
+		{
+			title: (
+				<Link href="/">
+					<HomeOutlined />
+				</Link>
+			),
+		},
+		{
+			title: <Link href="/institutes">Institutes</Link>,
+		},
+		{
+			title: institute.name,
+		},
+	];
+
+	return (
+		<div className="institute-details-container">
+			<Breadcrumb items={breadcrumbItems} style={{ marginBottom: 16 }} />
+
+			<Button
+				icon={<ArrowLeftOutlined />}
+				style={{ marginBottom: 16 }}
+				onClick={() => navigate.push("/institutes")}
+			>
+				Back to Institutes
+			</Button>
+
+			<Card>
+				<Row gutter={[24, 24]}>
+					<Col xs={24} md={16}>
 						<Title level={2}>{institute.name}</Title>
 						{institute.bnName && (
-							<Title level={4} type="secondary">
-								{institute.bnName}
-							</Title>
+							<Text type="secondary">{institute.bnName}</Text>
 						)}
 
-						<div style={{ marginBottom: 16 }}>
-							{institute.hospitalType && (
-								<Tag color="blue" style={{ marginRight: 8 }}>
-									{institute.hospitalType.name}
-								</Tag>
-							)}
-							{institute.organizationType && (
-								<Tag color="green">{institute.organizationType.name}</Tag>
-							)}
-						</div>
+						<Space style={{ marginTop: 16 }}>
+							<Tag color={getOrgTypeColor(organizationTypeName)}>
+								{organizationTypeName}
+							</Tag>
+							<Tag color={getHospitalTypeColor(hospitalTypeName)}>
+								{hospitalTypeName}
+							</Tag>
+						</Space>
+					</Col>
 
-						<Descriptions column={{ xs: 1, md: 2 }} bordered>
-							{institute.district && (
-								<Descriptions.Item label="Location">
-									<Space>
-										<EnvironmentOutlined />
-										<span>
-											{institute.district.name}
-											{institute.district.division &&
-												`, ${institute.district.division.name}`}
-										</span>
-									</Space>
-								</Descriptions.Item>
-							)}
-
-							{institute.establishedYear && (
-								<Descriptions.Item label="Established">
-									{institute.establishedYear}
-								</Descriptions.Item>
-							)}
-
-							{institute.enroll && (
-								<Descriptions.Item label="Enrollment">
-									{institute.enroll}
-								</Descriptions.Item>
-							)}
-
-							{institute.numberOfBed > 0 && (
-								<Descriptions.Item label="Number of Beds">
-									{institute.numberOfBed}
-								</Descriptions.Item>
-							)}
-
+					<Col xs={24} md={8} style={{ textAlign: "right" }}>
+						<Space direction="vertical">
 							{institute.websiteUrl && (
-								<Descriptions.Item label="Website">
-									<Button
-										type="link"
-										href={institute.websiteUrl}
-										target="_blank"
-										icon={<LinkOutlined />}
-										style={{ padding: 0 }}
-									>
-										Visit Website
-									</Button>
-								</Descriptions.Item>
+								<Button
+									type="link"
+									href={institute.websiteUrl}
+									target="_blank"
+									icon={<LinkOutlined />}
+								>
+									Visit Website
+								</Button>
 							)}
+							{institute.lat && institute.lon && (
+								<Button
+									type="primary"
+									onClick={() =>
+										window.open(
+											`https://www.google.com/maps?q=${institute.lat},${institute.lon}`,
+											"_blank"
+										)
+									}
+									icon={<EnvironmentOutlined />}
+								>
+									View on Map
+								</Button>
+							)}
+						</Space>
+					</Col>
+				</Row>
 
+				<Divider />
+
+				<Tabs defaultActiveKey="info">
+					<TabPane tab="Institute Information" key="info">
+						<Descriptions
+							bordered
+							column={{ xs: 1, sm: 2, md: 3 }}
+							layout="vertical"
+						>
+							<Descriptions.Item label="Institute Name">
+								{institute.name}
+							</Descriptions.Item>
 							{institute.acronym && (
 								<Descriptions.Item label="Acronym">
 									{institute.acronym}
 								</Descriptions.Item>
 							)}
-						</Descriptions>
-					</Card>
-				</Col>
-				<Col xs={24} lg={8}>
-					<Card>
-						<img
-							alt={institute.name}
-							src={
-								institute.imageUrl ||
-								`https://via.placeholder.com/800x400?text=${encodeURIComponent(
-									institute.name
-								)}`
-							}
-							style={{ width: "100%", borderRadius: 8 }}
-						/>
-
-						{institute.lat && institute.lon && (
-							<div style={{ marginTop: 16 }}>
-								<Title level={5}>Location</Title>
-								<div
-									style={{
-										height: 200,
-										background: "#f0f0f0",
-										borderRadius: 8,
-										display: "flex",
-										alignItems: "center",
-										justifyContent: "center",
-									}}
-								>
-									{/* Implement map here if needed */}
-									<Text type="secondary">Map View</Text>
-								</div>
-								<Text type="secondary">
+							{institute.establishedYear && (
+								<Descriptions.Item label="Established Year">
+									{institute.establishedYear}
+								</Descriptions.Item>
+							)}
+							{institute.enroll !== undefined && (
+								<Descriptions.Item label="Enrollment Capacity">
+									{institute.enroll}
+								</Descriptions.Item>
+							)}
+							{institute.numberOfBed !== undefined && (
+								<Descriptions.Item label="Number of Beds">
+									{institute.numberOfBed}
+								</Descriptions.Item>
+							)}
+							<Descriptions.Item label="Organization Type">
+								<Tag color={getOrgTypeColor(organizationTypeName)}>
+									{organizationTypeName}
+								</Tag>
+							</Descriptions.Item>
+							<Descriptions.Item label="Institute Type">
+								<Tag color={getHospitalTypeColor(hospitalTypeName)}>
+									{hospitalTypeName}
+								</Tag>
+							</Descriptions.Item>
+							<Descriptions.Item label="District">
+								<Space>
+									<EnvironmentOutlined />
+									{institute.district.name}
+								</Space>
+							</Descriptions.Item>
+							<Descriptions.Item label="Division">
+								{institute.district.division.name}
+							</Descriptions.Item>
+							{institute.websiteUrl && (
+								<Descriptions.Item label="Website">
+									<a
+										href={institute.websiteUrl}
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										<LinkOutlined /> {institute.websiteUrl}
+									</a>
+								</Descriptions.Item>
+							)}
+							{institute.lat && institute.lon && (
+								<Descriptions.Item label="GPS Coordinates">
 									Lat: {institute.lat}, Lon: {institute.lon}
-								</Text>
-							</div>
-						)}
-					</Card>
-				</Col>
-			</Row>
+								</Descriptions.Item>
+							)}
+						</Descriptions>
+					</TabPane>
 
-			<Card style={{ marginTop: 24 }}>
-				<Tabs activeKey={activeTab} onChange={handleTabChange}>
-					<Tabs.TabPane tab="Information" key="info">
-						<Row gutter={[16, 16]}>
-							<Col span={24}>
-								<Card title="About Institute" bordered={false}>
-									<p>
-										{institute.description ||
-											"No detailed information available for this institute at the moment."}
-									</p>
-								</Card>
-							</Col>
-						</Row>
-					</Tabs.TabPane>
-
-					<Tabs.TabPane tab="Faculty" key="teachers">
-						{teachersLoading ? (
-							<div style={{ textAlign: "center", padding: "50px" }}>
-								<Spin />
-								<div style={{ marginTop: 16 }}>Loading faculty...</div>
-							</div>
-						) : (
-							<>
-								{teachers.length > 0 ? (
-									<>
-										<List
-											dataSource={teachers}
-											renderItem={(doctor) => (
-												<List.Item
-													key={doctor.id}
-													actions={[
-														<Link
-															href={`/doctors/${doctor.id}`}
-															key="view-profile"
-														>
-															<Button type="primary">View Profile</Button>
-														</Link>,
-													]}
-												>
-													<List.Item.Meta
-														avatar={
-															<Avatar
-																size={64}
-																src={doctor.profile?.photo}
-																icon={<UserOutlined />}
-															/>
-														}
-														title={
-															<Link href={`/doctors/${doctor.id}`}>
-																{doctor.profile?.name}
-															</Link>
-														}
-														description={
-															<Space direction="vertical">
-																<div>{doctor.specializations}</div>
-																<div>{doctor.degrees}</div>
-																<div>
-																	Experience: {doctor.yearOfExperience} years
-																</div>
-															</Space>
-														}
-													/>
-												</List.Item>
-											)}
-										/>
-										<div
-											style={{
-												marginTop: 24,
-												display: "flex",
-												justifyContent: "center",
-											}}
-										>
-											<Pagination
-												current={teachersPagination.current + 1}
-												pageSize={teachersPagination.pageSize}
-												total={teachersPagination.total}
-												onChange={handleTeacherPageChange}
-												showSizeChanger={false}
-											/>
-										</div>
-									</>
-								) : (
-									<Empty description="No faculty found for this institute" />
-								)}
-							</>
+					<TabPane tab="Teachers" key="teachers">
+						{renderDoctorList(
+							teachers,
+							teachersLoading,
+							teachersPagination,
+							handleTeachersPageChange
 						)}
-					</Tabs.TabPane>
+					</TabPane>
 
-					<Tabs.TabPane tab="Alumni" key="graduates">
-						{graduatesLoading ? (
-							<div style={{ textAlign: "center", padding: "50px" }}>
-								<Spin />
-								<div style={{ marginTop: 16 }}>Loading alumni...</div>
-							</div>
-						) : (
-							<>
-								{graduates.length > 0 ? (
-									<>
-										<List
-											dataSource={graduates}
-											renderItem={(doctor) => (
-												<List.Item
-													key={doctor.id}
-													actions={[
-														<Link
-															href={`/doctors/${doctor.id}`}
-															key="view-profile"
-														>
-															<Button type="primary">View Profile</Button>
-														</Link>,
-													]}
-												>
-													<List.Item.Meta
-														avatar={
-															<Avatar
-																size={64}
-																src={doctor.profile?.photo}
-																icon={<UserOutlined />}
-															/>
-														}
-														title={
-															<Link href={`/doctors/${doctor.id}`}>
-																{doctor.profile?.name}
-															</Link>
-														}
-														description={
-															<Space direction="vertical">
-																<div>{doctor.specializations}</div>
-																<div>{doctor.degrees}</div>
-																<div>
-																	Experience: {doctor.yearOfExperience} years
-																</div>
-															</Space>
-														}
-													/>
-												</List.Item>
-											)}
-										/>
-										<div
-											style={{
-												marginTop: 24,
-												display: "flex",
-												justifyContent: "center",
-											}}
-										>
-											<Pagination
-												current={graduatesPagination.current + 1}
-												pageSize={graduatesPagination.pageSize}
-												total={graduatesPagination.total}
-												onChange={handleGraduatesPageChange}
-												showSizeChanger={false}
-											/>
-										</div>
-									</>
-								) : (
-									<Empty description="No alumni found for this institute" />
-								)}
-							</>
+					<TabPane tab="Graduates" key="graduates">
+						{renderDoctorList(
+							graduates,
+							graduatesLoading,
+							graduatesPagination,
+							handleGraduatesPageChange
 						)}
-					</Tabs.TabPane>
+					</TabPane>
 				</Tabs>
 			</Card>
 		</div>
 	);
-}
+};
+
+export default InstituteDetail;

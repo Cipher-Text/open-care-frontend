@@ -2,50 +2,50 @@
 
 /* Reset the default root styles from Vite */
 #root {
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  text-align: left;
+	max-width: 100%;
+	margin: 0;
+	padding: 0;
+	text-align: left;
 }
 
 /* Layout components */
 .layout {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
 }
 
 .site-layout-content {
-  background: #fff;
-  padding: 24px;
-  min-height: 280px;
-  margin-top: 20px;
+	background: #fff;
+	padding: 24px;
+	min-height: 280px;
+	margin-top: 20px;
 }
 
 /* Logo styling */
 .logo {
-  width: 120px;
-  height: 31px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 16px 24px 16px 0;
-  float: left;
+	width: 120px;
+	height: 31px;
+	background: rgba(255, 255, 255, 0.2);
+	margin: 16px 24px 16px 0;
+	float: left;
 }
 
 /* Header styles */
 .ant-layout-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  width: 100%;
-  padding: 0 50px;
-  display: flex;
-  align-items: center;
+	position: sticky;
+	top: 0;
+	z-index: 100;
+	width: 100%;
+	padding: 0 50px;
+	display: flex;
+	align-items: center;
 }
 
 /* Content container */
 .ant-layout-content {
-  padding: 0 50px;
-  width: 100%;
+	padding: 0 50px;
+	width: 100%;
 }
 
 /* Page containers */
@@ -54,54 +54,60 @@
 .institutes-container,
 .profile-container,
 .home-container {
-  padding: 24px 0;
+	padding: 24px 0;
 }
 
 /* Responsive media queries */
 @media (max-width: 768px) {
-  .desktop-view {
-    display: none;
-  }
-  
-  .mobile-view {
-    display: block;
-  }
-  
-  .ant-layout-header {
-    padding: 0 15px;
-  }
-  
-  .ant-layout-content {
-    padding: 0 15px;
-  }
+	.desktop-view {
+		display: none;
+	}
+
+	.mobile-view {
+		display: block;
+	}
+
+	.ant-layout-header {
+		padding: 0 15px;
+	}
+
+	.ant-layout-content {
+		padding: 0 15px;
+	}
 }
 
 @media (min-width: 769px) {
-  .desktop-view {
-    display: block;
-  }
-  
-  .mobile-view {
-    display: none;
-  }
+	.desktop-view {
+		display: block;
+	}
+
+	.mobile-view {
+		display: none;
+	}
 }
 
 /* Mobile menu */
 .mobile-menu {
-  display: none;
+	display: none;
 }
 
 @media (max-width: 768px) {
-  .mobile-menu {
-    display: block;
-  }
-  
-  .desktop-menu {
-    display: none;
-  }
+	.mobile-menu {
+		display: block;
+	}
+
+	.desktop-menu {
+		display: none;
+	}
 }
 
 /* Filter container styling */
 .filter-container {
-  margin-bottom: 24px;
+	margin-bottom: 24px;
+}
+
+.doctor-details-container {
+	padding: 24px;
+	background: #ffffff;
+	border-radius: 8px;
 }

@@ -54,24 +54,24 @@ img {
 
 @media (min-width: 768px) {
 	.container {
-		max-width: 768px;
+		min-width: 768px;
 	}
 }
 
 @media (min-width: 992px) {
 	.container {
-		max-width: 992px;
+		min-width: 992px;
 	}
 }
 
 @media (min-width: 1200px) {
 	.container {
-		max-width: 1200px;
+		min-width: 1200px;
 	}
 
 	@media (min-width: 1400px) {
 		.container {
-			max-width: 1400px;
+			min-width: 1400px;
 		}
 	}
 }

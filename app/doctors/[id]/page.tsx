@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
@@ -36,9 +35,10 @@ import {
 	PlusOutlined,
 	DeleteOutlined,
 } from "@ant-design/icons";
-import { Doctor, DoctorWorkplace, DoctorDegree } from "../../../src/types";
+import { Doctor, DoctorDegree, DoctorWorkplace } from "../../../src/types";
 import { fetchDoctorById } from "../../../src/services/api";
 import dayjs from "dayjs";
+import { useParams } from "next/navigation";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -50,53 +50,49 @@ const getUserRoles = (): string[] => {
 	const token = localStorage.getItem("token"); // or however you store the token
 	if (!token) return [];
 
-	// In a real app, you would decode the token and get user roles
-	// For now we just return a mock role for demonstration
-	return ["user"]; // You might have "admin", "doctor", etc.
+	try {
+		const payload = JSON.parse(atob(token.split(".")[1]));
+		return payload.realm_access?.roles || [];
+	} catch {
+		return [];
+	}
 };
 
-import { useParams } from "next/navigation";
+// We'll rely on the separate file for generateStaticParams
+// This is to work around Next.js fast refresh issues
+// The function will be automatically used by Next.js
 
-export default function DoctorDetailsPage() {
-	const params = useParams();
+const DoctorDetails = () => {
+	const params = useParams<{ id: string }>();
+	const id = params.id;
 	const [doctor, setDoctor] = useState<Doctor | null>(null);
 	const [loading, setLoading] = useState(true);
-	const [editMode, setEditMode] = useState<string | null>(null); // null, "basic", "workplace", "degree"
-	const [form] = Form.useForm();
-	// Define interfaces that match the actual type structure coming from the API
-	interface Workplace {
-		id: number;
-		hospital?: { id: number; name: string } | null;
-		designation: React.ReactNode;
-		department: React.ReactNode;
-		startDate: string;
-		endDate?: string | null;
-	}
+	const [userRoles] = useState<string[]>(getUserRoles());
 
-	interface Degree {
-		id: number;
-		degree?: { id: number; name: string; abbreviation: string };
-		institute: React.ReactNode;
-		year: React.ReactNode;
-	}
+	// Modal states
+	const [personalInfoModalVisible, setPersonalInfoModalVisible] =
+		useState(false);
+	const [degreeModalVisible, setDegreeModalVisible] = useState(false);
+	const [workplaceModalVisible, setWorkplaceModalVisible] = useState(false);
+	const [editingDegree, setEditingDegree] = useState<DoctorDegree | null>(null);
+	const [editingWorkplace, setEditingWorkplace] =
+		useState<DoctorWorkplace | null>(null);
 
-	// Type for items that can be edited
-	type EditableItem = Workplace | Degree | DoctorWorkplace | DoctorDegree;
+	// Forms
+	const [personalInfoForm] = Form.useForm();
+	const [degreeForm] = Form.useForm();
+	const [workplaceForm] = Form.useForm();
 
-	const [selectedWorkplace, setSelectedWorkplace] = useState<Workplace | null>(
-		null
-	);
-	const [selectedDegree, setSelectedDegree] = useState<Degree | null>(null);
-
-	const userRoles = getUserRoles();
-	const canEdit = userRoles.includes("admin") || userRoles.includes("doctor");
+	const canUpdateDoctor = userRoles.includes("update-doctor");
 
 	useEffect(() => {
-		const loadDoctor = async () => {
+		const fetchDoctorDetails = async () => {
 			setLoading(true);
 			try {
-				const data = await fetchDoctorById(Number(params.id));
-				setDoctor(data);
+				if (id) {
+					const data = await fetchDoctorById(id);
+					setDoctor(data);
+				}
 			} catch (error) {
 				console.error("Failed to fetch doctor details:", error);
 			} finally {
@@ -104,119 +100,339 @@ export default function DoctorDetailsPage() {
 			}
 		};
 
-		if (params.id) {
-			loadDoctor();
-		}
-	}, [params.id]);
+		fetchDoctorDetails();
+	}, [id]);
 
-	// Handle edit form submission
-	const handleSubmit = async () => {
-		if (editMode === "basic") {
-			// Handle basic information update
-			message.success("Doctor information updated successfully!");
-		} else if (editMode === "workplace") {
-			// Handle workplace update/add
-			message.success(
-				selectedWorkplace
-					? "Workplace updated successfully!"
-					: "Workplace added successfully!"
-			);
-		} else if (editMode === "degree") {
-			// Handle degree update/add
-			message.success(
-				selectedDegree
-					? "Degree updated successfully!"
-					: "Degree added successfully!"
-			);
-		}
-
-		setEditMode(null);
-		// Refetch doctor data
-	};
-
-	const handleEdit = (type: string, item?: EditableItem) => {
-		setEditMode(type);
-
-		if (type === "basic" && doctor) {
-			form.setFieldsValue({
-				name: doctor.profile?.name,
-				bnName: doctor.profile?.bnName,
-				gender: doctor.profile?.gender,
-				email: doctor.profile?.email,
-				phone: doctor.profile?.phone,
-				address: doctor.profile?.address,
+	// Personal Info Modal handlers
+	const handleEditPersonalInfo = () => {
+		if (doctor) {
+			personalInfoForm.setFieldsValue({
+				name: doctor.profile.name,
+				bnName: doctor.profile.bnName,
+				phone: doctor.profile.phone,
+				email: doctor.profile.email,
+				address: doctor.profile.address,
+				gender: doctor.profile.gender,
 				bmdcNo: doctor.bmdcNo,
-				specializations: doctor.specializations,
+				yearOfExperience: doctor.yearOfExperience,
 				description: doctor.description,
 			});
-		} else if (type === "workplace" && item) {
-			const workplaceItem = item as Workplace;
-			setSelectedWorkplace(workplaceItem);
-			form.setFieldsValue({
-				hospital: workplaceItem.hospital?.id,
-				designation: workplaceItem.designation,
-				department: workplaceItem.department,
-				startDate: dayjs(workplaceItem.startDate),
-				endDate: workplaceItem.endDate ? dayjs(workplaceItem.endDate) : null,
-				isCurrentlyWorking: !workplaceItem.endDate,
-			});
-		} else if (type === "degree" && item) {
-			const degreeItem = item as Degree;
-			setSelectedDegree(degreeItem);
-			form.setFieldsValue({
-				degree: degreeItem.degree?.id,
-				institute: degreeItem.institute,
-				year: degreeItem.year,
-			});
-		} else {
-			// Reset form when adding new
-			form.resetFields();
-			setSelectedWorkplace(null);
-			setSelectedDegree(null);
+			setPersonalInfoModalVisible(true);
 		}
 	};
 
-	const handleCancel = () => {
-		setEditMode(null);
-		form.resetFields();
+	interface PersonalInfoFormValues {
+		name: string;
+		bnName?: string;
+		phone?: string;
+		email?: string;
+		address?: string;
+		gender?: string;
+		dateOfBirth?: string;
+	}
+
+	const handlePersonalInfoSubmit = async (values: PersonalInfoFormValues) => {
+		try {
+			// API call to update personal info
+			console.log("Updating personal info:", values);
+			message.success("Personal information updated successfully");
+			setPersonalInfoModalVisible(false);
+			// Refresh doctor data
+		} catch (err) {
+			console.error("Failed to update personal information:", err);
+			message.error("Failed to update personal information");
+		}
 	};
 
-	const handleDelete = (type: string, id: number) => {
-		console.log(`Deleting ${type} with id: ${id}`);
-		if (type === "workplace") {
-			// Handle delete workplace
-			message.success("Workplace deleted successfully!");
-		} else if (type === "degree") {
-			// Handle delete degree
-			message.success("Degree deleted successfully!");
+	// Degree Modal handlers
+	const handleAddDegree = () => {
+		setEditingDegree(null);
+		degreeForm.resetFields();
+		setDegreeModalVisible(true);
+	};
+
+	const handleEditDegree = (degree: DoctorDegree) => {
+		setEditingDegree(degree);
+		degreeForm.setFieldsValue({
+			degreeId: degree.degree.id,
+			institutionId: degree.institution?.id,
+			medicalSpecialityId: degree.medicalSpeciality?.id,
+			startDateTime: degree.startDateTime ? dayjs(degree.startDateTime) : null,
+			endDateTime: degree.endDateTime ? dayjs(degree.endDateTime) : null,
+		});
+		setDegreeModalVisible(true);
+	};
+
+	interface DegreeFormValues {
+		degreeId: number;
+		institutionId?: number;
+		medicalSpecialityId?: number;
+		startDateTime?: dayjs.Dayjs;
+		endDateTime?: dayjs.Dayjs;
+	}
+
+	const handleDegreeSubmit = async (values: DegreeFormValues) => {
+		try {
+			const formattedValues = {
+				...values,
+				startDateTime: values.startDateTime?.toISOString(),
+				endDateTime: values.endDateTime?.toISOString(),
+			};
+
+			if (editingDegree) {
+				console.log("Updating degree:", formattedValues);
+				message.success("Degree updated successfully");
+			} else {
+				console.log("Adding degree:", formattedValues);
+				message.success("Degree added successfully");
+			}
+
+			setDegreeModalVisible(false);
+			// Refresh doctor data
+		} catch (err) {
+			console.error("Failed to save degree information:", err);
+			message.error("Failed to save degree information");
 		}
-		// TODO: Implement actual API call to delete data
+	};
+
+	const handleDeleteDegree = async (degreeId: number) => {
+		try {
+			console.log("Deleting degree:", degreeId);
+			message.success("Degree deleted successfully");
+			// Refresh doctor data
+		} catch (err) {
+			console.error("Failed to delete degree:", err);
+			message.error("Failed to delete degree");
+		}
+	};
+
+	// Workplace Modal handlers
+	const handleAddWorkplace = () => {
+		setEditingWorkplace(null);
+		workplaceForm.resetFields();
+		setWorkplaceModalVisible(true);
+	};
+
+	const handleEditWorkplace = (workplace: DoctorWorkplace) => {
+		setEditingWorkplace(workplace);
+		workplaceForm.setFieldsValue({
+			hospitalId: workplace.hospital?.id,
+			institutionId: workplace.institution?.id,
+			doctorPosition: workplace.doctorPosition,
+			teacherPosition: workplace.teacherPosition,
+			medicalSpecialityId: workplace.medicalSpeciality?.id,
+			startDate: workplace.startDate ? dayjs(workplace.startDate) : null,
+		});
+		setWorkplaceModalVisible(true);
+	};
+
+	interface WorkplaceFormValues {
+		hospitalId?: number;
+		institutionId?: number;
+		doctorPosition?: string;
+		teacherPosition?: string;
+		medicalSpecialityId?: number;
+		startDate?: dayjs.Dayjs;
+	}
+
+	const handleWorkplaceSubmit = async (values: WorkplaceFormValues) => {
+		try {
+			const formattedValues = {
+				...values,
+				startDate: values.startDate?.toISOString(),
+			};
+
+			if (editingWorkplace) {
+				console.log("Updating workplace:", formattedValues);
+				message.success("Workplace updated successfully");
+			} else {
+				console.log("Adding workplace:", formattedValues);
+				message.success("Workplace added successfully");
+			}
+
+			setWorkplaceModalVisible(false);
+			// Refresh doctor data
+		} catch (err) {
+			console.error("Failed to save workplace information:", err);
+			message.error("Failed to save workplace information");
+		}
+	};
+
+	const handleDeleteWorkplace = async (workplaceId: number) => {
+		try {
+			console.log("Deleting workplace:", workplaceId);
+			message.success("Workplace deleted successfully");
+			// Refresh doctor data
+		} catch (err) {
+			console.error("Failed to delete workplace:", err);
+			message.error("Failed to delete workplace");
+		}
 	};
 
 	if (loading) {
 		return (
-			<div style={{ textAlign: "center", padding: "100px" }}>
+			<div style={{ textAlign: "center", padding: "100px 0" }}>
 				<Spin size="large" />
-				<div style={{ marginTop: 16 }}>Loading doctor information...</div>
 			</div>
 		);
 	}
 
 	if (!doctor) {
 		return (
-			<div style={{ textAlign: "center", padding: "100px" }}>
+			<div style={{ textAlign: "center", padding: "50px 0" }}>
 				<Empty description="Doctor not found" />
-				<Link href="/doctors">
-					<Button type="primary" style={{ marginTop: 16 }}>
-						Back to Doctors List
-					</Button>
-				</Link>
+				<Button type="primary" style={{ marginTop: 16 }}>
+					<Link href="/doctors">Back to Doctors</Link>
+				</Button>
 			</div>
 		);
 	}
 
+	const renderDegrees = () => {
+		if (!doctor.doctorDegrees || doctor.doctorDegrees.length === 0) {
+			return <Empty description="No degree information available" />;
+		}
+
+		return (
+			<List
+				itemLayout="vertical"
+				dataSource={doctor.doctorDegrees}
+				renderItem={(item: DoctorDegree) => (
+					<List.Item
+						actions={
+							canUpdateDoctor
+								? [
+										<Button
+											key="edit"
+											type="text"
+											icon={<EditOutlined />}
+											onClick={() => handleEditDegree(item)}
+										>
+											Edit
+										</Button>,
+										<Popconfirm
+											key="delete"
+											title="Are you sure you want to delete this degree?"
+											onConfirm={() => handleDeleteDegree(item.id)}
+											okText="Yes"
+											cancelText="No"
+										>
+											<Button type="text" danger icon={<DeleteOutlined />}>
+												Delete
+											</Button>
+										</Popconfirm>,
+								  ]
+								: []
+						}
+					>
+						<Card size="small" style={{ width: "100%" }}>
+							<Title level={5}>
+								{item.degree.abbreviation} - {item.degree.name}
+							</Title>
+							{item.medicalSpeciality && (
+								<Text type="secondary" style={{ display: "block" }}>
+									Speciality: {item.medicalSpeciality.name}
+								</Text>
+							)}
+							{item.institution && (
+								<Text style={{ display: "block" }}>
+									<strong>Institution:</strong> {item.institution.name}
+								</Text>
+							)}
+							{item.startDateTime && item.endDateTime && (
+								<Text style={{ display: "block" }}>
+									<strong>Period:</strong>{" "}
+									{new Date(item.startDateTime).getFullYear()} -{" "}
+									{new Date(item.endDateTime).getFullYear()}
+								</Text>
+							)}
+							<Text type="secondary" style={{ display: "block" }}>
+								Type: {item.degree.degreeType}
+							</Text>
+						</Card>
+					</List.Item>
+				)}
+			/>
+		);
+	};
+
+	const renderWorkplaces = () => {
+		if (!doctor.doctorWorkplaces || doctor.doctorWorkplaces.length === 0) {
+			return <Empty description="No workplace information available" />;
+		}
+
+		return (
+			<List
+				itemLayout="vertical"
+				dataSource={doctor.doctorWorkplaces}
+				renderItem={(workplace: DoctorWorkplace) => (
+					<List.Item
+						actions={
+							canUpdateDoctor
+								? [
+										<Button
+											key="edit"
+											type="text"
+											icon={<EditOutlined />}
+											onClick={() => handleEditWorkplace(workplace)}
+										>
+											Edit
+										</Button>,
+										<Popconfirm
+											key="delete"
+											title="Are you sure you want to delete this workplace?"
+											onConfirm={() => handleDeleteWorkplace(workplace.id)}
+											okText="Yes"
+											cancelText="No"
+										>
+											<Button type="text" danger icon={<DeleteOutlined />}>
+												Delete
+											</Button>
+										</Popconfirm>,
+								  ]
+								: []
+						}
+					>
+						<Card size="small" style={{ width: "100%" }}>
+							<Title level={5}>
+								{workplace.hospital?.name ||
+									workplace.institution?.name ||
+									"Unknown"}
+							</Title>
+							{workplace.doctorPosition && (
+								<Text strong style={{ display: "block" }}>
+									Position: {workplace.doctorPosition}
+								</Text>
+							)}
+							{workplace.teacherPosition && (
+								<Text strong style={{ display: "block" }}>
+									Academic Position: {workplace.teacherPosition}
+								</Text>
+							)}
+							{workplace.medicalSpeciality && (
+								<Text style={{ display: "block" }}>
+									Speciality: {workplace.medicalSpeciality.name}
+								</Text>
+							)}
+							{workplace.startDate && (
+								<Text type="secondary" style={{ display: "block" }}>
+									Since: {new Date(workplace.startDate).toLocaleDateString()}
+								</Text>
+							)}
+							{workplace.hospital?.district && (
+								<Text type="secondary" style={{ display: "block" }}>
+									<EnvironmentOutlined /> {workplace.hospital.district.name}
+								</Text>
+							)}
+						</Card>
+					</List.Item>
+				)}
+			/>
+		);
+	};
+
 	return (
-		<div className="doctor-details-container" style={{ padding: "20px" }}>
+		<div className="doctor-details-container">
 			<Breadcrumb style={{ marginBottom: 16 }}>
 				<Breadcrumb.Item>
 					<Link href="/">
@@ -226,482 +442,457 @@ export default function DoctorDetailsPage() {
 				<Breadcrumb.Item>
 					<Link href="/doctors">Doctors</Link>
 				</Breadcrumb.Item>
-				<Breadcrumb.Item>{doctor.profile?.name}</Breadcrumb.Item>
+				<Breadcrumb.Item>{doctor.profile.name}</Breadcrumb.Item>
 			</Breadcrumb>
 
-			<Card className="doctor-profile-card" style={{ marginBottom: 24 }}>
-				<Row gutter={24}>
-					<Col xs={24} sm={8} md={6}>
-						<div style={{ textAlign: "center" }}>
-							<Avatar
-								size={200}
-								icon={<UserOutlined />}
-								src={doctor.profile?.photo}
-							/>
-							{canEdit && (
-								<div style={{ marginTop: 16 }}>
+			<Row gutter={[24, 24]}>
+				{/* Left Column - Doctor Profile */}
+				<Col xs={24} md={10} lg={8}>
+					<Card
+						title={
+							canUpdateDoctor && (
+								<div
+									style={{
+										display: "flex",
+										justifyContent: "space-between",
+										alignItems: "center",
+									}}
+								>
+									<span>Personal Information</span>
 									<Button
 										type="primary"
+										size="small"
 										icon={<EditOutlined />}
-										onClick={() => handleEdit("basic")}
+										onClick={handleEditPersonalInfo}
 									>
-										Edit Information
+										Edit
 									</Button>
 								</div>
-							)}
-						</div>
-					</Col>
-					<Col xs={24} sm={16} md={18}>
-						<Title level={2}>{doctor.profile?.name}</Title>
-						{doctor.profile?.bnName && (
-							<Title level={4} type="secondary">
-								{doctor.profile.bnName}
-							</Title>
-						)}
-						<div>
-							{doctor.specializations &&
-								doctor.specializations.split(",").map((spec, index) => (
-									<Tag color="blue" key={index}>
-										{spec.trim()}
-									</Tag>
-								))}
+							)
+						}
+					>
+						<div style={{ textAlign: "center", marginBottom: 20 }}>
+							<Avatar
+								src={doctor.profile.photo || undefined}
+								icon={<UserOutlined />}
+								size={150}
+								style={{ marginBottom: 16 }}
+							/>
+							<Title level={3}>{doctor.profile.name}</Title>
+							{doctor.profile.bnName &&
+								doctor.profile.bnName !== doctor.profile.name && (
+									<Title level={5} type="secondary">
+										{doctor.profile.bnName}
+									</Title>
+								)}
+							<Tag color="blue">{doctor.profile.gender}</Tag>
 						</div>
 
 						<Divider />
 
-						<Row gutter={[16, 16]}>
-							<Col span={24} md={12}>
-								<List>
+						{/* Professional Information Section */}
+						<div style={{ marginBottom: 20 }}>
+							<div
+								style={{
+									display: "flex",
+									alignItems: "center",
+									marginBottom: 16,
+								}}
+							>
+								<IdcardOutlined style={{ fontSize: 20, marginRight: 10 }} />
+								<Title level={5} style={{ margin: 0 }}>
+									BMDC Registration: {doctor.bmdcNo || "N/A"}
+								</Title>
+							</div>
+
+							{doctor.yearOfExperience && (
+								<div
+									style={{
+										display: "flex",
+										alignItems: "center",
+										marginBottom: 16,
+									}}
+								>
+									<MedicineBoxOutlined
+										style={{ fontSize: 20, marginRight: 10 }}
+									/>
+									<div>
+										<Text strong>Experience</Text>
+										<div>
+											<Tag
+												color="green"
+												style={{ fontSize: 14, padding: "4px 8px" }}
+											>
+												{doctor.yearOfExperience} years
+											</Tag>
+										</div>
+									</div>
+								</div>
+							)}
+
+							{doctor.degrees && (
+								<div style={{ display: "flex", marginBottom: 16 }}>
+									<BookOutlined
+										style={{ fontSize: 20, marginRight: 10, marginTop: 4 }}
+									/>
+									<div>
+										<Text strong style={{ display: "block", marginBottom: 8 }}>
+											Degrees
+										</Text>
+										<div>
+											{doctor.degrees
+												.split(", ")
+												.map((degree: string, index: number) => (
+													<Tag
+														key={index}
+														color="blue"
+														style={{
+															margin: "0 4px 8px 0",
+															fontSize: 14,
+															padding: "4px 8px",
+															borderRadius: "16px",
+														}}
+													>
+														{degree}
+													</Tag>
+												))}
+										</div>
+									</div>
+								</div>
+							)}
+
+							{doctor.specializations && (
+								<div style={{ display: "flex", marginBottom: 16 }}>
+									<MedicineBoxOutlined
+										style={{ fontSize: 20, marginRight: 10, marginTop: 4 }}
+									/>
+									<div>
+										<Text strong style={{ display: "block", marginBottom: 8 }}>
+											Specializations
+										</Text>
+										<div>
+											{doctor.specializations
+												.split(", ")
+												.map((specialization: string, index: number) => (
+													<Tag
+														key={index}
+														color="purple"
+														style={{
+															margin: "0 4px 8px 0",
+															fontSize: 14,
+															padding: "4px 8px",
+															borderRadius: "16px",
+														}}
+													>
+														{specialization}
+													</Tag>
+												))}
+										</div>
+									</div>
+								</div>
+							)}
+						</div>
+
+						<Divider />
+
+						{/* Contact Information Section */}
+						<div style={{ marginBottom: 20 }}>
+							<Title level={5} style={{ marginBottom: 16 }}>
+								Contact Information
+							</Title>
+
+							<List itemLayout="horizontal" size="small">
+								{doctor.profile.phone && (
 									<List.Item>
-										<IdcardOutlined style={{ marginRight: 8 }} />
-										<Text strong>BMDC No:</Text> {doctor.bmdcNo}
+										<List.Item.Meta
+											avatar={<PhoneOutlined />}
+											title="Phone"
+											description={doctor.profile.phone}
+										/>
 									</List.Item>
+								)}
+
+								{doctor.profile.email && (
 									<List.Item>
-										<MedicineBoxOutlined style={{ marginRight: 8 }} />
-										<Text strong>Experience:</Text> {doctor.yearOfExperience}{" "}
-										years
+										<List.Item.Meta
+											avatar={<MailOutlined />}
+											title="Email"
+											description={doctor.profile.email}
+										/>
 									</List.Item>
-									{doctor.profile?.gender && (
-										<List.Item>
-											<UserOutlined style={{ marginRight: 8 }} />
-											<Text strong>Gender:</Text> {doctor.profile.gender}
-										</List.Item>
-									)}
-								</List>
-							</Col>
-							<Col span={24} md={12}>
-								<List>
-									{doctor.profile?.email && (
-										<List.Item>
-											<MailOutlined style={{ marginRight: 8 }} />
-											<Text strong>Email:</Text> {doctor.profile.email}
-										</List.Item>
-									)}
-									{doctor.profile?.phone && (
-										<List.Item>
-											<PhoneOutlined style={{ marginRight: 8 }} />
-											<Text strong>Phone:</Text> {doctor.profile.phone}
-										</List.Item>
-									)}
-									{doctor.profile?.address && (
-										<List.Item>
-											<EnvironmentOutlined style={{ marginRight: 8 }} />
-											<Text strong>Address:</Text> {doctor.profile.address}
-										</List.Item>
-									)}
-								</List>
-							</Col>
-						</Row>
+								)}
+
+								{doctor.profile.address && (
+									<List.Item>
+										<List.Item.Meta
+											avatar={<EnvironmentOutlined />}
+											title="Address"
+											description={doctor.profile.address}
+										/>
+									</List.Item>
+								)}
+							</List>
+						</div>
 
 						{doctor.description && (
-							<div style={{ marginTop: 16 }}>
-								<Title level={5}>About</Title>
-								<p>{doctor.description}</p>
+							<>
+								<Divider />
+								<div>
+									<Title level={5}>About</Title>
+									<Text>{doctor.description}</Text>
+								</div>
+							</>
+						)}
+					</Card>
+				</Col>
+
+				{/* Right Column - Degrees and Workplaces */}
+				<Col xs={24} md={14} lg={16}>
+					<Card
+						title={
+							<div
+								style={{
+									display: "flex",
+									justifyContent: "space-between",
+									alignItems: "center",
+								}}
+							>
+								<Title level={4} style={{ margin: 0 }}>
+									<BookOutlined /> Educational Qualifications
+								</Title>
+								{canUpdateDoctor && (
+									<Button
+										type="primary"
+										icon={<PlusOutlined />}
+										onClick={handleAddDegree}
+									>
+										Add Degree
+									</Button>
+								)}
 							</div>
-						)}
-					</Col>
-				</Row>
-			</Card>
+						}
+					>
+						{renderDegrees()}
+					</Card>
 
-			<Card
-				title={
-					<div style={{ display: "flex", justifyContent: "space-between" }}>
-						<span>
-							<MedicineBoxOutlined /> Workplaces
-						</span>
-						{canEdit && (
-							<Button
-								type="primary"
-								size="small"
-								icon={<PlusOutlined />}
-								onClick={() => handleEdit("workplace")}
+					<Card
+						title={
+							<div
+								style={{
+									display: "flex",
+									justifyContent: "space-between",
+									alignItems: "center",
+								}}
 							>
-								Add Workplace
-							</Button>
-						)}
-					</div>
-				}
-				style={{ marginBottom: 24 }}
-			>
-				{doctor.doctorWorkplaces && doctor.doctorWorkplaces.length > 0 ? (
-					<List
-						dataSource={doctor.doctorWorkplaces}
-						renderItem={(workplace) => (
-							<List.Item
-								actions={
-									canEdit
-										? [
-												<Button
-													key="edit"
-													icon={<EditOutlined />}
-													onClick={() => handleEdit("workplace", workplace)}
-												/>,
-												<Popconfirm
-													key="delete"
-													title="Are you sure to delete this workplace?"
-													onConfirm={() =>
-														handleDelete("workplace", workplace.id)
-													}
-													okText="Yes"
-													cancelText="No"
-												>
-													<Button danger icon={<DeleteOutlined />} />
-												</Popconfirm>,
-										  ]
-										: []
-								}
-							>
-								<List.Item.Meta
-									title={
-										<span>
-											<strong>{workplace.designation}</strong> at{" "}
-											<Link href={`/hospitals/${workplace.hospital?.id}`}>
-												{workplace.hospital?.name}
-											</Link>
-										</span>
-									}
-									description={
-										<div>
-											<div>Department: {workplace.department}</div>
-											<div>
-												Duration:{" "}
-												{workplace.startDate
-													? new Date(workplace.startDate).toLocaleDateString()
-													: "N/A"}{" "}
-												{workplace.endDate
-													? `to ${new Date(
-															workplace.endDate
-													  ).toLocaleDateString()}`
-													: "to Present"}
-											</div>
-										</div>
-									}
-								/>
-							</List.Item>
-						)}
-					/>
-				) : (
-					<Empty description="No workplace information available" />
-				)}
-			</Card>
+								<Title level={4} style={{ margin: 0 }}>
+									<MedicineBoxOutlined /> Work Experience
+								</Title>
+								{canUpdateDoctor && (
+									<Button
+										type="primary"
+										icon={<PlusOutlined />}
+										onClick={handleAddWorkplace}
+									>
+										Add Workplace
+									</Button>
+								)}
+							</div>
+						}
+						style={{ marginTop: 24 }}
+					>
+						{renderWorkplaces()}
+					</Card>
+				</Col>
+			</Row>
 
-			<Card
-				title={
-					<div style={{ display: "flex", justifyContent: "space-between" }}>
-						<span>
-							<BookOutlined /> Education & Degrees
-						</span>
-						{canEdit && (
-							<Button
-								type="primary"
-								size="small"
-								icon={<PlusOutlined />}
-								onClick={() => handleEdit("degree")}
-							>
-								Add Degree
-							</Button>
-						)}
-					</div>
-				}
-			>
-				{doctor.doctorDegrees && doctor.doctorDegrees.length > 0 ? (
-					<List
-						dataSource={doctor.doctorDegrees}
-						renderItem={(degree) => (
-							<List.Item
-								actions={
-									canEdit
-										? [
-												<Button
-													key="edit"
-													icon={<EditOutlined />}
-													onClick={() => handleEdit("degree", degree)}
-												/>,
-												<Popconfirm
-													key="delete"
-													title="Are you sure to delete this degree?"
-													onConfirm={() => handleDelete("degree", degree.id)}
-													okText="Yes"
-													cancelText="No"
-												>
-													<Button danger icon={<DeleteOutlined />} />
-												</Popconfirm>,
-										  ]
-										: []
-								}
-							>
-								<List.Item.Meta
-									title={
-										<span>
-											<strong>
-												{degree.degree?.name} ({degree.degree?.abbreviation})
-											</strong>
-										</span>
-									}
-									description={
-										<div>
-											<div>Institute: {degree.institute}</div>
-											<div>Year: {degree.year}</div>
-										</div>
-									}
-								/>
-							</List.Item>
-						)}
-					/>
-				) : (
-					<Empty description="No degree information available" />
-				)}
-			</Card>
+			<div style={{ textAlign: "center", margin: "24px 0" }}>
+				<Button type="primary">
+					<Link href="/doctors">Back to Doctors</Link>
+				</Button>
+			</div>
 
-			{/* Edit Basic Information Modal */}
+			{/* Personal Info Modal */}
 			<Modal
-				title="Edit Basic Information"
-				open={editMode === "basic"}
-				onCancel={handleCancel}
-				footer={[
-					<Button key="cancel" onClick={handleCancel}>
-						Cancel
-					</Button>,
-					<Button key="submit" type="primary" onClick={() => form.submit()}>
-						Save
-					</Button>,
-				]}
-				width={800}
+				title="Edit Personal Information"
+				open={personalInfoModalVisible}
+				onCancel={() => setPersonalInfoModalVisible(false)}
+				onOk={() => personalInfoForm.submit()}
+				width={600}
 			>
 				<Form
-					form={form}
+					form={personalInfoForm}
 					layout="vertical"
-					onFinish={handleSubmit}
-					initialValues={{
-						name: doctor.profile?.name,
-						bnName: doctor.profile?.bnName,
-						gender: doctor.profile?.gender,
-						email: doctor.profile?.email,
-						phone: doctor.profile?.phone,
-						address: doctor.profile?.address,
-						bmdcNo: doctor.bmdcNo,
-						specializations: doctor.specializations,
-						description: doctor.description,
-					}}
+					onFinish={handlePersonalInfoSubmit}
 				>
 					<Row gutter={16}>
 						<Col span={12}>
 							<Form.Item
-								name="name"
 								label="Name"
-								rules={[{ required: true, message: "Name is required" }]}
+								name="name"
+								rules={[{ required: true, message: "Please input name!" }]}
 							>
-								<Input placeholder="Doctor's name" />
+								<Input />
 							</Form.Item>
 						</Col>
 						<Col span={12}>
-							<Form.Item name="bnName" label="Name (Bengali)">
-								<Input placeholder="Doctor's name in Bengali" />
+							<Form.Item label="Bengali Name" name="bnName">
+								<Input />
 							</Form.Item>
 						</Col>
 					</Row>
-
 					<Row gutter={16}>
 						<Col span={12}>
-							<Form.Item name="gender" label="Gender">
-								<Select placeholder="Select gender">
-									<Option value="Male">Male</Option>
-									<Option value="Female">Female</Option>
-									<Option value="Other">Other</Option>
+							<Form.Item label="Phone" name="phone">
+								<Input />
+							</Form.Item>
+						</Col>
+						<Col span={12}>
+							<Form.Item
+								label="Email"
+								name="email"
+								rules={[
+									{ type: "email", message: "Please enter a valid email!" },
+								]}
+							>
+								<Input />
+							</Form.Item>
+						</Col>
+					</Row>
+					<Row gutter={16}>
+						<Col span={12}>
+							<Form.Item label="Gender" name="gender">
+								<Select>
+									<Option value="MALE">Male</Option>
+									<Option value="FEMALE">Female</Option>
+									<Option value="OTHER">Other</Option>
 								</Select>
 							</Form.Item>
 						</Col>
 						<Col span={12}>
-							<Form.Item
-								name="bmdcNo"
-								label="BMDC Registration Number"
-								rules={[{ required: true, message: "BMDC number is required" }]}
-							>
-								<Input placeholder="BMDC registration number" />
+							<Form.Item label="BMDC Registration" name="bmdcNo">
+								<Input />
 							</Form.Item>
 						</Col>
 					</Row>
-
 					<Row gutter={16}>
 						<Col span={12}>
-							<Form.Item name="email" label="Email">
-								<Input placeholder="Email address" />
-							</Form.Item>
-						</Col>
-						<Col span={12}>
-							<Form.Item name="phone" label="Phone">
-								<Input placeholder="Phone number" />
+							<Form.Item label="Years of Experience" name="yearOfExperience">
+								<Input type="number" />
 							</Form.Item>
 						</Col>
 					</Row>
-
-					<Form.Item name="address" label="Address">
-						<Input placeholder="Address" />
+					<Form.Item label="Address" name="address">
+						<TextArea rows={3} />
 					</Form.Item>
-
-					<Form.Item name="specializations" label="Specializations">
-						<Input placeholder="Specializations (comma separated)" />
-					</Form.Item>
-
-					<Form.Item name="description" label="About">
-						<TextArea rows={4} placeholder="Brief description" />
+					<Form.Item label="Description" name="description">
+						<TextArea rows={4} />
 					</Form.Item>
 				</Form>
 			</Modal>
 
-			{/* Edit/Add Workplace Modal */}
+			{/* Degree Modal */}
 			<Modal
-				title={selectedWorkplace ? "Edit Workplace" : "Add New Workplace"}
-				open={editMode === "workplace"}
-				onCancel={handleCancel}
-				footer={[
-					<Button key="cancel" onClick={handleCancel}>
-						Cancel
-					</Button>,
-					<Button key="submit" type="primary" onClick={() => form.submit()}>
-						Save
-					</Button>,
-				]}
+				title={editingDegree ? "Edit Degree" : "Add Degree"}
+				open={degreeModalVisible}
+				onCancel={() => setDegreeModalVisible(false)}
+				onOk={() => degreeForm.submit()}
+				width={600}
 			>
-				<Form form={form} layout="vertical" onFinish={handleSubmit}>
+				<Form form={degreeForm} layout="vertical" onFinish={handleDegreeSubmit}>
 					<Form.Item
-						name="hospital"
-						label="Hospital"
-						rules={[{ required: true, message: "Hospital is required" }]}
+						label="Degree"
+						name="degreeId"
+						rules={[{ required: true, message: "Please select a degree!" }]}
 					>
-						<Select placeholder="Select hospital">
-							{/* This would be populated from API */}
-							<Option value={1}>City General Hospital</Option>
-							<Option value={2}>Riverside Medical Center</Option>
+						<Select placeholder="Select degree">
+							{/* You'll need to populate this with actual degree options */}
+							<Option value="1">MBBS</Option>
+							<Option value="2">MD</Option>
+							<Option value="3">MS</Option>
 						</Select>
 					</Form.Item>
-
-					<Form.Item
-						name="designation"
-						label="Designation"
-						rules={[{ required: true, message: "Designation is required" }]}
-					>
-						<Input placeholder="E.g. Consultant, Specialist" />
+					<Form.Item label="Institution" name="institutionId">
+						<Select placeholder="Select institution">
+							{/* You'll need to populate this with actual institution options */}
+							<Option value="1">Dhaka Medical College</Option>
+							<Option value="2">Chittagong Medical College</Option>
+						</Select>
 					</Form.Item>
-
-					<Form.Item name="department" label="Department">
-						<Input placeholder="E.g. Cardiology, Neurology" />
+					<Form.Item label="Medical Speciality" name="medicalSpecialityId">
+						<Select placeholder="Select speciality">
+							{/* You'll need to populate this with actual speciality options */}
+							<Option value="1">Cardiology</Option>
+							<Option value="2">Neurology</Option>
+						</Select>
 					</Form.Item>
-
 					<Row gutter={16}>
 						<Col span={12}>
-							<Form.Item
-								name="startDate"
-								label="Start Date"
-								rules={[{ required: true, message: "Start date is required" }]}
-							>
+							<Form.Item label="Start Date" name="startDateTime">
 								<DatePicker style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
 						<Col span={12}>
-							<Form.Item name="isCurrentlyWorking" valuePropName="checked">
-								<div style={{ marginTop: 30 }}>
-									<Select
-										defaultValue={false}
-										onChange={(value) => {
-											if (value) {
-												form.setFieldValue("endDate", null);
-											}
-										}}
-									>
-										<Option value={true}>Currently Working Here</Option>
-										<Option value={false}>Worked In The Past</Option>
-									</Select>
-								</div>
+							<Form.Item label="End Date" name="endDateTime">
+								<DatePicker style={{ width: "100%" }} />
 							</Form.Item>
 						</Col>
 					</Row>
-
-					<Form.Item
-						name="endDate"
-						label="End Date"
-						dependencies={["isCurrentlyWorking"]}
-						rules={[
-							({ getFieldValue }) => ({
-								required: !getFieldValue("isCurrentlyWorking"),
-								message: "End date is required if not currently working",
-							}),
-						]}
-					>
-						<DatePicker style={{ width: "100%" }} />
-					</Form.Item>
 				</Form>
 			</Modal>
 
-			{/* Edit/Add Degree Modal */}
+			{/* Workplace Modal */}
 			<Modal
-				title={selectedDegree ? "Edit Degree" : "Add New Degree"}
-				open={editMode === "degree"}
-				onCancel={handleCancel}
-				footer={[
-					<Button key="cancel" onClick={handleCancel}>
-						Cancel
-					</Button>,
-					<Button key="submit" type="primary" onClick={() => form.submit()}>
-						Save
-					</Button>,
-				]}
+				title={editingWorkplace ? "Edit Workplace" : "Add Workplace"}
+				open={workplaceModalVisible}
+				onCancel={() => setWorkplaceModalVisible(false)}
+				onOk={() => workplaceForm.submit()}
+				width={600}
 			>
-				<Form form={form} layout="vertical" onFinish={handleSubmit}>
-					<Form.Item
-						name="degree"
-						label="Degree"
-						rules={[{ required: true, message: "Degree is required" }]}
-					>
-						<Select placeholder="Select degree">
-							{/* This would be populated from API */}
-							<Option value={1}>
-								MBBS - Bachelor of Medicine, Bachelor of Surgery
-							</Option>
-							<Option value={2}>MD - Doctor of Medicine</Option>
-							<Option value={3}>
-								FCPS - Fellow of College of Physicians and Surgeons
-							</Option>
+				<Form
+					form={workplaceForm}
+					layout="vertical"
+					onFinish={handleWorkplaceSubmit}
+				>
+					<Form.Item label="Hospital" name="hospitalId">
+						<Select placeholder="Select hospital">
+							{/* You'll need to populate this with actual hospital options */}
+							<Option value="1">Dhaka Medical College Hospital</Option>
+							<Option value="2">Chittagong Medical College Hospital</Option>
 						</Select>
 					</Form.Item>
-
-					<Form.Item
-						name="institute"
-						label="Institute"
-						rules={[{ required: true, message: "Institute is required" }]}
-					>
-						<Input placeholder="Name of the medical school or university" />
+					<Form.Item label="Institution" name="institutionId">
+						<Select placeholder="Select institution">
+							{/* You'll need to populate this with actual institution options */}
+							<Option value="1">Dhaka Medical College</Option>
+							<Option value="2">Chittagong Medical College</Option>
+						</Select>
 					</Form.Item>
-
-					<Form.Item
-						name="year"
-						label="Passing Year"
-						rules={[{ required: true, message: "Passing year is required" }]}
-					>
-						<Input placeholder="Year of graduation" />
+					<Row gutter={16}>
+						<Col span={12}>
+							<Form.Item label="Doctor Position" name="doctorPosition">
+								<Input />
+							</Form.Item>
+						</Col>
+						<Col span={12}>
+							<Form.Item label="Academic Position" name="teacherPosition">
+								<Input />
+							</Form.Item>
+						</Col>
+					</Row>
+					<Form.Item label="Medical Speciality" name="medicalSpecialityId">
+						<Select placeholder="Select speciality">
+							{/* You'll need to populate this with actual speciality options */}
+							<Option value="1">Cardiology</Option>
+							<Option value="2">Neurology</Option>
+						</Select>
+					</Form.Item>
+					<Form.Item label="Start Date" name="startDate">
+						<DatePicker style={{ width: "100%" }} />
 					</Form.Item>
 				</Form>
 			</Modal>
 		</div>
 	);
-}
+};
+
+export default DoctorDetails;
