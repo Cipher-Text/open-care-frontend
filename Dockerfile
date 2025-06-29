@@ -1,4 +1,4 @@
-FROM node:18-alpine AS build
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
@@ -12,4 +12,5 @@ RUN npm run build
 
 EXPOSE 5175
 
-CMD ["npm", "run", "dev", "--", "--host", "--port", "5175"]
+# CMD ["npm", "run", "dev", "--", "--host", "--port", "5175"]
+CMD ["npm", "start"]

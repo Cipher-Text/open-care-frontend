@@ -20,4 +20,5 @@ COPY .env.dev .env
 EXPOSE 5175
 
 # Run the development server with host binding
-CMD ["npm", "run", "dev", "--", "--host"]
+# CMD ["npm", "run", "dev", "--", "--host"]
+CMD ["npm", "start"]
