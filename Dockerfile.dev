@@ -9,6 +9,8 @@ RUN npm install
 
 COPY . .
 
+COPY .env.dev .env
+
 RUN npm run build
 
 EXPOSE 5175
