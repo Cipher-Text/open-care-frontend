@@ -364,9 +364,9 @@ export const fetchLatestBlogs = async (): Promise<{
 	}
 };
 
-export const fetchContributors = async (): Promise<ContributorResponse[]> => {
+export const fetchContributors = async (): Promise<ContributorResponse> => {
 	try {
-		const response = await apiClient.get<ContributorResponse[]>(
+		const response = await apiClient.get<ContributorResponse>(
 			"/api/public/github/contributors"
 		);
 		return response.data;

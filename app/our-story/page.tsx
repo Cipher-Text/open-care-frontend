@@ -43,7 +43,7 @@ import {
 	ClockCircleOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
-import { Developer, ContributorResponse } from "../../src/types";
+import { Developer } from "../../src/types";
 
 const { Title, Paragraph, Text } = Typography;
 const { Panel } = Collapse;
@@ -145,11 +145,9 @@ export default function OurStoryPage() {
 				const contributorsData = await fetchContributors();
 
 				// Process contributors
-				const developersList: Developer[] = contributorsData
-					.filter(
-						(contributor: ContributorResponse) => contributor.type !== "Bot"
-					) // Skip bots
-					.map((contributor: ContributorResponse) => ({
+				const developersList: Developer[] = contributorsData?.contributors
+					?.filter((contributor) => contributor.type !== "Bot") // Skip bots
+					.map((contributor) => ({
 						id: contributor.id,
 						login: contributor.login,
 						name: contributor.login, // Using login as name since detailed user info isn't provided
