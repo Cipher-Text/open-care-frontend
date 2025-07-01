@@ -13,6 +13,7 @@ import {
 	MedicalSpeciality,
 	FeaturedData,
 	Institution,
+	ContributorResponse,
 } from "../types";
 
 // Create a custom error class for API errors
@@ -360,5 +361,19 @@ export const fetchLatestBlogs = async (): Promise<{
 			throw error;
 		}
 		throw new ApiError(500, "Failed to fetch latest blogs");
+	}
+};
+
+export const fetchContributors = async (): Promise<ContributorResponse[]> => {
+	try {
+		const response = await apiClient.get<ContributorResponse[]>(
+			"/api/public/github/contributors"
+		);
+		return response.data;
+	} catch (error) {
+		if (error instanceof ApiError) {
+			throw error;
+		}
+		throw new ApiError(500, "Failed to fetch contributors");
 	}
 };

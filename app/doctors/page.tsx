@@ -284,8 +284,7 @@ export default function DoctorsPage() {
 				</div>
 			) : (
 				<>
-					{/* Desktop view with Table */}
-					<div className="desktop-view" style={{ marginBottom: 24 }}>
+					<div style={{ marginBottom: 24 }}>
 						<Table
 							columns={columns}
 							dataSource={doctors}

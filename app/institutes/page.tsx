@@ -333,8 +333,7 @@ export default function InstitutesPage() {
 				</div>
 			) : (
 				<>
-					{/* Desktop view */}
-					<div className="desktop-view" style={{ marginBottom: 24 }}>
+					<div style={{ marginBottom: 24 }}>
 						<Table
 							columns={columns}
 							dataSource={institutes}

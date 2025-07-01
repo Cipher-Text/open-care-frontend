@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	// output: "standalone", // Outputs a Single-Page Application (SPA).
-	distDir: "./dist", // Changes the build output directory to `./dist/`.
+	images: {
+		domains: ["http://46.102.157.211:6700", "api.opencarebd.com"],
+		unoptimized: true,
+	},
 };
 
 export default nextConfig;
