@@ -1,142 +1,174 @@
 # Open Care Frontend
 
-Open Care Frontend is a React-based web application designed to provide users with a comprehensive platform for accessing medical resources, including doctors, hospitals, and medical institutes. The application is built using modern technologies like React, TypeScript, and Vite, and leverages Ant Design for a polished and responsive UI.
+Open Care Frontend is an open-source, modern web application for accessing medical resources in Bangladesh, including doctors, hospitals, and medical institutes. Built with Next.js, React, TypeScript, and Ant Design, it provides a fast, responsive, and user-friendly experience.
+
+---
+
+## Table of Contents
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Available Scripts](#available-scripts)
+- [Docker Usage](#docker-usage)
+- [Environment Variables](#environment-variables)
+- [Authentication](#authentication)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+
+---
 
 ## Features
+- **Home Page**: Highlights featured doctors, hospitals, institutes, and statistics.
+- **Doctors**: Search, filter, and view doctor profiles.
+- **Hospitals**: Browse and filter hospitals with detailed info.
+- **Institutes**: Explore medical institutes.
+- **Profile**: Manage user profile and authentication.
+- **Details Pages**: View detailed info for doctors, hospitals, and institutes.
+- **Responsive Design**: Works on desktop and mobile.
 
-- **Home Page**: Displays featured doctors, hospitals, institutes, and statistics.
-- **Doctors**: Search and browse a list of doctors with filters and pagination.
-- **Hospitals**: Explore hospitals with detailed information and filtering options.
-- **Institutes**: View medical institutes with filtering and pagination.
-- **Profile**: Manage user profile information.
-- **Hospital Details**: View detailed information about a specific hospital, including associated doctors.
-- **Responsive Design**: Optimized for both desktop and mobile devices.
+---
+
+## Tech Stack
+- **Next.js** (App Router)
+- **React** 19
+- **TypeScript**
+- **Ant Design** (UI components)
+- **Axios** (API requests)
+- **ESLint** (Linting)
+- **Docker** (Containerization)
+
+---
 
 ## Project Structure
 
-The project follows a modular structure for better scalability and maintainability:
-
 ```
+app/
+  ├── components/         # App-level UI components (e.g., AppHeader)
+  ├── doctors/            # Doctors listing and details
+  ├── hospitals/          # Hospitals listing and details
+  ├── institutes/         # Institutes listing and details
+  ├── profile/            # User profile page
+  ├── login/              # Login page
+  ├── register/           # Registration page
+  ├── our-story/          # About/Our Story page
+  ├── layout.tsx          # App layout
+  └── page.tsx            # Main entry page
 src/
-├── assets/          # Static assets like images
-├── components/      # Reusable UI components
-├── config/          # Configuration files
-├── pages/           # Page-level components
-├── services/        # API service functions
-├── types/           # TypeScript type definitions
-├── App.tsx          # Main application component
-├── main.tsx         # Application entry point
-├── App.css          # Global styles
-├── index.css        # Additional global styles
+  ├── assets/             # Static assets (images, etc.)
+  ├── config/             # App configuration
+  ├── contexts/           # React context providers (e.g., AuthContext)
+  ├── services/           # API service functions
+  ├── types/              # TypeScript type definitions
+  ├── App.css             # Global styles
+  └── index.css           # Additional global styles
+public/
+  └── images/             # Publicly served images
 ```
 
-## Technologies Used
+---
 
-- **React**: Frontend library for building user interfaces.
-- **TypeScript**: Strongly typed programming language for better code quality.
-- **Vite**: Fast build tool for modern web applications.
-- **Ant Design**: UI library for responsive and elegant components.
-- **Axios**: HTTP client for API requests.
-- **React Router**: For routing and navigation.
-- **CountUp.js**: For animated statistics.
+## Getting Started
 
-## Installation
+### Prerequisites
+- Node.js (v20 or later recommended)
+- Yarn or npm
+- (Optional) Docker
 
-1. Clone the repository:
-
+### Installation
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/Cipher-Text/open-care-frontend.git
    cd open-care-frontend
    ```
-
-2. Install dependencies:
-
+2. **Install dependencies:**
    ```bash
    yarn install
+   # or
+   npm install
    ```
-
-3. Create a `.env` file in the root directory and configure the following variables:
-
-   ```properties
+3. **Configure environment variables:**
+   Create a `.env` file in the root directory. Example:
+   ```env
    VITE_API_URL=http://46.102.157.211:6700/
    VITE_ITEMS_PER_PAGE=10
    ```
-
-4. Start the development server:
-
+4. **Run the development server:**
    ```bash
    yarn dev
+   # or
+   npm run dev
    ```
+   The app will be available at [http://localhost:5175](http://localhost:5175) (or as configured).
 
-5. Open the application in your browser at `http://localhost:5173`.
+---
 
-## Scripts
+## Available Scripts
+- `yarn dev` / `npm run dev` — Start the development server
+- `yarn build` / `npm run build` — Build for production
+- `yarn start` / `npm start` — Start the production server
+- `yarn lint` / `npm run lint` — Run ESLint
 
-- `yarn dev`: Start the development server.
-- `yarn build`: Build the application for production.
-- `yarn preview`: Preview the production build.
-- `yarn lint`: Run ESLint to check for code quality issues.
+---
 
-## API Configuration
+## Docker Usage
 
-The application uses the following environment variables for API configuration:
-
-- `VITE_API_URL`: Base URL for the backend API.
-- `VITE_ITEMS_PER_PAGE`: Number of items to display per page in paginated views.
-
-## Folder Details
-
-### `src/pages/`
-
-Contains the main pages of the application:
-
-- `Home.tsx`: Landing page with featured content.
-- `Doctors.tsx`: List of doctors with search and filters.
-- `Hospitals.tsx`: List of hospitals with filters.
-- `HospitalDetails.tsx`: Detailed view of a hospital.
-- `Institutes.tsx`: List of medical institutes.
-- `Profile.tsx`: User profile management.
-
-### `src/services/`
-
-Contains API service functions for interacting with the backend:
-
-- `api.ts`: Functions for fetching doctors, hospitals, institutes, and user profiles.
-
-### `src/types/`
-
-Contains TypeScript type definitions for the application:
-
-- `index.ts`: Defines types like `Doctor`, `Hospital`, `Institute`, etc.
-
-### `src/components/`
-
-Reusable UI components:
-
-- `AppHeader.tsx`: Header with navigation links.
-
-### `src/config/`
-
-Configuration files:
-
-- `index.ts`: Contains application-wide configuration like API URL and pagination settings.
-
-## Deployment
-
-To build the application for production, run:
-
+### Build and Run (Production)
 ```bash
-yarn build
+docker build -f Dockerfile -t open-care-frontend .
+docker run -p 5175:5175 open-care-frontend
 ```
 
-The production-ready files will be available in the `dist` directory.
+### Development
+```bash
+docker build -f Dockerfile.dev -t open-care-frontend-dev .
+docker run -p 5175:5175 open-care-frontend-dev
+```
+
+### QA/Production (Custom)
+- Use `Dockerfile.qa` or `Dockerfile.prod` as needed:
+  ```bash
+  docker build -f Dockerfile.prod -t open-care-frontend-prod .
+  docker run -p 5175:5175 open-care-frontend-prod
+  ```
+
+---
+
+## Environment Variables
+- `VITE_API_URL` — Base URL for backend API
+- `VITE_ITEMS_PER_PAGE` — Default items per page for pagination
+
+You can use `.env`, `.env.dev`, `.env.prod`, or `.env.qa` for different environments.
+
+---
+
+## Authentication
+- The app uses a React context (`AuthContext`) for authentication state.
+- Login stores a JWT token in `localStorage` and fetches the user profile.
+- Logout clears the token and user state.
+- Authenticated routes/pages use this context to check login status.
+
+---
+
+## Contributing
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/YourFeature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin feature/YourFeature`)
+5. Open a Pull Request
+
+---
 
 ## License
 
-This project is licensed under the MIT License. See the `LICENSE` file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
 
 ## Acknowledgments
-
-- [Ant Design](https://ant.design/) for the UI components.
-- [Vite](https://vitejs.dev/) for the fast development experience.
-- [React](https://reactjs.org/) for the robust frontend framework.
+- [Ant Design](https://ant.design/)
+- [Next.js](https://nextjs.org/)
+- [React](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- All contributors and the open-source community!
