@@ -21,9 +21,9 @@ import {
 	fetchHospitals,
 	fetchDegrees,
 	fetchMedicalSpecialities,
-} from "../../src/services/api";
-import config from "../../src/config";
-import { Doctor } from "../../src/types";
+} from "@/services/api";
+import config from "@/config";
+import { Doctor } from "@/types";
 
 const { Title } = Typography;
 const { Option } = Select;

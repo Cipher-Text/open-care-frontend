@@ -1,5 +1,5 @@
-import AppHeader from "./components/AppHeader";
-import { Providers } from "./components/Providers";
+import AppHeader from "./_components/AppHeader";
+import { Providers } from "./_components/Providers";
 import "antd/dist/reset.css"; // Import Ant Design styles
 import "../src/index.css"; // Import global CSS
 import "../src/App.css"; // Import application-specific styles

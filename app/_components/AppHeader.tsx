@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Layout, Menu, Button, Avatar, Dropdown } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
