@@ -33,9 +33,9 @@ import {
 	fetchHospitalById,
 	fetchDoctorsByHospital,
 	fetchHospitalMedicalTests,
-} from "../../../src/services/api";
-import { Hospital, Doctor, HospitalMedicalTest } from "../../../src/types";
-import config from "../../../src/config";
+} from "@/services/api";
+import { Hospital, Doctor, HospitalMedicalTest } from "@/types";
+import config from "@/config";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 

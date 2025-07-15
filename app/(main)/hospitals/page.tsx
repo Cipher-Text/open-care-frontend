@@ -17,9 +17,9 @@ import {
 	LinkOutlined,
 	InfoCircleOutlined,
 } from "@ant-design/icons";
-import { fetchHospitals } from "../../src/services/api";
-import { District, Hospital } from "../../src/types";
-import config from "../../src/config";
+import { fetchHospitals } from "@/services/api";
+import { District, Hospital } from "@/types";
+import config from "@/config";
 
 const { Title } = Typography;
 const { Option } = Select;

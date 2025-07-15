@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { fetchContributors } from "../../src/services/api";
+import { fetchContributors } from "@/src/services/api";
 import {
 	Typography,
 	Row,
@@ -43,7 +43,7 @@ import {
 	ClockCircleOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
-import { Developer } from "../../src/types";
+import { Developer } from "@/src/types";
 
 const { Title, Paragraph, Text } = Typography;
 const { Panel } = Collapse;

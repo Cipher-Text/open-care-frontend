@@ -6,7 +6,7 @@ import type { Rule } from "antd/es/form";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../../src/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const { Title, Text } = Typography;
 

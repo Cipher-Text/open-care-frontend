@@ -8,7 +8,7 @@ import {
 	LogoutOutlined,
 	SettingOutlined,
 } from "@ant-design/icons";
-import { useAuth } from "../../src/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const { Header } = Layout;
 

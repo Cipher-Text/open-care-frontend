@@ -37,9 +37,9 @@ import {
 	HomeOutlined,
 	EnvironmentOutlined,
 } from "@ant-design/icons";
-import { fetchUserProfile } from "../../src/services/api";
-import { User } from "../../src/types";
-import { useAuth } from "../../src/contexts/AuthContext";
+import { fetchUserProfile } from "@/services/api";
+import { User } from "@/types";
+import { useAuth } from "@/contexts/AuthContext";
 import moment from "moment";
 
 const { Title, Text } = Typography;

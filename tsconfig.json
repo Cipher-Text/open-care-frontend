@@ -41,6 +41,7 @@
 		"./dist/types/**/*.ts",
 		"./next-env.d.ts",
 		"./src",
+		"./app",
 		".next/types/**/*.ts"
 	],
 	"exclude": ["./node_modules"]

@@ -28,8 +28,8 @@ import {
 	MailOutlined,
 	UserOutlined,
 } from "@ant-design/icons";
-import { apiClient } from "../../../src/services/api";
-import { Institution, Doctor, DoctorResponse } from "../../../src/types";
+import { apiClient } from "@/services/api";
+import { Institution, Doctor, DoctorResponse } from "@/types";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 

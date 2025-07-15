@@ -35,8 +35,8 @@ import {
 	PlusOutlined,
 	DeleteOutlined,
 } from "@ant-design/icons";
-import { Doctor, DoctorDegree, DoctorWorkplace } from "../../../src/types";
-import { fetchDoctorById } from "../../../src/services/api";
+import { Doctor, DoctorDegree, DoctorWorkplace } from "@/types";
+import { fetchDoctorById } from "@/services/api";
 import dayjs from "dayjs";
 import { useParams } from "next/navigation";
 
