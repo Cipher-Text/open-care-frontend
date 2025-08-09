@@ -1,33 +1,33 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Activity, DollarSign, TrendingUp } from "lucide-react";
+import { Users, Activity, Building2, Stethoscope } from "lucide-react";
 
 const stats = [
 	{
-		title: "Total Patients",
-		value: "2,847",
+		title: "Total Doctors",
+		value: "342",
 		description: "+12% from last month",
+		icon: Stethoscope,
+		trend: "up",
+	},
+	{
+		title: "Total Hospitals",
+		value: "156",
+		description: "+8% from last month",
+		icon: Building2,
+		trend: "up",
+	},
+	{
+		title: "Active Users",
+		value: "2,847",
+		description: "+15% from last month",
 		icon: Users,
 		trend: "up",
 	},
 	{
-		title: "Appointments Today",
-		value: "156",
-		description: "+8% from yesterday",
+		title: "Daily Activities",
+		value: "1,234",
+		description: "+2.1% from yesterday",
 		icon: Activity,
-		trend: "up",
-	},
-	{
-		title: "Revenue",
-		value: "$45,231",
-		description: "+15% from last month",
-		icon: DollarSign,
-		trend: "up",
-	},
-	{
-		title: "Growth Rate",
-		value: "12.5%",
-		description: "+2.1% from last month",
-		icon: TrendingUp,
 		trend: "up",
 	},
 ];

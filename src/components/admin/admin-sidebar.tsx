@@ -1,6 +1,13 @@
 "use client";
 
-import { Settings, Home, LogOut, Bell, Stethoscope } from "lucide-react";
+import {
+	Settings,
+	Home,
+	LogOut,
+	Bell,
+	Stethoscope,
+	Building2,
+} from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
 	DropdownMenu,
@@ -35,6 +42,11 @@ const menuItems = [
 		title: "Doctors",
 		url: "/admin/doctors",
 		icon: Stethoscope,
+	},
+	{
+		title: "Hospitals",
+		url: "/admin/hospitals",
+		icon: Building2,
 	},
 ];
 
