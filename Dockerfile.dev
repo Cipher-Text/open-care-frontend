@@ -16,4 +16,4 @@ RUN npm run build
 EXPOSE 5175
 
 # CMD ["npm", "run", "dev", "--", "--host", "--port", "5175"]
-CMD ["npm", "start"]
+CMD ["npm", "start", "-p", "5175"]
