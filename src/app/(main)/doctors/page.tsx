@@ -1,9 +1,5 @@
-"use client";
-
-import { useState } from "react";
 import DoctorFilters from "@/components/doctors/DoctorFilters";
 import DoctorsList from "@/components/doctors/DoctorsList";
-import DoctorPagination from "@/components/doctors/DoctorPagination";
 
 // Mock data for doctors
 const mockDoctors = [
@@ -74,17 +70,6 @@ const mockDoctors = [
 ];
 
 export default function DoctorsPage() {
-	const [currentPage, setCurrentPage] = useState(1);
-	const resultsPerPage = 4;
-	const totalResults = 156; // Mock total
-	const totalPages = Math.ceil(totalResults / resultsPerPage);
-
-	const handlePageChange = (page: number) => {
-		setCurrentPage(page);
-		// Scroll to top when page changes
-		window.scrollTo({ top: 0, behavior: "smooth" });
-	};
-
 	return (
 		<div className="min-h-screen bg-gray-50">
 			{/* Header Section */}
@@ -108,16 +93,7 @@ export default function DoctorsPage() {
 				<DoctorFilters />
 
 				{/* Doctors List */}
-				<DoctorsList doctors={mockDoctors} totalResults={totalResults} />
-
-				{/* Pagination */}
-				<DoctorPagination
-					currentPage={currentPage}
-					totalPages={totalPages}
-					totalResults={totalResults}
-					resultsPerPage={resultsPerPage}
-					onPageChange={handlePageChange}
-				/>
+				<DoctorsList doctors={mockDoctors} totalResults={129} />
 			</div>
 		</div>
 	);

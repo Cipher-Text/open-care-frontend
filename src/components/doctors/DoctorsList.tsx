@@ -1,4 +1,5 @@
 import DoctorCard from "./DoctorCard";
+import DoctorPagination from "./DoctorPagination";
 
 interface Doctor {
 	id: string;
@@ -45,6 +46,15 @@ export default function DoctorsList({
 					<DoctorCard key={doctor.id} doctor={doctor} />
 				))}
 			</div>
+
+			{/* Pagination */}
+			<DoctorPagination
+				currentPage={1}
+				totalPages={20}
+				totalResults={totalResults}
+				resultsPerPage={10}
+				onPageChange={(page: number) => console.log("Page changed to:", page)}
+			/>
 		</div>
 	);
 }

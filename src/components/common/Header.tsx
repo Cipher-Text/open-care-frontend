@@ -23,33 +23,42 @@ export default function Header() {
 
 					{/* Navigation */}
 					<nav className="hidden lg:flex space-x-8">
-						<Link
+						{/* <Link
 							href="/services"
-							className="text-gray-600 hover:text-gray-900"
+							className="text-gray-600 transition-all hover:text-teal-600 hover:font-semibold"
 						>
 							Services
-						</Link>
-						<Link href="/doctors" className="text-gray-600 hover:text-gray-900">
+						</Link> */}
+						<Link
+							href="/doctors"
+							className="text-gray-600 transition-all hover:text-teal-600 hover:font-semibold"
+						>
 							Doctors
 						</Link>
 						<Link
+							href="/hospitals"
+							className="text-gray-600 transition-all hover:text-teal-600 hover:font-semibold"
+						>
+							Hospitals
+						</Link>
+						{/* <Link
 							href="/ambulance"
-							className="text-gray-600 hover:text-gray-900"
+							className="text-gray-600 transition-all hover:text-teal-600 hover:font-semibold"
 						>
 							Ambulance
 						</Link>
 						<Link
 							href="/blood-bank"
-							className="text-gray-600 hover:text-gray-900"
+							className="text-gray-600 transition-all hover:text-teal-600 hover:font-semibold"
 						>
 							Blood Bank
 						</Link>
-						<Link href="/about" className="text-gray-600 hover:text-gray-900">
+						<Link href="/about" className="text-gray-600 transition-all hover:text-teal-600 hover:font-semibold">
 							About
 						</Link>
-						<Link href="/contact" className="text-gray-600 hover:text-gray-900">
+						<Link href="/contact" className="text-gray-600 transition-all hover:text-teal-600 hover:font-semibold">
 							Contact
-						</Link>
+						</Link> */}
 					</nav>
 
 					{/* Header Actions */}
