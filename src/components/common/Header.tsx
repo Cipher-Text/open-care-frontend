@@ -63,15 +63,19 @@ export default function Header() {
 
 					{/* Header Actions */}
 					<div className="flex space-x-4">
-						<Button
-							variant="outline"
-							className="border-teal-600 text-teal-600 hover:bg-teal-50"
-						>
-							Sign In
-						</Button>
-						<Button className="bg-teal-600 hover:bg-teal-700">
-							Get Started
-						</Button>
+						<Link href="/login">
+							<Button
+								variant="outline"
+								className="border-teal-600 text-teal-600 hover:bg-teal-50"
+							>
+								Sign In
+							</Button>
+						</Link>
+						<Link href="/signup">
+							<Button className="bg-teal-600 hover:bg-teal-700">
+								Get Started
+							</Button>
+						</Link>
 					</div>
 				</div>
 			</div>
