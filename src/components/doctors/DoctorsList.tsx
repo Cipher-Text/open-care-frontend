@@ -1,3 +1,5 @@
+"use client";
+
 import DoctorCard from "./DoctorCard";
 import DoctorPagination from "./DoctorPagination";
 
