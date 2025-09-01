@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useEffect } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,12 +11,21 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, User, Lock } from "lucide-react";
 import { loginSchema, LoginFormData } from "@/validations/login-schema";
 import { submitLogin } from "./actions";
+import { redirectToAdmin } from "./redirect-actions";
 
 export default function LoginPage() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [state, action, isLoading] = useActionState(submitLogin, {
 		success: false,
 	});
+
+	// Handle redirect on successful login
+	useEffect(() => {
+		if (state.success && state.shouldRedirect) {
+			// Use server action for redirect to ensure proper server-side redirect
+			redirectToAdmin();
+		}
+	}, [state.success, state.shouldRedirect]);
 
 	const {
 		register,

@@ -2,11 +2,14 @@
 
 import { login } from "@/api/auth";
 import { LoginResponse } from "@/types/auth";
+import { saveAuthTokens } from "@/lib/auth";
 
 export interface LoginState {
 	success: boolean;
 	error?: string;
 	data?: LoginResponse;
+	shouldRedirect?: boolean;
+	redirectTo?: string;
 }
 
 export async function submitLogin(
@@ -28,15 +31,18 @@ export async function submitLogin(
 		};
 	}
 
-	console.log(username, password);
-
 	try {
 		const response = await login({ username, password });
-		console.log("Login response:", response);
 
+		// Save tokens to cookies using utility function
+		await saveAuthTokens(response);
+
+		// Return success state with redirect info
 		return {
 			success: true,
 			data: response,
+			shouldRedirect: true,
+			redirectTo: "/admin",
 		};
 	} catch (error) {
 		return {

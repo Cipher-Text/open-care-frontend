@@ -5,3 +5,7 @@ export interface LoginResponse {
 	expires_in: number;
 	scope: string;
 }
+
+export interface RefreshTokenRequest {
+	refreshToken: string;
+}
