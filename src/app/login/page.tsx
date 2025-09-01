@@ -1,51 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Eye, EyeOff, User, Lock } from "lucide-react";
 import { loginSchema, LoginFormData } from "@/validations/login-schema";
+import { submitLogin } from "./actions";
 
 export default function LoginPage() {
 	const [showPassword, setShowPassword] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState("");
-	const router = useRouter();
+	const [state, action, isLoading] = useActionState(submitLogin, {
+		success: false,
+	});
 
 	const {
 		register,
-		handleSubmit,
 		formState: { errors },
 	} = useForm<LoginFormData>({
 		resolver: zodResolver(loginSchema),
 	});
-
-	const onSubmit = async (data: LoginFormData) => {
-		setIsLoading(true);
-		setError("");
-
-		try {
-			// TODO: Replace with actual API call
-			console.log("Login data:", data);
-
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 1000));
-
-			// TODO: Handle successful login (store tokens, redirect, etc.)
-			router.push("/");
-		} catch {
-			setError("Invalid username or password. Please try again.");
-		} finally {
-			setIsLoading(false);
-		}
-	};
 
 	return (
 		<div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -66,13 +44,19 @@ export default function LoginPage() {
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-							{error && (
-								<Alert className="border-red-200 bg-red-50">
-									<AlertDescription className="text-red-700">
-										{error}
-									</AlertDescription>
-								</Alert>
+						<form action={action} className="space-y-6">
+							{/* Server Error Display */}
+							{state.error && (
+								<div className="bg-red-50 border border-red-200 rounded-md p-3">
+									<p className="text-sm text-red-600">{state.error}</p>
+								</div>
+							)}
+
+							{/* Success Message */}
+							{state.success && (
+								<div className="bg-green-50 border border-green-200 rounded-md p-3">
+									<p className="text-sm text-green-600">Login successful!</p>
+								</div>
 							)}
 
 							{/* Username Field */}
