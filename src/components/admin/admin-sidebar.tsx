@@ -1,148 +1,154 @@
 "use client";
 
 import {
-	Settings,
-	Home,
-	LogOut,
-	Bell,
-	Stethoscope,
-	Building2,
+  Settings,
+  Home,
+  LogOut,
+  Bell,
+  Stethoscope,
+  Building2,
+  Brain,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-	Sidebar,
-	SidebarContent,
-	SidebarFooter,
-	SidebarGroup,
-	SidebarGroupContent,
-	SidebarGroupLabel,
-	SidebarHeader,
-	SidebarMenu,
-	SidebarMenuButton,
-	SidebarMenuItem,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 
 // Menu items
 const menuItems = [
-	{
-		title: "Dashboard",
-		url: "/admin",
-		icon: Home,
-	},
-	{
-		title: "Doctors",
-		url: "/admin/doctors",
-		icon: Stethoscope,
-	},
-	{
-		title: "Hospitals",
-		url: "/admin/hospitals",
-		icon: Building2,
-	},
+  {
+    title: "Dashboard",
+    url: "/admin",
+    icon: Home,
+  },
+  {
+    title: "Doctors",
+    url: "/admin/doctors",
+    icon: Stethoscope,
+  },
+  {
+    title: "Hospitals",
+    url: "/admin/hospitals",
+    icon: Building2,
+  },
+  {
+    title: "Medical Specialities",
+    url: "/admin/medical-specialities",
+    icon: Brain,
+  },
 ];
 
 export function AdminSidebar() {
-	return (
-		<Sidebar variant="inset">
-			<SidebarHeader>
-				<div className="flex items-center gap-2 px-4 py-2">
-					<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-						<Home className="size-4" />
-					</div>
-					<div className="grid flex-1 text-left text-sm leading-tight">
-						<span className="truncate font-semibold">OpenCare Admin</span>
-						<span className="truncate text-xs">Healthcare Management</span>
-					</div>
-				</div>
-			</SidebarHeader>
+  return (
+    <Sidebar variant="inset">
+      <SidebarHeader>
+        <div className="flex items-center gap-2 px-4 py-2">
+          <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+            <Home className="size-4" />
+          </div>
+          <div className="grid flex-1 text-left text-sm leading-tight">
+            <span className="truncate font-semibold">OpenCare Admin</span>
+            <span className="truncate text-xs">Healthcare Management</span>
+          </div>
+        </div>
+      </SidebarHeader>
 
-			<SidebarContent>
-				<SidebarGroup>
-					<SidebarGroupLabel>Main Menu</SidebarGroupLabel>
-					<SidebarGroupContent>
-						<SidebarMenu>
-							{menuItems.map((item) => (
-								<SidebarMenuItem key={item.title}>
-									<Link href={item.url}>
-										<SidebarMenuButton>
-											<item.icon />
-											<span>{item.title}</span>
-										</SidebarMenuButton>
-									</Link>
-								</SidebarMenuItem>
-							))}
-						</SidebarMenu>
-					</SidebarGroupContent>
-				</SidebarGroup>
-			</SidebarContent>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {menuItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <Link href={item.url}>
+                    <SidebarMenuButton>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
 
-			<SidebarFooter>
-				<SidebarMenu>
-					<SidebarMenuItem>
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<SidebarMenuButton
-									size="lg"
-									className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-								>
-									<Avatar className="h-8 w-8 rounded-lg">
-										<AvatarImage src="/avatars/01.png" alt="Admin" />
-										<AvatarFallback className="rounded-lg">AD</AvatarFallback>
-									</Avatar>
-									<div className="grid flex-1 text-left text-sm leading-tight">
-										<span className="truncate font-semibold">Admin User</span>
-										<span className="truncate text-xs">admin@opencare.com</span>
-									</div>
-								</SidebarMenuButton>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent
-								className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-								side="bottom"
-								align="end"
-								sideOffset={4}
-							>
-								<DropdownMenuLabel className="p-0 font-normal">
-									<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-										<Avatar className="h-8 w-8 rounded-lg">
-											<AvatarImage src="/avatars/01.png" alt="Admin" />
-											<AvatarFallback className="rounded-lg">AD</AvatarFallback>
-										</Avatar>
-										<div className="grid flex-1 text-left text-sm leading-tight">
-											<span className="truncate font-semibold">Admin User</span>
-											<span className="truncate text-xs">
-												admin@opencare.com
-											</span>
-										</div>
-									</div>
-								</DropdownMenuLabel>
-								<DropdownMenuSeparator />
-								<DropdownMenuItem>
-									<Settings />
-									Account Settings
-								</DropdownMenuItem>
-								<DropdownMenuItem>
-									<Bell />
-									Notifications
-								</DropdownMenuItem>
-								<DropdownMenuSeparator />
-								<DropdownMenuItem>
-									<LogOut />
-									Log out
-								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</SidebarMenuItem>
-				</SidebarMenu>
-			</SidebarFooter>
-		</Sidebar>
-	);
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton
+                  size="lg"
+                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                >
+                  <Avatar className="h-8 w-8 rounded-lg">
+                    <AvatarImage src="/avatars/01.png" alt="Admin" />
+                    <AvatarFallback className="rounded-lg">AD</AvatarFallback>
+                  </Avatar>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold">Admin User</span>
+                    <span className="truncate text-xs">admin@opencare.com</span>
+                  </div>
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                side="bottom"
+                align="end"
+                sideOffset={4}
+              >
+                <DropdownMenuLabel className="p-0 font-normal">
+                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                    <Avatar className="h-8 w-8 rounded-lg">
+                      <AvatarImage src="/avatars/01.png" alt="Admin" />
+                      <AvatarFallback className="rounded-lg">AD</AvatarFallback>
+                    </Avatar>
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-semibold">Admin User</span>
+                      <span className="truncate text-xs">
+                        admin@opencare.com
+                      </span>
+                    </div>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Settings />
+                  Account Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Bell />
+                  Notifications
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <LogOut />
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
+  );
 }
