@@ -10,10 +10,10 @@ export interface MedicalSpeciality {
 }
 
 export interface MedicalSpecialitiesListResponse {
-  specialities: MedicalSpeciality[];
+  medicalSpecialities: MedicalSpeciality[];
   totalItems: number;
   totalPages: number;
   currentPage: number;
-  message: string;
-  status: number;
+  message?: string;
+  status?: number;
 }

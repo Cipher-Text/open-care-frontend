@@ -22,19 +22,18 @@ const buildQueryString = (params: QueryParams): string => {
 };
 
 export const fetchMedicalSpecialities = async (
-  params?: QueryParams
+  params: QueryParams
 ): Promise<MedicalSpecialitiesListResponse> => {
-  const queryString = params ? buildQueryString(params) : "";
-  const url = queryString
-    ? `${baseUrl}/medical-specialities?${queryString}`
-    : `${baseUrl}/medical-specialities`;
-
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const queryString = buildQueryString(params);
+  const response = await fetch(
+    `${baseUrl}/medical-specialities?${queryString}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
   if (!response.ok) {
     throw new Error(
@@ -44,25 +43,12 @@ export const fetchMedicalSpecialities = async (
 
   const data = await response.json();
 
-  // Transform the data to match our expected response format
-  // Filter based on client-side params if needed
-  let specialities = Array.isArray(data) ? data : [];
-
-  // Apply client-side filtering if params exist
-  if (params?.search) {
-    const searchTerm = params.search.toString().toLowerCase();
-    specialities = specialities.filter(
-      (item: MedicalSpeciality) =>
-        item.name.toLowerCase().includes(searchTerm) ||
-        item.bnName.toLowerCase().includes(searchTerm)
-    );
-  }
-
+  // Return the data as is since it now matches our expected format
   return {
-    specialities,
-    totalItems: specialities.length,
-    totalPages: 1,
-    currentPage: 1,
+    medicalSpecialities: data.medicalSpecialities || [],
+    totalItems: data.totalItems || 0,
+    totalPages: data.totalPages || 0,
+    currentPage: data.currentPage || 0,
     message: "Success",
     status: 200,
   };

@@ -229,7 +229,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      {totalItems !== undefined && totalPages !== undefined && (
+      {totalItems !== undefined && totalPages !== undefined && onPageChange && (
         <div className="flex items-center justify-end space-x-2 py-4">
           <div className="flex-1 text-sm text-muted-foreground">
             {totalItems} total specialit{totalItems === 1 ? "y" : "ies"}
@@ -240,6 +240,15 @@ export function DataTable<TData, TValue>({
             totalPages={totalPages}
             onPageChange={onPageChange}
           />
+        </div>
+      )}
+
+      {totalItems !== undefined && !onPageChange && (
+        <div className="flex items-center justify-end space-x-2 py-4">
+          <div className="flex-1 text-sm text-muted-foreground">
+            {totalItems} total specialit{totalItems === 1 ? "y" : "ies"}{" "}
+            (filtered)
+          </div>
         </div>
       )}
     </div>
