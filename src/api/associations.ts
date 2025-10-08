@@ -1,4 +1,5 @@
 import { AssociationsListResponse, Association } from "@/types/associations";
+import { baseUrl } from "@/config/config";
 
 interface QueryParams {
   [key: string]: string | number | boolean | undefined | null;
@@ -20,11 +21,8 @@ const buildQueryString = (params: QueryParams): string => {
 export const fetchAssociations = async (
   params: QueryParams
 ): Promise<AssociationsListResponse> => {
-  // Note: The API endpoint seems to be on a different port (6700)
-  // You may need to update this URL based on your actual API configuration
-  const apiBaseUrl = "http://localhost:6700/api";
   const queryString = buildQueryString(params);
-  const response = await fetch(`${apiBaseUrl}/associations?${queryString}`, {
+  const response = await fetch(`${baseUrl}/associations?${queryString}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -53,8 +51,7 @@ export const fetchAssociations = async (
 export const fetchAssociationById = async (
   id: number
 ): Promise<Association> => {
-  const apiBaseUrl = "http://localhost:6700/api";
-  const response = await fetch(`${apiBaseUrl}/associations/${id}`, {
+  const response = await fetch(`${baseUrl}/associations/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

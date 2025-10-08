@@ -1,4 +1,5 @@
 import { AmbulancesListResponse, Ambulance } from "@/types/ambulances";
+import { baseUrl } from "@/config/config";
 
 interface QueryParams {
   [key: string]: string | number | boolean | undefined | null;
@@ -20,10 +21,8 @@ const buildQueryString = (params: QueryParams): string => {
 export const fetchAmbulances = async (
   params: QueryParams
 ): Promise<AmbulancesListResponse> => {
-  // Note: The API endpoint is on port 6700
-  const apiBaseUrl = "http://localhost:6700/api";
   const queryString = buildQueryString(params);
-  const response = await fetch(`${apiBaseUrl}/ambulances?${queryString}`, {
+  const response = await fetch(`${baseUrl}/ambulances?${queryString}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -50,8 +49,7 @@ export const fetchAmbulances = async (
 };
 
 export const fetchAmbulanceById = async (id: number): Promise<Ambulance> => {
-  const apiBaseUrl = "http://localhost:6700/api";
-  const response = await fetch(`${apiBaseUrl}/ambulances/${id}`, {
+  const response = await fetch(`${baseUrl}/ambulances/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
