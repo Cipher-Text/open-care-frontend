@@ -1,4 +1,5 @@
 import { MedicalTestsListResponse } from "@/types/medical-tests";
+import { baseUrl } from "@/config/config";
 
 interface FetchMedicalTestsParams {
   page: number;
@@ -26,9 +27,7 @@ export async function fetchMedicalTests({
     params.append("name", name);
   }
 
-  const response = await fetch(
-    `http://localhost:6700/api/medical-tests?${params}`
-  );
+  const response = await fetch(`${baseUrl}/medical-tests?${params}`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch medical tests");

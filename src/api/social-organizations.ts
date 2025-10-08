@@ -1,4 +1,5 @@
 import { SocialOrganizationsListResponse } from "@/types/social-organizations";
+import { baseUrl } from "@/config/config";
 
 interface FetchSocialOrganizationsParams {
   page: number;
@@ -26,9 +27,7 @@ export async function fetchSocialOrganizations({
     params.append("name", name);
   }
 
-  const response = await fetch(
-    `http://localhost:6700/api/social-organization?${params}`
-  );
+  const response = await fetch(`${baseUrl}/social-organization?${params}`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch social organizations");
