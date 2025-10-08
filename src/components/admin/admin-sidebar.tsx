@@ -8,6 +8,10 @@ import {
   Stethoscope,
   Building2,
   Brain,
+  Users,
+  Truck,
+  TestTube,
+  Heart,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -53,6 +57,26 @@ const menuItems = [
     title: "Medical Specialities",
     url: "/admin/medical-specialities",
     icon: Brain,
+  },
+  {
+    title: "Medical Tests",
+    url: "/admin/medical-tests",
+    icon: TestTube,
+  },
+  {
+    title: "Associations",
+    url: "/admin/associations",
+    icon: Users,
+  },
+  {
+    title: "Social Organizations",
+    url: "/admin/social-organizations",
+    icon: Heart,
+  },
+  {
+    title: "Ambulances",
+    url: "/admin/ambulances",
+    icon: Truck,
   },
 ];
 
