@@ -13,6 +13,7 @@ import {
   TestTube,
   Heart,
   Database,
+  MapPin,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -83,6 +84,11 @@ const menuItems = [
     title: "Constants",
     url: "/admin/constants",
     icon: Database,
+  },
+  {
+    title: "Geolocation",
+    url: "/admin/geolocation",
+    icon: MapPin,
   },
 ];
 
