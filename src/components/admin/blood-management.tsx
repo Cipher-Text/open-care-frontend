@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { baseUrl } from "@/config/config";
 import "./blood-management.css";
 
 // Common interfaces
@@ -181,7 +182,6 @@ const TAB_CONFIGS: TabConfig[] = [
 ];
 
 const ITEMS_PER_PAGE = 10;
-const BASE_URL = "http://localhost:6700/api";
 
 const BloodManagement: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>(TAB_CONFIGS[0].name);
@@ -206,7 +206,7 @@ const BloodManagement: React.FC = () => {
 
     try {
       const response = await fetch(
-        `${BASE_URL}/blood-donors?page=${page}&size=${ITEMS_PER_PAGE}&sortBy=bloodDonationCount&sortDir=desc`
+        `${baseUrl}/blood-donors?page=${page}&size=${ITEMS_PER_PAGE}&sortBy=bloodDonationCount&sortDir=desc`
       );
       if (!response.ok) throw new Error("Failed to fetch");
       const result = await response.json();
@@ -224,7 +224,7 @@ const BloodManagement: React.FC = () => {
 
     try {
       const response = await fetch(
-        `${BASE_URL}/blood-donations?page=${page}&size=${ITEMS_PER_PAGE}`
+        `${baseUrl}/blood-donations?page=${page}&size=${ITEMS_PER_PAGE}`
       );
       if (!response.ok) throw new Error("Failed to fetch");
       const result = await response.json();
@@ -245,7 +245,7 @@ const BloodManagement: React.FC = () => {
 
     try {
       const response = await fetch(
-        `${BASE_URL}/blood-requisitions?page=${page}&size=${ITEMS_PER_PAGE}`
+        `${baseUrl}/blood-requisitions?page=${page}&size=${ITEMS_PER_PAGE}`
       );
       if (!response.ok) throw new Error("Failed to fetch");
       const result = await response.json();
