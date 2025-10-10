@@ -14,6 +14,7 @@ import {
   Heart,
   Database,
   MapPin,
+  GraduationCap,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -89,6 +90,11 @@ const menuItems = [
     title: "Geolocation",
     url: "/admin/geolocation",
     icon: MapPin,
+  },
+  {
+    title: "Degrees",
+    url: "/admin/degrees",
+    icon: GraduationCap,
   },
 ];
 
