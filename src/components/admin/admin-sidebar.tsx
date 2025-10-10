@@ -12,6 +12,7 @@ import {
   Truck,
   TestTube,
   Heart,
+  Database,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -77,6 +78,11 @@ const menuItems = [
     title: "Ambulances",
     url: "/admin/ambulances",
     icon: Truck,
+  },
+  {
+    title: "Constants",
+    url: "/admin/constants",
+    icon: Database,
   },
 ];
 
