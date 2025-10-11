@@ -33,6 +33,10 @@ function ActionsCell({ association }: { association: Association }) {
     router.push(`/admin/associations/${association.id}`);
   };
 
+  const handleViewDetails = () => {
+    router.push(`/admin/associations/${association.id}/view`);
+  };
+
   const handleViewWebsite = () => {
     if (association.websiteUrl) {
       window.open(association.websiteUrl, "_blank");
@@ -61,7 +65,7 @@ function ActionsCell({ association }: { association: Association }) {
           <Edit className="mr-2 h-4 w-4" />
           Edit association
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleViewDetails}>
           <Eye className="mr-2 h-4 w-4" />
           View details
         </DropdownMenuItem>

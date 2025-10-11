@@ -15,6 +15,13 @@ interface ListItem {
   bnName?: string;
   banglaName?: string;
   description?: string;
+  label?: string;
+  startAge?: number;
+  endAge?: number;
+  minDonations?: number;
+  maxDonations?: number;
+  icon?: string;
+  levelName?: string;
 }
 
 interface ApiConfig {
@@ -42,6 +49,24 @@ const API_CONFIGS: ApiConfig[] = [
     endpoint: "/api/degree-types",
     title: "Degree Types",
     category: "Education",
+  },
+  {
+    name: "ageGroups",
+    endpoint: "/api/age-groups",
+    title: "Age Groups",
+    category: "Demographics",
+  },
+  {
+    name: "bloodDonationBadges",
+    endpoint: "/api/blood-donation-badges",
+    title: "Blood Donation Badges",
+    category: "Blood Bank",
+  },
+  {
+    name: "hospitalAmenityTypes",
+    endpoint: "/api/hospital-amenity-types",
+    title: "Hospital Amenity Types",
+    category: "Medical",
   },
 ];
 
@@ -131,6 +156,16 @@ const ConstantsManagement: React.FC = () => {
     const hasBnName = items.some((item) => item.bnName);
     const hasBanglaName = items.some((item) => item.banglaName);
     const hasDescription = items.some((item) => item.description);
+    const hasLabel = items.some((item) => item.label);
+    const hasAgeRange = items.some(
+      (item) => item.startAge !== undefined && item.endAge !== undefined
+    );
+    const hasIcon = items.some((item) => item.icon);
+    const hasLevelName = items.some((item) => item.levelName);
+    const hasDonationRange = items.some(
+      (item) =>
+        item.minDonations !== undefined && item.maxDonations !== undefined
+    );
 
     return (
       <div className="overflow-x-auto">
@@ -140,6 +175,21 @@ const ConstantsManagement: React.FC = () => {
               <th className="border border-gray-300 px-4 py-2 text-left font-medium">
                 Value
               </th>
+              {hasIcon && (
+                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                  Icon
+                </th>
+              )}
+              {hasLevelName && (
+                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                  Level Name
+                </th>
+              )}
+              {hasLabel && (
+                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                  Label
+                </th>
+              )}
               {hasDisplayName && (
                 <th className="border border-gray-300 px-4 py-2 text-left font-medium">
                   Display Name
@@ -153,6 +203,16 @@ const ConstantsManagement: React.FC = () => {
               {hasBanglaName && (
                 <th className="border border-gray-300 px-4 py-2 text-left font-medium">
                   Bangla Name
+                </th>
+              )}
+              {hasDonationRange && (
+                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                  Donation Range
+                </th>
+              )}
+              {hasAgeRange && (
+                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                  Age Range
                 </th>
               )}
               {hasDescription && (
@@ -170,6 +230,21 @@ const ConstantsManagement: React.FC = () => {
                     {item.value}
                   </code>
                 </td>
+                {hasIcon && (
+                  <td className="border border-gray-300 px-4 py-2 text-center text-lg">
+                    {item.icon || "-"}
+                  </td>
+                )}
+                {hasLevelName && (
+                  <td className="border border-gray-300 px-4 py-2 font-medium">
+                    {item.levelName || "-"}
+                  </td>
+                )}
+                {hasLabel && (
+                  <td className="border border-gray-300 px-4 py-2">
+                    {item.label || "-"}
+                  </td>
+                )}
                 {hasDisplayName && (
                   <td className="border border-gray-300 px-4 py-2">
                     {item.displayName || "-"}
@@ -183,6 +258,25 @@ const ConstantsManagement: React.FC = () => {
                 {hasBanglaName && (
                   <td className="border border-gray-300 px-4 py-2">
                     {item.banglaName || "-"}
+                  </td>
+                )}
+                {hasDonationRange && (
+                  <td className="border border-gray-300 px-4 py-2">
+                    {item.minDonations !== undefined &&
+                    item.maxDonations !== undefined
+                      ? `${item.minDonations} - ${
+                          item.maxDonations === 2147483647
+                            ? "∞"
+                            : item.maxDonations
+                        }`
+                      : "-"}
+                  </td>
+                )}
+                {hasAgeRange && (
+                  <td className="border border-gray-300 px-4 py-2">
+                    {item.startAge !== undefined && item.endAge !== undefined
+                      ? `${item.startAge} - ${item.endAge}`
+                      : "-"}
                   </td>
                 )}
                 {hasDescription && (
