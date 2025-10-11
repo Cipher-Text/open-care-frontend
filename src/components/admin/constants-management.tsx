@@ -68,6 +68,54 @@ const API_CONFIGS: ApiConfig[] = [
     title: "Hospital Amenity Types",
     category: "Medical",
   },
+  {
+    name: "hospitalTypes",
+    endpoint: "/api/hospital-types",
+    title: "Hospital Types",
+    category: "Medical",
+  },
+  {
+    name: "bloodGroups",
+    endpoint: "/api/blood-groups",
+    title: "Blood Groups",
+    category: "Blood Bank",
+  },
+  {
+    name: "doctorBadges",
+    endpoint: "/api/doctor-badges",
+    title: "Doctor Badges",
+    category: "Medical",
+  },
+  {
+    name: "organizationTypes",
+    endpoint: "/api/organization-types",
+    title: "Organization Types",
+    category: "General",
+  },
+  {
+    name: "permissions",
+    endpoint: "/api/permissions",
+    title: "Permissions",
+    category: "Security",
+  },
+  {
+    name: "userTypes",
+    endpoint: "/api/user-types",
+    title: "User Types",
+    category: "Security",
+  },
+  {
+    name: "teacherPositions",
+    endpoint: "/api/teacher-positions",
+    title: "Teacher Positions",
+    category: "Education",
+  },
+  {
+    name: "socialOrganizationTypes",
+    endpoint: "/api/social-organization-types",
+    title: "Social Organization Types",
+    category: "General",
+  },
 ];
 
 const ConstantsManagement: React.FC = () => {
