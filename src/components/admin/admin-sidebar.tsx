@@ -16,6 +16,7 @@ import {
   MapPin,
   GraduationCap,
   Droplets,
+  User,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -39,6 +40,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { clientLogout } from "@/lib/auth-client";
 
 // Menu items
 const menuItems = [
@@ -98,7 +100,7 @@ const menuItems = [
     icon: GraduationCap,
   },
   {
-    title: "Blood",
+    title: "Blood Management",
     url: "/admin/blood",
     icon: Droplets,
   },
@@ -188,7 +190,7 @@ export function AdminSidebar() {
                   Notifications
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={clientLogout}>
                   <LogOut />
                   Log out
                 </DropdownMenuItem>

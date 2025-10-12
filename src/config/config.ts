@@ -1,1 +1,1 @@
-export const baseUrl = "https://api.opencarebd.com/api";
+export const baseUrl = "http://localhost:6700/api";
