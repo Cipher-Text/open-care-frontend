@@ -53,19 +53,19 @@ interface ApiConfig {
 const API_CONFIGS: ApiConfig[] = [
   {
     name: "divisions",
-    endpoint: "/api/divisions",
+    endpoint: "/divisions",
     title: "Divisions",
     icon: "🏛️",
   },
   {
     name: "districts",
-    endpoint: "/api/districts",
+    endpoint: "/districts",
     title: "Districts",
     icon: "🏢",
   },
   {
     name: "upazilas",
-    endpoint: "/api/upazilas",
+    endpoint: "/upazilas",
     title: "Upazilas",
     icon: "🏘️",
   },
@@ -96,9 +96,7 @@ const GeolocationManagement: React.FC = () => {
       setError((prev) => ({ ...prev, [config.name]: "" }));
 
       try {
-        const response = await fetch(
-          `${baseUrl}${config.endpoint}`
-        );
+        const response = await fetch(`${baseUrl}${config.endpoint}`);
         if (!response.ok) throw new Error("Failed to fetch");
         const result = await response.json();
         setData((prev) => ({ ...prev, [config.name]: result }));

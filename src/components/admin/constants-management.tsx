@@ -35,85 +35,85 @@ interface ApiConfig {
 const API_CONFIGS: ApiConfig[] = [
   {
     name: "associationTypes",
-    endpoint: "/api/association-types",
+    endpoint: "/association-types",
     title: "Association Types",
     category: "General",
   },
   {
     name: "ambulanceTypes",
-    endpoint: "/api/ambulance-types",
+    endpoint: "/ambulance-types",
     title: "Ambulance Types",
     category: "Medical",
   },
   {
     name: "degreeTypes",
-    endpoint: "/api/degree-types",
+    endpoint: "/degree-types",
     title: "Degree Types",
     category: "Education",
   },
   {
     name: "ageGroups",
-    endpoint: "/api/age-groups",
+    endpoint: "/age-groups",
     title: "Age Groups",
     category: "Demographics",
   },
   {
     name: "bloodDonationBadges",
-    endpoint: "/api/blood-donation-badges",
+    endpoint: "/blood-donation-badges",
     title: "Blood Donation Badges",
     category: "Blood Bank",
   },
   {
     name: "hospitalAmenityTypes",
-    endpoint: "/api/hospital-amenity-types",
+    endpoint: "/hospital-amenity-types",
     title: "Hospital Amenity Types",
     category: "Medical",
   },
   {
     name: "hospitalTypes",
-    endpoint: "/api/hospital-types",
+    endpoint: "/hospital-types",
     title: "Hospital Types",
     category: "Medical",
   },
   {
     name: "bloodGroups",
-    endpoint: "/api/blood-groups",
+    endpoint: "/blood-groups",
     title: "Blood Groups",
     category: "Blood Bank",
   },
   {
     name: "doctorBadges",
-    endpoint: "/api/doctor-badges",
+    endpoint: "/doctor-badges",
     title: "Doctor Badges",
     category: "Medical",
   },
   {
     name: "organizationTypes",
-    endpoint: "/api/organization-types",
+    endpoint: "/organization-types",
     title: "Organization Types",
     category: "General",
   },
   {
     name: "permissions",
-    endpoint: "/api/permissions",
+    endpoint: "/permissions",
     title: "Permissions",
     category: "Security",
   },
   {
     name: "userTypes",
-    endpoint: "/api/user-types",
+    endpoint: "/user-types",
     title: "User Types",
     category: "Security",
   },
   {
     name: "teacherPositions",
-    endpoint: "/api/teacher-positions",
+    endpoint: "/teacher-positions",
     title: "Teacher Positions",
     category: "Education",
   },
   {
     name: "socialOrganizationTypes",
-    endpoint: "/api/social-organization-types",
+    endpoint: "/social-organization-types",
     title: "Social Organization Types",
     category: "General",
   },
@@ -148,9 +148,7 @@ const ConstantsManagement: React.FC = () => {
       setError((prev) => ({ ...prev, [config.name]: "" }));
 
       try {
-        const response = await fetch(
-          `${baseUrl}${config.endpoint}`
-        );
+        const response = await fetch(`${baseUrl}${config.endpoint}`);
         if (!response.ok) throw new Error("Failed to fetch");
         const result = await response.json();
         setData((prev) => ({ ...prev, [config.name]: result }));
