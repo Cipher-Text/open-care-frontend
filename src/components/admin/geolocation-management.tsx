@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { baseUrl } from "@/config/config";
 import "./geolocation-management.css";
 
 interface Division {
@@ -96,7 +97,7 @@ const GeolocationManagement: React.FC = () => {
 
       try {
         const response = await fetch(
-          `https://api.opencarebd.com${config.endpoint}`
+          `${baseUrl}${config.endpoint}`
         );
         if (!response.ok) throw new Error("Failed to fetch");
         const result = await response.json();
