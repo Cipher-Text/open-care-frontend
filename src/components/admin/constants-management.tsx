@@ -117,6 +117,12 @@ const API_CONFIGS: ApiConfig[] = [
     title: "Social Organization Types",
     category: "General",
   },
+  {
+    name: "advertisementPositions",
+    endpoint: "/advertisement-positions",
+    title: "Advertisement Positions",
+    category: "General",
+  },
 ];
 
 const ConstantsManagement: React.FC = () => {
