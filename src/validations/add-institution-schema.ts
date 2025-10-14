@@ -10,10 +10,25 @@ export const addInstitutionSchema = z.object({
   address: z.string().min(1, "Address is required"),
 
   // Institution Details
-  establishedYear: z.number().min(1800, "Invalid establishment year").max(new Date().getFullYear(), "Year cannot be in the future"),
+  establishedYear: z
+    .number()
+    .min(1800, "Invalid establishment year")
+    .max(new Date().getFullYear(), "Year cannot be in the future"),
   enroll: z.number().min(0, "Enrollment must be a positive number"),
-  websiteUrl: z.string().url("Invalid website URL").optional().or(z.literal("")),
-  imageUrl: z.string().url("Invalid image URL").optional().or(z.literal("")),
+  websiteUrl: z
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || z.string().url().safeParse(val).success,
+      "Invalid website URL"
+    ),
+  imageUrl: z
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || z.string().url().safeParse(val).success,
+      "Invalid image URL"
+    ),
 
   // Location
   districtId: z.number().min(1, "District is required"),

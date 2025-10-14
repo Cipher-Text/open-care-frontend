@@ -29,10 +29,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import { addInstitution } from "@/api/institutions";
-import {
-  fetchDistricts,
-  fetchUpazilas,
-} from "@/api/locations";
+import { fetchDistricts, fetchUpazilas } from "@/api/locations";
 import {
   addInstitutionSchema,
   AddInstitutionFormData,
@@ -41,7 +38,9 @@ import { District, Upazila } from "@/types/locations";
 
 export default function AddInstitutionPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedDistrictId, setSelectedDistrictId] = useState<number | null>(null);
+  const [selectedDistrictId, setSelectedDistrictId] = useState<number | null>(
+    null
+  );
   const router = useRouter();
 
   // Fetch districts
@@ -127,7 +126,10 @@ export default function AddInstitutionPage() {
                       <FormItem>
                         <FormLabel>Institution Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter institution name" {...field} />
+                          <Input
+                            placeholder="Enter institution name"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -153,7 +155,10 @@ export default function AddInstitutionPage() {
                       <FormItem>
                         <FormLabel>Acronym</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter acronym (e.g., DU, BUET)" {...field} />
+                          <Input
+                            placeholder="Enter acronym (e.g., DU, BUET)"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -248,7 +253,9 @@ export default function AddInstitutionPage() {
                             type="number"
                             placeholder="Enter establishment year"
                             {...field}
-                            onChange={(e) => field.onChange(parseInt(e.target.value))}
+                            onChange={(e) =>
+                              field.onChange(Number(e.target.value) || 0)
+                            }
                           />
                         </FormControl>
                         <FormMessage />
@@ -266,7 +273,9 @@ export default function AddInstitutionPage() {
                             type="number"
                             placeholder="Enter total enrollment"
                             {...field}
-                            onChange={(e) => field.onChange(parseInt(e.target.value))}
+                            onChange={(e) =>
+                              field.onChange(Number(e.target.value) || 0)
+                            }
                           />
                         </FormControl>
                         <FormMessage />
@@ -279,14 +288,19 @@ export default function AddInstitutionPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Institution Type</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select institution type" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="UNIVERSITY">University</SelectItem>
+                            <SelectItem value="UNIVERSITY">
+                              University
+                            </SelectItem>
                             <SelectItem value="COLLEGE">College</SelectItem>
                             <SelectItem value="SCHOOL">School</SelectItem>
                             <SelectItem value="INSTITUTE">Institute</SelectItem>
@@ -303,7 +317,10 @@ export default function AddInstitutionPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Organization Type</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select organization type" />
@@ -312,8 +329,12 @@ export default function AddInstitutionPage() {
                           <SelectContent>
                             <SelectItem value="PUBLIC">Public</SelectItem>
                             <SelectItem value="PRIVATE">Private</SelectItem>
-                            <SelectItem value="GOVERNMENT">Government</SelectItem>
-                            <SelectItem value="NON_PROFIT">Non-Profit</SelectItem>
+                            <SelectItem value="GOVERNMENT">
+                              Government
+                            </SelectItem>
+                            <SelectItem value="NON_PROFIT">
+                              Non-Profit
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -326,7 +347,10 @@ export default function AddInstitutionPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Country</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select country" />
@@ -393,7 +417,9 @@ export default function AddInstitutionPage() {
                               placeholder="Select upazila"
                               searchPlaceholder="Search upazilas..."
                               emptyText="No upazila found."
-                              disabled={isUpazilasLoading || !selectedDistrictId}
+                              disabled={
+                                isUpazilasLoading || !selectedDistrictId
+                              }
                               options={upazilas
                                 .filter(
                                   (upazila: Upazila) =>
@@ -422,7 +448,9 @@ export default function AddInstitutionPage() {
                                 step="any"
                                 placeholder="Enter latitude"
                                 {...field}
-                                onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                                onChange={(e) =>
+                                  field.onChange(Number(e.target.value) || 0)
+                                }
                               />
                             </FormControl>
                             <FormMessage />
@@ -441,7 +469,9 @@ export default function AddInstitutionPage() {
                                 step="any"
                                 placeholder="Enter longitude"
                                 {...field}
-                                onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                                onChange={(e) =>
+                                  field.onChange(Number(e.target.value) || 0)
+                                }
                               />
                             </FormControl>
                             <FormMessage />
