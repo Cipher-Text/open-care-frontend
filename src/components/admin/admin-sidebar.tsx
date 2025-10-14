@@ -16,7 +16,7 @@ import {
   MapPin,
   GraduationCap,
   Droplets,
-  User,
+  Megaphone,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -108,6 +108,11 @@ const menuItems = [
     title: "Blood Management",
     url: "/admin/blood",
     icon: Droplets,
+  },
+  {
+    title: "Advertisement",
+    url: "/admin/advertisement",
+    icon: Megaphone,
   },
 ];
 
