@@ -55,6 +55,11 @@ const menuItems = [
     icon: Stethoscope,
   },
   {
+    title: "Institutions",
+    url: "/admin/institutions",
+    icon: GraduationCap,
+  },
+  {
     title: "Hospitals",
     url: "/admin/hospitals",
     icon: Building2,
