@@ -17,6 +17,7 @@ import {
   GraduationCap,
   Droplets,
   Megaphone,
+  HeartPulse,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -53,6 +54,11 @@ const menuItems = [
     title: "Doctors",
     url: "/admin/doctors",
     icon: Stethoscope,
+  },
+  {
+    title: "Nurses",
+    url: "/admin/nurses",
+    icon: HeartPulse,
   },
   {
     title: "Institutions",
