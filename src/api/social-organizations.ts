@@ -1,4 +1,7 @@
-import { SocialOrganizationsListResponse } from "@/types/social-organizations";
+import {
+  SocialOrganizationsListResponse,
+  SocialOrganization,
+} from "@/types/social-organizations";
 import { baseUrl } from "@/config/config";
 
 interface FetchSocialOrganizationsParams {
@@ -35,4 +38,23 @@ export async function fetchSocialOrganizations({
 
   const data = await response.json();
   return data;
+}
+
+export async function fetchSocialOrganizationById(
+  id: string
+): Promise<SocialOrganization> {
+  const response = await fetch(`${baseUrl}/social-organization/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch social organization: ${response.status} ${response.statusText}`
+    );
+  }
+
+  return response.json();
 }

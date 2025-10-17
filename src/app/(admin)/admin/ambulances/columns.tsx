@@ -36,6 +36,10 @@ function ActionsCell({ ambulance }: { ambulance: Ambulance }) {
     router.push(`/admin/ambulances/${ambulance.id}`);
   };
 
+  const handleViewDetails = () => {
+    router.push(`/admin/ambulances/${ambulance.id}/view`);
+  };
+
   const handleCallDriver = () => {
     if (ambulance.driverPhone) {
       window.open(`tel:${ambulance.driverPhone}`, "_self");
@@ -62,7 +66,7 @@ function ActionsCell({ ambulance }: { ambulance: Ambulance }) {
           <Edit className="mr-2 h-4 w-4" />
           Edit ambulance
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleViewDetails}>
           <Eye className="mr-2 h-4 w-4" />
           View details
         </DropdownMenuItem>

@@ -4,17 +4,16 @@ import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
-  Building2,
   Mail,
   Phone,
   Globe,
   MapPin,
   Calendar,
-  Users,
   Badge as BadgeIcon,
+  Heart,
 } from "lucide-react";
-import { fetchAssociationById } from "@/api/associations";
-import { Association } from "@/types/associations";
+import { fetchSocialOrganizationById } from "@/api/social-organizations";
+import { SocialOrganization } from "@/types/social-organizations";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,28 +21,28 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-export default function AssociationViewPage() {
+export default function SocialOrganizationViewPage() {
   const params = useParams();
   const router = useRouter();
-  const associationId = parseInt(params.id as string);
+  const organizationId = params.id as string;
 
   const {
-    data: association,
+    data: organization,
     isLoading,
     isError,
     error,
-  } = useQuery<Association>({
-    queryKey: ["association", associationId],
-    queryFn: () => fetchAssociationById(associationId),
-    enabled: !!associationId,
+  } = useQuery<SocialOrganization>({
+    queryKey: ["social-organization", organizationId],
+    queryFn: () => fetchSocialOrganizationById(organizationId),
+    enabled: !!organizationId,
   });
 
   if (isLoading) {
     return (
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
         <AdminHeader
-          title="Association Details"
-          description="Loading association information..."
+          title="Social Organization Details"
+          description="Loading social organization information..."
         >
           <Button
             variant="outline"
@@ -67,15 +66,6 @@ export default function AssociationViewPage() {
               <Skeleton className="h-4 w-1/2" />
             </CardContent>
           </Card>
-
-          <Card>
-            <CardHeader>
-              <Skeleton className="h-6 w-32" />
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-32 w-full" />
-            </CardContent>
-          </Card>
         </div>
       </div>
     );
@@ -85,8 +75,8 @@ export default function AssociationViewPage() {
     return (
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
         <AdminHeader
-          title="Association Details"
-          description="Error loading association"
+          title="Social Organization Details"
+          description="Error loading social organization"
         >
           <Button
             variant="outline"
@@ -102,19 +92,19 @@ export default function AssociationViewPage() {
           <AlertDescription>
             {error instanceof Error
               ? error.message
-              : "Failed to load association details"}
+              : "Failed to load social organization details"}
           </AlertDescription>
         </Alert>
       </div>
     );
   }
 
-  if (!association) {
+  if (!organization) {
     return (
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
         <AdminHeader
-          title="Association Details"
-          description="Association not found"
+          title="Social Organization Details"
+          description="Social organization not found"
         >
           <Button
             variant="outline"
@@ -128,7 +118,7 @@ export default function AssociationViewPage() {
 
         <Alert>
           <AlertDescription>
-            Association not found or may have been deleted.
+            Social organization not found or may have been deleted.
           </AlertDescription>
         </Alert>
       </div>
@@ -138,8 +128,8 @@ export default function AssociationViewPage() {
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <AdminHeader
-        title={association.name}
-        description={`${association.shortName} - Association Details`}
+        title={organization.name}
+        description={`${organization.bnName} - Social Organization Details`}
       >
         <Button
           variant="outline"
@@ -152,68 +142,90 @@ export default function AssociationViewPage() {
       </AdminHeader>
 
       <div className="grid gap-6">
-        {/* Association Information */}
+        {/* Social Organization Information */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Building2 className="h-5 w-5" />
-              Association Information
+              <Heart className="h-5 w-5" />
+              Social Organization Information
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Basic Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-500">
                   Name
                 </label>
-                <p className="text-sm font-semibold">{association.name}</p>
+                <p className="text-sm font-semibold">{organization.name}</p>
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-500">
                   Bengali Name
                 </label>
-                <p className="text-sm">{association.bnName}</p>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-500">
-                  Short Name
-                </label>
-                <p className="text-sm">{association.shortName}</p>
+                <p className="text-sm">{organization.bnName}</p>
               </div>
             </div>
 
-            {/* Type and Domain */}
+            {/* Type and Origin */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-500">
-                  Association Type
+                  Organization Type
                 </label>
                 <Badge
                   variant="secondary"
                   className="flex w-fit items-center gap-1"
                 >
                   <BadgeIcon className="h-3 w-3" />
-                  {association.associationType?.displayName ||
-                    association.associationType?.bnName ||
+                  {organization.socialOrganizationType?.displayName ||
+                    organization.socialOrganizationType?.banglaName ||
                     "N/A"}
                 </Badge>
               </div>
+              {organization.originCountry && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-500">
+                    Origin Country
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-gray-500" />
+                    <span className="text-sm">
+                      {organization.originCountry.displayNameEn ||
+                        organization.originCountry.nameBn ||
+                        "N/A"}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Founded Date */}
+            {organization.foundedDate && (
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-500">
-                  Domain
+                  Founded Date
                 </label>
-                <Badge
-                  variant="outline"
-                  className="flex w-fit items-center gap-1"
-                >
-                  <Users className="h-3 w-3" />
-                  {association.domain?.displayName ||
-                    association.domain?.banglaName ||
-                    "N/A"}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-gray-500" />
+                  <span className="text-sm">
+                    {new Date(organization.foundedDate).toLocaleDateString()}
+                  </span>
+                </div>
               </div>
-            </div>
+            )}
+
+            {/* Description */}
+            {organization.description && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-500">
+                  Description
+                </label>
+                <p className="text-sm text-gray-700">
+                  {organization.description}
+                </p>
+              </div>
+            )}
 
             {/* Contact Information */}
             <div className="space-y-4">
@@ -221,84 +233,54 @@ export default function AssociationViewPage() {
                 Contact Information
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {association.email && (
+                {organization.email && (
                   <div className="flex items-center gap-2">
                     <Mail className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm">{association.email}</span>
+                    <span className="text-sm">{organization.email}</span>
                   </div>
                 )}
-                {association.phone && (
+                {organization.phone && (
                   <div className="flex items-center gap-2">
                     <Phone className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm">{association.phone}</span>
+                    <span className="text-sm">{organization.phone}</span>
                   </div>
                 )}
-                {association.websiteUrl && (
-                  <div className="flex items-center gap-2">
+                {organization.websiteUrl && (
+                  <div className="flex items-center gap-2 col-span-2">
                     <Globe className="h-4 w-4 text-gray-500" />
                     <a
-                      href={association.websiteUrl}
+                      href={organization.websiteUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm text-blue-600 hover:underline"
                     >
-                      {association.websiteUrl}
+                      {organization.websiteUrl}
                     </a>
+                  </div>
+                )}
+                {organization.address && (
+                  <div className="flex items-start gap-2 col-span-2">
+                    <MapPin className="h-4 w-4 text-gray-500 mt-0.5" />
+                    <span className="text-sm">{organization.address}</span>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Location Information */}
-            <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-gray-700">Location</h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-500">
-                    Country
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm">
-                      {association.originCountry?.displayNameEn ||
-                        association.originCountry?.nameBn ||
-                        "N/A"}
-                    </span>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-500">
-                    Division
-                  </label>
-                  <p className="text-sm">
-                    {association.division?.name || "N/A"}
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-500">
-                    District
-                  </label>
-                  <p className="text-sm">
-                    {association.district?.name || "N/A"}
-                  </p>
-                </div>
-              </div>
-            </div>
-
             {/* Social Media Links */}
-            {(association.facebookUrl ||
-              association.twitterUrl ||
-              association.linkedinUrl ||
-              association.youtubeUrl) && (
+            {(organization.facebookUrl ||
+              organization.twitterUrl ||
+              organization.linkedinUrl ||
+              organization.youtubeUrl) && (
               <div className="space-y-4">
                 <h4 className="text-sm font-semibold text-gray-700">
                   Social Media
                 </h4>
                 <div className="flex flex-wrap gap-2">
-                  {association.facebookUrl && (
+                  {organization.facebookUrl && (
                     <Button variant="outline" size="sm" asChild>
                       <a
-                        href={association.facebookUrl}
+                        href={organization.facebookUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -306,10 +288,10 @@ export default function AssociationViewPage() {
                       </a>
                     </Button>
                   )}
-                  {association.twitterUrl && (
+                  {organization.twitterUrl && (
                     <Button variant="outline" size="sm" asChild>
                       <a
-                        href={association.twitterUrl}
+                        href={organization.twitterUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -317,10 +299,10 @@ export default function AssociationViewPage() {
                       </a>
                     </Button>
                   )}
-                  {association.linkedinUrl && (
+                  {organization.linkedinUrl && (
                     <Button variant="outline" size="sm" asChild>
                       <a
-                        href={association.linkedinUrl}
+                        href={organization.linkedinUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -328,10 +310,10 @@ export default function AssociationViewPage() {
                       </a>
                     </Button>
                   )}
-                  {association.youtubeUrl && (
+                  {organization.youtubeUrl && (
                     <Button variant="outline" size="sm" asChild>
                       <a
-                        href={association.youtubeUrl}
+                        href={organization.youtubeUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -343,38 +325,16 @@ export default function AssociationViewPage() {
               </div>
             )}
 
-            {/* Additional Information */}
-            {(association.foundedDate || association.description) && (
+            {/* Tags */}
+            {organization.tags && organization.tags.length > 0 && (
               <div className="space-y-4">
-                <h4 className="text-sm font-semibold text-gray-700">
-                  Additional Information
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {association.foundedDate && (
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-500">
-                        Founded Date
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm">
-                          {new Date(
-                            association.foundedDate
-                          ).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </div>
-                  )}
-                  {association.description && (
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-500">
-                        Description
-                      </label>
-                      <p className="text-sm text-gray-700">
-                        {association.description}
-                      </p>
-                    </div>
-                  )}
+                <h4 className="text-sm font-semibold text-gray-700">Tags</h4>
+                <div className="flex flex-wrap gap-2">
+                  {organization.tags.map((tag, index) => (
+                    <Badge key={index} variant="outline">
+                      {tag}
+                    </Badge>
+                  ))}
                 </div>
               </div>
             )}

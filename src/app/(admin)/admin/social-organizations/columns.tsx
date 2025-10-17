@@ -11,6 +11,7 @@ import {
   Mail,
   ExternalLink,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -39,6 +40,69 @@ const getOrganizationTypeBadgeVariant = (type: string) => {
       return "secondary";
   }
 };
+
+// Actions component to use hooks
+function ActionsCell({ organization }: { organization: SocialOrganization }) {
+  const router = useRouter();
+
+  const handleViewDetails = () => {
+    router.push(`/admin/social-organizations/${organization.id}/view`);
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <span className="sr-only">Open menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuItem
+          onClick={() =>
+            navigator.clipboard.writeText(organization.id.toString())
+          }
+        >
+          <Copy className="mr-2 h-4 w-4" />
+          Copy ID
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={handleViewDetails}>
+          <Eye className="mr-2 h-4 w-4" />
+          View details
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Edit className="mr-2 h-4 w-4" />
+          Edit organization
+        </DropdownMenuItem>
+        {organization.websiteUrl && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <a
+                href={organization.websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Globe className="mr-2 h-4 w-4" />
+                Visit website
+              </a>
+            </DropdownMenuItem>
+          </>
+        )}
+        {organization.email && (
+          <DropdownMenuItem asChild>
+            <a href={`mailto:${organization.email}`}>
+              <Mail className="mr-2 h-4 w-4" />
+              Send email
+            </a>
+          </DropdownMenuItem>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 export const columns: ColumnDef<SocialOrganization>[] = [
   {
@@ -199,60 +263,7 @@ export const columns: ColumnDef<SocialOrganization>[] = [
     id: "actions",
     cell: ({ row }) => {
       const organization = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(organization.id.toString())
-              }
-            >
-              <Copy className="mr-2 h-4 w-4" />
-              Copy ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Eye className="mr-2 h-4 w-4" />
-              View details
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Edit className="mr-2 h-4 w-4" />
-              Edit organization
-            </DropdownMenuItem>
-            {organization.websiteUrl && (
-              <>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <a
-                    href={organization.websiteUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Globe className="mr-2 h-4 w-4" />
-                    Visit website
-                  </a>
-                </DropdownMenuItem>
-              </>
-            )}
-            {organization.email && (
-              <DropdownMenuItem asChild>
-                <a href={`mailto:${organization.email}`}>
-                  <Mail className="mr-2 h-4 w-4" />
-                  Send email
-                </a>
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      return <ActionsCell organization={organization} />;
     },
   },
 ];

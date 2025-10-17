@@ -9,6 +9,7 @@ import {
   Edit,
   Globe,
   Calendar,
+  Eye,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -33,6 +34,10 @@ function ActionsCell({ institution }: { institution: InstitutionResponse }) {
     router.push(`/admin/institutions/${institution.id}`);
   };
 
+  const handleViewDetails = () => {
+    router.push(`/admin/institutions/${institution.id}/view`);
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -44,7 +49,9 @@ function ActionsCell({ institution }: { institution: InstitutionResponse }) {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem
-          onClick={() => navigator.clipboard.writeText(institution.id.toString())}
+          onClick={() =>
+            navigator.clipboard.writeText(institution.id.toString())
+          }
         >
           Copy institution ID
         </DropdownMenuItem>
@@ -53,7 +60,10 @@ function ActionsCell({ institution }: { institution: InstitutionResponse }) {
           <Edit className="mr-2 h-4 w-4" />
           Edit institution
         </DropdownMenuItem>
-        <DropdownMenuItem>View details</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleViewDetails}>
+          <Eye className="mr-2 h-4 w-4" />
+          View details
+        </DropdownMenuItem>
         <DropdownMenuItem>View programs</DropdownMenuItem>
         <DropdownMenuItem>Contact institution</DropdownMenuItem>
       </DropdownMenuContent>
@@ -159,7 +169,9 @@ export const columns: ColumnDef<InstitutionResponse>[] = [
     },
     cell: ({ row }) => {
       const enrollment = row.getValue("enroll") as number;
-      return <span className="text-sm">{enrollment?.toLocaleString() || "N/A"}</span>;
+      return (
+        <span className="text-sm">{enrollment?.toLocaleString() || "N/A"}</span>
+      );
     },
   },
   {
