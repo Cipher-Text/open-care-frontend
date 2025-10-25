@@ -105,12 +105,15 @@ export const fetchDoctorById = async (id: string): Promise<Doctor> => {
 export const fetchDoctorDetailsById = async (
   id: number
 ): Promise<DoctorDetailsResponse> => {
-  const response = await fetch(`${baseUrl}/doctors/${id}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await fetch(
+    `${baseUrl}/doctors/${id}?degrees=true&workplaces=true&associations=true`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
   if (!response.ok) {
     throw new Error(
