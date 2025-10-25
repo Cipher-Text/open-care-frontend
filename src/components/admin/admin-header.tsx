@@ -2,18 +2,19 @@
 
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Bell, Search, User } from "lucide-react";
+import { Bell, Search, User, Activity } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { clientLogout } from "@/lib/auth-client";interface AdminHeaderProps {
+import { clientLogout } from "@/lib/auth-client";
+interface AdminHeaderProps {
   title: string;
   description?: string;
   children?: React.ReactNode;
@@ -68,6 +69,12 @@ export function AdminHeader({
                 <Link href="/admin/profile">
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/admin/health">
+                  <Activity className="mr-2 h-4 w-4" />
+                  <span>Health</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
