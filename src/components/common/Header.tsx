@@ -1,8 +1,13 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function Header() {
+	const { isAuthenticated } = useAuth();
+
 	return (
 		<header className="bg-white/95 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-50 transition-all duration-300 shadow-sm">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,21 +67,23 @@ export default function Header() {
 					</nav>
 
 					{/* Header Actions */}
-					<div className="flex space-x-4">
-						<Link href="/login">
-							<Button
-								variant="outline"
-								className="border-teal-600 text-teal-600 hover:bg-teal-50"
-							>
-								Sign In
-							</Button>
-						</Link>
-						<Link href="/signup">
-							<Button className="bg-teal-600 hover:bg-teal-700">
-								Get Started
-							</Button>
-						</Link>
-					</div>
+					{!isAuthenticated && (
+						<div className="flex space-x-4">
+							<Link href="/login">
+								<Button
+									variant="outline"
+									className="border-teal-600 text-teal-600 hover:bg-teal-50"
+								>
+									Sign In
+								</Button>
+							</Link>
+							<Link href="/signup">
+								<Button className="bg-teal-600 hover:bg-teal-700">
+									Get Started
+								</Button>
+							</Link>
+						</div>
+					)}
 				</div>
 			</div>
 		</header>

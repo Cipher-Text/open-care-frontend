@@ -13,25 +13,30 @@ import { loginSchema, LoginFormData } from "@/validations/login-schema";
 import { submitLogin } from "./actions";
 import { redirectToAdmin } from "./redirect-actions";
 import { saveUserSession } from "@/lib/auth-client";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function LoginPage() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [state, action, isLoading] = useActionState(submitLogin, {
 		success: false,
 	});
+	const { refetchUser } = useAuth();
 
 	// Handle redirect on successful login
 	useEffect(() => {
 		if (state.success && state.data) {
 			// Save session to localStorage for client-side access
 			saveUserSession(state.data);
-			
+
+			// Refetch user in auth context
+			refetchUser();
+
 			if (state.shouldRedirect) {
 				// Use server action for redirect to ensure proper server-side redirect
 				redirectToAdmin();
 			}
 		}
-	}, [state.success, state.shouldRedirect, state.data]);
+	}, [state.success, state.shouldRedirect, state.data, refetchUser]);
 
 	const {
 		register,
