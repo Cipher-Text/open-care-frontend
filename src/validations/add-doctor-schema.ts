@@ -7,7 +7,7 @@ export const addDoctorSchema = z.object({
 	email: z.string().email("Invalid email address"),
 	phone: z.string().min(1, "Phone number is required"),
 	username: z.string().min(1, "Username is required"),
-	gender: z.enum(["Male", "Female", "Other"], {
+	gender: z.enum(["MALE", "FEMALE", "OTHER"], {
 		message: "Gender is required",
 	}),
 	dateOfBirth: z.string().min(1, "Date of birth is required"),

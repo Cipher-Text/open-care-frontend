@@ -58,7 +58,7 @@ export default function SignupPage() {
 	};
 
 	const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
-	const genders = ["Male", "Female", "Other"];
+	const genders = ["MALE", "FEMALE", "OTHER"];
 
 	// Mock districts data - replace with actual API call
 	const districts = [

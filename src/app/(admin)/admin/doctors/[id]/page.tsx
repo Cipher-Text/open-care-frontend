@@ -86,7 +86,7 @@ export default function DoctorFormPage() {
 			email: "",
 			phone: "",
 			username: "",
-			gender: "Male",
+			gender: "MALE",
 			dateOfBirth: "",
 			address: "",
 			districtId: 1,
@@ -127,7 +127,7 @@ export default function DoctorFormPage() {
 				phone: doctorData.profile.phone || "",
 				username: doctorData.profile.username || "",
 				gender:
-					(doctorData.profile.gender as "Male" | "Female" | "Other") || "Male",
+					(doctorData.profile.gender as "MALE" | "FEMALE" | "OTHER") || "MALE",
 				dateOfBirth: doctorData.profile.dateOfBirth
 					? doctorData.profile.dateOfBirth.split("T")[0]
 					: "",
@@ -353,9 +353,9 @@ export default function DoctorFormPage() {
 														</SelectTrigger>
 													</FormControl>
 													<SelectContent>
-														<SelectItem value="Male">Male</SelectItem>
-														<SelectItem value="Female">Female</SelectItem>
-														<SelectItem value="Other">Other</SelectItem>
+														<SelectItem value="MALE">Male</SelectItem>
+														<SelectItem value="FEMALE">Female</SelectItem>
+														<SelectItem value="OTHER">Other</SelectItem>
 													</SelectContent>
 												</Select>
 												<FormMessage />
@@ -539,7 +539,9 @@ export default function DoctorFormPage() {
 															placeholder="Select upazila"
 															searchPlaceholder="Search upazilas..."
 															emptyText="No upazila found."
-															disabled={isUpazilasLoading || !selectedDistrictId}
+															disabled={
+																isUpazilasLoading || !selectedDistrictId
+															}
 															options={upazilas
 																.filter(
 																	(upazila: Upazila) =>

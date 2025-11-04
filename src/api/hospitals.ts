@@ -1,159 +1,103 @@
-import { baseUrl } from "@/config/config";
+"use client";
+
 import { ICommonEnum } from "@/types/common";
 import {
-  HospitalListResponse,
-  Hospital,
-  HospitalDetailsResponse,
+	HospitalListResponse,
+	Hospital,
+	HospitalDetailsResponse,
 } from "@/types/hospitals";
 import { AddHospitalFormData } from "@/validations/add-hospital-schema";
-
-interface QueryParams {
-  [key: string]: string | number | boolean | undefined | null;
-}
-
-// Helper function to build query string
-const buildQueryString = (params: QueryParams): string => {
-  const queryParams = new URLSearchParams();
-
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== "") {
-      queryParams.append(key, value.toString());
-    }
-  });
-
-  return queryParams.toString();
-};
+import { apiGet, apiPost, apiPut, buildUrl } from "@/lib/api-client";
 
 export const fetchHospitals = async (
-  params: QueryParams
+	params: Record<string, unknown> = {}
 ): Promise<HospitalListResponse> => {
-  const queryString = buildQueryString(params);
-  const response = await fetch(`${baseUrl}/hospitals?${queryString}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+	const url = buildUrl("/hospitals", params);
+	const response = await apiGet<HospitalListResponse>(url);
 
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch hospitals: ${response.status} ${response.statusText}`
-    );
-  }
+	if (!response.ok) {
+		throw new Error(response.error || "Failed to fetch hospitals");
+	}
 
-  return response.json();
+	return response.data as HospitalListResponse;
 };
 
 export const addHospital = async (
-  hospitalData: AddHospitalFormData
+	hospitalData: AddHospitalFormData
 ): Promise<{ success: boolean; message?: string; data?: unknown }> => {
-  const response = await fetch(`${baseUrl}/hospitals`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(hospitalData),
-  });
+	const response = await apiPost("/hospitals", hospitalData);
 
-  if (!response.ok) {
-    throw new Error(
-      `Failed to add hospital: ${response.status} ${response.statusText}`
-    );
-  }
+	if (!response.ok) {
+		throw new Error(response.error || "Failed to add hospital");
+	}
 
-  return response.json();
+	return response.data as {
+		success: boolean;
+		message?: string;
+		data?: unknown;
+	};
 };
 
 export const fetchHospitalById = async (id: string): Promise<Hospital> => {
-  const response = await fetch(`${baseUrl}/hospitals/${id}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+	const response = await apiGet<Hospital>(`/hospitals/${id}`);
 
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch hospital: ${response.status} ${response.statusText}`
-    );
-  }
+	if (!response.ok) {
+		throw new Error(response.error || "Failed to fetch hospital");
+	}
 
-  return response.json();
+	return response.data as Hospital;
 };
 
 export const fetchHospitalDetailsById = async (
-  id: number
+	id: number
 ): Promise<HospitalDetailsResponse> => {
-  const response = await fetch(
-    `${baseUrl}/hospitals/${id}?doctors=true&tests=true&amenities=true`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+	const url = buildUrl(`/hospitals/${id}`, {
+		doctors: true,
+		tests: true,
+		amenities: true,
+	});
+	const response = await apiGet<HospitalDetailsResponse>(url);
 
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch hospital details: ${response.status} ${response.statusText}`
-    );
-  }
+	if (!response.ok) {
+		throw new Error(response.error || "Failed to fetch hospital details");
+	}
 
-  return response.json();
+	return response.data as HospitalDetailsResponse;
 };
 
 export const updateHospital = async (
-  id: string,
-  hospitalData: AddHospitalFormData
+	id: string,
+	hospitalData: AddHospitalFormData
 ): Promise<{ success: boolean; message?: string; data?: unknown }> => {
-  const response = await fetch(`${baseUrl}/hospitals/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(hospitalData),
-  });
+	const response = await apiPut(`/hospitals/${id}`, hospitalData);
 
-  if (!response.ok) {
-    throw new Error(
-      `Failed to update hospital: ${response.status} ${response.statusText}`
-    );
-  }
+	if (!response.ok) {
+		throw new Error(response.error || "Failed to update hospital");
+	}
 
-  return response.json();
+	return response.data as {
+		success: boolean;
+		message?: string;
+		data?: unknown;
+	};
 };
 
 export const fetchHospitalTypes = async (): Promise<ICommonEnum[]> => {
-  const response = await fetch(`${baseUrl}/hospital-types`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+	const response = await apiGet<ICommonEnum[]>("/hospital-types");
 
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch hospital types: ${response.status} ${response.statusText}`
-    );
-  }
+	if (!response.ok) {
+		throw new Error(response.error || "Failed to fetch hospital types");
+	}
 
-  return response.json();
+	return response.data as ICommonEnum[];
 };
 
 export const fetchOrganizationTypes = async (): Promise<ICommonEnum[]> => {
-  const response = await fetch(`${baseUrl}/organization-types`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+	const response = await apiGet<ICommonEnum[]>("/organization-types");
 
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch organization types: ${response.status} ${response.statusText}`
-    );
-  }
+	if (!response.ok) {
+		throw new Error(response.error || "Failed to fetch organization types");
+	}
 
-  return response.json();
+	return response.data as ICommonEnum[];
 };
