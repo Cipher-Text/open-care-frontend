@@ -18,6 +18,7 @@ import {
   Droplets,
   Megaphone,
   HeartPulse,
+  LayoutDashboard,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -49,6 +50,11 @@ const menuItems = [
     title: "Dashboard",
     url: "/admin",
     icon: Home,
+  },
+  {
+    title: "Admin Dashboard",
+    url: "/admin/dashboard",
+    icon: LayoutDashboard,
   },
   {
     title: "Doctors",
