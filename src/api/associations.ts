@@ -1,4 +1,5 @@
 import { AssociationsListResponse, Association } from "@/types/associations";
+import { AddAssociationFormData } from "@/validations/add-association-schema";
 import { baseUrl } from "@/config/config";
 
 interface QueryParams {
@@ -61,6 +62,45 @@ export const fetchAssociationById = async (
   if (!response.ok) {
     throw new Error(
       `Failed to fetch association: ${response.status} ${response.statusText}`
+    );
+  }
+
+  return response.json();
+};
+
+export const addAssociation = async (
+  data: AddAssociationFormData
+): Promise<Association> => {
+  const response = await fetch(`${baseUrl}/associations`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to add association: ${response.status} ${response.statusText}`
+    );
+  }
+
+  return response.json();
+};
+
+export const fetchAssociationTypes = async (): Promise<
+  Array<{ value: string; displayName: string; bnName: string }>
+> => {
+  const response = await fetch(`${baseUrl}/association-types`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch association types: ${response.status} ${response.statusText}`
     );
   }
 
