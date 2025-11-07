@@ -23,6 +23,13 @@ interface ListItem {
   maxDonations?: number;
   icon?: string;
   levelName?: string;
+  // Countries fields
+  displayNameEn?: string;
+  nameBn?: string;
+  nameNative?: string;
+  acronym?: string;
+  // Domain fields
+  isAdvertisement?: boolean;
 }
 
 interface ApiConfig {
@@ -123,6 +130,18 @@ const API_CONFIGS: ApiConfig[] = [
     title: "Advertisement Positions",
     category: "General",
   },
+  {
+    name: "domain",
+    endpoint: "/domain",
+    title: "Domain",
+    category: "General",
+  },
+  {
+    name: "countries",
+    endpoint: "/countries",
+    title: "Countries",
+    category: "Geography",
+  },
 ];
 
 const ConstantsManagement: React.FC = () => {
@@ -219,6 +238,15 @@ const ConstantsManagement: React.FC = () => {
       (item) =>
         item.minDonations !== undefined && item.maxDonations !== undefined
     );
+    // New fields for Countries
+    const hasDisplayNameEn = items.some((item) => item.displayNameEn);
+    const hasNameBn = items.some((item) => item.nameBn);
+    const hasNameNative = items.some((item) => item.nameNative);
+    const hasAcronym = items.some((item) => item.acronym);
+    // New field for Domain
+    const hasIsAdvertisement = items.some(
+      (item) => item.isAdvertisement !== undefined
+    );
 
     return (
       <div className="overflow-x-auto">
@@ -256,6 +284,31 @@ const ConstantsManagement: React.FC = () => {
               {hasBanglaName && (
                 <th className="border border-gray-300 px-4 py-2 text-left font-medium">
                   Bangla Name
+                </th>
+              )}
+              {hasDisplayNameEn && (
+                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                  English Name
+                </th>
+              )}
+              {hasNameBn && (
+                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                  Bengali Name
+                </th>
+              )}
+              {hasNameNative && (
+                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                  Native Name
+                </th>
+              )}
+              {hasAcronym && (
+                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                  Acronym
+                </th>
+              )}
+              {hasIsAdvertisement && (
+                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                  Advertisement
                 </th>
               )}
               {hasDonationRange && (
@@ -311,6 +364,37 @@ const ConstantsManagement: React.FC = () => {
                 {hasBanglaName && (
                   <td className="border border-gray-300 px-4 py-2">
                     {item.banglaName || "-"}
+                  </td>
+                )}
+                {hasDisplayNameEn && (
+                  <td className="border border-gray-300 px-4 py-2">
+                    {item.displayNameEn || "-"}
+                  </td>
+                )}
+                {hasNameBn && (
+                  <td className="border border-gray-300 px-4 py-2">
+                    {item.nameBn || "-"}
+                  </td>
+                )}
+                {hasNameNative && (
+                  <td className="border border-gray-300 px-4 py-2">
+                    {item.nameNative || "-"}
+                  </td>
+                )}
+                {hasAcronym && (
+                  <td className="border border-gray-300 px-4 py-2">
+                    <code className="bg-blue-100 px-2 py-1 rounded text-sm font-medium">
+                      {item.acronym || "-"}
+                    </code>
+                  </td>
+                )}
+                {hasIsAdvertisement && (
+                  <td className="border border-gray-300 px-4 py-2 text-center">
+                    <Badge
+                      variant={item.isAdvertisement ? "default" : "secondary"}
+                    >
+                      {item.isAdvertisement ? "Yes" : "No"}
+                    </Badge>
                   </td>
                 )}
                 {hasDonationRange && (
