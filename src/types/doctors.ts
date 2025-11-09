@@ -38,7 +38,11 @@ export type Degree = {
   id: number;
   name: string;
   abbreviation: string;
-  degreeType: string;
+  degreeType: {
+    value: string | null;
+    displayName: string | null;
+    banglaName: string;
+  } | null;
 };
 
 export type MedicalSpeciality = {
@@ -49,7 +53,7 @@ export type MedicalSpeciality = {
   icon: string;
   imageUrl: string;
   description: string;
-  doctorCount?: number;
+  doctorCount: number;
 };
 
 export type Institution = {
@@ -74,14 +78,21 @@ export type Institution = {
 
 export type DoctorDegree = {
   id: number;
-  doctor: string;
+  doctor: {
+    id: number;
+    isActive: boolean;
+    isVerified: boolean;
+    tags: string[];
+  };
   degree: Degree;
   medicalSpeciality: MedicalSpeciality;
   institution: Institution;
-  startDateTime: string;
-  endDateTime: string;
+  startDate: string;
+  endDate: string;
   grade: string;
   description: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type Association = {
@@ -161,6 +172,7 @@ export type Doctor = {
   isActive: boolean;
   profile: DoctorProfile;
   associations?: DoctorAssociation[];
+  doctorDegrees?: DoctorDegree[];
 };
 
 export type Hospital = {

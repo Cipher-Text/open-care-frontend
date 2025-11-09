@@ -36,12 +36,7 @@ import {
   addDoctorSchema,
   AddDoctorFormData,
 } from "@/validations/add-doctor-schema";
-import {
-  addDoctor,
-  fetchDoctorById,
-  updateDoctor,
-  DoctorDegreeResponse,
-} from "@/api/doctors";
+import { addDoctor, fetchDoctorById, updateDoctor } from "@/api/doctors";
 import {
   fetchDistricts,
   fetchUpazilas,
@@ -49,6 +44,7 @@ import {
 } from "@/api/locations";
 import { Doctor } from "@/types/doctors";
 import { District, Upazila, Union } from "@/types/locations";
+
 export default function DoctorFormPage() {
   const router = useRouter();
   const params = useParams();
@@ -592,22 +588,6 @@ export default function DoctorFormPage() {
                 </CardContent>
               </Card>
             </div>
-
-            {/* Doctor Degrees Management - Only show when editing */}
-            {isEditing && doctorData && (
-              <DoctorDegreesManagement
-                doctorId={Number(doctorId)}
-                initialDegrees={
-                  (doctorData.doctorDegrees ||
-                    []) as unknown as DoctorDegreeResponse[]
-                }
-                onUpdate={() => {
-                  queryClient.invalidateQueries({
-                    queryKey: ["doctor", doctorId],
-                  });
-                }}
-              />
-            )}
 
             {/* Submit Button */}
             <div className="flex justify-end space-x-2">

@@ -1,4 +1,6 @@
-import { baseUrl } from "@/config/config";
+"use client";
+
+import { apiGet, buildUrl } from "@/lib/api-client";
 import {
   MedicalSpecialitiesListResponse,
   MedicalSpeciality,
@@ -8,42 +10,18 @@ interface QueryParams {
   [key: string]: string | number | boolean | undefined | null;
 }
 
-// Helper function to build query string
-const buildQueryString = (params: QueryParams): string => {
-  const queryParams = new URLSearchParams();
-
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== "") {
-      queryParams.append(key, value.toString());
-    }
-  });
-
-  return queryParams.toString();
-};
-
 export const fetchMedicalSpecialities = async (
-  params: QueryParams
+  params: QueryParams = {}
 ): Promise<MedicalSpecialitiesListResponse> => {
-  const queryString = buildQueryString(params);
-  const response = await fetch(
-    `${baseUrl}/medical-specialities?${queryString}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const url = buildUrl("/medical-specialities", params);
+  const response = await apiGet<MedicalSpecialitiesListResponse>(url);
 
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch medical specialities: ${response.status} ${response.statusText}`
-    );
+    throw new Error(response.error || "Failed to fetch medical specialities");
   }
 
-  const data = await response.json();
+  const data = response.data as MedicalSpecialitiesListResponse;
 
-  // Return the data as is since it now matches our expected format
   return {
     medicalSpecialities: data.medicalSpecialities || [],
     totalItems: data.totalItems || 0,
@@ -53,21 +31,17 @@ export const fetchMedicalSpecialities = async (
     status: 200,
   };
 };
+
 export const fetchMedicalSpecialityById = async (
   id: number
 ): Promise<MedicalSpeciality> => {
-  const response = await fetch(`${baseUrl}/medical-specialities/${id}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await apiGet<MedicalSpeciality>(
+    `/medical-specialities/${id}`
+  );
 
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch medical speciality: ${response.status} ${response.statusText}`
-    );
+    throw new Error(response.error || "Failed to fetch medical speciality");
   }
 
-  return response.json();
+  return response.data as MedicalSpeciality;
 };
