@@ -53,29 +53,29 @@ export interface Union {
 
 export interface UserProfile {
   id: number;
-  username: string;
+  username: string | null;
   userType: UserType;
-  keycloakUserId: string;
-  photo: string | null;
-  phone: string;
-  email: string;
+  keycloakUserId: string | null;
+  photoUrl: string | null;
+  phone: string | null;
+  email: string | null;
   name: string;
   bnName: string;
-  gender: Gender;
-  dateOfBirth: string;
-  bloodGroup: BloodGroup;
-  address: string;
-  district: District;
-  upazila: Upazila;
-  union: Union;
+  gender: Gender | null;
+  dateOfBirth: string | null;
+  bloodGroup: BloodGroup | null;
+  address: string | null;
+  district: District | null;
+  upazila: Upazila | null;
+  union: Union | null;
   isBloodDonor: boolean;
-  bloodDonationCount: number;
+  bloodDonationCount: number | null;
   lastBloodDonationDate: string | null;
   isVolunteer: boolean;
   healthDataConsent: boolean;
   isActive: boolean;
-  facebookProfileUrl: string;
-  linkedinProfileUrl: string;
-  researchGateProfileUrl: string;
-  xprofileUrl: string;
+  facebookProfileUrl: string | null;
+  linkedinProfileUrl: string | null;
+  researchGateProfileUrl: string | null;
+  xprofileUrl: string | null;
 }

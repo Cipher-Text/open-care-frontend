@@ -19,6 +19,7 @@ import {
   Megaphone,
   HeartPulse,
   LayoutDashboard,
+  UserCircle,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -65,6 +66,11 @@ const menuItems = [
     title: "Nurses",
     url: "/admin/nurses",
     icon: HeartPulse,
+  },
+  {
+    title: "Profiles",
+    url: "/admin/profiles",
+    icon: UserCircle,
   },
   {
     title: "Institutions",

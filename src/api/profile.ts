@@ -73,3 +73,38 @@ export const uploadProfilePhoto = async (
 
   return response.json();
 };
+
+/**
+ * Get all profiles with pagination
+ */
+export interface ProfilesResponse {
+  totalItems: number;
+  profiles: UserProfile[];
+  totalPages: number;
+  currentPage: number;
+}
+
+export const getProfiles = async (
+  page: number = 0,
+  size: number = 10,
+  sortBy: string = "id",
+  sortDir: string = "ASC"
+): Promise<ProfilesResponse> => {
+  const response = await fetch(
+    `${baseUrl}/profiles?page=${page}&size=${size}&sortBy=${sortBy}&sortDir=${sortDir}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch profiles: ${response.status} ${response.statusText}`
+    );
+  }
+
+  return response.json();
+};
