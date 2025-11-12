@@ -28,7 +28,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Separator } from "@/components/ui/separator";
 import { getProfileById, ProfileDetailsResponse } from "@/api/profile";
 
 export default function ProfileDetailsPage() {
@@ -494,61 +493,6 @@ export default function ProfileDetailsPage() {
               </Card>
             )}
 
-            {/* Blood Donations */}
-            {profile.bloodDonationList &&
-              profile.bloodDonationList.length > 0 && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Heart className="h-5 w-5 text-red-500" />
-                      Blood Donation History ({
-                        profile.bloodDonationList.length
-                      }{" "}
-                      donations)
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {profile.bloodDonationList.map((donation, index) => (
-                        <div key={donation.id}>
-                          {index > 0 && <Separator className="my-4" />}
-                          <div className="flex items-start justify-between">
-                            <div className="space-y-2 flex-1">
-                              <div className="flex items-center gap-2">
-                                <Heart className="h-4 w-4 text-red-500 fill-red-500" />
-                                <span className="font-medium">
-                                  {donation.hospital.name}
-                                </span>
-                                <Badge variant="outline" className="text-xs">
-                                  {donation.bloodComponent.banglaName}
-                                </Badge>
-                              </div>
-                              <div className="text-sm text-muted-foreground pl-6">
-                                {donation.hospital.bnName}
-                              </div>
-                              <div className="flex items-center gap-4 text-sm text-muted-foreground pl-6">
-                                <div className="flex items-center gap-1">
-                                  <MapPin className="h-3 w-3" />
-                                  {donation.hospital.district.name}
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <Calendar className="h-3 w-3" />
-                                  {formatDate(donation.donationDate)}
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <Droplet className="h-3 w-3" />
-                                  {donation.quantityMl} ml
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
             {/* Blood Donor Status */}
             {profile.isBloodDonor && (
               <Card>
@@ -611,6 +555,61 @@ export default function ProfileDetailsPage() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Blood Donation History - Moved to end */}
+            {profile.bloodDonationList &&
+              profile.bloodDonationList.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Heart className="h-5 w-5 text-red-500" />
+                      Blood Donation History ({
+                        profile.bloodDonationList.length
+                      }{" "}
+                      donations)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {profile.bloodDonationList.map((donation) => (
+                        <div
+                          key={donation.id}
+                          className="flex items-center justify-between py-2 border-b last:border-b-0"
+                        >
+                          <div className="flex items-center gap-3 flex-1">
+                            <Heart className="h-4 w-4 text-red-500 fill-red-500 flex-shrink-0" />
+                            <div className="flex items-center gap-2 flex-wrap flex-1">
+                              <span className="font-medium">
+                                {donation.hospital.name}
+                              </span>
+                              <span className="text-sm text-muted-foreground">
+                                ({donation.hospital.bnName})
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-4 text-sm text-muted-foreground flex-shrink-0">
+                            <Badge variant="outline" className="text-xs">
+                              {donation.bloodComponent.banglaName}
+                            </Badge>
+                            <div className="flex items-center gap-1">
+                              <MapPin className="h-3 w-3" />
+                              {donation.hospital.district.name}
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Calendar className="h-3 w-3" />
+                              {formatDate(donation.donationDate)}
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Droplet className="h-3 w-3" />
+                              {donation.quantityMl} ml
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
           </>
         ) : null}
       </div>

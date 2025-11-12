@@ -127,7 +127,10 @@ export default function ProfilePage() {
             <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
               <div className="relative">
                 <Avatar className="h-24 w-24">
-                  <AvatarImage src={profile.photo || ""} alt={profile.name} />
+                  <AvatarImage
+                    src={profile.photoUrl || ""}
+                    alt={profile.name}
+                  />
                   <AvatarFallback className="text-lg">
                     {getInitials(profile.name)}
                   </AvatarFallback>
@@ -195,7 +198,7 @@ export default function ProfilePage() {
                 <label className="text-sm font-medium text-muted-foreground">
                   Gender
                 </label>
-                <p className="mt-1">{profile.gender.displayName}</p>
+                <p className="mt-1">{profile.gender?.displayName || "N/A"}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-muted-foreground">
@@ -203,7 +206,7 @@ export default function ProfilePage() {
                 </label>
                 <p className="mt-1 flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
-                  {formatDate(profile.dateOfBirth)}
+                  {formatDate(profile.dateOfBirth || "")}
                 </p>
               </div>
               <div>
@@ -212,7 +215,7 @@ export default function ProfilePage() {
                 </label>
                 <p className="mt-1 flex items-center gap-1">
                   <Droplets className="h-4 w-4 text-red-500" />
-                  {profile.bloodGroup.displayName}
+                  {profile.bloodGroup?.displayName || "N/A"}
                 </p>
               </div>
               <div>
@@ -242,45 +245,53 @@ export default function ProfilePage() {
         </Card>
 
         {/* Location Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MapPin className="h-5 w-5" />
-              Location Information
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">
-                  District
-                </label>
-                <p className="mt-1">{profile.district.name}</p>
-                <p className="text-sm text-muted-foreground">
-                  {profile.district.bnName}
-                </p>
+        {(profile.district || profile.upazila || profile.union) && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MapPin className="h-5 w-5" />
+                Location Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {profile.district && (
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      District
+                    </label>
+                    <p className="mt-1">{profile.district.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {profile.district.bnName}
+                    </p>
+                  </div>
+                )}
+                {profile.upazila && (
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Upazila
+                    </label>
+                    <p className="mt-1">{profile.upazila.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {profile.upazila.bnName}
+                    </p>
+                  </div>
+                )}
+                {profile.union && (
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Union
+                    </label>
+                    <p className="mt-1">{profile.union.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {profile.union.bnName}
+                    </p>
+                  </div>
+                )}
               </div>
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">
-                  Upazila
-                </label>
-                <p className="mt-1">{profile.upazila.name}</p>
-                <p className="text-sm text-muted-foreground">
-                  {profile.upazila.bnName}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">
-                  Union
-                </label>
-                <p className="mt-1">{profile.union.name}</p>
-                <p className="text-sm text-muted-foreground">
-                  {profile.union.bnName}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Blood Donation & Volunteer Status */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
