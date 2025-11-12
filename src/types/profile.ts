@@ -75,7 +75,12 @@ export interface UserProfile {
   healthDataConsent: boolean;
   isActive: boolean;
   facebookProfileUrl: string | null;
+  facebookPageUrl: string | null;
   linkedinProfileUrl: string | null;
   researchGateProfileUrl: string | null;
   xprofileUrl: string | null;
+  instagramProfileUrl: string | null;
+  youtubeChannelUrl: string | null;
+  websiteUrl: string | null;
+  blogUrl: string | null;
 }

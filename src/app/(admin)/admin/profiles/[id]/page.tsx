@@ -19,6 +19,11 @@ import {
   Clock,
   Eye,
   MousePointerClick,
+  Share2,
+  Twitter,
+  Instagram,
+  Youtube,
+  FileText,
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -522,6 +527,147 @@ export default function ProfileDetailsPage() {
                         {formatDate(profile.lastBloodDonationDate)}
                       </p>
                     </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Social Media Links */}
+            {(profile.facebookProfileUrl ||
+              profile.facebookPageUrl ||
+              profile.linkedinProfileUrl ||
+              profile.researchGateProfileUrl ||
+              profile.xprofileUrl ||
+              profile.instagramProfileUrl ||
+              profile.youtubeChannelUrl ||
+              profile.websiteUrl ||
+              profile.blogUrl) && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Share2 className="h-5 w-5" />
+                    Social Media & Links
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-3">
+                    {profile.facebookProfileUrl && (
+                      <a
+                        href={profile.facebookProfileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 transition-colors"
+                      >
+                        <Facebook className="h-5 w-5 text-blue-600" />
+                        <span className="text-sm font-medium text-blue-900">
+                          Facebook Profile
+                        </span>
+                      </a>
+                    )}
+                    {profile.facebookPageUrl && (
+                      <a
+                        href={profile.facebookPageUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 transition-colors"
+                      >
+                        <Facebook className="h-5 w-5 text-blue-600" />
+                        <span className="text-sm font-medium text-blue-900">
+                          Facebook Page
+                        </span>
+                      </a>
+                    )}
+                    {profile.linkedinProfileUrl && (
+                      <a
+                        href={profile.linkedinProfileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 transition-colors"
+                      >
+                        <Linkedin className="h-5 w-5 text-blue-700" />
+                        <span className="text-sm font-medium text-blue-900">
+                          LinkedIn
+                        </span>
+                      </a>
+                    )}
+                    {profile.xprofileUrl && (
+                      <a
+                        href={profile.xprofileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors"
+                      >
+                        <Twitter className="h-5 w-5 text-slate-700" />
+                        <span className="text-sm font-medium text-slate-900">
+                          X (Twitter)
+                        </span>
+                      </a>
+                    )}
+                    {profile.instagramProfileUrl && (
+                      <a
+                        href={profile.instagramProfileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-pink-200 bg-pink-50 hover:bg-pink-100 transition-colors"
+                      >
+                        <Instagram className="h-5 w-5 text-pink-600" />
+                        <span className="text-sm font-medium text-pink-900">
+                          Instagram
+                        </span>
+                      </a>
+                    )}
+                    {profile.youtubeChannelUrl && (
+                      <a
+                        href={profile.youtubeChannelUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 transition-colors"
+                      >
+                        <Youtube className="h-5 w-5 text-red-600" />
+                        <span className="text-sm font-medium text-red-900">
+                          YouTube
+                        </span>
+                      </a>
+                    )}
+                    {profile.researchGateProfileUrl && (
+                      <a
+                        href={profile.researchGateProfileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-teal-200 bg-teal-50 hover:bg-teal-100 transition-colors"
+                      >
+                        <Globe className="h-5 w-5 text-teal-600" />
+                        <span className="text-sm font-medium text-teal-900">
+                          ResearchGate
+                        </span>
+                      </a>
+                    )}
+                    {profile.websiteUrl && (
+                      <a
+                        href={profile.websiteUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-violet-200 bg-violet-50 hover:bg-violet-100 transition-colors"
+                      >
+                        <Monitor className="h-5 w-5 text-violet-600" />
+                        <span className="text-sm font-medium text-violet-900">
+                          Website
+                        </span>
+                      </a>
+                    )}
+                    {profile.blogUrl && (
+                      <a
+                        href={profile.blogUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-orange-200 bg-orange-50 hover:bg-orange-100 transition-colors"
+                      >
+                        <FileText className="h-5 w-5 text-orange-600" />
+                        <span className="text-sm font-medium text-orange-900">
+                          Blog
+                        </span>
+                      </a>
+                    )}
                   </div>
                 </CardContent>
               </Card>
