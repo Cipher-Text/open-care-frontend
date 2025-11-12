@@ -108,3 +108,75 @@ export const getProfiles = async (
 
   return response.json();
 };
+
+/**
+ * Get profile by ID with optional blood donations and user activity
+ */
+export interface ProfileDetailsResponse extends UserProfile {
+  userActivity: {
+    profileId: number;
+    profileName: string;
+    profileEmail: string;
+    lastLoginTime: string | null;
+    lastLogoutTime: string | null;
+    lastActivityTime: string | null;
+    lastLoginIp: string | null;
+    lastLoginDevice: string | null;
+    lastLoginBrowser: string | null;
+    lastKnownLocationLatitude: number | null;
+    lastKnownLocationLongitude: number | null;
+    totalLogins: number;
+    totalSessions: number;
+    avgSessionDurationSeconds: number | null;
+    adClickCount: number;
+    lastAdSeen: string | null;
+    lastAdClicked: string | null;
+  } | null;
+  bloodDonationList: Array<{
+    id: number;
+    donationDate: string;
+    quantityMl: number;
+    hospital: {
+      id: number;
+      name: string;
+      bnName: string;
+      district: {
+        name: string;
+        bnName: string;
+      };
+    };
+    bloodComponent: {
+      value: string | null;
+      displayName: string | null;
+      banglaName: string;
+    };
+  }> | null;
+}
+
+export const getProfileById = async (
+  id: number,
+  bloodDonations: boolean = true,
+  userActivity: boolean = true
+): Promise<ProfileDetailsResponse> => {
+  const params = new URLSearchParams();
+  if (bloodDonations) params.append("bloodDonations", "true");
+  if (userActivity) params.append("userActivity", "true");
+
+  const response = await fetch(
+    `${baseUrl}/profiles/${id}?${params.toString()}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch profile: ${response.status} ${response.statusText}`
+    );
+  }
+
+  return response.json();
+};
