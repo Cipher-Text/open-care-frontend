@@ -8,3 +8,18 @@ export interface ICommonEnum {
 	banglaName: string;
 	englishName: string;
 }
+
+export interface Sort {
+	unsorted: boolean;
+	sorted: boolean;
+	empty: boolean;
+}
+
+export interface Pageable {
+	unpaged: boolean;
+	pageNumber: number;
+	paged: boolean;
+	pageSize: number;
+	offset: number;
+	sort: Sort;
+}

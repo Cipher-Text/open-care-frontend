@@ -5,7 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Plus } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import { AdminHeader } from "@/components/admin/admin-header";
+import { AddDoctorDegreeModal } from "@/components/admin/add-doctor-degree-modal";
 
 import {
 	addDoctorSchema,
@@ -49,6 +50,7 @@ export default function DoctorFormPage() {
 	const params = useParams();
 	const queryClient = useQueryClient();
 	const [isLoading, setIsLoading] = useState(false);
+	const [isAddDegreeModalOpen, setIsAddDegreeModalOpen] = useState(false);
 	const [selectedDistrictId, setSelectedDistrictId] = useState<number | null>(
 		null
 	);
@@ -93,8 +95,6 @@ export default function DoctorFormPage() {
 			upazilaId: 1,
 			unionId: 1,
 			bmdcNo: "",
-			degrees: "",
-			specializations: "",
 			startDate: "",
 			description: "",
 			photo: "",
@@ -136,8 +136,6 @@ export default function DoctorFormPage() {
 				upazilaId: upazilaId,
 				unionId: doctorData.profile.union?.id || 1,
 				bmdcNo: doctorData.bmdcNo || "",
-				degrees: doctorData.degrees || "",
-				specializations: doctorData.specializations || "",
 				startDate: doctorData.startDate
 					? doctorData.startDate.split("T")[0]
 					: "",
@@ -425,38 +423,6 @@ export default function DoctorFormPage() {
 									/>
 									<FormField
 										control={form.control}
-										name="degrees"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Degrees</FormLabel>
-												<FormControl>
-													<Input
-														placeholder="Enter degrees (e.g., MBBS, MD)"
-														{...field}
-													/>
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="specializations"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Specializations</FormLabel>
-												<FormControl>
-													<Input
-														placeholder="Enter specializations"
-														{...field}
-													/>
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
 										name="startDate"
 										render={({ field }) => (
 											<FormItem>
@@ -484,6 +450,19 @@ export default function DoctorFormPage() {
 											</FormItem>
 										)}
 									/>
+
+									{/* Add Degree Button (Only when editing) */}
+									{isEditing && (
+										<Button
+											type="button"
+											variant="outline"
+											onClick={() => setIsAddDegreeModalOpen(true)}
+											className="w-full gap-2 mt-2"
+										>
+											<Plus className="h-4 w-4" />
+											Add Degree
+										</Button>
+									)}
 
 									{/* Location Information */}
 									<div className="space-y-4">
@@ -611,6 +590,21 @@ export default function DoctorFormPage() {
 						</div>
 					</form>
 				</Form>
+
+				{/* Add Degree Modal */}
+				{isEditing && doctorId && (
+					<AddDoctorDegreeModal
+						isOpen={isAddDegreeModalOpen}
+						onClose={() => setIsAddDegreeModalOpen(false)}
+						doctorId={doctorId}
+						onSuccess={() => {
+							// Optionally refetch doctor data
+							queryClient.invalidateQueries({
+								queryKey: ["doctor", doctorId],
+							});
+						}}
+					/>
+				)}
 			</div>
 		</div>
 	);

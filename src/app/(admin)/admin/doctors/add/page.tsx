@@ -83,8 +83,6 @@ export default function AddDoctorPage() {
 			upazilaId: 1,
 			unionId: 1,
 			bmdcNo: "",
-			degrees: "",
-			specializations: "",
 			startDate: "",
 			description: "",
 			photo: "",
@@ -281,38 +279,6 @@ export default function AddDoctorPage() {
 												<FormLabel>BMDC Number</FormLabel>
 												<FormControl>
 													<Input placeholder="Enter BMDC number" {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="degrees"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Degrees</FormLabel>
-												<FormControl>
-													<Input
-														placeholder="Enter degrees (e.g., MBBS, MD)"
-														{...field}
-													/>
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="specializations"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Specializations</FormLabel>
-												<FormControl>
-													<Input
-														placeholder="Enter specializations"
-														{...field}
-													/>
 												</FormControl>
 												<FormMessage />
 											</FormItem>

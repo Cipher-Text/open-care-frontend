@@ -20,8 +20,6 @@ export const addDoctorSchema = z.object({
 
 	// Medical Info
 	bmdcNo: z.string().min(1, "BMDC number is required"),
-	degrees: z.string().min(1, "Degrees are required"),
-	specializations: z.string().min(1, "Specializations are required"),
 	startDate: z.string().min(1, "Start date is required"),
 	description: z.string().optional(),
 
