@@ -10,6 +10,7 @@ import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getUserSession } from "@/lib/auth-client";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
@@ -24,7 +25,11 @@ export default function ProfilesPage() {
     error,
   } = useQuery<ProfilesResponse>({
     queryKey: ["profiles", currentPage],
-    queryFn: () => getProfiles(currentPage, 10, "id", "ASC"),
+    queryFn: () => {
+      const session = getUserSession();
+      const token = session?.access_token;
+      return getProfiles(currentPage, 10, "id", "ASC", token);
+    },
     placeholderData: (previousData) => previousData,
   });
 

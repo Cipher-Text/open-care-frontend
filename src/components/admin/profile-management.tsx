@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getProfiles, ProfilesResponse } from "@/api/profile";
+import { getUserSession } from "@/lib/auth-client";
 import "./profile-management.css";
 
 const ITEMS_PER_PAGE = 10;
@@ -40,11 +41,15 @@ const ProfileManagement: React.FC = () => {
     setError("");
 
     try {
+      const session = getUserSession();
+      const token = session?.access_token;
+
       const response = await getProfiles(
         currentPage,
         ITEMS_PER_PAGE,
         sortBy,
-        sortDir
+        sortDir,
+        token
       );
       setData(response);
     } catch (err) {

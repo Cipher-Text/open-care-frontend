@@ -88,15 +88,23 @@ export const getProfiles = async (
   page: number = 0,
   size: number = 10,
   sortBy: string = "id",
-  sortDir: string = "ASC"
+  sortDir: string = "ASC",
+  token?: string
 ): Promise<ProfilesResponse> => {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  // Add authorization header if token is provided
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   const response = await fetch(
     `${baseUrl}/profiles?page=${page}&size=${size}&sortBy=${sortBy}&sortDir=${sortDir}`,
     {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
     }
   );
 
@@ -156,19 +164,27 @@ export interface ProfileDetailsResponse extends UserProfile {
 export const getProfileById = async (
   id: number,
   bloodDonations: boolean = true,
-  userActivity: boolean = true
+  userActivity: boolean = true,
+  token?: string
 ): Promise<ProfileDetailsResponse> => {
   const params = new URLSearchParams();
   if (bloodDonations) params.append("bloodDonations", "true");
   if (userActivity) params.append("userActivity", "true");
 
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  // Add authorization header if token is provided
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   const response = await fetch(
     `${baseUrl}/profiles/${id}?${params.toString()}`,
     {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
     }
   );
 

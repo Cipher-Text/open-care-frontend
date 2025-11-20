@@ -34,6 +34,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getProfileById, ProfileDetailsResponse } from "@/api/profile";
+import { getUserSession } from "@/lib/auth-client";
 
 export default function ProfileDetailsPage() {
   const router = useRouter();
@@ -47,7 +48,11 @@ export default function ProfileDetailsPage() {
     error,
   } = useQuery<ProfileDetailsResponse>({
     queryKey: ["profile", profileId],
-    queryFn: () => getProfileById(profileId, true, true),
+    queryFn: () => {
+      const session = getUserSession();
+      const token = session?.access_token;
+      return getProfileById(profileId, true, true, token);
+    },
     enabled: !!profileId,
   });
 
