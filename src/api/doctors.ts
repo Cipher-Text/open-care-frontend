@@ -4,13 +4,9 @@ import {
 	DoctorListResponse,
 	Doctor,
 	DoctorDetailsResponse,
-	DoctorDegreesListResponse,
-	AddDoctorDegreeRequest,
 } from "@/types/doctors";
 import { AddDoctorFormData } from "@/validations/add-doctor-schema";
 import { apiGet, apiPost, apiPut, buildUrl } from "@/lib/api-client";
-
-export type { AddDoctorDegreeRequest };
 
 export const fetchDoctors = async (
 	params: Record<string, unknown> = {}
@@ -76,37 +72,6 @@ export const updateDoctor = async (
 
 	if (!response.ok) {
 		throw new Error(response.error || "Failed to update doctor");
-	}
-
-	return response.data as {
-		success: boolean;
-		message?: string;
-		data?: unknown;
-	};
-};
-
-export const fetchDoctorDegrees = async (
-	doctorId: string,
-	params: { page?: number; size?: number } = {}
-): Promise<DoctorDegreesListResponse> => {
-	const url = buildUrl(`/doctors/${doctorId}/degrees`, params);
-	const response = await apiGet<DoctorDegreesListResponse>(url);
-
-	if (!response.ok) {
-		throw new Error(response.error || "Failed to fetch doctor degrees");
-	}
-
-	return response.data as DoctorDegreesListResponse;
-};
-
-export const addDoctorDegree = async (
-	doctorId: string,
-	degreeData: AddDoctorDegreeRequest
-): Promise<{ success: boolean; message?: string; data?: unknown }> => {
-	const response = await apiPost(`/doctors/${doctorId}/degrees`, degreeData);
-
-	if (!response.ok) {
-		throw new Error(response.error || "Failed to add doctor degree");
 	}
 
 	return response.data as {
