@@ -30,6 +30,8 @@ interface ListItem {
   acronym?: string;
   // Domain fields
   isAdvertisement?: boolean;
+  // Document Types fields
+  category?: string;
 }
 
 interface ApiConfig {
@@ -134,6 +136,12 @@ const API_CONFIGS: ApiConfig[] = [
     name: "domain",
     endpoint: "/domain",
     title: "Domain",
+    category: "General",
+  },
+  {
+    name: "documentTypes",
+    endpoint: "/document-types",
+    title: "Document Types",
     category: "General",
   },
   {
@@ -247,6 +255,8 @@ const ConstantsManagement: React.FC = () => {
     const hasIsAdvertisement = items.some(
       (item) => item.isAdvertisement !== undefined
     );
+    // New field for Document Types
+    const hasCategory = items.some((item) => item.category);
 
     return (
       <div className="overflow-x-auto">
@@ -304,6 +314,11 @@ const ConstantsManagement: React.FC = () => {
               {hasAcronym && (
                 <th className="border border-gray-300 px-4 py-2 text-left font-medium">
                   Acronym
+                </th>
+              )}
+              {hasCategory && (
+                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                  Category
                 </th>
               )}
               {hasIsAdvertisement && (
@@ -386,6 +401,13 @@ const ConstantsManagement: React.FC = () => {
                     <code className="bg-blue-100 px-2 py-1 rounded text-sm font-medium">
                       {item.acronym || "-"}
                     </code>
+                  </td>
+                )}
+                {hasCategory && (
+                  <td className="border border-gray-300 px-4 py-2">
+                    <Badge variant="outline" className="text-xs">
+                      {item.category || "-"}
+                    </Badge>
                   </td>
                 )}
                 {hasIsAdvertisement && (
