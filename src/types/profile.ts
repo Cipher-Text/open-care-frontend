@@ -51,6 +51,31 @@ export interface Union {
   url: string;
 }
 
+export interface ContributionBadge {
+  contributionPoints: number;
+  badgeLevel: string;
+  badgeName: string;
+  badgeColor: string;
+  pointsToNextLevel: number;
+  currentLevelMinPoints: number;
+  nextLevelMinPoints: number;
+  progressPercentage: number;
+}
+
+export interface BloodDonationBadge {
+  bloodDonationCount: number;
+  badgeLevel: string;
+  badgeName: string;
+  badgeColor: string;
+  donationsToNextLevel: number;
+  currentLevelMinDonations: number;
+  nextLevelMinDonations: number;
+  progressPercentage: number;
+  lastDonationDate: string | null;
+  isEligibleToDonate: boolean;
+  daysUntilNextEligible: number;
+}
+
 export interface UserProfile {
   id: number;
   username: string | null;
@@ -68,6 +93,7 @@ export interface UserProfile {
   district: District | null;
   upazila: Upazila | null;
   union: Union | null;
+  contributionPoints: number;
   isBloodDonor: boolean;
   bloodDonationCount: number | null;
   lastBloodDonationDate: string | null;
@@ -83,4 +109,6 @@ export interface UserProfile {
   youtubeChannelUrl: string | null;
   websiteUrl: string | null;
   blogUrl: string | null;
+  contributionBadge: ContributionBadge | null;
+  bloodDonationBadge: BloodDonationBadge | null;
 }
