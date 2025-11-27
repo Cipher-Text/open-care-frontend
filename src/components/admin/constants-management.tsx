@@ -32,6 +32,9 @@ interface ListItem {
   isAdvertisement?: boolean;
   // Document Types fields
   category?: string;
+  // Contribution Actions fields
+  code?: string;
+  points?: number;
 }
 
 interface ApiConfig {
@@ -150,6 +153,18 @@ const API_CONFIGS: ApiConfig[] = [
     title: "Countries",
     category: "Geography",
   },
+  {
+    name: "contributionActions",
+    endpoint: "/contribution-actions",
+    title: "Contribution Actions",
+    category: "General",
+  },
+  {
+    name: "contributionBadges",
+    endpoint: "/contribution-badges",
+    title: "Contribution Badges",
+    category: "General",
+  },
 ];
 
 const ConstantsManagement: React.FC = () => {
@@ -257,6 +272,9 @@ const ConstantsManagement: React.FC = () => {
     );
     // New field for Document Types
     const hasCategory = items.some((item) => item.category);
+    // New fields for Contribution Actions
+    const hasCode = items.some((item) => item.code);
+    const hasPoints = items.some((item) => item.points !== undefined);
 
     return (
       <div className="overflow-x-auto">
@@ -319,6 +337,16 @@ const ConstantsManagement: React.FC = () => {
               {hasCategory && (
                 <th className="border border-gray-300 px-4 py-2 text-left font-medium">
                   Category
+                </th>
+              )}
+              {hasCode && (
+                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                  Code
+                </th>
+              )}
+              {hasPoints && (
+                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                  Points
                 </th>
               )}
               {hasIsAdvertisement && (
@@ -407,6 +435,20 @@ const ConstantsManagement: React.FC = () => {
                   <td className="border border-gray-300 px-4 py-2">
                     <Badge variant="outline" className="text-xs">
                       {item.category || "-"}
+                    </Badge>
+                  </td>
+                )}
+                {hasCode && (
+                  <td className="border border-gray-300 px-4 py-2">
+                    <code className="bg-gray-100 px-2 py-1 rounded text-sm">
+                      {item.code || "-"}
+                    </code>
+                  </td>
+                )}
+                {hasPoints && (
+                  <td className="border border-gray-300 px-4 py-2 text-center">
+                    <Badge variant="default" className="text-xs">
+                      {item.points !== undefined ? item.points : "-"}
                     </Badge>
                   </td>
                 )}
