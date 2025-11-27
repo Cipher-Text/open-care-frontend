@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
@@ -34,11 +34,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import {
-	fetchDegrees,
-	addDoctorDegreesBatch,
-	fetchDoctorDegrees,
-} from "@/api/degrees";
+import { fetchDegrees, addDoctorDegreesBatch } from "@/api/degrees";
 import { fetchAllInstitutions } from "@/api/institutions";
 import { fetchAllMedicalSpecialities } from "@/api/medical-specialities";
 import { DoctorDegree } from "@/types/degrees";
@@ -91,11 +87,7 @@ export function AddDoctorDegreeModal({
 	});
 
 	// Fetch existing doctor degrees for edit mode
-	const { data: existingDegrees = [], isLoading: isLoadingDegrees } = useQuery({
-		queryKey: ["doctor-degrees", doctorId],
-		queryFn: () => fetchDoctorDegrees(doctorId),
-		enabled: isOpen && !!doctorId,
-	});
+	// REMOVED API CALL - Will be implemented later
 
 	const form = useForm<AddDegreesFormData>({
 		resolver: zodResolver(addDegreesFormSchema),
@@ -118,41 +110,6 @@ export function AddDoctorDegreeModal({
 		control: form.control,
 		name: "degrees",
 	});
-
-	// Update form when existing degrees are loaded
-	useEffect(() => {
-		if (
-			isOpen &&
-			existingDegrees &&
-			existingDegrees.length > 0 &&
-			!isLoadingDegrees
-		) {
-			// Clear current fields
-			while (fields.length > 0) {
-				remove(0);
-			}
-
-			// Add existing degrees to form
-			existingDegrees.forEach((degree) => {
-				append({
-					degreeId: degree.degreeId.toString(),
-					medicalSpecialityId: degree.medicalSpecialityId.toString(),
-					institutionId: degree.institutionId.toString(),
-					startDate: degree.startDate,
-					endDate: degree.endDate,
-					grade: degree.grade || "",
-					description: degree.description || "",
-				});
-			});
-		}
-	}, [
-		isOpen,
-		existingDegrees,
-		isLoadingDegrees,
-		fields.length,
-		append,
-		remove,
-	]);
 
 	const onSubmit = async (data: AddDegreesFormData) => {
 		try {
