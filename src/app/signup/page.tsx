@@ -21,7 +21,11 @@ import {
 import { Eye, EyeOff, User, Mail, Phone, Lock } from "lucide-react";
 import { signupSchema, SignupFormData } from "@/validations/signup-schema";
 import { fetchDistricts } from "@/api/locations";
+import { fetchBloodGroups } from "@/api/blood-groups";
+import { fetchGenders } from "@/api/gender";
 import type { District } from "@/types/locations";
+import type { BloodGroup } from "@/types/blood-groups";
+import type { Gender } from "@/types/gender";
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -60,8 +64,25 @@ export default function SignupPage() {
     }
   };
 
-  const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
-  const genders = ["MALE", "FEMALE", "OTHER"];
+  // Fetch blood groups from API
+  const {
+    data: bloodGroups = [],
+    isLoading: isLoadingBloodGroups,
+    isError: isBloodGroupsError,
+  } = useQuery<BloodGroup[]>({
+    queryKey: ["bloodGroups"],
+    queryFn: fetchBloodGroups,
+  });
+
+  // Fetch genders from API
+  const {
+    data: genders = [],
+    isLoading: isLoadingGenders,
+    isError: isGendersError,
+  } = useQuery<Gender[]>({
+    queryKey: ["genders"],
+    queryFn: fetchGenders,
+  });
 
   // Fetch districts from API
   const {
@@ -263,6 +284,7 @@ export default function SignupPage() {
                   </Label>
                   <Select
                     onValueChange={(value) => setValue("bloodGroup", value)}
+                    disabled={isLoadingBloodGroups || isBloodGroupsError}
                   >
                     <SelectTrigger
                       className={`h-12 border-gray-300 focus:border-teal-500 ${
@@ -271,12 +293,20 @@ export default function SignupPage() {
                           : ""
                       }`}
                     >
-                      <SelectValue placeholder="Select blood group" />
+                      <SelectValue
+                        placeholder={
+                          isLoadingBloodGroups
+                            ? "Loading blood groups..."
+                            : isBloodGroupsError
+                            ? "Failed to load blood groups"
+                            : "Select blood group"
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
-                      {bloodGroups.map((group) => (
-                        <SelectItem key={group} value={group}>
-                          {group}
+                      {bloodGroups.map((group: BloodGroup) => (
+                        <SelectItem key={group.value} value={group.value}>
+                          {group.displayName} ({group.bnName})
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -293,7 +323,10 @@ export default function SignupPage() {
                   <Label className="text-sm font-medium text-gray-700">
                     Gender
                   </Label>
-                  <Select onValueChange={(value) => setValue("gender", value)}>
+                  <Select
+                    onValueChange={(value) => setValue("gender", value)}
+                    disabled={isLoadingGenders || isGendersError}
+                  >
                     <SelectTrigger
                       className={`h-12 border-gray-300 focus:border-teal-500 ${
                         errors.gender
@@ -301,12 +334,20 @@ export default function SignupPage() {
                           : ""
                       }`}
                     >
-                      <SelectValue placeholder="Select gender" />
+                      <SelectValue
+                        placeholder={
+                          isLoadingGenders
+                            ? "Loading genders..."
+                            : isGendersError
+                            ? "Failed to load genders"
+                            : "Select gender"
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
-                      {genders.map((gender) => (
-                        <SelectItem key={gender} value={gender}>
-                          {gender}
+                      {genders.map((gender: Gender) => (
+                        <SelectItem key={gender.value} value={gender.value}>
+                          {gender.displayName} ({gender.banglaName})
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -398,7 +439,12 @@ export default function SignupPage() {
               {/* Submit Button */}
               <Button
                 type="submit"
-                disabled={isLoading || isLoadingDistricts}
+                disabled={
+                  isLoading ||
+                  isLoadingDistricts ||
+                  isLoadingBloodGroups ||
+                  isLoadingGenders
+                }
                 className="w-full h-12 bg-teal-600 hover:bg-teal-700 text-white font-medium"
               >
                 {isLoading ? "Creating Account..." : "Create Account"}
