@@ -22,6 +22,24 @@ export const fetchHospitals = async (
 	return response.data as HospitalListResponse;
 };
 
+export const fetchAllHospitals = async (): Promise<Hospital[]> => {
+	const response = await fetch(`${baseUrl}/hospitals/all`, {
+		method: "GET",
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+
+	if (!response.ok) {
+		throw new Error(
+			`Failed to fetch hospitals: ${response.status} ${response.statusText}`
+		);
+	}
+
+	const data = await response.json();
+	return Array.isArray(data) ? data : data?.data || [];
+};
+
 export const addHospital = async (
 	hospitalData: AddHospitalFormData
 ): Promise<{ success: boolean; message?: string; data?: unknown }> => {

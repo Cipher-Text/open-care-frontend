@@ -25,6 +25,22 @@ import {
 export function buildDoctorDetailSections(
 	doctor: DoctorDetailsResponse
 ): DetailSection[] {
+	const formatBloodGroup = (
+		bloodGroup:
+			| DoctorDetailsResponse["profile"]["bloodGroup"]
+			| { value?: string; displayName?: string; bnName?: string }
+	) => {
+		if (!bloodGroup) {
+			return "N/A";
+		}
+
+		if (typeof bloodGroup === "string") {
+			return bloodGroup;
+		}
+
+		return bloodGroup.displayName || bloodGroup.bnName || bloodGroup.value;
+	};
+
 	const profileProperties: PropertyConfig[] = [
 		{ label: "Name", value: doctor.profile.name || "N/A" },
 		{ label: "Bengali Name", value: doctor.profile.bnName || "N/A" },
@@ -81,7 +97,7 @@ export function buildDoctorDetailSections(
 				: "N/A",
 			icon: <Calendar className="h-4 w-4" />,
 		},
-		{ label: "Blood Group", value: doctor.profile.bloodGroup || "N/A" },
+		{ label: "Blood Group", value: formatBloodGroup(doctor.profile.bloodGroup) },
 		{ label: "Description", value: doctor.description || "N/A" },
 	];
 

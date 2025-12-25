@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
@@ -40,6 +40,7 @@ import { fetchAllMedicalSpecialities } from "@/api/medical-specialities";
 import { DoctorDegree } from "@/types/degrees";
 
 const degreeSchema = z.object({
+	id: z.number().optional(),
 	degreeId: z.string().min(1, "Degree is required"),
 	medicalSpecialityId: z.string().min(1, "Specialization is required"),
 	institutionId: z.string().min(1, "Institution is required"),
@@ -55,11 +56,25 @@ const addDegreesFormSchema = z.object({
 
 type AddDegreesFormData = z.infer<typeof addDegreesFormSchema>;
 
+type DegreeFormValues = AddDegreesFormData["degrees"][number];
+
+const emptyDegree: DegreeFormValues = {
+	id: undefined,
+	degreeId: "",
+	medicalSpecialityId: "",
+	institutionId: "",
+	startDate: "",
+	endDate: "",
+	grade: "",
+	description: "",
+};
+
 interface AddDoctorDegreeModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	doctorId: string;
 	onSuccess?: () => void;
+	initialDegrees?: DegreeFormValues[];
 }
 
 export function AddDoctorDegreeModal({
@@ -67,6 +82,7 @@ export function AddDoctorDegreeModal({
 	onClose,
 	doctorId,
 	onSuccess,
+	initialDegrees,
 }: AddDoctorDegreeModalProps) {
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -94,6 +110,7 @@ export function AddDoctorDegreeModal({
 		defaultValues: {
 			degrees: [
 				{
+					id: undefined,
 					degreeId: "",
 					medicalSpecialityId: "",
 					institutionId: "",
@@ -111,11 +128,28 @@ export function AddDoctorDegreeModal({
 		name: "degrees",
 	});
 
+	const hasInitialDegrees = (initialDegrees?.length || 0) > 0;
+
+	// Reset form when modal opens so edit mode reflects current data.
+	useEffect(() => {
+		if (!isOpen) {
+			return;
+		}
+
+		if (hasInitialDegrees) {
+			form.reset({ degrees: initialDegrees || [] });
+			return;
+		}
+
+		form.reset({ degrees: [emptyDegree] });
+	}, [isOpen, hasInitialDegrees, initialDegrees, form]);
+
 	const onSubmit = async (data: AddDegreesFormData) => {
 		try {
 			setIsLoading(true);
 
 			const degreesData: DoctorDegree[] = data.degrees.map((degree) => ({
+				id: degree.id,
 				doctorId: parseInt(doctorId),
 				degreeId: parseInt(degree.degreeId),
 				medicalSpecialityId: parseInt(degree.medicalSpecialityId),
@@ -124,6 +158,7 @@ export function AddDoctorDegreeModal({
 				endDate: degree.endDate,
 				grade: degree.grade || "",
 				description: degree.description || "",
+				update: Boolean(degree.id),
 				endDateValid: true,
 			}));
 
@@ -154,6 +189,7 @@ export function AddDoctorDegreeModal({
 		if (!open) {
 			form.reset();
 			onClose();
+			return;
 		}
 	};
 
@@ -161,9 +197,13 @@ export function AddDoctorDegreeModal({
 		<Dialog open={isOpen} onOpenChange={handleOpenChange}>
 			<DialogContent className="max-w-full w-[95vw] lg:max-w-5xl max-h-[90vh] overflow-y-auto">
 				<DialogHeader>
-					<DialogTitle>Add Doctor Degrees</DialogTitle>
+					<DialogTitle>
+						{hasInitialDegrees ? "Edit Doctor Degrees" : "Add Doctor Degrees"}
+					</DialogTitle>
 					<DialogDescription>
-						Add one or multiple degrees for this doctor
+						{hasInitialDegrees
+							? "Update existing degrees or add new ones"
+							: "Add one or multiple degrees for this doctor"}
 					</DialogDescription>
 				</DialogHeader>
 

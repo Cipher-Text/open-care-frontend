@@ -22,6 +22,10 @@ export const addDoctorSchema = z.object({
 	bmdcNo: z.string().min(1, "BMDC number is required"),
 	startDate: z.string().min(1, "Start date is required"),
 	description: z.string().optional(),
+	bloodGroup: z.string().optional(),
+	facebookProfileUrl: z.string().optional(),
+	linkedinProfileUrl: z.string().optional(),
+	researchGateProfileUrl: z.string().optional(),
 
 	// Optional
 	photo: z.string().optional(),
