@@ -292,36 +292,38 @@ export default function DoctorFormPage() {
 											</FormItem>
 										)}
 									/>
-									<FormField
-										control={form.control}
-										name="email"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Email</FormLabel>
-												<FormControl>
-													<Input
-														type="email"
-														placeholder="Enter email"
-														{...field}
-													/>
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="phone"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Phone</FormLabel>
-												<FormControl>
-													<Input placeholder="Enter phone number" {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
+									<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+										<FormField
+											control={form.control}
+											name="email"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>Email</FormLabel>
+													<FormControl>
+														<Input
+															type="email"
+															placeholder="Enter email"
+															{...field}
+														/>
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+										<FormField
+											control={form.control}
+											name="phone"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>Phone</FormLabel>
+													<FormControl>
+														<Input placeholder="Enter phone number" {...field} />
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+									</div>
 									<FormField
 										control={form.control}
 										name="username"
@@ -335,44 +337,46 @@ export default function DoctorFormPage() {
 											</FormItem>
 										)}
 									/>
-									<FormField
-										control={form.control}
-										name="gender"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Gender</FormLabel>
-												<Select
-													onValueChange={field.onChange}
-													defaultValue={field.value}
-												>
+									<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+										<FormField
+											control={form.control}
+											name="gender"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>Gender</FormLabel>
+													<Select
+														onValueChange={field.onChange}
+														defaultValue={field.value}
+													>
+														<FormControl>
+														<SelectTrigger className="w-full">
+																<SelectValue placeholder="Select gender" />
+															</SelectTrigger>
+														</FormControl>
+														<SelectContent>
+															<SelectItem value="MALE">Male</SelectItem>
+															<SelectItem value="FEMALE">Female</SelectItem>
+															<SelectItem value="OTHER">Other</SelectItem>
+														</SelectContent>
+													</Select>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+										<FormField
+											control={form.control}
+											name="dateOfBirth"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>Date of Birth</FormLabel>
 													<FormControl>
-														<SelectTrigger>
-															<SelectValue placeholder="Select gender" />
-														</SelectTrigger>
+														<Input type="date" {...field} />
 													</FormControl>
-													<SelectContent>
-														<SelectItem value="MALE">Male</SelectItem>
-														<SelectItem value="FEMALE">Female</SelectItem>
-														<SelectItem value="OTHER">Other</SelectItem>
-													</SelectContent>
-												</Select>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="dateOfBirth"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Date of Birth</FormLabel>
-												<FormControl>
-													<Input type="date" {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+									</div>
 									<FormField
 										control={form.control}
 										name="address"
@@ -408,32 +412,34 @@ export default function DoctorFormPage() {
 									<CardTitle>Medical Information</CardTitle>
 								</CardHeader>
 								<CardContent className="space-y-4">
-									<FormField
-										control={form.control}
-										name="bmdcNo"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>BMDC Number</FormLabel>
-												<FormControl>
-													<Input placeholder="Enter BMDC number" {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="startDate"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Practice Start Date</FormLabel>
-												<FormControl>
-													<Input type="date" {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
+									<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+										<FormField
+											control={form.control}
+											name="bmdcNo"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>BMDC Number</FormLabel>
+													<FormControl>
+														<Input placeholder="Enter BMDC number" {...field} />
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+										<FormField
+											control={form.control}
+											name="startDate"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>Practice Start Date</FormLabel>
+													<FormControl>
+														<Input type="date" {...field} />
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+									</div>
 									<FormField
 										control={form.control}
 										name="description"
@@ -467,101 +473,103 @@ export default function DoctorFormPage() {
 									{/* Location Information */}
 									<div className="space-y-4">
 										<h4 className="font-medium">Location Information</h4>
-										<FormField
-											control={form.control}
-											name="districtId"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel>District</FormLabel>
-													<FormControl>
-														<SearchableSelect
-															value={field.value?.toString()}
-															onValueChange={(value) => {
-																const districtId = Number(value);
-																field.onChange(districtId);
-																setSelectedDistrictId(districtId);
-																// Reset upazila and union when district changes
-																form.setValue("upazilaId", 1);
-																form.setValue("unionId", 1);
-																setSelectedUpazilaId(null);
-															}}
-															placeholder="Select district"
-															searchPlaceholder="Search districts..."
-															emptyText="No district found."
-															disabled={isDistrictsLoading}
-															options={districts.map((district: District) => ({
-																value: district.id.toString(),
-																label: district.name,
-															}))}
-														/>
-													</FormControl>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-										<FormField
-											control={form.control}
-											name="upazilaId"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel>Upazila</FormLabel>
-													<FormControl>
-														<SearchableSelect
-															value={field.value?.toString()}
-															onValueChange={(value) => {
-																const upazilaId = Number(value);
-																field.onChange(upazilaId);
-																setSelectedUpazilaId(upazilaId);
-																// Reset union when upazila changes
-																form.setValue("unionId", 1);
-															}}
-															placeholder="Select upazila"
-															searchPlaceholder="Search upazilas..."
-															emptyText="No upazila found."
-															disabled={
-																isUpazilasLoading || !selectedDistrictId
-															}
-															options={upazilas
-																.filter(
-																	(upazila: Upazila) =>
-																		upazila.district.id === selectedDistrictId
-																)
-																.map((upazila: Upazila) => ({
-																	value: upazila.id.toString(),
-																	label: upazila.name,
+										<div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+											<FormField
+												control={form.control}
+												name="districtId"
+												render={({ field }) => (
+													<FormItem>
+														<FormLabel>District</FormLabel>
+														<FormControl>
+															<SearchableSelect
+																value={field.value?.toString()}
+																onValueChange={(value) => {
+																	const districtId = Number(value);
+																	field.onChange(districtId);
+																	setSelectedDistrictId(districtId);
+																	// Reset upazila and union when district changes
+																	form.setValue("upazilaId", 1);
+																	form.setValue("unionId", 1);
+																	setSelectedUpazilaId(null);
+																}}
+																placeholder="Select district"
+																searchPlaceholder="Search districts..."
+																emptyText="No district found."
+																disabled={isDistrictsLoading}
+																options={districts.map((district: District) => ({
+																	value: district.id.toString(),
+																	label: district.name,
 																}))}
-														/>
-													</FormControl>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-										<FormField
-											control={form.control}
-											name="unionId"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel>Union</FormLabel>
-													<FormControl>
-														<SearchableSelect
-															value={field.value?.toString()}
-															onValueChange={(value) => {
-																field.onChange(Number(value));
-															}}
-															placeholder="Select union"
-															searchPlaceholder="Search unions..."
-															emptyText="No union found."
-															disabled={isUnionsLoading || !selectedUpazilaId}
-															options={unions.map((union: Union) => ({
-																value: union.id.toString(),
-																label: union.name,
-															}))}
-														/>
-													</FormControl>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
+															/>
+														</FormControl>
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
+											<FormField
+												control={form.control}
+												name="upazilaId"
+												render={({ field }) => (
+													<FormItem>
+														<FormLabel>Upazila</FormLabel>
+														<FormControl>
+															<SearchableSelect
+																value={field.value?.toString()}
+																onValueChange={(value) => {
+																	const upazilaId = Number(value);
+																	field.onChange(upazilaId);
+																	setSelectedUpazilaId(upazilaId);
+																	// Reset union when upazila changes
+																	form.setValue("unionId", 1);
+																}}
+																placeholder="Select upazila"
+																searchPlaceholder="Search upazilas..."
+																emptyText="No upazila found."
+																disabled={
+																	isUpazilasLoading || !selectedDistrictId
+																}
+																options={upazilas
+																	.filter(
+																		(upazila: Upazila) =>
+																			upazila.district.id === selectedDistrictId
+																	)
+																	.map((upazila: Upazila) => ({
+																		value: upazila.id.toString(),
+																		label: upazila.name,
+																	}))}
+															/>
+														</FormControl>
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
+											<FormField
+												control={form.control}
+												name="unionId"
+												render={({ field }) => (
+													<FormItem>
+														<FormLabel>Union</FormLabel>
+														<FormControl>
+															<SearchableSelect
+																value={field.value?.toString()}
+																onValueChange={(value) => {
+																	field.onChange(Number(value));
+																}}
+																placeholder="Select union"
+																searchPlaceholder="Search unions..."
+																emptyText="No union found."
+																disabled={isUnionsLoading || !selectedUpazilaId}
+																options={unions.map((union: Union) => ({
+																	value: union.id.toString(),
+																	label: union.name,
+																}))}
+															/>
+														</FormControl>
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
+										</div>
 									</div>
 								</CardContent>
 							</Card>
