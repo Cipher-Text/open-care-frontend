@@ -51,4 +51,5 @@ export const addHospitalSchema = z.object({
 	isActive: z.boolean().optional(),
 });
 
-export type AddHospitalFormData = z.infer<typeof addHospitalSchema>;
+export type AddHospitalFormInput = z.input<typeof addHospitalSchema>;
+export type AddHospitalFormData = z.output<typeof addHospitalSchema>;

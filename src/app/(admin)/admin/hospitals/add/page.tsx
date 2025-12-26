@@ -101,8 +101,8 @@ export default function AddHospitalPage() {
 			unionId: 1,
 			hospitalType: "",
 			organizationType: "",
-			lat: "",
-			lon: "",
+			lat: undefined,
+			lon: undefined,
 			websiteUrl: "",
 			imageUrl: "",
 			registrationCode: "",
@@ -596,7 +596,15 @@ export default function AddHospitalPage() {
 															type="number"
 															step="any"
 															placeholder="23.7104"
-															{...field}
+															value={field.value ?? ""}
+															onChange={(e) => {
+																const nextValue = e.target.value;
+																field.onChange(
+																	nextValue === ""
+																		? undefined
+																		: Number.parseFloat(nextValue)
+																);
+															}}
 														/>
 													</FormControl>
 													<FormMessage />
@@ -614,7 +622,15 @@ export default function AddHospitalPage() {
 															type="number"
 															step="any"
 															placeholder="90.4074"
-															{...field}
+															value={field.value ?? ""}
+															onChange={(e) => {
+																const nextValue = e.target.value;
+																field.onChange(
+																	nextValue === ""
+																		? undefined
+																		: Number.parseFloat(nextValue)
+																);
+															}}
 														/>
 													</FormControl>
 													<FormMessage />

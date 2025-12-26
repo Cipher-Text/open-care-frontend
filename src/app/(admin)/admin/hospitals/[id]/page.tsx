@@ -110,8 +110,8 @@ export default function HospitalFormPage() {
       unionId: 1,
       hospitalType: "",
       organizationType: "",
-      lat: "",
-      lon: "",
+      lat: undefined,
+      lon: undefined,
       websiteUrl: "",
       imageUrl: "",
       registrationCode: "",
@@ -161,8 +161,22 @@ export default function HospitalFormPage() {
           hospitalData.organizationType?.value ||
           hospitalData.organizationType?.displayName ||
           "GOVERNMENT",
-        lat: hospitalData.lat ?? "",
-        lon: hospitalData.lon ?? "",
+        lat:
+          hospitalData.lat === null ||
+          hospitalData.lat === undefined ||
+          hospitalData.lat === ""
+            ? undefined
+            : Number.isNaN(Number(hospitalData.lat))
+              ? undefined
+              : Number(hospitalData.lat),
+        lon:
+          hospitalData.lon === null ||
+          hospitalData.lon === undefined ||
+          hospitalData.lon === ""
+            ? undefined
+            : Number.isNaN(Number(hospitalData.lon))
+              ? undefined
+              : Number(hospitalData.lon),
         websiteUrl: hospitalData.websiteUrl || "",
         imageUrl: hospitalData.imageUrl || "",
         registrationCode: hospitalData.registrationCode || "",
@@ -728,7 +742,15 @@ export default function HospitalFormPage() {
                               type="number"
                               step="any"
                               placeholder="23.7104"
-                              {...field}
+                              value={field.value ?? ""}
+                              onChange={(e) => {
+                                const nextValue = e.target.value;
+                                field.onChange(
+                                  nextValue === ""
+                                    ? undefined
+                                    : Number.parseFloat(nextValue)
+                                );
+                              }}
                             />
                           </FormControl>
                           <FormMessage />
@@ -746,7 +768,15 @@ export default function HospitalFormPage() {
                               type="number"
                               step="any"
                               placeholder="90.4074"
-                              {...field}
+                              value={field.value ?? ""}
+                              onChange={(e) => {
+                                const nextValue = e.target.value;
+                                field.onChange(
+                                  nextValue === ""
+                                    ? undefined
+                                    : Number.parseFloat(nextValue)
+                                );
+                              }}
                             />
                           </FormControl>
                           <FormMessage />
