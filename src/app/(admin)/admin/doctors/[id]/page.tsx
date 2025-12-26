@@ -143,8 +143,14 @@ export default function DoctorFormPage() {
 			enabled: isEditing && Boolean(doctorId),
 		});
 
-	const doctorDegrees = doctorDetails?.doctorDegrees || [];
-	const doctorWorkplaces = doctorDetails?.doctorWorkplaces || [];
+	const doctorDegrees = useMemo(
+		() => doctorDetails?.doctorDegrees || [],
+		[doctorDetails?.doctorDegrees]
+	);
+	const doctorWorkplaces = useMemo(
+		() => doctorDetails?.doctorWorkplaces || [],
+		[doctorDetails?.doctorWorkplaces]
+	);
 
 	const degreeFormDefaults = useMemo(
 		() =>
@@ -169,7 +175,9 @@ export default function DoctorFormPage() {
 		() =>
 			doctorWorkplaces.map((workplace) => ({
 				id: workplace.id,
-				workplaceType: workplace.teacherPosition ? "TEACHER" : "DOCTOR",
+				workplaceType: workplace.teacherPosition
+					? ("TEACHER" as const)
+					: ("DOCTOR" as const),
 				medicalSpecialityId: workplace.medicalSpeciality?.id
 					? workplace.medicalSpeciality.id.toString()
 					: "",

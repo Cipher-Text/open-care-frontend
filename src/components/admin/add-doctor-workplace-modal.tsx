@@ -41,7 +41,7 @@ import { fetchAllHospitals } from "@/api/hospitals";
 import { fetchTeacherPositions } from "@/api/teacher-positions";
 import { addDoctorWorkplacesBatch } from "@/api/workplaces";
 import { DoctorWorkplaceRequest } from "@/types/workplaces";
-import { MedicalSpeciality } from "@/types/doctors";
+import { MedicalSpeciality } from "@/types/medical-specialities";
 import { Institution } from "@/types/institutions";
 import { Hospital } from "@/types/hospitals";
 import { TeacherPosition } from "@/types/teacher-positions";

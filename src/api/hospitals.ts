@@ -23,20 +23,18 @@ export const fetchHospitals = async (
 };
 
 export const fetchAllHospitals = async (): Promise<Hospital[]> => {
-	const response = await fetch(`${baseUrl}/hospitals/all`, {
-		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
-	});
+	const response = await apiGet<Hospital[] | { data?: Hospital[] }>(
+		"/hospitals/all",
+		{
+			includeAuth: false,
+		}
+	);
 
 	if (!response.ok) {
-		throw new Error(
-			`Failed to fetch hospitals: ${response.status} ${response.statusText}`
-		);
+		throw new Error(response.error || "Failed to fetch hospitals");
 	}
 
-	const data = await response.json();
+	const data = response.data;
 	return Array.isArray(data) ? data : data?.data || [];
 };
 

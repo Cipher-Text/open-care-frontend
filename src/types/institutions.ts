@@ -1,4 +1,4 @@
-import { District, Division, Upazila, Union } from "./locations";
+import { District, Upazila, Union } from "./locations";
 
 export interface Tag {
   id: number;
