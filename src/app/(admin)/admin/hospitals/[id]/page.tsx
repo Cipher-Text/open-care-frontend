@@ -21,6 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -28,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 import {
   addHospital,
@@ -111,6 +113,19 @@ export default function HospitalFormPage() {
       lat: "",
       lon: "",
       websiteUrl: "",
+      imageUrl: "",
+      registrationCode: "",
+      slug: "",
+      facebookPageUrl: "",
+      twitterProfileUrl: "",
+      email: "",
+      phone: "",
+      address: "",
+      hasEmergencyService: false,
+      hasAmbulanceService: false,
+      hasBloodBank: false,
+      isAffiliated: false,
+      isActive: true,
     },
   });
 
@@ -138,11 +153,30 @@ export default function HospitalFormPage() {
         districtId: districtId,
         upazilaId: upazilaId,
         unionId: hospitalData.union?.id || 1,
-        hospitalType: hospitalData.hospitalType?.value || "GENERAL",
-        organizationType: hospitalData.organizationType?.value || "GOVERNMENT",
-        lat: hospitalData.lat || "",
-        lon: hospitalData.lon || "",
+        hospitalType:
+          hospitalData.hospitalType?.value ||
+          hospitalData.hospitalType?.englishName ||
+          "GENERAL",
+        organizationType:
+          hospitalData.organizationType?.value ||
+          hospitalData.organizationType?.displayName ||
+          "GOVERNMENT",
+        lat: hospitalData.lat ?? "",
+        lon: hospitalData.lon ?? "",
         websiteUrl: hospitalData.websiteUrl || "",
+        imageUrl: hospitalData.imageUrl || "",
+        registrationCode: hospitalData.registrationCode || "",
+        slug: hospitalData.slug || "",
+        facebookPageUrl: hospitalData.facebookPageUrl || "",
+        twitterProfileUrl: hospitalData.twitterProfileUrl || "",
+        email: hospitalData.email || "",
+        phone: hospitalData.phone || "",
+        address: hospitalData.address || "",
+        hasEmergencyService: hospitalData.hasEmergencyService ?? false,
+        hasAmbulanceService: hospitalData.hasAmbulanceService ?? false,
+        hasBloodBank: hospitalData.hasBloodBank ?? false,
+        isAffiliated: hospitalData.isAffiliated ?? false,
+        isActive: hospitalData.isActive ?? true,
       }); // Set selected location values for dropdowns
       setSelectedDistrictId(districtId);
       setSelectedUpazilaId(upazilaId);
@@ -350,14 +384,18 @@ export default function HospitalFormPage() {
                                     type.englishName &&
                                     type.englishName.trim() !== ""
                                 )
-                                .map((type) => (
-                                  <SelectItem
-                                    key={type.englishName}
-                                    value={type.englishName}
-                                  >
-                                    {type.englishName} ({type.banglaName})
-                                  </SelectItem>
-                                ))
+                                .map((type) => {
+                                  const optionValue =
+                                    type.value || type.englishName;
+                                  return (
+                                    <SelectItem
+                                      key={optionValue}
+                                      value={optionValue}
+                                    >
+                                      {type.englishName} ({type.banglaName})
+                                    </SelectItem>
+                                  );
+                                })
                             )}
                           </SelectContent>
                         </Select>
@@ -381,56 +419,175 @@ export default function HospitalFormPage() {
                               <SelectValue placeholder="Select organization type" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
-                            {isOrganizationTypesLoading ? (
-                              <SelectItem
-                                value="organization-types-loading"
-                                disabled
-                              >
-                                Loading organization types...
-                              </SelectItem>
-                            ) : (
+                        <SelectContent>
+                          {isOrganizationTypesLoading ? (
+                            <SelectItem
+                              value="organization-types-loading"
+                              disabled
+                            >
+                              Loading organization types...
+                            </SelectItem>
+                          ) : (
                               organizationTypes
                                 .filter(
                                   (type) =>
-                                    type.englishName &&
-                                    type.englishName.trim() !== ""
+                                    (type.value || type.displayName) &&
+                                    (type.value || type.displayName || "")
+                                      .trim() !== ""
                                 )
-                                .map((type) => (
+                              .map((type) => {
+                                const optionValue =
+                                  type.value || type.displayName || "";
+                                const label =
+                                  type.displayName || type.englishName || optionValue;
+                                return (
                                   <SelectItem
-                                    key={type.englishName}
-                                    value={type.englishName}
+                                    key={optionValue}
+                                    value={optionValue}
                                   >
-                                    {type.englishName} ({type.banglaName})
+                                    {label} ({type.banglaName})
                                   </SelectItem>
-                                ))
-                            )}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="websiteUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Website URL (Optional)</FormLabel>
-                        <FormControl>
-                          <Input placeholder="https://example.com" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </CardContent>
-              </Card>
+                                );
+                              })
+                          )}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="registrationCode"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Registration Code (Optional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter registration code" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="slug"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Slug (Optional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="hospital-slug" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Image URL (Optional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="https://..." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
 
-              {/* Location Information Card */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Location Information</CardTitle>
+            <Card>
+              <CardHeader>
+                <CardTitle>Contact & Online</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="websiteUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Website URL (Optional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="https://example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="facebookPageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Facebook Page URL (Optional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="facebook.com/..." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="twitterProfileUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Twitter Profile URL (Optional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="twitter.com/..." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email (Optional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="name@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone (Optional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="+880..." {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Address (Optional)</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="Enter address" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Location Information Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Location Information</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <FormField
@@ -567,7 +724,12 @@ export default function HospitalFormPage() {
                         <FormItem>
                           <FormLabel>Latitude (Optional)</FormLabel>
                           <FormControl>
-                            <Input placeholder="23.7104" {...field} />
+                            <Input
+                              type="number"
+                              step="any"
+                              placeholder="23.7104"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -580,13 +742,126 @@ export default function HospitalFormPage() {
                         <FormItem>
                           <FormLabel>Longitude (Optional)</FormLabel>
                           <FormControl>
-                            <Input placeholder="90.4074" {...field} />
+                            <Input
+                              type="number"
+                              step="any"
+                              placeholder="90.4074"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Services & Status</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="hasEmergencyService"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>Emergency Service</FormLabel>
+                          <div className="text-sm text-muted-foreground">
+                            Supports emergency care.
+                          </div>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="hasAmbulanceService"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>Ambulance Service</FormLabel>
+                          <div className="text-sm text-muted-foreground">
+                            Provides ambulance services.
+                          </div>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="hasBloodBank"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>Blood Bank</FormLabel>
+                          <div className="text-sm text-muted-foreground">
+                            Has blood bank facilities.
+                          </div>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="isAffiliated"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>Affiliated</FormLabel>
+                          <div className="text-sm text-muted-foreground">
+                            Affiliated with another institution.
+                          </div>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="isActive"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>Active</FormLabel>
+                          <div className="text-sm text-muted-foreground">
+                            Show this hospital as active.
+                          </div>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
                 </CardContent>
               </Card>
             </div>

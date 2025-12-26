@@ -7,6 +7,8 @@ export interface Response {
 export interface ICommonEnum {
 	banglaName: string;
 	englishName: string;
+	value?: string;
+	displayName?: string;
 }
 
 export interface Sort {

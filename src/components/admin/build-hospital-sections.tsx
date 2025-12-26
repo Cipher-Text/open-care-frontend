@@ -13,6 +13,9 @@ import {
 	CheckCircle,
 	XCircle,
 	Package,
+	Mail,
+	Phone,
+	Share2,
 } from "lucide-react";
 import { HospitalDetailsResponse } from "@/types/hospitals";
 import {
@@ -25,6 +28,39 @@ import { DetailSection } from "./detail-view";
 export function buildHospitalDetailSections(
 	hospital: HospitalDetailsResponse
 ): DetailSection[] {
+	const formatValue = (value: string | number | null | undefined) =>
+		value === null || value === undefined || value === "" ? "N/A" : value;
+	const formatLinkValue = (value: string | null | undefined) => {
+		if (!value) {
+			return "N/A";
+		}
+		const href = value.startsWith("http") ? value : `https://${value}`;
+		return (
+			<a
+				href={href}
+				target="_blank"
+				rel="noopener noreferrer"
+				className="text-blue-600 hover:underline"
+			>
+				{value}
+			</a>
+		);
+	};
+	const formatBoolean = (value: boolean | null | undefined) => {
+		if (value === null || value === undefined) {
+			return "N/A";
+		}
+		return value ? (
+			<span className="text-xs text-green-600 flex items-center gap-1">
+				<CheckCircle className="h-3 w-3" /> Yes
+			</span>
+		) : (
+			<span className="text-xs text-red-600 flex items-center gap-1">
+				<XCircle className="h-3 w-3" /> No
+			</span>
+		);
+	};
+
 	const basicProperties: PropertyConfig[] = [
 		{ label: "Name", value: hospital.name || "N/A" },
 		{ label: "Bengali Name", value: hospital.bnName || "N/A" },
@@ -49,19 +85,36 @@ export function buildHospitalDetailSections(
 		},
 		{
 			label: "Website",
-			value: hospital.websiteUrl ? (
-				<a
-					href={hospital.websiteUrl}
-					target="_blank"
-					rel="noopener noreferrer"
-					className="text-blue-600 hover:underline"
-				>
-					{hospital.websiteUrl}
-				</a>
-			) : (
-				"N/A"
-			),
+			value: formatLinkValue(hospital.websiteUrl),
 			icon: <Globe className="h-4 w-4" />,
+		},
+		{
+			label: "Registration Code",
+			value: formatValue(hospital.registrationCode),
+		},
+		{
+			label: "Email",
+			value: formatValue(hospital.email),
+			icon: <Mail className="h-4 w-4" />,
+		},
+		{
+			label: "Phone",
+			value: formatValue(hospital.phone),
+			icon: <Phone className="h-4 w-4" />,
+		},
+		{
+			label: "Address",
+			value: formatValue(hospital.address),
+		},
+		{
+			label: "Facebook Page",
+			value: formatLinkValue(hospital.facebookPageUrl),
+			icon: <Share2 className="h-4 w-4" />,
+		},
+		{
+			label: "Twitter Profile",
+			value: formatLinkValue(hospital.twitterProfileUrl),
+			icon: <Share2 className="h-4 w-4" />,
 		},
 	];
 
@@ -77,8 +130,35 @@ export function buildHospitalDetailSections(
 			label: "Division",
 			value: hospital.district?.division?.name || "N/A",
 		},
-		{ label: "Latitude", value: hospital.lat || "N/A" },
-		{ label: "Longitude", value: hospital.lon || "N/A" },
+		{ label: "Latitude", value: formatValue(hospital.lat) },
+		{ label: "Longitude", value: formatValue(hospital.lon) },
+	];
+
+	const serviceProperties: PropertyConfig[] = [
+		{
+			label: "Emergency Service",
+			value: formatBoolean(hospital.hasEmergencyService),
+		},
+		{
+			label: "Ambulance Service",
+			value: formatBoolean(hospital.hasAmbulanceService),
+		},
+		{
+			label: "Blood Bank",
+			value: formatBoolean(hospital.hasBloodBank),
+		},
+		{
+			label: "Affiliated",
+			value: formatBoolean(hospital.isAffiliated),
+		},
+		{
+			label: "Verified",
+			value: formatBoolean(hospital.isVerified),
+		},
+		{
+			label: "Active",
+			value: formatBoolean(hospital.isActive),
+		},
 	];
 
 	const doctorsProperties: PropertyConfig[] =
@@ -213,6 +293,12 @@ export function buildHospitalDetailSections(
 			title: "Location Information",
 			icon: <MapPin className="h-5 w-5" />,
 			properties: locationProperties,
+		},
+		{
+			id: "services",
+			title: "Services & Status",
+			icon: <Sparkles className="h-5 w-5" />,
+			properties: serviceProperties,
 		},
 		{
 			id: "doctors",
