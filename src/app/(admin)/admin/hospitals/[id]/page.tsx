@@ -65,6 +65,51 @@ export default function HospitalFormPage() {
   const hospitalId = params.id === "new" ? null : (params.id as string);
   const isEditing = hospitalId !== null;
 
+  const resolveSelectValue = (
+    current:
+      | {
+          value?: string | null;
+          englishName?: string | null;
+          displayName?: string | null;
+        }
+      | null
+      | undefined,
+    options: Array<{
+      value?: string | null;
+      englishName?: string | null;
+      displayName?: string | null;
+    }>
+  ) => {
+    const candidates = [
+      current?.value,
+      current?.englishName,
+      current?.displayName,
+    ]
+      .filter((entry): entry is string => Boolean(entry && entry.trim()))
+      .map((entry) => entry.trim().toLowerCase());
+
+    const match = options.find((option) => {
+      const optionCandidates = [
+        option.value,
+        option.englishName,
+        option.displayName,
+      ]
+        .filter((entry): entry is string => Boolean(entry && entry.trim()))
+        .map((entry) => entry.trim().toLowerCase());
+      return optionCandidates.some((entry) => candidates.includes(entry));
+    });
+
+    return (
+      match?.value ||
+      match?.englishName ||
+      match?.displayName ||
+      current?.value ||
+      current?.englishName ||
+      current?.displayName ||
+      ""
+    );
+  };
+
   // Fetch districts
   const { data: districts = [], isLoading: isDistrictsLoading } = useQuery({
     queryKey: ["districts"],
@@ -144,24 +189,28 @@ export default function HospitalFormPage() {
   // Populate form when editing
   useEffect(() => {
     if (isEditing && hospitalData) {
-      const districtId = hospitalData.district?.id || 1;
-      const upazilaId = hospitalData.upazila?.id || 1;
+      const upazilaId = hospitalData.upazila?.id ?? hospitalData.union?.upazila?.id ?? 1;
+      const districtId =
+        hospitalData.upazila?.district?.id ??
+        hospitalData.district?.id ??
+        hospitalData.union?.upazila?.district?.id ??
+        1;
 
       form.reset({
         name: hospitalData.name || "",
         bnName: hospitalData.bnName || "",
-        numberOfBed: hospitalData.numberOfBed || 1,
+        numberOfBed: hospitalData.numberOfBed ?? 1,
         districtId: districtId,
         upazilaId: upazilaId,
-        unionId: hospitalData.union?.id || 1,
+        unionId: hospitalData.union?.id ?? 1,
         hospitalType:
-          hospitalData.hospitalType?.value ||
-          hospitalData.hospitalType?.englishName ||
-          "GENERAL",
+          hospitalData.hospitalType?.value ??
+          hospitalData.hospitalType?.englishName ??
+          "",
         organizationType:
-          hospitalData.organizationType?.value ||
-          hospitalData.organizationType?.displayName ||
-          "GOVERNMENT",
+          hospitalData.organizationType?.value ??
+          hospitalData.organizationType?.displayName ??
+          "",
         lat:
           hospitalData.lat === null ||
           hospitalData.lat === undefined ||
@@ -197,6 +246,26 @@ export default function HospitalFormPage() {
       setSelectedUpazilaId(upazilaId);
     }
   }, [hospitalData, isEditing, form]);
+
+  useEffect(() => {
+    if (!isEditing || !hospitalData) {
+      return;
+    }
+
+    if (hospitalTypes.length > 0) {
+      form.setValue(
+        "hospitalType",
+        resolveSelectValue(hospitalData.hospitalType, hospitalTypes)
+      );
+    }
+
+    if (organizationTypes.length > 0) {
+      form.setValue(
+        "organizationType",
+        resolveSelectValue(hospitalData.organizationType, organizationTypes)
+      );
+    }
+  }, [hospitalTypes, organizationTypes, hospitalData, isEditing, form]);
 
   // Set initial selected values for new hospital
   useEffect(() => {
@@ -402,7 +471,9 @@ export default function HospitalFormPage() {
                         <FormLabel>Hospital Type</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          value={field.value}
+                          value={
+                            typeof field.value === "string" ? field.value : ""
+                          }
                           disabled={isHospitalTypesLoading}
                         >
                           <FormControl>
@@ -452,7 +523,9 @@ export default function HospitalFormPage() {
                         <FormLabel>Organization Type</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          value={field.value}
+                          value={
+                            typeof field.value === "string" ? field.value : ""
+                          }
                           disabled={isOrganizationTypesLoading}
                         >
                           <FormControl>

@@ -255,11 +255,11 @@ export default function AddHospitalPage() {
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>Hospital Type</FormLabel>
-												<Select
-													onValueChange={field.onChange}
-													value={field.value}
-													disabled={isHospitalTypesLoading}
-												>
+						<Select
+							onValueChange={field.onChange}
+							value={typeof field.value === "string" ? field.value : ""}
+							disabled={isHospitalTypesLoading}
+						>
 													<FormControl>
 														<SelectTrigger className="w-full">
 															<SelectValue placeholder="Select hospital type" />
@@ -305,11 +305,11 @@ export default function AddHospitalPage() {
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>Organization Type</FormLabel>
-												<Select
-													onValueChange={field.onChange}
-													value={field.value}
-													disabled={isOrganizationTypesLoading}
-												>
+						<Select
+							onValueChange={field.onChange}
+							value={typeof field.value === "string" ? field.value : ""}
+							disabled={isOrganizationTypesLoading}
+						>
 													<FormControl>
 														<SelectTrigger className="w-full">
 															<SelectValue placeholder="Select organization type" />
