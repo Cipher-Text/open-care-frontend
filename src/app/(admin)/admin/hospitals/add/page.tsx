@@ -42,6 +42,7 @@ import {
 } from "@/api/locations";
 import {
 	addHospitalSchema,
+	AddHospitalFormInput,
 	AddHospitalFormData,
 } from "@/validations/add-hospital-schema";
 
@@ -90,7 +91,7 @@ export default function AddHospitalPage() {
 		queryFn: fetchOrganizationTypes,
 	});
 
-	const form = useForm<AddHospitalFormData>({
+	const form = useForm<AddHospitalFormInput, unknown, AddHospitalFormData>({
 		resolver: zodResolver(addHospitalSchema),
 		defaultValues: {
 			name: "",
@@ -123,8 +124,25 @@ export default function AddHospitalPage() {
 	// Set initial selected values based on form defaults
 	useEffect(() => {
 		const formValues = form.getValues();
-		setSelectedDistrictId(formValues.districtId);
-		setSelectedUpazilaId(formValues.upazilaId);
+		const districtId =
+			typeof formValues.districtId === "number"
+				? formValues.districtId
+				: typeof formValues.districtId === "string" &&
+					formValues.districtId.trim() !== "" &&
+					!Number.isNaN(Number(formValues.districtId))
+				? Number(formValues.districtId)
+				: null;
+		const upazilaId =
+			typeof formValues.upazilaId === "number"
+				? formValues.upazilaId
+				: typeof formValues.upazilaId === "string" &&
+					formValues.upazilaId.trim() !== "" &&
+					!Number.isNaN(Number(formValues.upazilaId))
+				? Number(formValues.upazilaId)
+				: null;
+
+		setSelectedDistrictId(districtId ?? 1);
+		setSelectedUpazilaId(upazilaId ?? 1);
 	}, [form]);
 
 	// Filter upazilas based on selected district
@@ -212,7 +230,16 @@ export default function AddHospitalPage() {
 													<Input
 														type="number"
 														placeholder="Enter number of beds"
-														{...field}
+														name={field.name}
+														onBlur={field.onBlur}
+														ref={field.ref}
+														disabled={field.disabled}
+														value={
+															typeof field.value === "number" ||
+															typeof field.value === "string"
+																? field.value
+																: ""
+														}
 														onChange={(e) =>
 															field.onChange(Number(e.target.value))
 														}
@@ -474,7 +501,12 @@ export default function AddHospitalPage() {
 														form.setValue("unionId", 1);
 														setSelectedUpazilaId(null);
 													}}
-													value={field.value.toString()}
+													value={
+														typeof field.value === "number" ||
+														typeof field.value === "string"
+															? String(field.value)
+															: ""
+													}
 												>
 													<FormControl>
 														<SelectTrigger className="w-full">
@@ -516,7 +548,12 @@ export default function AddHospitalPage() {
 														// Reset union when upazila changes
 														form.setValue("unionId", 1);
 													}}
-													value={field.value.toString()}
+													value={
+														typeof field.value === "number" ||
+														typeof field.value === "string"
+															? String(field.value)
+															: ""
+													}
 													disabled={!selectedDistrictId}
 												>
 													<FormControl>
@@ -555,7 +592,12 @@ export default function AddHospitalPage() {
 													onValueChange={(value) =>
 														field.onChange(Number(value))
 													}
-													value={field.value.toString()}
+													value={
+														typeof field.value === "number" ||
+														typeof field.value === "string"
+															? String(field.value)
+															: ""
+													}
 													disabled={!selectedUpazilaId}
 												>
 													<FormControl>
@@ -585,22 +627,31 @@ export default function AddHospitalPage() {
 										)}
 									/>
 									<div className="grid grid-cols-2 gap-4">
-										<FormField
-											control={form.control}
-											name="lat"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel>Latitude (Optional)</FormLabel>
-													<FormControl>
-														<Input
-															type="number"
-															step="any"
-															placeholder="23.7104"
-															value={field.value ?? ""}
-															onChange={(e) => {
-																const nextValue = e.target.value;
-																field.onChange(
-																	nextValue === ""
+									<FormField
+										control={form.control}
+										name="lat"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Latitude (Optional)</FormLabel>
+												<FormControl>
+													<Input
+														type="number"
+														step="any"
+														placeholder="23.7104"
+														name={field.name}
+														onBlur={field.onBlur}
+														ref={field.ref}
+														disabled={field.disabled}
+														value={
+															typeof field.value === "number" ||
+															typeof field.value === "string"
+																? field.value
+																: ""
+														}
+														onChange={(e) => {
+															const nextValue = e.target.value;
+															field.onChange(
+																nextValue === ""
 																		? undefined
 																		: Number.parseFloat(nextValue)
 																);
@@ -611,22 +662,31 @@ export default function AddHospitalPage() {
 												</FormItem>
 											)}
 										/>
-										<FormField
-											control={form.control}
-											name="lon"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel>Longitude (Optional)</FormLabel>
-													<FormControl>
-														<Input
-															type="number"
-															step="any"
-															placeholder="90.4074"
-															value={field.value ?? ""}
-															onChange={(e) => {
-																const nextValue = e.target.value;
-																field.onChange(
-																	nextValue === ""
+									<FormField
+										control={form.control}
+										name="lon"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Longitude (Optional)</FormLabel>
+												<FormControl>
+													<Input
+														type="number"
+														step="any"
+														placeholder="90.4074"
+														name={field.name}
+														onBlur={field.onBlur}
+														ref={field.ref}
+														disabled={field.disabled}
+														value={
+															typeof field.value === "number" ||
+															typeof field.value === "string"
+																? field.value
+																: ""
+														}
+														onChange={(e) => {
+															const nextValue = e.target.value;
+															field.onChange(
+																nextValue === ""
 																		? undefined
 																		: Number.parseFloat(nextValue)
 																);
