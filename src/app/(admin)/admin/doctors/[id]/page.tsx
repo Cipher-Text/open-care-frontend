@@ -108,9 +108,9 @@ export default function DoctorFormPage() {
 			gender: "MALE",
 			dateOfBirth: "",
 			address: "",
-			districtId: 1,
-			upazilaId: 1,
-			unionId: 1,
+			districtId: undefined,
+			upazilaId: undefined,
+			unionId: undefined,
 			bmdcNo: "",
 			startDate: "",
 			description: "",
@@ -202,8 +202,8 @@ export default function DoctorFormPage() {
 	// Populate form when editing
 	useEffect(() => {
 		if (isEditing && doctorData) {
-			const districtId = doctorData.profile.district?.id || 1;
-			const upazilaId = doctorData.profile.upazila?.id || 1;
+			const districtId = doctorData.profile.district?.id ?? undefined;
+			const upazilaId = doctorData.profile.upazila?.id ?? undefined;
 
 			form.reset({
 				name: doctorData.profile.name || "",
@@ -219,7 +219,7 @@ export default function DoctorFormPage() {
 				address: doctorData.profile.address || "",
 				districtId: districtId,
 				upazilaId: upazilaId,
-				unionId: doctorData.profile.union?.id || 1,
+				unionId: doctorData.profile.union?.id ?? undefined,
 				bmdcNo: doctorData.bmdcNo || "",
 				startDate: doctorData.startDate
 					? doctorData.startDate.split("T")[0]
@@ -236,8 +236,8 @@ export default function DoctorFormPage() {
 			});
 
 			// Set selected location values for dropdowns
-			setSelectedDistrictId(districtId);
-			setSelectedUpazilaId(upazilaId);
+			setSelectedDistrictId(districtId ?? null);
+			setSelectedUpazilaId(upazilaId ?? null);
 		}
 	}, [doctorData, isEditing, form]);
 
@@ -245,8 +245,8 @@ export default function DoctorFormPage() {
 	useEffect(() => {
 		if (!isEditing) {
 			const formValues = form.getValues();
-			setSelectedDistrictId(formValues.districtId);
-			setSelectedUpazilaId(formValues.upazilaId);
+			setSelectedDistrictId(formValues.districtId ?? null);
+			setSelectedUpazilaId(formValues.upazilaId ?? null);
 		}
 	}, [isEditing, form]);
 
@@ -501,98 +501,92 @@ export default function DoctorFormPage() {
 								</Card>
 
 								{/* Degrees Card */}
-								<Card>
-									<CardHeader className="flex flex-row items-center justify-between space-y-0">
-										<CardTitle>Degrees</CardTitle>
-										<Button
-											type="button"
-											variant="outline"
-											size="sm"
-											onClick={() => setIsAddDegreeModalOpen(true)}
-											disabled={!isEditing}
-										>
-											<Plus className="mr-2 h-4 w-4" />
-											Add Degree
-										</Button>
-									</CardHeader>
-									<CardContent className="space-y-3">
-										{!isEditing && (
-											<p className="text-sm text-muted-foreground">
-												Save the doctor first to manage degrees.
-											</p>
-										)}
+								{isEditing && (
+									<Card>
+										<CardHeader className="flex flex-row items-center justify-between space-y-0">
+											<CardTitle>Degrees</CardTitle>
+											<Button
+												type="button"
+												variant="outline"
+												size="sm"
+												onClick={() => setIsAddDegreeModalOpen(true)}
+											>
+												<Plus className="mr-2 h-4 w-4" />
+												Add Degree
+											</Button>
+										</CardHeader>
+										<CardContent className="space-y-3">
+											{isDoctorDetailsLoading && (
+												<div className="space-y-2">
+													<Skeleton className="h-5 w-full" />
+													<Skeleton className="h-5 w-3/4" />
+												</div>
+											)}
 
-										{isEditing && isDoctorDetailsLoading && (
-											<div className="space-y-2">
-												<Skeleton className="h-5 w-full" />
-												<Skeleton className="h-5 w-3/4" />
-											</div>
-										)}
-
-										{isEditing &&
-											!isDoctorDetailsLoading &&
-											doctorDegrees.length === 0 && (
+											{!isDoctorDetailsLoading && doctorDegrees.length === 0 && (
 												<p className="text-sm text-muted-foreground">
 													No degrees added yet.
 												</p>
 											)}
 
-										{isEditing && doctorDegrees.length > 0 && (
-											<div className="space-y-3">
-												{doctorDegrees.map((degree) => (
-													<div
-														key={degree.id}
-														className="rounded-md border p-3"
-													>
-														<div className="flex items-start justify-between gap-4">
-															<div className="space-y-1">
-																<div className="font-medium">
-																	{degree.degree?.name}
-																	{degree.degree?.abbreviation
-																		? ` (${degree.degree.abbreviation})`
-																		: ""}
-																</div>
-																<div className="text-sm text-muted-foreground">
-																	{degree.institution?.name || "Institution N/A"}
-																	{degree.medicalSpeciality?.name
-																		? ` • ${degree.medicalSpeciality.name}`
-																		: ""}
-																</div>
-																<div className="text-sm text-muted-foreground">
-																	{degree.startDate || degree.endDate
-																		? `${formatYear(degree.startDate)} - ${formatYear(
-																				degree.endDate
-																		  )}`
-																		: "Years N/A"}
-																</div>
-																{degree.grade && (
-																	<div className="text-sm">
-																		Grade: {degree.grade}
+											{doctorDegrees.length > 0 && (
+												<div className="space-y-3">
+													{doctorDegrees.map((degree) => (
+														<div
+															key={degree.id}
+															className="rounded-md border p-3"
+														>
+															<div className="flex items-start justify-between gap-4">
+																<div className="space-y-1">
+																	<div className="font-medium">
+																		{degree.degree?.name}
+																		{degree.degree?.abbreviation
+																			? ` (${degree.degree.abbreviation})`
+																			: ""}
 																	</div>
-																)}
-																{degree.description && (
-																	<p className="text-sm text-muted-foreground">
-																		{degree.description}
-																	</p>
-																)}
+																	<div className="text-sm text-muted-foreground">
+																		{degree.institution?.name ||
+																			"Institution N/A"}
+																		{degree.medicalSpeciality?.name
+																			? ` • ${degree.medicalSpeciality.name}`
+																			: ""}
+																	</div>
+																	<div className="text-sm text-muted-foreground">
+																		{degree.startDate || degree.endDate
+																			? `${formatYear(
+																					degree.startDate
+																			  )} - ${formatYear(degree.endDate)}`
+																			: "Years N/A"}
+																	</div>
+																	{degree.grade && (
+																		<div className="text-sm">
+																			Grade: {degree.grade}
+																		</div>
+																	)}
+																	{degree.description && (
+																		<p className="text-sm text-muted-foreground">
+																			{degree.description}
+																		</p>
+																	)}
+																</div>
+																<Button
+																	type="button"
+																	variant="outline"
+																	size="sm"
+																	onClick={() =>
+																		setIsAddDegreeModalOpen(true)
+																	}
+																>
+																	Edit
+																</Button>
 															</div>
-															<Button
-																type="button"
-																variant="outline"
-																size="sm"
-																onClick={() =>
-																	setIsAddDegreeModalOpen(true)
-																}
-															>
-																Edit
-															</Button>
 														</div>
-													</div>
-												))}
-											</div>
-										)}
-									</CardContent>
-								</Card>
+													))}
+												</div>
+											)}
+										</CardContent>
+									</Card>
+								)}
 							</div>
 
 							<div className="space-y-6">
@@ -745,20 +739,20 @@ export default function DoctorFormPage() {
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel>District</FormLabel>
-														<FormControl>
-															<SearchableSelect
-																value={field.value?.toString()}
-																onValueChange={(value) => {
-																	const districtId = Number(value);
-																	field.onChange(districtId);
-																	setSelectedDistrictId(districtId);
-																	// Reset upazila and union when district changes
-																	form.setValue("upazilaId", 1);
-																	form.setValue("unionId", 1);
-																	setSelectedUpazilaId(null);
-																}}
-																placeholder="Select district"
-																searchPlaceholder="Search districts..."
+											<FormControl>
+												<SearchableSelect
+													value={field.value?.toString()}
+													onValueChange={(value) => {
+														const districtId = Number(value);
+														field.onChange(districtId);
+														setSelectedDistrictId(districtId);
+														// Reset upazila and union when district changes
+														form.setValue("upazilaId", undefined);
+														form.setValue("unionId", undefined);
+														setSelectedUpazilaId(null);
+													}}
+													placeholder="Select district"
+													searchPlaceholder="Search districts..."
 																emptyText="No district found."
 																disabled={isDistrictsLoading}
 																options={districts.map((district: District) => ({
@@ -780,13 +774,13 @@ export default function DoctorFormPage() {
 														<FormControl>
 															<SearchableSelect
 																value={field.value?.toString()}
-																onValueChange={(value) => {
-																	const upazilaId = Number(value);
-																	field.onChange(upazilaId);
-																	setSelectedUpazilaId(upazilaId);
-																	// Reset union when upazila changes
-																	form.setValue("unionId", 1);
-																}}
+													onValueChange={(value) => {
+														const upazilaId = Number(value);
+														field.onChange(upazilaId);
+														setSelectedUpazilaId(upazilaId);
+														// Reset union when upazila changes
+														form.setValue("unionId", undefined);
+													}}
 																placeholder="Select upazila"
 																searchPlaceholder="Search upazilas..."
 																emptyText="No upazila found."
@@ -839,89 +833,83 @@ export default function DoctorFormPage() {
 								</Card>
 
 								{/* Workplaces Card */}
-								<Card>
-									<CardHeader className="flex flex-row items-center justify-between space-y-0">
-										<CardTitle>Workplaces</CardTitle>
-										<Button
-											type="button"
-											variant="outline"
-											size="sm"
-											onClick={() => setIsAddWorkplaceModalOpen(true)}
-											disabled={!isEditing}
-										>
-											<Plus className="mr-2 h-4 w-4" />
-											Add Workplace
-										</Button>
-									</CardHeader>
-									<CardContent className="space-y-3">
-										{!isEditing && (
-											<p className="text-sm text-muted-foreground">
-												Save the doctor first to manage workplaces.
-											</p>
-										)}
-
-										{isEditing && isDoctorDetailsLoading && (
-											<div className="space-y-2">
-												<Skeleton className="h-5 w-full" />
-												<Skeleton className="h-5 w-3/4" />
-											</div>
-										)}
-
-										{isEditing &&
-											!isDoctorDetailsLoading &&
-											doctorWorkplaces.length === 0 && (
-												<p className="text-sm text-muted-foreground">
-													No workplaces added yet.
-												</p>
+								{isEditing && (
+									<Card>
+										<CardHeader className="flex flex-row items-center justify-between space-y-0">
+											<CardTitle>Workplaces</CardTitle>
+											<Button
+												type="button"
+												variant="outline"
+												size="sm"
+												onClick={() => setIsAddWorkplaceModalOpen(true)}
+											>
+												<Plus className="mr-2 h-4 w-4" />
+												Add Workplace
+											</Button>
+										</CardHeader>
+										<CardContent className="space-y-3">
+											{isDoctorDetailsLoading && (
+												<div className="space-y-2">
+													<Skeleton className="h-5 w-full" />
+													<Skeleton className="h-5 w-3/4" />
+												</div>
 											)}
 
-										{isEditing && doctorWorkplaces.length > 0 && (
-											<div className="space-y-3">
-												{doctorWorkplaces.map((workplace) => (
-													<div
-														key={workplace.id}
-														className="rounded-md border p-3"
-													>
-														<div className="flex items-start justify-between gap-4">
-															<div className="space-y-1">
-																<div className="font-medium">
-																	{workplace.hospital?.name ||
-																		workplace.institution?.name ||
-																		"Workplace"}
+											{!isDoctorDetailsLoading &&
+												doctorWorkplaces.length === 0 && (
+													<p className="text-sm text-muted-foreground">
+														No workplaces added yet.
+													</p>
+												)}
+
+											{doctorWorkplaces.length > 0 && (
+												<div className="space-y-3">
+													{doctorWorkplaces.map((workplace) => (
+														<div
+															key={workplace.id}
+															className="rounded-md border p-3"
+														>
+															<div className="flex items-start justify-between gap-4">
+																<div className="space-y-1">
+																	<div className="font-medium">
+																		{workplace.hospital?.name ||
+																			workplace.institution?.name ||
+																			"Workplace"}
+																	</div>
+																	<div className="text-sm text-muted-foreground">
+																		{workplace.doctorPosition ||
+																			workplace.teacherPosition ||
+																			"Position N/A"}
+																		{workplace.medicalSpeciality?.name
+																			? ` • ${workplace.medicalSpeciality.name}`
+																			: ""}
+																	</div>
+																	<div className="text-sm text-muted-foreground">
+																		{workplace.startDate || workplace.endDate
+																			? `${formatYear(
+																					workplace.startDate
+																			  )} - ${formatYear(workplace.endDate)}`
+																			: "Years N/A"}
+																	</div>
 																</div>
-																<div className="text-sm text-muted-foreground">
-																	{workplace.doctorPosition ||
-																		workplace.teacherPosition ||
-																		"Position N/A"}
-																	{workplace.medicalSpeciality?.name
-																		? ` • ${workplace.medicalSpeciality.name}`
-																		: ""}
-																</div>
-																<div className="text-sm text-muted-foreground">
-																	{workplace.startDate || workplace.endDate
-																		? `${formatYear(workplace.startDate)} - ${formatYear(
-																				workplace.endDate
-																		  )}`
-																		: "Years N/A"}
-																</div>
+																<Button
+																	type="button"
+																	variant="outline"
+																	size="sm"
+																	onClick={() =>
+																		setIsAddWorkplaceModalOpen(true)
+																	}
+																>
+																	Edit
+																</Button>
 															</div>
-															<Button
-																type="button"
-																variant="outline"
-																size="sm"
-																onClick={() =>
-																	setIsAddWorkplaceModalOpen(true)
-																}
-															>
-																Edit
-															</Button>
 														</div>
-													</div>
-												))}
-											</div>
-										)}
-									</CardContent>
-								</Card>
+													))}
+												</div>
+											)}
+										</CardContent>
+									</Card>
+								)}
 							</div>
 						</div>
 

@@ -3,24 +3,24 @@ import { z } from "zod";
 export const addDoctorSchema = z.object({
 	// Basic Info
 	name: z.string().min(1, "Name is required"),
-	bnName: z.string().min(1, "Bengali name is required"),
-	email: z.string().email("Invalid email address"),
+	bnName: z.string().optional(),
+	email: z.string().email("Invalid email address").or(z.literal("")),
 	phone: z.string().min(1, "Phone number is required"),
-	username: z.string().min(1, "Username is required"),
+	username: z.string().optional(),
 	gender: z.enum(["MALE", "FEMALE", "OTHER"], {
 		message: "Gender is required",
 	}),
-	dateOfBirth: z.string().min(1, "Date of birth is required"),
-	address: z.string().min(1, "Address is required"),
+	dateOfBirth: z.string().optional(),
+	address: z.string().optional(),
 
 	// Location
-	districtId: z.number().min(1, "District is required"),
-	upazilaId: z.number().min(1, "Upazila is required"),
-	unionId: z.number().min(1, "Union is required"),
+	districtId: z.number().optional(),
+	upazilaId: z.number().optional(),
+	unionId: z.number().optional(),
 
 	// Medical Info
-	bmdcNo: z.string().min(1, "BMDC number is required"),
-	startDate: z.string().min(1, "Start date is required"),
+	bmdcNo: z.string().optional(),
+	startDate: z.string().optional(),
 	description: z.string().optional(),
 	bloodGroup: z.string().optional(),
 	facebookProfileUrl: z.string().optional(),

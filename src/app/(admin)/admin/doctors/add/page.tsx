@@ -79,9 +79,9 @@ export default function AddDoctorPage() {
 			gender: "MALE",
 			dateOfBirth: "",
 			address: "",
-			districtId: 1,
-			upazilaId: 1,
-			unionId: 1,
+			districtId: undefined,
+			upazilaId: undefined,
+			unionId: undefined,
 			bmdcNo: "",
 			startDate: "",
 			description: "",
@@ -94,8 +94,8 @@ export default function AddDoctorPage() {
 	// Set initial selected values based on form defaults
 	useEffect(() => {
 		const formValues = form.getValues();
-		setSelectedDistrictId(formValues.districtId);
-		setSelectedUpazilaId(formValues.upazilaId);
+		setSelectedDistrictId(formValues.districtId ?? null);
+		setSelectedUpazilaId(formValues.upazilaId ?? null);
 	}, [form]);
 
 	const onSubmit = async (data: AddDoctorFormData) => {
@@ -328,13 +328,13 @@ export default function AddDoctorPage() {
 															value={field.value?.toString()}
 															onValueChange={(value) => {
 																const districtId = Number(value);
-																field.onChange(districtId);
-																setSelectedDistrictId(districtId);
-																// Reset upazila and union when district changes
-																form.setValue("upazilaId", 1);
-																form.setValue("unionId", 1);
-																setSelectedUpazilaId(null);
-															}}
+															field.onChange(districtId);
+															setSelectedDistrictId(districtId);
+															// Reset upazila and union when district changes
+															form.setValue("upazilaId", undefined);
+															form.setValue("unionId", undefined);
+															setSelectedUpazilaId(null);
+														}}
 															placeholder="Select district"
 															searchPlaceholder="Search districts..."
 															emptyText="No district found."
@@ -360,11 +360,11 @@ export default function AddDoctorPage() {
 															value={field.value?.toString()}
 															onValueChange={(value) => {
 																const upazilaId = Number(value);
-																field.onChange(upazilaId);
-																setSelectedUpazilaId(upazilaId);
-																// Reset union when upazila changes
-																form.setValue("unionId", 1);
-															}}
+															field.onChange(upazilaId);
+															setSelectedUpazilaId(upazilaId);
+															// Reset union when upazila changes
+															form.setValue("unionId", undefined);
+														}}
 															placeholder="Select upazila"
 															searchPlaceholder="Search upazilas..."
 															emptyText="No upazila found."
