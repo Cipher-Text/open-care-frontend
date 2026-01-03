@@ -1,6 +1,7 @@
 import { AssociationsListResponse, Association } from "@/types/associations";
 import { AddAssociationFormData } from "@/validations/add-association-schema";
 import { baseUrl } from "@/config/config";
+import { apiPost } from "@/lib/api-client";
 
 interface QueryParams {
   [key: string]: string | number | boolean | undefined | null;
@@ -71,21 +72,13 @@ export const fetchAssociationById = async (
 export const addAssociation = async (
   data: AddAssociationFormData
 ): Promise<Association> => {
-  const response = await fetch(`${baseUrl}/associations`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+  const response = await apiPost<Association>("/associations", data);
 
-  if (!response.ok) {
-    throw new Error(
-      `Failed to add association: ${response.status} ${response.statusText}`
-    );
+  if (!response.data) {
+    throw new Error("Failed to add association");
   }
 
-  return response.json();
+  return response.data;
 };
 
 export const fetchAssociationTypes = async (): Promise<

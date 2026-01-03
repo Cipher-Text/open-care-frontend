@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -132,6 +133,8 @@ export default function AddAssociationPage() {
       youtubeUrl: "",
       email: "",
       phone: "",
+      isAffiliated: true,
+      isActive: true,
       divisionId: null,
       districtId: null,
       upazilaId: null,
@@ -410,6 +413,55 @@ export default function AddAssociationPage() {
                     )}
                   />
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* Status */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Status</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="isAffiliated"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>Affiliated</FormLabel>
+                        <div className="text-sm text-muted-foreground">
+                          Marks the association as affiliated.
+                        </div>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="isActive"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>Active</FormLabel>
+                        <div className="text-sm text-muted-foreground">
+                          Controls whether the association is active.
+                        </div>
+                      </div>
+                    </FormItem>
+                  )}
+                />
               </CardContent>
             </Card>
 

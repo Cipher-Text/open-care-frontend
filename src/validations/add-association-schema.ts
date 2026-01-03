@@ -49,6 +49,10 @@ export const addAssociationSchema = z.object({
   email: z.string().email("Invalid email").optional().or(z.literal("")),
   phone: z.string().optional().or(z.literal("")),
 
+  // Status
+  isAffiliated: z.boolean(),
+  isActive: z.boolean(),
+
   // Location
   divisionId: z.number().optional().nullable(),
   districtId: z.number().optional().nullable(),
