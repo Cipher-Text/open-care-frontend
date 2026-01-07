@@ -1,7 +1,7 @@
 import { AssociationsListResponse, Association } from "@/types/associations";
 import { AddAssociationFormData } from "@/validations/add-association-schema";
 import { baseUrl } from "@/config/config";
-import { apiPost } from "@/lib/api-client";
+import { apiPost, apiPut } from "@/lib/api-client";
 
 interface QueryParams {
   [key: string]: string | number | boolean | undefined | null;
@@ -76,6 +76,19 @@ export const addAssociation = async (
 
   if (!response.data) {
     throw new Error("Failed to add association");
+  }
+
+  return response.data;
+};
+
+export const updateAssociation = async (
+  id: number,
+  data: AddAssociationFormData
+): Promise<Association> => {
+  const response = await apiPut<Association>(`/associations/${id}`, data);
+
+  if (!response.ok || !response.data) {
+    throw new Error(response.error || "Failed to update association");
   }
 
   return response.data;

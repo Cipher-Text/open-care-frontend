@@ -124,6 +124,8 @@ export interface Association {
   youtubeUrl: string | null;
   email: string | null;
   phone: string | null;
+  isAffiliated?: boolean;
+  isActive?: boolean;
   divisionId: number | null;
   division: Division;
   districtId: number | null;
