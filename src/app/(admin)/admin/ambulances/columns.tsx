@@ -3,8 +3,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import {
   ArrowUpDown,
-  MoreHorizontal,
-  Edit,
   Eye,
   Phone,
   MapPin,
@@ -13,19 +11,13 @@ import {
   CheckCircle,
   XCircle,
   User,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Ambulance } from "@/types/ambulances";
 import { usePermissions } from "@/hooks/use-permissions";
 
@@ -34,6 +26,7 @@ function ActionsCell({ ambulance }: { ambulance: Ambulance }) {
   const router = useRouter();
   const { hasPermission } = usePermissions();
   const canEditAmbulance = hasPermission("update-ambulance");
+  const canDeleteAmbulance = hasPermission("delete-ambulance");
 
   const handleEdit = () => {
     router.push(`/admin/ambulances/${ambulance.id}`);
@@ -43,46 +36,42 @@ function ActionsCell({ ambulance }: { ambulance: Ambulance }) {
     router.push(`/admin/ambulances/${ambulance.id}/view`);
   };
 
-  const handleCallDriver = () => {
-    if (ambulance.driverPhone) {
-      window.open(`tel:${ambulance.driverPhone}`, "_self");
-    }
-  };
+  const handleDelete = () => {};
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={() => navigator.clipboard.writeText(ambulance.id.toString())}
+    <div className="flex items-center justify-end gap-1">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        onClick={handleViewDetails}
+        aria-label="View ambulance"
+      >
+        <Eye className="h-4 w-4" />
+      </Button>
+      {canEditAmbulance && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={handleEdit}
+          aria-label="Edit ambulance"
         >
-          Copy ambulance ID
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        {canEditAmbulance && (
-          <DropdownMenuItem onClick={handleEdit}>
-            <Edit className="mr-2 h-4 w-4" />
-            Edit ambulance
-          </DropdownMenuItem>
-        )}
-        <DropdownMenuItem onClick={handleViewDetails}>
-          <Eye className="mr-2 h-4 w-4" />
-          View details
-        </DropdownMenuItem>
-        {ambulance.driverPhone && (
-          <DropdownMenuItem onClick={handleCallDriver}>
-            <Phone className="mr-2 h-4 w-4" />
-            Call driver
-          </DropdownMenuItem>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <Pencil className="h-4 w-4" />
+        </Button>
+      )}
+      {canDeleteAmbulance && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-destructive"
+          onClick={handleDelete}
+          aria-label="Delete ambulance"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      )}
+    </div>
   );
 }
 

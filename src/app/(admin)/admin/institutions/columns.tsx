@@ -3,27 +3,19 @@
 import { ColumnDef } from "@tanstack/react-table";
 import {
   ArrowUpDown,
-  MoreHorizontal,
   Building,
   MapPin,
-  Edit,
   Globe,
   Calendar,
   Eye,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { InstitutionResponse } from "@/types/institutions";
 import { usePermissions } from "@/hooks/use-permissions";
 
@@ -32,6 +24,7 @@ function ActionsCell({ institution }: { institution: InstitutionResponse }) {
   const router = useRouter();
   const { hasPermission } = usePermissions();
   const canEditInstitution = hasPermission("update-institution");
+  const canDeleteInstitution = hasPermission("delete-institution");
 
   const handleEdit = () => {
     router.push(`/admin/institutions/${institution.id}`);
@@ -41,38 +34,42 @@ function ActionsCell({ institution }: { institution: InstitutionResponse }) {
     router.push(`/admin/institutions/${institution.id}/view`);
   };
 
+  const handleDelete = () => {};
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={() =>
-            navigator.clipboard.writeText(institution.id.toString())
-          }
+    <div className="flex items-center justify-end gap-1">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        onClick={handleViewDetails}
+        aria-label="View institution"
+      >
+        <Eye className="h-4 w-4" />
+      </Button>
+      {canEditInstitution && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={handleEdit}
+          aria-label="Edit institution"
         >
-          Copy institution ID
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        {canEditInstitution && (
-          <DropdownMenuItem onClick={handleEdit}>
-            <Edit className="mr-2 h-4 w-4" />
-            Edit institution
-          </DropdownMenuItem>
-        )}
-        <DropdownMenuItem onClick={handleViewDetails}>
-          <Eye className="mr-2 h-4 w-4" />
-          View details
-        </DropdownMenuItem>
-        <DropdownMenuItem>View programs</DropdownMenuItem>
-        <DropdownMenuItem>Contact institution</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <Pencil className="h-4 w-4" />
+        </Button>
+      )}
+      {canDeleteInstitution && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-destructive"
+          onClick={handleDelete}
+          aria-label="Delete institution"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      )}
+    </div>
   );
 }
 

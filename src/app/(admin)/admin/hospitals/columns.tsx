@@ -3,25 +3,17 @@
 import { ColumnDef } from "@tanstack/react-table";
 import {
   ArrowUpDown,
-  MoreHorizontal,
   MapPin,
-  Edit,
   Building2,
   Bed,
   Eye,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Hospital } from "@/types/hospitals";
 import { usePermissions } from "@/hooks/use-permissions";
 
@@ -30,6 +22,7 @@ function ActionsCell({ hospital }: { hospital: Hospital }) {
   const router = useRouter();
   const { hasPermission } = usePermissions();
   const canEditHospital = hasPermission("update-hospital");
+  const canDeleteHospital = hasPermission("delete-hospital");
 
   const handleEdit = () => {
     router.push(`/admin/hospitals/${hospital.id}`);
@@ -39,36 +32,42 @@ function ActionsCell({ hospital }: { hospital: Hospital }) {
     router.push(`/admin/hospitals/${hospital.id}/view`);
   };
 
+  const handleDelete = () => {};
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={() => navigator.clipboard.writeText(hospital.id.toString())}
+    <div className="flex items-center justify-end gap-1">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        onClick={handleViewDetails}
+        aria-label="View hospital"
+      >
+        <Eye className="h-4 w-4" />
+      </Button>
+      {canEditHospital && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={handleEdit}
+          aria-label="Edit hospital"
         >
-          Copy hospital ID
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        {canEditHospital && (
-          <DropdownMenuItem onClick={handleEdit}>
-            <Edit className="mr-2 h-4 w-4" />
-            Edit hospital
-          </DropdownMenuItem>
-        )}
-        <DropdownMenuItem onClick={handleViewDetails}>
-          <Eye className="mr-2 h-4 w-4" />
-          View details
-        </DropdownMenuItem>
-        <DropdownMenuItem>View departments</DropdownMenuItem>
-        <DropdownMenuItem>View doctors</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <Pencil className="h-4 w-4" />
+        </Button>
+      )}
+      {canDeleteHospital && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-destructive"
+          onClick={handleDelete}
+          aria-label="Delete hospital"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      )}
+    </div>
   );
 }
 

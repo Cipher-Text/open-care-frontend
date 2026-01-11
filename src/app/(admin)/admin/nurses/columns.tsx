@@ -3,25 +3,18 @@
 import { ColumnDef } from "@tanstack/react-table";
 import {
   ArrowUpDown,
-  MoreHorizontal,
   UserCheck,
   UserX,
   MapPin,
-  Edit,
+  Eye,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { NurseResponse } from "@/types/nurses";
 import { usePermissions } from "@/hooks/use-permissions";
 
@@ -30,37 +23,52 @@ function ActionsCell({ nurse }: { nurse: NurseResponse }) {
   const router = useRouter();
   const { hasPermission } = usePermissions();
   const canEditNurse = hasPermission("update-nurse");
+  const canDeleteNurse = hasPermission("delete-nurse");
 
   const handleEdit = () => {
     router.push(`/admin/nurses/${nurse.id}`);
   };
 
+  const handleViewProfile = () => {
+    router.push(`/admin/profiles/${nurse.profile.id}`);
+  };
+
+  const handleDelete = () => {};
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={() => navigator.clipboard.writeText(nurse.id.toString())}
+    <div className="flex items-center justify-end gap-1">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        onClick={handleViewProfile}
+        aria-label="View nurse"
+      >
+        <Eye className="h-4 w-4" />
+      </Button>
+      {canEditNurse && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={handleEdit}
+          aria-label="Edit nurse"
         >
-          Copy nurse ID
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        {canEditNurse && (
-          <DropdownMenuItem onClick={handleEdit}>
-            <Edit className="mr-2 h-4 w-4" />
-            Edit nurse
-          </DropdownMenuItem>
-        )}
-        <DropdownMenuItem>View profile</DropdownMenuItem>
-        <DropdownMenuItem>Contact nurse</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <Pencil className="h-4 w-4" />
+        </Button>
+      )}
+      {canDeleteNurse && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-destructive"
+          onClick={handleDelete}
+          aria-label="Delete nurse"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      )}
+    </div>
   );
 }
 

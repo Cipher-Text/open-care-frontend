@@ -3,26 +3,17 @@
 import { ColumnDef } from "@tanstack/react-table";
 import {
   ArrowUpDown,
-  MoreHorizontal,
-  Edit,
   Eye,
   Globe,
   MapPin,
   Building2,
-  ExternalLink,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Association } from "@/types/associations";
 import { usePermissions } from "@/hooks/use-permissions";
 
@@ -31,6 +22,7 @@ function ActionsCell({ association }: { association: Association }) {
   const router = useRouter();
   const { hasPermission } = usePermissions();
   const canEditAssociation = hasPermission("update-master-data");
+  const canDeleteAssociation = hasPermission("delete-master-data");
 
   const handleEdit = () => {
     router.push(`/admin/associations/${association.id}`);
@@ -40,48 +32,42 @@ function ActionsCell({ association }: { association: Association }) {
     router.push(`/admin/associations/${association.id}/view`);
   };
 
-  const handleViewWebsite = () => {
-    if (association.websiteUrl) {
-      window.open(association.websiteUrl, "_blank");
-    }
-  };
+  const handleDelete = () => {};
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={() =>
-            navigator.clipboard.writeText(association.id.toString())
-          }
+    <div className="flex items-center justify-end gap-1">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        onClick={handleViewDetails}
+        aria-label="View association"
+      >
+        <Eye className="h-4 w-4" />
+      </Button>
+      {canEditAssociation && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={handleEdit}
+          aria-label="Edit association"
         >
-          Copy association ID
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        {canEditAssociation && (
-          <DropdownMenuItem onClick={handleEdit}>
-            <Edit className="mr-2 h-4 w-4" />
-            Edit association
-          </DropdownMenuItem>
-        )}
-        <DropdownMenuItem onClick={handleViewDetails}>
-          <Eye className="mr-2 h-4 w-4" />
-          View details
-        </DropdownMenuItem>
-        {association.websiteUrl && (
-          <DropdownMenuItem onClick={handleViewWebsite}>
-            <ExternalLink className="mr-2 h-4 w-4" />
-            Visit website
-          </DropdownMenuItem>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <Pencil className="h-4 w-4" />
+        </Button>
+      )}
+      {canDeleteAssociation && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-destructive"
+          onClick={handleDelete}
+          aria-label="Delete association"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      )}
+    </div>
   );
 }
 

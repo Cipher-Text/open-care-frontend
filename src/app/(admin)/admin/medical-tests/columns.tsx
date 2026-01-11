@@ -1,16 +1,8 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Copy, Edit, Eye } from "lucide-react";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { MedicalTest } from "@/types/medical-tests";
 import { usePermissions } from "@/hooks/use-permissions";
@@ -18,38 +10,48 @@ import { usePermissions } from "@/hooks/use-permissions";
 function ActionsCell({ medicalTest }: { medicalTest: MedicalTest }) {
   const { hasPermission } = usePermissions();
   const canEditMedicalTest = hasPermission("update-master-data");
+  const canDeleteMedicalTest = hasPermission("delete-master-data");
+
+  const handleViewDetails = () => {};
+
+  const handleEdit = () => {};
+
+  const handleDelete = () => {};
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={() =>
-            navigator.clipboard.writeText(medicalTest.id.toString())
-          }
+    <div className="flex items-center justify-end gap-1">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        onClick={handleViewDetails}
+        aria-label="View medical test"
+      >
+        <Eye className="h-4 w-4" />
+      </Button>
+      {canEditMedicalTest && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={handleEdit}
+          aria-label="Edit medical test"
         >
-          <Copy className="mr-2 h-4 w-4" />
-          Copy ID
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Eye className="mr-2 h-4 w-4" />
-          View details
-        </DropdownMenuItem>
-        {canEditMedicalTest && (
-          <DropdownMenuItem>
-            <Edit className="mr-2 h-4 w-4" />
-            Edit medical test
-          </DropdownMenuItem>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <Pencil className="h-4 w-4" />
+        </Button>
+      )}
+      {canDeleteMedicalTest && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-destructive"
+          onClick={handleDelete}
+          aria-label="Delete medical test"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      )}
+    </div>
   );
 }
 

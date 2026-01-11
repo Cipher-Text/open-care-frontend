@@ -3,58 +3,73 @@
 import { ColumnDef } from "@tanstack/react-table";
 import {
   ArrowUpDown,
-  MoreHorizontal,
   Phone,
   Mail,
   MapPin,
   Heart,
+  Eye,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { UserProfile } from "@/types/profile";
+import { usePermissions } from "@/hooks/use-permissions";
 
 // Actions component to use hooks
 function ActionsCell({ profile }: { profile: UserProfile }) {
   const router = useRouter();
+  const { hasPermission } = usePermissions();
+  const canEditProfile = hasPermission("update-profile");
+  const canDeleteProfile = hasPermission("delete-profile");
 
   const handleViewProfile = () => {
     router.push(`/admin/profiles/${profile.id}`);
   };
 
+  const handleEditProfile = () => {
+    router.push(`/admin/profiles/${profile.id}`);
+  };
+
+  const handleDelete = () => {};
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={() => navigator.clipboard.writeText(profile.id.toString())}
+    <div className="flex items-center justify-end gap-1">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        onClick={handleViewProfile}
+        aria-label="View profile"
+      >
+        <Eye className="h-4 w-4" />
+      </Button>
+      {canEditProfile && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={handleEditProfile}
+          aria-label="Edit profile"
         >
-          Copy profile ID
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleViewProfile}>
-          View Profile
-        </DropdownMenuItem>
-        <DropdownMenuItem>View Activity</DropdownMenuItem>
-        <DropdownMenuItem>Contact User</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <Pencil className="h-4 w-4" />
+        </Button>
+      )}
+      {canDeleteProfile && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-destructive"
+          onClick={handleDelete}
+          aria-label="Delete profile"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      )}
+    </div>
   );
 }
 

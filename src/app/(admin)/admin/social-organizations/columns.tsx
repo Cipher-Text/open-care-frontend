@@ -2,25 +2,15 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import {
-  MoreHorizontal,
-  Copy,
-  Edit,
   Eye,
   Globe,
   Phone,
   Mail,
-  ExternalLink,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import {
   SocialOrganization,
@@ -47,65 +37,50 @@ function ActionsCell({ organization }: { organization: SocialOrganization }) {
   const router = useRouter();
   const { hasPermission } = usePermissions();
   const canEditOrganization = hasPermission("update-social-organization");
+  const canDeleteOrganization = hasPermission("delete-social-organization");
 
   const handleViewDetails = () => {
     router.push(`/admin/social-organizations/${organization.id}/view`);
   };
 
+  const handleEdit = () => {};
+
+  const handleDelete = () => {};
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={() =>
-            navigator.clipboard.writeText(organization.id.toString())
-          }
+    <div className="flex items-center justify-end gap-1">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        onClick={handleViewDetails}
+        aria-label="View social organization"
+      >
+        <Eye className="h-4 w-4" />
+      </Button>
+      {canEditOrganization && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={handleEdit}
+          aria-label="Edit social organization"
         >
-          <Copy className="mr-2 h-4 w-4" />
-          Copy ID
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleViewDetails}>
-          <Eye className="mr-2 h-4 w-4" />
-          View details
-        </DropdownMenuItem>
-        {canEditOrganization && (
-          <DropdownMenuItem>
-            <Edit className="mr-2 h-4 w-4" />
-            Edit organization
-          </DropdownMenuItem>
-        )}
-        {organization.websiteUrl && (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <a
-                href={organization.websiteUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Globe className="mr-2 h-4 w-4" />
-                Visit website
-              </a>
-            </DropdownMenuItem>
-          </>
-        )}
-        {organization.email && (
-          <DropdownMenuItem asChild>
-            <a href={`mailto:${organization.email}`}>
-              <Mail className="mr-2 h-4 w-4" />
-              Send email
-            </a>
-          </DropdownMenuItem>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <Pencil className="h-4 w-4" />
+        </Button>
+      )}
+      {canDeleteOrganization && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-destructive"
+          onClick={handleDelete}
+          aria-label="Delete social organization"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      )}
+    </div>
   );
 }
 

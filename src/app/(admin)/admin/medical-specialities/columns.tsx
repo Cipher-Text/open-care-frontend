@@ -1,19 +1,11 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal, Edit, Eye, Users } from "lucide-react";
+import { ArrowUpDown, Eye, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { MedicalSpeciality } from "@/types/medical-specialities";
 import { usePermissions } from "@/hooks/use-permissions";
 
@@ -22,49 +14,50 @@ function ActionsCell({ speciality }: { speciality: MedicalSpeciality }) {
   const router = useRouter();
   const { hasPermission } = usePermissions();
   const canEditSpeciality = hasPermission("update-master-data");
+  const canDeleteSpeciality = hasPermission("delete-master-data");
 
   const handleEdit = () => {
     router.push(`/admin/medical-specialities/${speciality.id}`);
   };
 
-  const handleViewDoctors = () => {
-    router.push(`/admin/doctors?speciality=${speciality.id}`);
-  };
+  const handleViewDetails = () => {};
+
+  const handleDelete = () => {};
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={() =>
-            navigator.clipboard.writeText(speciality.id.toString())
-          }
+    <div className="flex items-center justify-end gap-1">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        onClick={handleViewDetails}
+        aria-label="View speciality"
+      >
+        <Eye className="h-4 w-4" />
+      </Button>
+      {canEditSpeciality && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={handleEdit}
+          aria-label="Edit speciality"
         >
-          Copy speciality ID
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        {canEditSpeciality && (
-          <DropdownMenuItem onClick={handleEdit}>
-            <Edit className="mr-2 h-4 w-4" />
-            Edit speciality
-          </DropdownMenuItem>
-        )}
-        <DropdownMenuItem onClick={handleViewDoctors}>
-          <Users className="mr-2 h-4 w-4" />
-          View doctors
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Eye className="mr-2 h-4 w-4" />
-          View details
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <Pencil className="h-4 w-4" />
+        </Button>
+      )}
+      {canDeleteSpeciality && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-destructive"
+          onClick={handleDelete}
+          aria-label="Delete speciality"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      )}
+    </div>
   );
 }
 
