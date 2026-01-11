@@ -1,15 +1,16 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getUserSession } from "@/lib/auth-client";
 import { getPermissionsFromToken, hasPermission } from "@/lib/permissions";
 
 export const usePermissions = () => {
-  const token = getUserSession()?.access_token;
-  const permissions = useMemo(
-    () => getPermissionsFromToken(token),
-    [token]
-  );
+  const [permissions, setPermissions] = useState<string[]>([]);
+
+  useEffect(() => {
+    const token = getUserSession()?.access_token;
+    setPermissions(getPermissionsFromToken(token));
+  }, []);
 
   const can = useCallback(
     (permission: string) => hasPermission(permission, permissions),

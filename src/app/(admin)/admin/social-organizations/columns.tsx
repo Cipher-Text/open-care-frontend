@@ -6,6 +6,7 @@ import {
   Globe,
   Phone,
   Mail,
+  ExternalLink,
   Pencil,
   Trash2,
 } from "lucide-react";
