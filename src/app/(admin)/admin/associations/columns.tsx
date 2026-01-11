@@ -24,10 +24,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Association } from "@/types/associations";
+import { usePermissions } from "@/hooks/use-permissions";
 
 // Actions component to use hooks
 function ActionsCell({ association }: { association: Association }) {
   const router = useRouter();
+  const { hasPermission } = usePermissions();
+  const canEditAssociation = hasPermission("update-master-data");
 
   const handleEdit = () => {
     router.push(`/admin/associations/${association.id}`);
@@ -61,10 +64,12 @@ function ActionsCell({ association }: { association: Association }) {
           Copy association ID
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleEdit}>
-          <Edit className="mr-2 h-4 w-4" />
-          Edit association
-        </DropdownMenuItem>
+        {canEditAssociation && (
+          <DropdownMenuItem onClick={handleEdit}>
+            <Edit className="mr-2 h-4 w-4" />
+            Edit association
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={handleViewDetails}>
           <Eye className="mr-2 h-4 w-4" />
           View details

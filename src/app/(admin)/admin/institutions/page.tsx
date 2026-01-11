@@ -10,12 +10,15 @@ import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePermissions } from "@/hooks/use-permissions";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
 export default function InstitutionsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
+  const { hasPermission } = usePermissions();
+  const canCreateInstitution = hasPermission("create-institution");
 
   const {
     data: institutionsData,
@@ -55,10 +58,12 @@ export default function InstitutionsPage() {
         title="Institutions Management"
         description="Manage and monitor educational institutions and their information"
       >
-        <Button onClick={() => router.push("/admin/institutions/add")}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Institution
-        </Button>
+        {canCreateInstitution && (
+          <Button onClick={() => router.push("/admin/institutions/add")}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Institution
+          </Button>
+        )}
       </AdminHeader>
 
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">

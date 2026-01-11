@@ -25,10 +25,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { InstitutionResponse } from "@/types/institutions";
+import { usePermissions } from "@/hooks/use-permissions";
 
 // Actions component to use hooks
 function ActionsCell({ institution }: { institution: InstitutionResponse }) {
   const router = useRouter();
+  const { hasPermission } = usePermissions();
+  const canEditInstitution = hasPermission("update-institution");
 
   const handleEdit = () => {
     router.push(`/admin/institutions/${institution.id}`);
@@ -56,10 +59,12 @@ function ActionsCell({ institution }: { institution: InstitutionResponse }) {
           Copy institution ID
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleEdit}>
-          <Edit className="mr-2 h-4 w-4" />
-          Edit institution
-        </DropdownMenuItem>
+        {canEditInstitution && (
+          <DropdownMenuItem onClick={handleEdit}>
+            <Edit className="mr-2 h-4 w-4" />
+            Edit institution
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={handleViewDetails}>
           <Eye className="mr-2 h-4 w-4" />
           View details

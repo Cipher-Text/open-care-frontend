@@ -10,6 +10,7 @@ import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePermissions } from "@/hooks/use-permissions";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
@@ -21,6 +22,8 @@ export default function AssociationsPage() {
     direction: "DESC",
   });
   const router = useRouter();
+  const { hasPermission } = usePermissions();
+  const canCreateAssociation = hasPermission("create-master-data");
 
   // Fetch associations with filters
   const {
@@ -82,10 +85,12 @@ export default function AssociationsPage() {
         title="Medical Associations Management"
         description="Manage and monitor medical associations and professional organizations"
       >
-        <Button onClick={() => router.push("/admin/associations/add")}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Association
-        </Button>
+        {canCreateAssociation && (
+          <Button onClick={() => router.push("/admin/associations/add")}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Association
+          </Button>
+        )}
       </AdminHeader>
 
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">

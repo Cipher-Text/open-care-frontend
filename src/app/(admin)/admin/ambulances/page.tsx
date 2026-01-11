@@ -10,6 +10,7 @@ import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePermissions } from "@/hooks/use-permissions";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
@@ -22,6 +23,8 @@ export default function AmbulancesPage() {
     status: "",
   });
   const router = useRouter();
+  const { hasPermission } = usePermissions();
+  const canCreateAmbulance = hasPermission("create-ambulance");
 
   // Fetch ambulances with filters
   const {
@@ -108,10 +111,12 @@ export default function AmbulancesPage() {
         title="Ambulance Management"
         description="Manage and monitor ambulance fleet and driver information"
       >
-        <Button onClick={() => router.push("/admin/ambulances/add")}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Ambulance
-        </Button>
+        {canCreateAmbulance && (
+          <Button onClick={() => router.push("/admin/ambulances/add")}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Ambulance
+          </Button>
+        )}
       </AdminHeader>
 
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">

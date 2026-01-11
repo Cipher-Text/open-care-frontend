@@ -13,6 +13,45 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { MedicalTest } from "@/types/medical-tests";
+import { usePermissions } from "@/hooks/use-permissions";
+
+function ActionsCell({ medicalTest }: { medicalTest: MedicalTest }) {
+  const { hasPermission } = usePermissions();
+  const canEditMedicalTest = hasPermission("update-master-data");
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <span className="sr-only">Open menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuItem
+          onClick={() =>
+            navigator.clipboard.writeText(medicalTest.id.toString())
+          }
+        >
+          <Copy className="mr-2 h-4 w-4" />
+          Copy ID
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          <Eye className="mr-2 h-4 w-4" />
+          View details
+        </DropdownMenuItem>
+        {canEditMedicalTest && (
+          <DropdownMenuItem>
+            <Edit className="mr-2 h-4 w-4" />
+            Edit medical test
+          </DropdownMenuItem>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 export const columns: ColumnDef<MedicalTest>[] = [
   {
@@ -110,37 +149,7 @@ export const columns: ColumnDef<MedicalTest>[] = [
     id: "actions",
     cell: ({ row }) => {
       const medicalTest = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(medicalTest.id.toString())
-              }
-            >
-              <Copy className="mr-2 h-4 w-4" />
-              Copy ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Eye className="mr-2 h-4 w-4" />
-              View details
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Edit className="mr-2 h-4 w-4" />
-              Edit medical test
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      return <ActionsCell medicalTest={medicalTest} />;
     },
   },
 ];

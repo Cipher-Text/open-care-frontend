@@ -11,6 +11,7 @@ import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePermissions } from "@/hooks/use-permissions";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
@@ -22,6 +23,8 @@ export default function HospitalsPage() {
 		unionId: "",
 	});
 	const router = useRouter();
+	const { hasPermission } = usePermissions();
+	const canCreateHospital = hasPermission("create-hospital");
 
 	// Fetch hospitals with filters
 	const {
@@ -102,10 +105,12 @@ export default function HospitalsPage() {
 				title="Hospitals Management"
 				description="Manage and monitor hospital registrations and information"
 			>
-				<Button onClick={() => router.push("/admin/hospitals/add")}>
-					<Plus className="mr-2 h-4 w-4" />
-					Add Hospital
-				</Button>
+				{canCreateHospital && (
+					<Button onClick={() => router.push("/admin/hospitals/add")}>
+						<Plus className="mr-2 h-4 w-4" />
+						Add Hospital
+					</Button>
+				)}
 			</AdminHeader>
 
 			<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">

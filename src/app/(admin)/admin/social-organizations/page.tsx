@@ -10,6 +10,7 @@ import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePermissions } from "@/hooks/use-permissions";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
@@ -21,6 +22,10 @@ export default function SocialOrganizationsPage() {
     direction: "ASC" as "ASC" | "DESC",
   });
   const router = useRouter();
+  const { hasPermission } = usePermissions();
+  const canCreateSocialOrganization = hasPermission(
+    "create-social-organization"
+  );
 
   // Fetch social organizations with filters
   const {
@@ -81,12 +86,14 @@ export default function SocialOrganizationsPage() {
           title="Social Organizations Management"
           description="Manage and monitor social organizations and NGOs in the healthcare sector"
         >
-          <Button
-            onClick={() => router.push("/admin/social-organizations/add")}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add Social Organization
-          </Button>
+          {canCreateSocialOrganization && (
+            <Button
+              onClick={() => router.push("/admin/social-organizations/add")}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Social Organization
+            </Button>
+          )}
         </AdminHeader>
 
         <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -109,10 +116,12 @@ export default function SocialOrganizationsPage() {
         title="Social Organizations Management"
         description="Manage and monitor social organizations and NGOs in the healthcare sector"
       >
-        <Button onClick={() => router.push("/admin/social-organizations/add")}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Social Organization
-        </Button>
+        {canCreateSocialOrganization && (
+          <Button onClick={() => router.push("/admin/social-organizations/add")}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Social Organization
+          </Button>
+        )}
       </AdminHeader>
 
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">

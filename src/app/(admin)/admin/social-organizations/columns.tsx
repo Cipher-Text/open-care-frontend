@@ -27,6 +27,7 @@ import {
   SocialOrganizationType,
   OriginCountry,
 } from "@/types/social-organizations";
+import { usePermissions } from "@/hooks/use-permissions";
 
 const getOrganizationTypeBadgeVariant = (type: string) => {
   switch (type) {
@@ -44,6 +45,8 @@ const getOrganizationTypeBadgeVariant = (type: string) => {
 // Actions component to use hooks
 function ActionsCell({ organization }: { organization: SocialOrganization }) {
   const router = useRouter();
+  const { hasPermission } = usePermissions();
+  const canEditOrganization = hasPermission("update-social-organization");
 
   const handleViewDetails = () => {
     router.push(`/admin/social-organizations/${organization.id}/view`);
@@ -72,10 +75,12 @@ function ActionsCell({ organization }: { organization: SocialOrganization }) {
           <Eye className="mr-2 h-4 w-4" />
           View details
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Edit className="mr-2 h-4 w-4" />
-          Edit organization
-        </DropdownMenuItem>
+        {canEditOrganization && (
+          <DropdownMenuItem>
+            <Edit className="mr-2 h-4 w-4" />
+            Edit organization
+          </DropdownMenuItem>
+        )}
         {organization.websiteUrl && (
           <>
             <DropdownMenuSeparator />

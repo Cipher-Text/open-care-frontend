@@ -27,10 +27,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Ambulance } from "@/types/ambulances";
+import { usePermissions } from "@/hooks/use-permissions";
 
 // Actions component to use hooks
 function ActionsCell({ ambulance }: { ambulance: Ambulance }) {
   const router = useRouter();
+  const { hasPermission } = usePermissions();
+  const canEditAmbulance = hasPermission("update-ambulance");
 
   const handleEdit = () => {
     router.push(`/admin/ambulances/${ambulance.id}`);
@@ -62,10 +65,12 @@ function ActionsCell({ ambulance }: { ambulance: Ambulance }) {
           Copy ambulance ID
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleEdit}>
-          <Edit className="mr-2 h-4 w-4" />
-          Edit ambulance
-        </DropdownMenuItem>
+        {canEditAmbulance && (
+          <DropdownMenuItem onClick={handleEdit}>
+            <Edit className="mr-2 h-4 w-4" />
+            Edit ambulance
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={handleViewDetails}>
           <Eye className="mr-2 h-4 w-4" />
           View details

@@ -11,12 +11,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getUserSession } from "@/lib/auth-client";
+import { usePermissions } from "@/hooks/use-permissions";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
 export default function ProfilesPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const router = useRouter();
+  const { hasPermission } = usePermissions();
+  const canCreateProfile = hasPermission("create-profile");
 
   const {
     data: profilesData,
@@ -56,10 +59,12 @@ export default function ProfilesPage() {
         title="Profile Management"
         description="Manage and monitor user profiles across the platform"
       >
-        <Button onClick={() => router.push("/admin/profiles/new")}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Profile
-        </Button>
+        {canCreateProfile && (
+          <Button onClick={() => router.push("/admin/profiles/new")}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Profile
+          </Button>
+        )}
       </AdminHeader>
 
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">

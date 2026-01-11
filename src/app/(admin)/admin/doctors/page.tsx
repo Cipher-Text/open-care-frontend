@@ -10,12 +10,15 @@ import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePermissions } from "@/hooks/use-permissions";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
 export default function DoctorsPage() {
 	const [currentPage, setCurrentPage] = useState(1);
 	const router = useRouter();
+	const { hasPermission } = usePermissions();
+	const canCreateDoctor = hasPermission("create-doctor");
 
 	const {
 		data: doctorsData,
@@ -55,10 +58,12 @@ export default function DoctorsPage() {
 				title="Doctors Management"
 				description="Manage and monitor doctor registrations and verifications"
 			>
-				<Button onClick={() => router.push("/admin/doctors/new")}>
-					<Plus className="mr-2 h-4 w-4" />
-					Add Doctor
-				</Button>
+				{canCreateDoctor && (
+					<Button onClick={() => router.push("/admin/doctors/new")}>
+						<Plus className="mr-2 h-4 w-4" />
+						Add Doctor
+					</Button>
+				)}
 			</AdminHeader>
 
 			<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">

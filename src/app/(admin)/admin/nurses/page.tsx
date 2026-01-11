@@ -10,12 +10,15 @@ import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePermissions } from "@/hooks/use-permissions";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
 export default function NursesPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const router = useRouter();
+  const { hasPermission } = usePermissions();
+  const canCreateNurse = hasPermission("create-nurse");
 
   const {
     data: nursesData,
@@ -54,10 +57,12 @@ export default function NursesPage() {
         title="Nurses Management"
         description="Manage and monitor nurse registrations and verifications"
       >
-        <Button onClick={() => router.push("/admin/nurses/new")}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Nurse
-        </Button>
+        {canCreateNurse && (
+          <Button onClick={() => router.push("/admin/nurses/new")}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Nurse
+          </Button>
+        )}
       </AdminHeader>
 
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">

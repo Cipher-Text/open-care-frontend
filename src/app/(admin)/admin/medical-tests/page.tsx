@@ -10,6 +10,7 @@ import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePermissions } from "@/hooks/use-permissions";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
@@ -21,6 +22,8 @@ export default function MedicalTestsPage() {
     direction: "ASC" as "ASC" | "DESC",
   });
   const router = useRouter();
+  const { hasPermission } = usePermissions();
+  const canCreateMedicalTest = hasPermission("create-master-data");
 
   // Fetch medical tests with filters
   const {
@@ -81,10 +84,12 @@ export default function MedicalTestsPage() {
           title="Medical Tests Management"
           description="Manage and monitor medical tests and diagnostic procedures"
         >
-          <Button onClick={() => router.push("/admin/medical-tests/add")}>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Medical Test
-          </Button>
+          {canCreateMedicalTest && (
+            <Button onClick={() => router.push("/admin/medical-tests/add")}>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Medical Test
+            </Button>
+          )}
         </AdminHeader>
 
         <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -107,10 +112,12 @@ export default function MedicalTestsPage() {
         title="Medical Tests Management"
         description="Manage and monitor medical tests and diagnostic procedures"
       >
-        <Button onClick={() => router.push("/admin/medical-tests/add")}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Medical Test
-        </Button>
+        {canCreateMedicalTest && (
+          <Button onClick={() => router.push("/admin/medical-tests/add")}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Medical Test
+          </Button>
+        )}
       </AdminHeader>
 
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">

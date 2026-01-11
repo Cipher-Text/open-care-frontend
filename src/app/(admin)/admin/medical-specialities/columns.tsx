@@ -15,10 +15,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MedicalSpeciality } from "@/types/medical-specialities";
+import { usePermissions } from "@/hooks/use-permissions";
 
 // Actions component to use hooks
 function ActionsCell({ speciality }: { speciality: MedicalSpeciality }) {
   const router = useRouter();
+  const { hasPermission } = usePermissions();
+  const canEditSpeciality = hasPermission("update-master-data");
 
   const handleEdit = () => {
     router.push(`/admin/medical-specialities/${speciality.id}`);
@@ -46,10 +49,12 @@ function ActionsCell({ speciality }: { speciality: MedicalSpeciality }) {
           Copy speciality ID
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleEdit}>
-          <Edit className="mr-2 h-4 w-4" />
-          Edit speciality
-        </DropdownMenuItem>
+        {canEditSpeciality && (
+          <DropdownMenuItem onClick={handleEdit}>
+            <Edit className="mr-2 h-4 w-4" />
+            Edit speciality
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={handleViewDoctors}>
           <Users className="mr-2 h-4 w-4" />
           View doctors
