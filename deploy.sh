@@ -35,29 +35,32 @@ fi
 cp "$ENV_FILE" "$RUNTIME_ENV_FILE"
 log "Loaded environment '$TARGET_ENV' from $ENV_FILE -> $RUNTIME_ENV_FILE"
 
+PKG_MGR=""
 if command -v yarn >/dev/null 2>&1 && [[ -f yarn.lock ]]; then
   PKG_MGR="yarn"
 elif command -v npm >/dev/null 2>&1; then
   PKG_MGR="npm"
-else
-  log "Neither yarn nor npm is installed"
-  exit 1
 fi
 
-if [[ "$PKG_MGR" == "yarn" ]]; then
-  log "Installing dependencies with yarn"
-  yarn install --frozen-lockfile
-  if [[ "$SKIP_BUILD" != "1" ]]; then
+if [[ "$SKIP_BUILD" != "1" ]]; then
+  if [[ -z "$PKG_MGR" ]]; then
+    log "Neither yarn nor npm is installed. Set SKIP_BUILD=1 to deploy prebuilt artifact."
+    exit 1
+  fi
+
+  if [[ "$PKG_MGR" == "yarn" ]]; then
+    log "Installing dependencies with yarn"
+    yarn install --frozen-lockfile
     log "Building application"
     yarn build
-  fi
-else
-  log "Installing dependencies with npm"
-  npm ci
-  if [[ "$SKIP_BUILD" != "1" ]]; then
+  else
+    log "Installing dependencies with npm"
+    npm ci
     log "Building application"
     npm run build
   fi
+else
+  log "SKIP_BUILD=1, skipping dependency install and build"
 fi
 
 if [[ -f "$PID_FILE" ]]; then
@@ -71,7 +74,16 @@ if [[ -f "$PID_FILE" ]]; then
 fi
 
 log "Starting application on port $PORT"
-nohup env PORT="$PORT" npm run start >/tmp/open-care-frontend.log 2>&1 &
+if command -v npm >/dev/null 2>&1; then
+  START_CMD=(npm run start)
+elif [[ -x "./node_modules/.bin/next" ]]; then
+  START_CMD=(./node_modules/.bin/next start -p "$PORT")
+else
+  log "Cannot start app: npm is not installed and ./node_modules/.bin/next is missing"
+  exit 1
+fi
+
+nohup env PORT="$PORT" "${START_CMD[@]}" >/tmp/open-care-frontend.log 2>&1 &
 NEW_PID="$!"
 echo "$NEW_PID" > "$PID_FILE"
 
