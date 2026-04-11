@@ -1,0 +1,10 @@
+# Keep this file small and temporary.
+# Rules:
+# 1) Add only reviewed false positives or accepted risks.
+# 2) Every entry must include: owner, reason, created date, expiry date.
+# 3) Remove entries as soon as a patch is available.
+#
+# Format:
+# CVE-YYYY-NNNNN # owner=@team reason="..." created=YYYY-MM-DD expires=YYYY-MM-DD
+
+# No active exceptions.

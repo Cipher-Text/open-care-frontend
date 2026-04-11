@@ -1,4 +1,4 @@
-name: Frontend CI/CD Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
@@ -14,7 +14,7 @@ on:
 
 jobs:
   build:
-    name: Install & Build Frontend
+    name: Build and Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -29,43 +29,33 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Build for Production
+      - name: Build
         run: npm run build
 
-  security:
-    name: Security Scans
+  vulnerability:
+    name: Vulnerability Scan (Trivy)
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Run Trivy Filesystem Scan
+        uses: aquasecurity/trivy-action@master
         with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: NPM Audit (fail on high/critical)
-        run: npm audit --audit-level=high
-
-      - name: Trivy FS Scan (fail on high/critical)
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          severity: 'HIGH,CRITICAL'
+          scan-type: fs
+          scan-ref: .
+          trivyignores: .trivyignore
+          scanners: vuln,secret,misconfig
           ignore-unfixed: true
+          severity: HIGH,CRITICAL
           exit-code: '1'
-          format: 'table'
 
   docker:
     name: Build and Push Docker Image
     runs-on: ubuntu-latest
+    needs: vulnerability
     if: github.event_name == 'push'
-    needs: [build, security]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -87,54 +77,61 @@ jobs:
             echo "ENV_NAME=prod" >> $GITHUB_ENV
           fi
 
-      - name: Build and Push Docker Image
-        if: github.event_name == 'push'
+      - name: Build and Tag Docker Images
         run: |
-          docker build -f Dockerfile.${{ env.ENV_NAME }} -t ${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ env.ENV_NAME }}-latest-ci .
-
-      - name: Trivy Image Scan (fail on high/critical)
-        if: github.event_name == 'push'
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          image-ref: '${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ env.ENV_NAME }}-latest-ci'
-          severity: 'HIGH,CRITICAL'
-          ignore-unfixed: true
-          exit-code: '1'
-          format: 'table'
-
-      - name: Tag and Push Docker Image
-        if: github.event_name == 'push'
-        run: |
-          docker tag ${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ env.ENV_NAME }}-latest-ci \
-            ${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ env.ENV_NAME }}-latest
-          docker tag ${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ env.ENV_NAME }}-latest-ci \
+          docker build -f Dockerfile.${{ env.ENV_NAME }} -t ${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ env.ENV_NAME }}-latest .
+          docker tag ${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ env.ENV_NAME }}-latest \
             ${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ env.ENV_NAME }}-${{ github.sha }}
 
+      - name: Scan Docker Image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: image
+          image-ref: ${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ env.ENV_NAME }}-latest
+          trivyignores: .trivyignore
+          scanners: vuln,secret,misconfig
+          ignore-unfixed: true
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+
+      - name: Push Docker Images
+        run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ env.ENV_NAME }}-latest
           docker push ${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ env.ENV_NAME }}-${{ github.sha }}
 
   deploy:
-    name: Deploy Frontend to Server
+    name: Deploy to Server
     runs-on: ubuntu-latest
     needs: docker
-    if: github.ref == 'refs/heads/dev'  # 🔹 Only for dev, expand if needed
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/qa')
     steps:
       - name: Determine Environment Name
         id: env_name
-        run: echo "ENV_NAME=dev" >> $GITHUB_ENV
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            echo "ENV_NAME=dev" >> $GITHUB_ENV
+            echo "env_name=dev" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/qa" ]]; then
+            echo "ENV_NAME=qa" >> $GITHUB_ENV
+            echo "env_name=qa" >> $GITHUB_OUTPUT
+          fi
 
-      - name: SSH and Deploy Frontend
-        uses: appleboy/ssh-action@v0.1.10
+      - name: SSH into Server and Deploy
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASSWORD }}
           port: ${{ secrets.SERVER_PORT }}
+          timeout: 60s
+          command_timeout: 30m
+          debug: true
+          script_stop: true
           script: |
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ env.ENV_NAME }}-latest
-            sudo docker stop open-care-frontend || true
-            sudo docker rm open-care-frontend || true
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ steps.env_name.outputs.env_name }}-latest
+            sudo docker stop open-care-frontend-${{ steps.env_name.outputs.env_name }} || true
+            sudo docker rm open-care-frontend-${{ steps.env_name.outputs.env_name }} || true
             sudo docker system prune -af
-            sudo docker run -d --name open-care-frontend -p 5175:5173 --restart always \
-              --env-file /home/ubuntu/open-care-frontend/.env.${{ env.ENV_NAME }} \
-              ${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ env.ENV_NAME }}-latest
+            sudo docker run -d --name open-care-frontend-${{ steps.env_name.outputs.env_name }} -p 5175:5175 --restart always \
+              --env-file /home/sadman/open-care-frontend/.env.${{ steps.env_name.outputs.env_name }} \
+              ${{ secrets.DOCKER_USERNAME }}/open-care-frontend:${{ steps.env_name.outputs.env_name }}-latest
