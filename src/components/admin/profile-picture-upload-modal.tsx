@@ -19,7 +19,8 @@ import { Upload, X, AlertCircle } from "lucide-react";
 interface ProfilePictureUploadModalProps {
 	isOpen: boolean;
 	onClose: () => void;
-	onSuccess: (photoUrl?: string, presignedUrl?: string) => void;
+	onSuccess: (photoUrl?: string, accessUrl?: string) => void;
+	entityId: number;
 	token?: string;
 }
 
@@ -28,7 +29,7 @@ const ASPECT_RATIO = 1; // 1:1 ratio
 
 export const ProfilePictureUploadModal: React.FC<
 	ProfilePictureUploadModalProps
-> = ({ isOpen, onClose, onSuccess, token }) => {
+> = ({ isOpen, onClose, onSuccess, entityId, token }) => {
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 	const [preview, setPreview] = useState<string | null>(null);
 	const [uploading, setUploading] = useState(false);
@@ -122,14 +123,15 @@ export const ProfilePictureUploadModal: React.FC<
 		try {
 			const response = await uploadFileWithProgress(
 				DocumentType.PROFILE_PICTURE,
+				entityId,
 				selectedFile,
 				(progressPercent) => setProgress(progressPercent),
 				token
 			);
 
-			// Show the uploaded image
-			setUploadedImageUrl(response.presignedUrl);
-			onSuccess(response.photoUrl, response.presignedUrl);
+			// accessUrl is permanent for public files (profile pictures)
+			setUploadedImageUrl(response.accessUrl);
+			onSuccess(response.photoUrl, response.accessUrl);
 
 			// Auto-close after 2 seconds
 			setTimeout(() => {

@@ -9,7 +9,7 @@ export enum DocumentType {
   BIRTH_CERTIFICATE = "BIRTH_CERTIFICATE",
   NID_SELFIE = "NID_SELFIE",
 
-  // Profile & Branding Documents
+  // Profile & Branding Documents (PUBLIC)
   PROFILE_PICTURE = "PROFILE_PICTURE",
   COVER_PHOTO = "COVER_PHOTO",
   LOGO = "LOGO",
@@ -71,7 +71,7 @@ export enum DocumentType {
   BENEFICIARY_NID = "BENEFICIARY_NID",
   DONATION_REPORT_ATTACHMENT = "DONATION_REPORT_ATTACHMENT",
 
-  // Advertisement Documents
+  // Advertisement Documents (PUBLIC)
   AD_IMAGE = "AD_IMAGE",
   AD_VIDEO = "AD_VIDEO",
   AD_POPUP_IMAGE = "AD_POPUP_IMAGE",
@@ -88,7 +88,7 @@ export enum DocumentType {
   INSURANCE_CARD = "INSURANCE_CARD",
   MALPRACTICE_INSURANCE = "MALPRACTICE_INSURANCE",
 
-  // Media Files
+  // Media Files (PUBLIC)
   IMAGE = "IMAGE",
   VIDEO = "VIDEO",
   AUDIO = "AUDIO",
@@ -104,11 +104,19 @@ export enum DocumentType {
 }
 
 /**
- * File upload response from server
+ * Response returned after a file upload.
+ *
+ * - photoUrl:  The stored object path in MinIO. Save this in your database/state.
+ * - accessUrl: Use this directly for <img src> or download links.
+ *              For public files this is a permanent CDN URL.
+ *              For private files this is a presigned URL valid for 15 minutes.
+ * - isPublic:  Whether the file is in the public bucket.
  */
 export interface FileUploadResponse {
   photoUrl: string;
-  presignedUrl: string;
+  accessUrl: string;
+  isPublic: boolean;
+  documentType: string;
 }
 
 /**
