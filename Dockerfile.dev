@@ -1,6 +1,9 @@
 # Use Node.js Alpine image
 FROM node:22-alpine
 
+# Update Alpine packages to fix vulnerabilities
+RUN apk upgrade --no-cache
+
 WORKDIR /app
 
 ARG NEXT_PUBLIC_API_BASE_URL
