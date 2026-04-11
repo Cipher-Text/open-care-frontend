@@ -228,6 +228,7 @@ Detailed documentation is available in the `/docs` directory:
 - [Blood Management](docs/blood-management.md)
 - [Geolocation Management](docs/geolocation-management.md)
 - [Degrees Management](docs/degrees-management.md)
+- [Frontend Testing Plan & Strategy](docs/testing-frontend.md)
 
 ## 🚀 Deployment
 
