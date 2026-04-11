@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { MedicalTest } from "@/types/medical-tests";
 import { usePermissions } from "@/hooks/use-permissions";
 
-function ActionsCell({ medicalTest }: { medicalTest: MedicalTest }) {
+function ActionsCell({ medicalTest: _medicalTest }: { medicalTest: MedicalTest }) {
   const { hasPermission } = usePermissions();
   const canEditMedicalTest = hasPermission("update-master-data");
   const canDeleteMedicalTest = hasPermission("delete-master-data");

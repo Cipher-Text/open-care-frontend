@@ -4,7 +4,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import {
   ArrowUpDown,
   Eye,
-  Phone,
   MapPin,
   Building2,
   Truck,

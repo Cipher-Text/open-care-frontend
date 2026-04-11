@@ -452,15 +452,18 @@ export default function ProfilePage() {
 			</div>
 
 			{/* Profile Picture Upload Modal */}
-			<ProfilePictureUploadModal
-				isOpen={uploadModalOpen}
-				onClose={() => setUploadModalOpen(false)}
-				onSuccess={() => {
-					setUploadModalOpen(false);
-					fetchProfile();
-				}}
-				token={getUserSession()?.access_token}
-			/>
+			{profile && (
+				<ProfilePictureUploadModal
+					isOpen={uploadModalOpen}
+					onClose={() => setUploadModalOpen(false)}
+					onSuccess={() => {
+						setUploadModalOpen(false);
+						fetchProfile();
+					}}
+					entityId={profile.id}
+					token={getUserSession()?.access_token}
+				/>
+			)}
 		</div>
 	);
 }
