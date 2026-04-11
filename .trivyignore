@@ -7,4 +7,5 @@
 # Format:
 # CVE-YYYY-NNNNN # owner=@team reason="..." created=YYYY-MM-DD expires=YYYY-MM-DD
 
-# No active exceptions.
+# Accepted Risks
+CVE-2026-33671 # owner=@devops reason="picomatch ReDoS in npm's internal dependencies. Low risk: npm is build-time only, not in production runtime. Upgrading npm in-place breaks builds. Will resolve when node:22-alpine updates." created=2026-04-12 expires=2026-07-12
