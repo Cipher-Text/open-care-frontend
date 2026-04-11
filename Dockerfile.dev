@@ -16,6 +16,14 @@ COPY .env.dev .env
 
 RUN npm run build
 
+# Create non-root user
+RUN addgroup -S nextjs && adduser -S nextjs -G nextjs
+
+# Change ownership of app directory
+RUN chown -R nextjs:nextjs /app
+
+USER nextjs
+
 EXPOSE 5175
 
 # CMD ["npm", "run", "dev", "--", "--host", "--port", "5175"]

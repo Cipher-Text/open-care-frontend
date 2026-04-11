@@ -19,6 +19,14 @@ COPY . .
 # Copy the .env.dev file and rename it to .env (if your app reads .env by default)
 COPY .env.qa .env
 
+# Create non-root user
+RUN addgroup -S nextjs && adduser -S nextjs -G nextjs
+
+# Change ownership of app directory
+RUN chown -R nextjs:nextjs /app
+
+USER nextjs
+
 # Expose the port your dev server runs on
 EXPOSE 5175
 
