@@ -1,8 +1,9 @@
 # Use Node.js Alpine image
 FROM node:22-alpine
 
-# Update Alpine packages to fix vulnerabilities
-RUN apk upgrade --no-cache
+# Update Alpine packages and npm to fix vulnerabilities
+RUN apk upgrade --no-cache && \
+    npm install -g npm@latest
 
 # Set working directory
 WORKDIR /app

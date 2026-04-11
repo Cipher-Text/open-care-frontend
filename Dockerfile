@@ -1,11 +1,13 @@
 FROM node:22-alpine AS deps
-RUN apk upgrade --no-cache
+RUN apk upgrade --no-cache && \
+    npm install -g npm@latest
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci --include=dev
 
 FROM node:22-alpine AS builder
-RUN apk upgrade --no-cache
+RUN apk upgrade --no-cache && \
+    npm install -g npm@latest
 WORKDIR /app
 ARG NEXT_PUBLIC_API_BASE_URL
 ENV NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
@@ -14,7 +16,8 @@ COPY . .
 RUN npm run build && npm prune --omit=dev
 
 FROM node:22-alpine AS runner
-RUN apk upgrade --no-cache
+RUN apk upgrade --no-cache && \
+    npm install -g npm@latest
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
