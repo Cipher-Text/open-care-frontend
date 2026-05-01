@@ -1,0 +1,38 @@
+/* Constants Management Custom Styles */
+.constants-sidebar {
+  height: calc(100vh - 80px); /* Adjust based on your header height */
+}
+
+.constants-sidebar-item {
+  transition: all 0.2s ease-in-out;
+}
+
+.constants-sidebar-item:hover {
+  background-color: rgb(249 250 251);
+}
+
+.constants-sidebar-item.active {
+  background-color: rgb(239 246 255);
+  border-left: 4px solid rgb(59 130 246);
+}
+
+.constants-category-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: rgb(75 85 99);
+  color: white;
+}
+
+.constants-main-content {
+  background-color: rgb(249 250 251);
+  min-height: calc(100vh - 80px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .constants-sidebar {
+    width: 100%;
+    max-width: 300px;
+  }
+}

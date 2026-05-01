@@ -1,0 +1,11 @@
+# Keep this file small and temporary.
+# Rules:
+# 1) Add only reviewed false positives or accepted risks.
+# 2) Every entry must include: owner, reason, created date, expiry date.
+# 3) Remove entries as soon as a patch is available.
+#
+# Format:
+# CVE-YYYY-NNNNN # owner=@team reason="..." created=YYYY-MM-DD expires=YYYY-MM-DD
+
+# Accepted Risks
+CVE-2026-33671 # owner=@devops reason="picomatch ReDoS in npm's internal dependencies. Low risk: npm is build-time only, not in production runtime. Upgrading npm in-place breaks builds. Will resolve when node:22-alpine updates." created=2026-04-12 expires=2026-07-12

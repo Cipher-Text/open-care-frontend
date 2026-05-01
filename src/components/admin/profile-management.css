@@ -1,0 +1,54 @@
+/* Profile Management Styles */
+.profile-management-container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.profile-card {
+  transition: all 0.2s ease-in-out;
+}
+
+.profile-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.profile-avatar {
+  transition: transform 0.2s ease-in-out;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.1);
+}
+
+.profile-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.profile-table thead {
+  background-color: #f9fafb;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.profile-table tbody tr {
+  transition: background-color 0.15s ease-in-out;
+}
+
+.profile-table tbody tr:hover {
+  background-color: #f3f4f6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .profile-table {
+    font-size: 0.875rem;
+  }
+  
+  .profile-table th,
+  .profile-table td {
+    padding: 0.5rem;
+  }
+}
