@@ -1,0 +1,182 @@
+/* Blood Management Custom Styles */
+
+.blood-management-tabs {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.blood-management-tab {
+  transition: all 0.2s ease-in-out;
+}
+
+.blood-management-tab:hover {
+  color: #374151;
+  border-color: #d1d5db;
+}
+
+.blood-management-tab.active {
+  color: #dc2626;
+  border-color: #dc2626;
+}
+
+.blood-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.blood-table th,
+.blood-table td {
+  border: 1px solid #d1d5db;
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.blood-table th {
+  background-color: #f9fafb;
+  font-weight: 500;
+  color: #374151;
+}
+
+.blood-table tbody tr:hover {
+  background-color: #f9fafb;
+  transition: background-color 0.2s ease;
+}
+
+.blood-group-badge {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.blood-component-badge {
+  background-color: #dbeafe;
+  color: #1e40af;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-active {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-inactive {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.urgent-requisition {
+  background-color: #fef2f2;
+  border-left: 4px solid #ef4444;
+}
+
+.contact-info {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.location-info {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.donation-count {
+  text-align: center;
+}
+
+.donation-count .count {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #dc2626;
+}
+
+.donation-count .last-date {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.patient-info {
+  margin-bottom: 0.5rem;
+}
+
+.patient-info .name {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.patient-info .details {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.hospital-info {
+  margin-bottom: 0.25rem;
+}
+
+.hospital-info .name {
+  font-weight: 600;
+}
+
+.hospital-info .bengali-name {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.hospital-info .location {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.days-remaining {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.days-remaining.urgent {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .blood-table {
+    font-size: 0.875rem;
+  }
+  
+  .blood-table th,
+  .blood-table td {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .contact-info,
+  .location-info {
+    font-size: 0.75rem;
+  }
+  
+  .donation-count .count {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .blood-table th,
+  .blood-table td {
+    padding: 0.5rem;
+  }
+  
+  .blood-group-badge,
+  .blood-component-badge {
+    font-size: 0.625rem;
+    padding: 0.125rem 0.5rem;
+  }
+}
