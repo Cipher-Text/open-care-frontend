@@ -132,6 +132,17 @@ open-care-frontend/
 NEXT_PUBLIC_API_BASE_URL=https://api.opencarebd.com/api
 ```
 
+### Dev one-click login
+
+On `/login` a "Dev login (one click)" button appears only when `NODE_ENV` is `development` (`npm run dev`), and the server action refuses to run otherwise. Put the account in `.env.local` (git-ignored, server-side only, never `NEXT_PUBLIC_`), then restart the dev server:
+
+```bash
+DEV_LOGIN_USERNAME=your-dev-user
+DEV_LOGIN_PASSWORD=your-dev-password
+```
+
+Use an account on a development backend, not a production admin.
+
 ### Build Commands
 
 ```bash

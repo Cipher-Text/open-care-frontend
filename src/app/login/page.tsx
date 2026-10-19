@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect } from "react";
+import { useActionState, useState, useEffect, startTransition } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,18 +8,32 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, User, Lock } from "lucide-react";
+import { Eye, EyeOff, User, Lock, Zap } from "lucide-react";
 import { loginSchema, LoginFormData } from "@/validations/login-schema";
-import { submitLogin } from "./actions";
+import { devLogin, getDevLoginAccounts, submitLogin } from "./actions";
 import { redirectToAdmin } from "./redirect-actions";
 import { saveUserSession } from "@/lib/auth-client";
 // import { useAuth } from "@/contexts/auth-context";
 
 export default function LoginPage() {
 	const [showPassword, setShowPassword] = useState(false);
-	const [state, action, isLoading] = useActionState(submitLogin, {
+	const [formState, action, isFormLoading] = useActionState(submitLogin, {
 		success: false,
 	});
+	const [devState, devAction, isDevLoading] = useActionState(devLogin, {
+		success: false,
+	});
+	// Whichever login path ran last drives the UI
+	const state = devState.success || devState.error ? devState : formState;
+	const isLoading = isFormLoading || isDevLoading;
+	const isDev = process.env.NODE_ENV === "development";
+	const [devAccounts, setDevAccounts] = useState<
+		{ label: string; username: string }[]
+	>([]);
+
+	useEffect(() => {
+		if (isDev) getDevLoginAccounts().then(setDevAccounts);
+	}, [isDev]);
 	// const { refetchUser } = useAuth();
 
 	// Handle redirect on successful login
@@ -180,6 +194,42 @@ export default function LoginPage() {
 							>
 								{isLoading ? "Signing In..." : "Sign In"}
 							</Button>
+
+							{/* Development only: removed from production builds */}
+							{isDev && (
+								<fieldset className="space-y-2 rounded-lg border border-dashed border-input p-3">
+									<legend className="flex items-center gap-1 px-1 text-xs font-medium text-muted-foreground">
+										<Zap className="size-3" aria-hidden="true" />
+										Dev login, one click
+									</legend>
+									{devAccounts.length === 0 ? (
+										<p className="text-xs text-muted-foreground">
+											Set DEV_LOGIN_ACCOUNTS in .env.local and restart the dev server.
+										</p>
+									) : (
+										<div className="grid grid-cols-2 gap-2">
+											{devAccounts.map((account) => (
+												<Button
+													key={account.username}
+													type="button"
+													onClick={() =>
+														startTransition(() => {
+															const data = new FormData();
+															data.set("account", account.username);
+															devAction(data);
+														})
+													}
+													variant="outline"
+													disabled={isLoading}
+													className="h-auto min-h-10 justify-start whitespace-normal py-2 text-left text-sm"
+												>
+													{account.label}
+												</Button>
+											))}
+										</div>
+									)}
+								</fieldset>
+							)}
 
 							{/* Sign Up Link */}
 							<div className="text-center">
