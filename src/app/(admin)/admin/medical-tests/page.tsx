@@ -35,7 +35,7 @@ export default function MedicalTestsPage() {
     queryKey: ["medical-tests", currentPage, filters],
     queryFn: () =>
       fetchMedicalTests({
-        page: currentPage - 1, // API uses 0-based pagination
+        page: currentPage, // 1-based; fetcher converts for the API
         size: 10,
         sort: filters.sort,
         direction: filters.direction,
@@ -74,7 +74,7 @@ export default function MedicalTestsPage() {
   const totalItems = testsData?.totalItems || 0;
   const totalPages = testsData?.totalPages || 0;
   const currentPageDisplay = testsData?.currentPage
-    ? testsData.currentPage + 1
+    ? testsData.currentPage
     : 1;
 
   if (isError) {

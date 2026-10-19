@@ -30,9 +30,6 @@ export const fetchMedicalSpecialities = async (
 		`${baseUrl}/medical-specialities?${queryString}`,
 		{
 			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-			},
 		}
 	);
 
@@ -50,9 +47,6 @@ export const fetchMedicalSpecialityById = async (
 ): Promise<MedicalSpeciality> => {
 	const response = await fetch(`${baseUrl}/medical-specialities/${id}`, {
 		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
 	});
 
 	if (!response.ok) {
@@ -69,9 +63,6 @@ export const fetchAllMedicalSpecialities = async (): Promise<
 > => {
 	const response = await fetch(`${baseUrl}/medical-specialities/all`, {
 		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
 	});
 
 	if (!response.ok) {

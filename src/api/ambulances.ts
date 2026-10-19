@@ -25,9 +25,6 @@ export const fetchAmbulances = async (
   const queryString = buildQueryString(withWirePage(params));
   const response = await fetch(`${baseUrl}/ambulances?${queryString}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
   if (!response.ok) {
@@ -43,9 +40,6 @@ export const fetchAmbulances = async (
 export const fetchAmbulanceById = async (id: number): Promise<Ambulance> => {
   const response = await fetch(`${baseUrl}/ambulances/${id}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
   if (!response.ok) {

@@ -14,7 +14,7 @@ export const fetchHospitals = async (
 	params: Record<string, unknown> = {}
 ): Promise<HospitalListResponse> => {
 	const url = buildUrl("/hospitals", withWirePage(params));
-	const response = await apiGet<WirePage<Hospital>>(url);
+	const response = await apiGet<WirePage<Hospital>>(url, { includeAuth: false });
 
 	if (!response.ok) {
 		throw new Error(response.error || "Failed to fetch hospitals");

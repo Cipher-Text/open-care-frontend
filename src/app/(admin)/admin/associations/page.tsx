@@ -35,7 +35,7 @@ export default function AssociationsPage() {
     queryKey: ["associations", currentPage, filters],
     queryFn: () =>
       fetchAssociations({
-        page: currentPage - 1, // API uses 0-based pagination
+        page: currentPage, // 1-based; fetcher converts for the API
         size: 10,
         sort: filters.sort,
         direction: filters.direction,
@@ -111,7 +111,7 @@ export default function AssociationsPage() {
                 totalItems={associationsData?.totalItems}
                 currentPage={
                   associationsData?.currentPage
-                    ? associationsData.currentPage + 1
+                    ? associationsData.currentPage
                     : 1
                 }
                 totalPages={associationsData?.totalPages}

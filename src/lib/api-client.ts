@@ -36,8 +36,10 @@ export async function apiRequest<T = unknown>(
 		? endpoint
 		: `${baseUrl}${endpoint.startsWith("/") ? endpoint : "/" + endpoint}`;
 
+	// Only send Content-Type with a body. On a GET it turns a simple cross-origin
+	// request into one that needs a CORS preflight (an extra OPTIONS per call).
 	const headers: Record<string, string> = {
-		"Content-Type": "application/json",
+		...(fetchOptions.body ? { "Content-Type": "application/json" } : {}),
 		...customHeaders,
 	};
 

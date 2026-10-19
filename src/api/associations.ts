@@ -27,9 +27,6 @@ export const fetchAssociations = async (
   const queryString = buildQueryString(withWirePage(params));
   const response = await fetch(`${baseUrl}/associations?${queryString}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
   if (!response.ok) {
@@ -47,9 +44,6 @@ export const fetchAssociationById = async (
 ): Promise<Association> => {
   const response = await fetch(`${baseUrl}/associations/${id}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
   if (!response.ok) {
@@ -91,9 +85,6 @@ export const fetchAssociationTypes = async (): Promise<
 > => {
   const response = await fetch(`${baseUrl}/association-types`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
   if (!response.ok) {

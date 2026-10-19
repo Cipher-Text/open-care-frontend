@@ -37,7 +37,7 @@ export default function SocialOrganizationsPage() {
     queryKey: ["social-organizations", currentPage, filters],
     queryFn: () =>
       fetchSocialOrganizations({
-        page: currentPage - 1, // API uses 0-based pagination
+        page: currentPage, // 1-based; fetcher converts for the API
         size: 10,
         sort: filters.sort,
         direction: filters.direction,
@@ -76,7 +76,7 @@ export default function SocialOrganizationsPage() {
   const totalItems = organizationsData?.totalItems || 0;
   const totalPages = organizationsData?.totalPages || 0;
   const currentPageDisplay = organizationsData?.currentPage
-    ? organizationsData.currentPage + 1
+    ? organizationsData.currentPage
     : 1;
 
   if (isError) {

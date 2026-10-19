@@ -141,7 +141,7 @@ export default function AmbulancesPage() {
                 }
                 currentPage={
                   ambulancesData?.currentPage
-                    ? ambulancesData.currentPage + 1
+                    ? ambulancesData.currentPage
                     : 1
                 }
                 totalPages={filters.status ? 1 : ambulancesData?.totalPages}

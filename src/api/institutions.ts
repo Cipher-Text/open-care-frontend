@@ -26,9 +26,6 @@ export const fetchInstitutions = async (
 	const queryString = buildQueryString(withWirePage(params));
 	const response = await fetch(`${baseUrl}/institutions?${queryString}`, {
 		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
 	});
 
 	if (!response.ok) {
@@ -65,9 +62,6 @@ export const fetchInstitutionById = async (
 ): Promise<Institution> => {
 	const response = await fetch(`${baseUrl}/institutions/${id}`, {
 		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
 	});
 
 	if (!response.ok) {
@@ -122,9 +116,6 @@ export const deleteInstitution = async (
 export const fetchAllInstitutions = async (): Promise<Institution[]> => {
 	const response = await fetch(`${baseUrl}/institutions/all`, {
 		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
 	});
 
 	if (!response.ok) {

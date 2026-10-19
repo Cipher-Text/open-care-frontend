@@ -83,7 +83,7 @@ export default function MedicalSpecialitiesPage() {
   const currentPageDisplay = filters.type
     ? 1
     : specialitiesData?.currentPage
-    ? specialitiesData.currentPage + 1
+    ? specialitiesData.currentPage
     : 1;
   if (isError) {
     return (

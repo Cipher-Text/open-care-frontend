@@ -45,9 +45,6 @@ export async function fetchSocialOrganizationById(
 ): Promise<SocialOrganization> {
   const response = await fetch(`${baseUrl}/social-organization/${id}`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
   if (!response.ok) {

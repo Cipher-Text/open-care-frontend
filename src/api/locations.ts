@@ -9,9 +9,6 @@ import {
 export const fetchDivisions = async (): Promise<DivisionResponse> => {
 	const response = await fetch(`${baseUrl}/divisions`, {
 		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
 	});
 
 	if (!response.ok) {
@@ -26,9 +23,6 @@ export const fetchDivisions = async (): Promise<DivisionResponse> => {
 export const fetchDistricts = async (): Promise<DistrictResponse> => {
 	const response = await fetch(`${baseUrl}/districts`, {
 		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
 	});
 
 	if (!response.ok) {
@@ -43,9 +37,6 @@ export const fetchDistricts = async (): Promise<DistrictResponse> => {
 export const fetchUpazilas = async (): Promise<UpazilaResponse> => {
 	const response = await fetch(`${baseUrl}/upazilas`, {
 		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
 	});
 
 	if (!response.ok) {
@@ -62,9 +53,6 @@ export const fetchUnionsByUpazila = async (
 ): Promise<UnionResponse> => {
 	const response = await fetch(`${baseUrl}/upazilas/${upazilaId}/unions`, {
 		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-		},
 	});
 
 	if (!response.ok) {
