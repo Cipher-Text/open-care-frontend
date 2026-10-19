@@ -1,3 +1,4 @@
+import { normalizePage, withWirePage } from "@/lib/pagination";
 import { baseUrl } from "@/config/config";
 import { InstitutionListResponse, Institution } from "@/types/institutions";
 import { AddInstitutionFormData } from "@/validations/add-institution-schema";
@@ -22,7 +23,7 @@ const buildQueryString = (params: QueryParams): string => {
 export const fetchInstitutions = async (
 	params: QueryParams
 ): Promise<InstitutionListResponse> => {
-	const queryString = buildQueryString(params);
+	const queryString = buildQueryString(withWirePage(params));
 	const response = await fetch(`${baseUrl}/institutions?${queryString}`, {
 		method: "GET",
 		headers: {
@@ -36,7 +37,7 @@ export const fetchInstitutions = async (
 		);
 	}
 
-	return response.json();
+	return normalizePage(await response.json());
 };
 
 export const addInstitution = async (

@@ -80,7 +80,7 @@ export default function DoctorsPage() {
 						) : (
 							<DataTable
 								columns={columns}
-								data={doctorsData?.doctors || []}
+								data={doctorsData?.content || []}
 								totalItems={doctorsData?.totalItems}
 								currentPage={doctorsData?.currentPage}
 								totalPages={doctorsData?.totalPages}

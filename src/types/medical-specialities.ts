@@ -1,3 +1,4 @@
+import type { PageResult } from "@/types/common";
 export interface MedicalSpeciality {
   id: number;
   parentId: number | null;
@@ -9,11 +10,4 @@ export interface MedicalSpeciality {
   doctorCount: number | null;
 }
 
-export interface MedicalSpecialitiesListResponse {
-  medicalSpecialities: MedicalSpeciality[];
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
-  message?: string;
-  status?: number;
-}
+export type MedicalSpecialitiesListResponse = PageResult<MedicalSpeciality>;

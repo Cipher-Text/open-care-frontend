@@ -102,7 +102,7 @@ export interface Advertisement {
 }
 
 export interface AdvertisementsResponse {
-  advertisements: Advertisement[];
+  content: Advertisement[];
   totalItems: number;
   totalPages: number;
   currentPage: number;

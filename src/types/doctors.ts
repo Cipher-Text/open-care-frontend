@@ -1,3 +1,4 @@
+import type { PageResult } from "@/types/common";
 import { District, Division, Union, Upazila } from "./locations";
 import { Sort, Pageable } from "./common";
 
@@ -363,14 +364,7 @@ export type DoctorDetailsResponse = {
 	tags: string[];
 };
 
-export interface DoctorListResponse {
-	doctors: DoctorResponse[];
-	totalItems: number;
-	totalPages: number;
-	currentPage: number;
-	message: string;
-	status: number;
-}
+export type DoctorListResponse = PageResult<DoctorResponse>;
 
 export interface DoctorDegreesListResponse {
 	totalElements: number;

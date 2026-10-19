@@ -1,4 +1,5 @@
 "use client";
+import { normalizePage, withWirePage, type WirePage } from "@/lib/pagination";
 
 import { ICommonEnum } from "@/types/common";
 import {
@@ -12,14 +13,14 @@ import { apiGet, apiPost, apiPut, buildUrl } from "@/lib/api-client";
 export const fetchHospitals = async (
 	params: Record<string, unknown> = {}
 ): Promise<HospitalListResponse> => {
-	const url = buildUrl("/hospitals", params);
-	const response = await apiGet<HospitalListResponse>(url);
+	const url = buildUrl("/hospitals", withWirePage(params));
+	const response = await apiGet<WirePage<Hospital>>(url);
 
 	if (!response.ok) {
 		throw new Error(response.error || "Failed to fetch hospitals");
 	}
 
-	return response.data as HospitalListResponse;
+	return normalizePage(response.data);
 };
 
 export const fetchAllHospitals = async (): Promise<Hospital[]> => {

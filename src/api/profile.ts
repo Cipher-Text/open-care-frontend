@@ -61,7 +61,7 @@ export const uploadProfilePhoto = async (
  */
 export interface ProfilesResponse {
 	totalItems: number;
-	profiles: UserProfile[];
+	content: UserProfile[];
 	totalPages: number;
 	currentPage: number;
 }

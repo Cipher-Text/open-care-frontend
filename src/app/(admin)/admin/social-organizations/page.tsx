@@ -72,7 +72,7 @@ export default function SocialOrganizationsPage() {
     [filters]
   );
 
-  const displayData = organizationsData?.socialOrganizations || [];
+  const displayData = organizationsData?.content || [];
   const totalItems = organizationsData?.totalItems || 0;
   const totalPages = organizationsData?.totalPages || 0;
   const currentPageDisplay = organizationsData?.currentPage

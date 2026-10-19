@@ -1,3 +1,4 @@
+import { normalizePage, withWirePage } from "@/lib/pagination";
 import { AssociationsListResponse, Association } from "@/types/associations";
 import { AddAssociationFormData } from "@/validations/add-association-schema";
 import { baseUrl } from "@/config/config";
@@ -23,7 +24,7 @@ const buildQueryString = (params: QueryParams): string => {
 export const fetchAssociations = async (
   params: QueryParams
 ): Promise<AssociationsListResponse> => {
-  const queryString = buildQueryString(params);
+  const queryString = buildQueryString(withWirePage(params));
   const response = await fetch(`${baseUrl}/associations?${queryString}`, {
     method: "GET",
     headers: {
@@ -38,16 +39,7 @@ export const fetchAssociations = async (
   }
 
   const data = await response.json();
-
-  // Return the data as is since it matches our expected format
-  return {
-    associations: data.associations || [],
-    totalItems: data.totalItems || 0,
-    totalPages: data.totalPages || 0,
-    currentPage: data.currentPage || 0,
-    message: "Success",
-    status: 200,
-  };
+	return normalizePage(data);
 };
 
 export const fetchAssociationById = async (

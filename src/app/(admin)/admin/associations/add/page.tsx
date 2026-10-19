@@ -83,7 +83,7 @@ export default function AddAssociationPage() {
     queryKey: ["medical-specialities-all"],
     queryFn: () =>
       fetchMedicalSpecialities({
-        page: 0,
+        page: 1,
         size: 1000,
         sort: "name",
         direction: "ASC",
@@ -91,7 +91,7 @@ export default function AddAssociationPage() {
   });
 
   const medicalSpecialities =
-    medicalSpecialitiesData?.medicalSpecialities || [];
+    medicalSpecialitiesData?.content || [];
 
   // Fetch countries
   const { data: countriesData, isLoading: isCountriesLoading } = useQuery({

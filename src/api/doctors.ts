@@ -1,7 +1,9 @@
 "use client";
+import { normalizePage, withWirePage, type WirePage } from "@/lib/pagination";
 
 import {
 	DoctorListResponse,
+	DoctorResponse,
 	Doctor,
 	DoctorDetailsResponse,
 } from "@/types/doctors";
@@ -11,14 +13,14 @@ import { apiGet, apiPost, apiPut, buildUrl } from "@/lib/api-client";
 export const fetchDoctors = async (
 	params: Record<string, unknown> = {}
 ): Promise<DoctorListResponse> => {
-	const url = buildUrl("/doctors", params);
-	const response = await apiGet<DoctorListResponse>(url);
+	const url = buildUrl("/doctors", withWirePage(params));
+	const response = await apiGet<WirePage<DoctorResponse>>(url);
 
 	if (!response.ok) {
 		throw new Error(response.error || "Failed to fetch doctors");
 	}
 
-	return response.data as DoctorListResponse;
+	return normalizePage(response.data);
 };
 
 export const addDoctor = async (

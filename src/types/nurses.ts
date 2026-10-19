@@ -1,3 +1,4 @@
+import type { PageResult } from "@/types/common";
 export type UserType = {
   value: string | null;
   displayName: string | null;
@@ -77,11 +78,6 @@ export type NurseResponse = {
   profile: NurseProfile;
 };
 
-export type NurseListResponse = {
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
-  nurses: NurseResponse[];
-};
+export type NurseListResponse = PageResult<NurseResponse>;
 
 export type Nurse = NurseResponse;

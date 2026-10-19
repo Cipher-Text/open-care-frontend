@@ -36,7 +36,7 @@ export default function AmbulancesPage() {
     queryKey: ["ambulances", currentPage, filters],
     queryFn: () =>
       fetchAmbulances({
-        page: currentPage - 1, // API uses 0-based pagination
+        page: currentPage, // 1-based; fetcher converts for the API
         size: 10,
         sort: filters.sort,
         direction: filters.direction,
@@ -75,7 +75,7 @@ export default function AmbulancesPage() {
 
   // Apply client-side status filtering since API might not support it
   const filteredData =
-    ambulancesData?.ambulances?.filter((ambulance) => {
+    ambulancesData?.content?.filter((ambulance) => {
       if (!filters.status) return true;
 
       switch (filters.status) {

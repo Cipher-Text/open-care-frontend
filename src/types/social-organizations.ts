@@ -1,3 +1,4 @@
+import type { PageResult } from "@/types/common";
 export interface SocialOrganizationType {
   value: string;
   displayName: string;
@@ -31,11 +32,4 @@ export interface SocialOrganization {
   tags: string[];
 }
 
-export interface SocialOrganizationsListResponse {
-  socialOrganizations: SocialOrganization[];
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
-  message?: string;
-  status?: number;
-}
+export type SocialOrganizationsListResponse = PageResult<SocialOrganization>;

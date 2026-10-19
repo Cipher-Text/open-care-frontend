@@ -1,3 +1,4 @@
+import { normalizePage, toWirePage } from "@/lib/pagination";
 import {
   SocialOrganizationsListResponse,
   SocialOrganization,
@@ -20,7 +21,7 @@ export async function fetchSocialOrganizations({
   name,
 }: FetchSocialOrganizationsParams): Promise<SocialOrganizationsListResponse> {
   const params = new URLSearchParams({
-    page: page.toString(),
+    page: toWirePage(page).toString(),
     size: size.toString(),
     sort,
     direction,
@@ -36,8 +37,7 @@ export async function fetchSocialOrganizations({
     throw new Error("Failed to fetch social organizations");
   }
 
-  const data = await response.json();
-  return data;
+  return normalizePage(await response.json());
 }
 
 export async function fetchSocialOrganizationById(

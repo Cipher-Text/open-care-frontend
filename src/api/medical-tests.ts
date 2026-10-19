@@ -1,3 +1,4 @@
+import { normalizePage, toWirePage } from "@/lib/pagination";
 import { MedicalTestsListResponse } from "@/types/medical-tests";
 import { baseUrl } from "@/config/config";
 
@@ -17,7 +18,7 @@ export async function fetchMedicalTests({
   name,
 }: FetchMedicalTestsParams): Promise<MedicalTestsListResponse> {
   const params = new URLSearchParams({
-    page: page.toString(),
+    page: toWirePage(page).toString(),
     size: size.toString(),
     sort,
     direction,
@@ -33,6 +34,5 @@ export async function fetchMedicalTests({
     throw new Error("Failed to fetch medical tests");
   }
 
-  const data = await response.json();
-  return data;
+  return normalizePage(await response.json());
 }

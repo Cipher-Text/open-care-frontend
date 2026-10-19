@@ -1,3 +1,4 @@
+import { normalizePage, withWirePage } from "@/lib/pagination";
 import { baseUrl } from "@/config/config";
 import { NurseListResponse, Nurse } from "@/types/nurses";
 
@@ -21,7 +22,7 @@ const buildQueryString = (params: QueryParams): string => {
 export const fetchNurses = async (
   params: QueryParams
 ): Promise<NurseListResponse> => {
-  const queryString = buildQueryString(params);
+  const queryString = buildQueryString(withWirePage(params));
   const response = await fetch(`${baseUrl}/nurses?${queryString}`, {
     method: "GET",
     headers: {
@@ -35,7 +36,7 @@ export const fetchNurses = async (
     );
   }
 
-  return response.json();
+  return normalizePage(await response.json());
 };
 
 export const fetchNurseById = async (id: string): Promise<Nurse> => {

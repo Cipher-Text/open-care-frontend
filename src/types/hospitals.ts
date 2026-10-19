@@ -1,3 +1,4 @@
+import type { PageResult } from "@/types/common";
 import { District, Union, Upazila } from "./locations";
 import { DoctorResponse } from "./doctors";
 
@@ -124,11 +125,4 @@ export interface HospitalDetailsResponse {
   amenities: HospitalAmenity[];
 }
 
-export interface HospitalListResponse {
-  hospitals: Hospital[];
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
-  message: string;
-  status: number;
-}
+export type HospitalListResponse = PageResult<Hospital>;

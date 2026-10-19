@@ -34,7 +34,7 @@ export default function MedicalSpecialitiesPage() {
     queryKey: ["medical-specialities", currentPage, filters],
     queryFn: () =>
       fetchMedicalSpecialities({
-        page: currentPage - 1, // API uses 0-based pagination
+        page: currentPage, // 1-based; fetcher converts for the API
         size: 10,
         name: filters.search || undefined,
       }),
@@ -65,7 +65,7 @@ export default function MedicalSpecialitiesPage() {
   // Filter data based on client-side type filter since API doesn't support this
   // When type filter is active, we disable pagination to avoid confusion
   const shouldShowPagination = !filters.type;
-  const displayData = specialitiesData?.medicalSpecialities || [];
+  const displayData = specialitiesData?.content || [];
   const filteredData = filters.type
     ? displayData.filter((speciality) => {
         const matchesType =

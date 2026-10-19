@@ -1,3 +1,4 @@
+import type { PageResult } from "@/types/common";
 import { District, Upazila, Union } from "./locations";
 
 export interface Tag {
@@ -83,11 +84,4 @@ export interface InstitutionResponse extends Institution {
   updatedAt?: string;
 }
 
-export interface InstitutionListResponse {
-  institutions: InstitutionResponse[];
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
-  message: string;
-  status: number;
-}
+export type InstitutionListResponse = PageResult<InstitutionResponse>;

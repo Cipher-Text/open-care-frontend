@@ -210,7 +210,8 @@ const BloodManagement: React.FC = () => {
       );
       if (!response.ok) throw new Error("Failed to fetch");
       const result = await response.json();
-      setDonorData(result);
+      // API returns PageResponse { content, ... }
+      setDonorData({ ...result, donors: result.content ?? [] });
     } catch {
       setError((prev) => ({ ...prev, donors: "Failed to load donors data" }));
     } finally {
@@ -228,7 +229,8 @@ const BloodManagement: React.FC = () => {
       );
       if (!response.ok) throw new Error("Failed to fetch");
       const result = await response.json();
-      setDonationData(result);
+      // API returns PageResponse { content, ... }
+      setDonationData({ ...result, donations: result.content ?? [] });
     } catch {
       setError((prev) => ({
         ...prev,
@@ -249,7 +251,8 @@ const BloodManagement: React.FC = () => {
       );
       if (!response.ok) throw new Error("Failed to fetch");
       const result = await response.json();
-      setRequisitionData(result);
+      // API returns PageResponse { content, ... }
+      setRequisitionData({ ...result, requisitions: result.content ?? [] });
     } catch {
       setError((prev) => ({
         ...prev,

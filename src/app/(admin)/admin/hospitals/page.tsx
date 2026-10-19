@@ -127,7 +127,7 @@ export default function HospitalsPage() {
 						) : (
 							<DataTable
 								columns={columns}
-								data={hospitalsData?.hospitals || []}
+								data={hospitalsData?.content || []}
 								totalItems={hospitalsData?.totalItems}
 								currentPage={hospitalsData?.currentPage}
 								totalPages={hospitalsData?.totalPages}

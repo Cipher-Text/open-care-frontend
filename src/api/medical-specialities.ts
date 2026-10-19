@@ -1,3 +1,4 @@
+import { normalizePage, withWirePage } from "@/lib/pagination";
 import { baseUrl } from "@/config/config";
 import {
 	MedicalSpecialitiesListResponse,
@@ -24,7 +25,7 @@ const buildQueryString = (params: QueryParams): string => {
 export const fetchMedicalSpecialities = async (
 	params: QueryParams
 ): Promise<MedicalSpecialitiesListResponse> => {
-	const queryString = buildQueryString(params);
+	const queryString = buildQueryString(withWirePage(params));
 	const response = await fetch(
 		`${baseUrl}/medical-specialities?${queryString}`,
 		{
@@ -42,16 +43,7 @@ export const fetchMedicalSpecialities = async (
 	}
 
 	const data = await response.json();
-
-	// Return the data as is since it now matches our expected format
-	return {
-		medicalSpecialities: data.medicalSpecialities || [],
-		totalItems: data.totalItems || 0,
-		totalPages: data.totalPages || 0,
-		currentPage: data.currentPage || 0,
-		message: "Success",
-		status: 200,
-	};
+	return normalizePage(data);
 };
 export const fetchMedicalSpecialityById = async (
 	id: number

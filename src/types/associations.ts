@@ -1,3 +1,4 @@
+import type { PageResult } from "@/types/common";
 import { Division, District, Upazila } from "./locations";
 import { MedicalSpeciality } from "./medical-specialities";
 
@@ -137,11 +138,4 @@ export interface Association {
   doctorAssociations?: DoctorAssociation[];
 }
 
-export interface AssociationsListResponse {
-  associations: Association[];
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
-  message?: string;
-  status?: number;
-}
+export type AssociationsListResponse = PageResult<Association>;

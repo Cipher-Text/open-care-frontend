@@ -1,3 +1,4 @@
+import type { PageResult } from "@/types/common";
 import { District, Upazila } from "./locations";
 
 export interface AmbulanceType {
@@ -52,11 +53,4 @@ export interface Ambulance {
   updatedAt: string;
 }
 
-export interface AmbulancesListResponse {
-  ambulances: Ambulance[];
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
-  message?: string;
-  status?: number;
-}
+export type AmbulancesListResponse = PageResult<Ambulance>;

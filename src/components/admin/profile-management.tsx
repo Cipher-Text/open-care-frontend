@@ -66,11 +66,11 @@ const ProfileManagement: React.FC = () => {
   }, [currentPage, sortBy, sortDir]);
 
   // Get unique user types for filter
-  const userTypes = data?.profiles
+  const userTypes = data?.content
     ? Array.from(
-        new Set(data.profiles.map((profile) => profile.userType.value))
+        new Set(data.content.map((profile) => profile.userType.value))
       ).map((value) => {
-        const userType = data.profiles.find(
+        const userType = data.content.find(
           (p) => p.userType.value === value
         )?.userType;
         return userType!;
@@ -81,7 +81,7 @@ const ProfileManagement: React.FC = () => {
   const getFilteredData = () => {
     if (!data) return [];
 
-    return data.profiles.filter((profile) => {
+    return data.content.filter((profile) => {
       const matchesSearch =
         profile.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         profile.bnName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -272,7 +272,7 @@ const ProfileManagement: React.FC = () => {
 
         {userTypes.slice(0, 3).map((type) => {
           const count =
-            data?.profiles.filter((p) => p.userType.value === type.value)
+            data?.content.filter((p) => p.userType.value === type.value)
               .length || 0;
           return (
             <Card key={type.value} className="p-4">

@@ -107,7 +107,7 @@ export default function AssociationsPage() {
             ) : (
               <DataTable
                 columns={columns}
-                data={associationsData?.associations || []}
+                data={associationsData?.content || []}
                 totalItems={associationsData?.totalItems}
                 currentPage={
                   associationsData?.currentPage

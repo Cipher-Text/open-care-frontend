@@ -81,7 +81,7 @@ export default function ProfilesPage() {
             ) : (
               <DataTable
                 columns={columns}
-                data={profilesData?.profiles || []}
+                data={profilesData?.content || []}
                 totalItems={profilesData?.totalItems}
                 currentPage={profilesData?.currentPage}
                 totalPages={profilesData?.totalPages}

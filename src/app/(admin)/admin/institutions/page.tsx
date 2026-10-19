@@ -80,7 +80,7 @@ export default function InstitutionsPage() {
             ) : (
               <DataTable
                 columns={columns}
-                data={institutionsData?.institutions || []}
+                data={institutionsData?.content || []}
                 totalItems={institutionsData?.totalItems}
                 currentPage={institutionsData?.currentPage}
                 totalPages={institutionsData?.totalPages}

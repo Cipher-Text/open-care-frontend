@@ -25,3 +25,11 @@ export interface Pageable {
 	offset: number;
 	sort: Sort;
 }
+
+/** One page of a list. `currentPage` is 1-based. See lib/pagination.ts. */
+export interface PageResult<T> {
+	content: T[];
+	currentPage: number;
+	totalItems: number;
+	totalPages: number;
+}

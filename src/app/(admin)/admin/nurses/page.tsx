@@ -79,7 +79,7 @@ export default function NursesPage() {
             ) : (
               <DataTable
                 columns={columns}
-                data={nursesData?.nurses || []}
+                data={nursesData?.content || []}
                 totalItems={nursesData?.totalItems}
                 currentPage={nursesData?.currentPage}
                 totalPages={nursesData?.totalPages}

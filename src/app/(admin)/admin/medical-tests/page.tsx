@@ -70,7 +70,7 @@ export default function MedicalTestsPage() {
     [filters]
   );
 
-  const displayData = testsData?.medicalTests || [];
+  const displayData = testsData?.content || [];
   const totalItems = testsData?.totalItems || 0;
   const totalPages = testsData?.totalPages || 0;
   const currentPageDisplay = testsData?.currentPage

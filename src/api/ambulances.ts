@@ -1,3 +1,4 @@
+import { normalizePage, withWirePage } from "@/lib/pagination";
 import { AmbulancesListResponse, Ambulance } from "@/types/ambulances";
 import { baseUrl } from "@/config/config";
 
@@ -21,7 +22,7 @@ const buildQueryString = (params: QueryParams): string => {
 export const fetchAmbulances = async (
   params: QueryParams
 ): Promise<AmbulancesListResponse> => {
-  const queryString = buildQueryString(params);
+  const queryString = buildQueryString(withWirePage(params));
   const response = await fetch(`${baseUrl}/ambulances?${queryString}`, {
     method: "GET",
     headers: {
@@ -36,16 +37,7 @@ export const fetchAmbulances = async (
   }
 
   const data = await response.json();
-
-  // Return the data as is since it matches our expected format
-  return {
-    ambulances: data.ambulances || [],
-    totalItems: data.totalItems || 0,
-    totalPages: data.totalPages || 0,
-    currentPage: data.currentPage || 0,
-    message: "Success",
-    status: 200,
-  };
+	return normalizePage(data);
 };
 
 export const fetchAmbulanceById = async (id: number): Promise<Ambulance> => {

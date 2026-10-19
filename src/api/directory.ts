@@ -3,20 +3,15 @@ import { Hospital } from "@/types/hospitals";
 import { DoctorResponse } from "@/types/doctors";
 import { District } from "@/types/locations";
 import { MedicalSpeciality } from "@/types/doctors";
-import { ICommonEnum } from "@/types/common";
+import { ICommonEnum, PageResult } from "@/types/common";
+import { normalizePage, toWirePage, type WirePage } from "@/lib/pagination";
 
 /**
  * Public directory fetchers. Every endpoint used here is a public GET on the
  * backend, so no auth header is sent (an expired token must not break browsing).
- * Pages are 0-based on the wire; callers pass 1-based pages and we convert.
+ * Callers pass 1-based pages; lib/pagination.ts converts to and from the API.
  */
 
-export interface PageResult<T> {
-	content: T[];
-	currentPage: number;
-	totalItems: number;
-	totalPages: number;
-}
 
 async function getPublic<T>(path: string, params?: Record<string, unknown>) {
 	const response = await apiGet<T>(buildUrl(path, params), {
@@ -42,11 +37,16 @@ export interface HospitalQuery {
 	size: number;
 }
 
-export const fetchPublicHospitals = ({ page, ...rest }: HospitalQuery) =>
-	getPublic<PageResult<Hospital>>("/hospitals", {
-		...rest,
-		page: page - 1,
-	});
+export const fetchPublicHospitals = async ({
+	page,
+	...rest
+}: HospitalQuery): Promise<PageResult<Hospital>> =>
+	normalizePage(
+		await getPublic<WirePage<Hospital>>("/hospitals", {
+			...rest,
+			page: toWirePage(page),
+		})
+	);
 
 export interface DoctorQuery {
 	name?: string;
@@ -56,11 +56,16 @@ export interface DoctorQuery {
 	size: number;
 }
 
-export const fetchPublicDoctors = ({ page, ...rest }: DoctorQuery) =>
-	getPublic<PageResult<DoctorResponse>>("/doctors", {
-		...rest,
-		page: page - 1,
-	});
+export const fetchPublicDoctors = async ({
+	page,
+	...rest
+}: DoctorQuery): Promise<PageResult<DoctorResponse>> =>
+	normalizePage(
+		await getPublic<WirePage<DoctorResponse>>("/doctors", {
+			...rest,
+			page: toWirePage(page),
+		})
+	);
 
 export const fetchDistrictOptions = () => getPublic<District[]>("/districts");
 
