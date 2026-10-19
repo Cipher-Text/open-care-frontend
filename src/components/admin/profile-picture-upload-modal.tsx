@@ -200,7 +200,7 @@ export const ProfilePictureUploadModal: React.FC<
 						</div>
 					) : preview ? (
 						<div className="relative mx-auto">
-							<div className="w-40 h-40 rounded-lg overflow-hidden border-2 border-gray-200 flex items-center justify-center bg-gray-50">
+							<div className="w-40 h-40 rounded-lg overflow-hidden border-2 border-border flex items-center justify-center bg-muted">
 								{/* eslint-disable-next-line @next/next/no-img-element */}
 								<img
 									src={preview}
@@ -225,14 +225,14 @@ export const ProfilePictureUploadModal: React.FC<
 						</div>
 					) : (
 						<div
-							className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-gray-400 transition-colors"
+							className="border-2 border-dashed border-input rounded-lg p-8 text-center cursor-pointer hover:border-input transition-colors"
 							onClick={handleChooseFile}
 						>
-							<Upload className="h-10 w-10 mx-auto mb-2 text-gray-400" />
-							<p className="text-sm font-medium text-gray-900">
+							<Upload className="h-10 w-10 mx-auto mb-2 text-muted-foreground" />
+							<p className="text-sm font-medium text-foreground">
 								Click to upload or drag and drop
 							</p>
-							<p className="text-xs text-gray-500 mt-1">
+							<p className="text-xs text-muted-foreground mt-1">
 								JPG, PNG, WebP (1:1 ratio, max 1 MB)
 							</p>
 						</div>
@@ -275,10 +275,10 @@ export const ProfilePictureUploadModal: React.FC<
 					{uploading && (
 						<div className="space-y-2">
 							<div className="flex items-center justify-between">
-								<span className="text-sm font-medium text-gray-700">
+								<span className="text-sm font-medium text-muted-foreground">
 									Uploading...
 								</span>
-								<span className="text-sm text-gray-600">
+								<span className="text-sm text-muted-foreground">
 									{Math.round(progress)}%
 								</span>
 							</div>

@@ -152,7 +152,7 @@ const AdvertisementManagement: React.FC = () => {
         </tbody>
       </table>
       {filteredTypes.length === 0 && (
-        <div className="p-8 text-center text-gray-500">
+        <div className="p-8 text-center text-muted-foreground">
           No advertisement types found
         </div>
       )}
@@ -195,7 +195,7 @@ const AdvertisementManagement: React.FC = () => {
               </td>
               <td>
                 <div className="font-medium">{ad.title}</div>
-                <div className="text-xs text-gray-500 mt-1">{ad.content}</div>
+                <div className="text-xs text-muted-foreground mt-1">{ad.content}</div>
               </td>
               <td>
                 <div className="text-sm">{ad.advertisementType.name}</div>
@@ -217,7 +217,7 @@ const AdvertisementManagement: React.FC = () => {
                 <div className="text-sm">
                   <div>{ad.district.name}</div>
                   {ad.upazila && (
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-muted-foreground">
                       {ad.upazila.name}
                     </div>
                   )}
@@ -259,7 +259,7 @@ const AdvertisementManagement: React.FC = () => {
         </tbody>
       </table>
       {filteredAdvertisements.length === 0 && (
-        <div className="p-8 text-center text-gray-500">
+        <div className="p-8 text-center text-muted-foreground">
           No advertisements found
         </div>
       )}
@@ -304,7 +304,7 @@ const AdvertisementManagement: React.FC = () => {
       <div className="advertisement-controls">
         <div className="advertisement-search">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
               type="text"
               placeholder={`Search ${
@@ -327,8 +327,8 @@ const AdvertisementManagement: React.FC = () => {
       <Card className="advertisement-content">
         {loading && currentItems === 0 ? (
           <div className="p-8 text-center">
-            <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-2 text-gray-400" />
-            <p className="text-gray-500">Loading...</p>
+            <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-2 text-muted-foreground" />
+            <p className="text-muted-foreground">Loading...</p>
           </div>
         ) : (
           <>

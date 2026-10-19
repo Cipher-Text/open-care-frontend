@@ -124,7 +124,7 @@ export function buildInstitutionDetailSections(
 					value: (
 						<div className="space-y-1">
 							<div className="font-semibold">{institution.affiliatedHospital.name}</div>
-							<div className="text-sm text-gray-600">
+							<div className="text-sm text-muted-foreground">
 								{institution.affiliatedHospital.bnName}
 							</div>
 						</div>
@@ -165,7 +165,7 @@ export function buildInstitutionDetailSections(
 
 	const tagsProperties: PropertyConfig[] = institution.tags?.map((tag) => ({
 		label: tag.displayName || tag.name,
-		value: <span className="text-xs text-gray-600">{tag.category}</span>,
+		value: <span className="text-xs text-muted-foreground">{tag.category}</span>,
 	})) || [];
 
 	const sections: SectionConfig[] = [

@@ -28,7 +28,7 @@ export function DetailView({ sections }: DetailViewProps) {
 					</CardHeader>
 					<CardContent>
 						{section.content || (
-							<p className="text-sm text-gray-500">
+							<p className="text-sm text-muted-foreground">
 								{section.emptyMessage || "No data available."}
 							</p>
 						)}

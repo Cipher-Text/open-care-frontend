@@ -79,7 +79,7 @@ export function RealTimeStatsDisplay({ data }: RealTimeStatsProps) {
               <div className="text-2xl font-bold">{stat.value}</div>
               {stat.showProgress && stat.progress !== undefined && (
                 <div className="mt-2">
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
                     <div
                       className={`h-full transition-all ${
                         stat.progress > 80

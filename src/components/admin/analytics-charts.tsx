@@ -21,7 +21,7 @@ const departmentData = [
 	{ department: "Pediatrics", percentage: 18, color: "bg-green-500" },
 	{ department: "Neurology", percentage: 15, color: "bg-purple-500" },
 	{ department: "Orthopedics", percentage: 12, color: "bg-yellow-500" },
-	{ department: "Others", percentage: 10, color: "bg-gray-500" },
+	{ department: "Others", percentage: 10, color: "bg-muted0" },
 ];
 
 export function AnalyticsCharts() {
@@ -86,7 +86,7 @@ export function AnalyticsCharts() {
 										{dept.percentage}%
 									</span>
 								</div>
-								<div className="w-full bg-gray-200 rounded-full h-2">
+								<div className="w-full bg-muted rounded-full h-2">
 									<div
 										className={`h-2 rounded-full ${dept.color}`}
 										style={{ width: `${dept.percentage}%` }}

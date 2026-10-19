@@ -7,19 +7,19 @@
 
 .degrees-table th,
 .degrees-table td {
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border);
   padding: 0.75rem 1rem;
   text-align: left;
 }
 
 .degrees-table th {
-  background-color: #f9fafb;
+  background-color: var(--muted);
   font-weight: 500;
-  color: #374151;
+  color: var(--foreground);
 }
 
 .degrees-table tbody tr:hover {
-  background-color: #f9fafb;
+  background-color: var(--muted);
   transition: background-color 0.2s ease;
 }
 
@@ -37,7 +37,7 @@
 
 .degrees-stat-card {
   background: white;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 1rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
@@ -51,12 +51,12 @@
 
 .degrees-stat-label {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--muted-foreground);
 }
 
 .degrees-abbreviation {
-  background-color: #dbeafe;
-  color: #1e40af;
+  background-color: var(--accent);
+  color: var(--primary);
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
@@ -79,8 +79,8 @@
 }
 
 .degrees-type-graduate {
-  background-color: #eff6ff;
-  color: #1e40af;
+  background-color: var(--accent);
+  color: var(--primary);
 }
 
 .degrees-type-postgraduate {
@@ -94,7 +94,7 @@
   justify-content: space-between;
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--border);
 }
 
 .degrees-search-section {

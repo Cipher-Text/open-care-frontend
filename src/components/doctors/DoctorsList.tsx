@@ -1,62 +1,79 @@
 "use client";
 
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { fetchPublicDoctors } from "@/api/directory";
+import { DirectoryPagination } from "@/components/common/DirectoryControls";
+import {
+	EmptyState,
+	ErrorState,
+	ListSkeleton,
+} from "@/components/common/StateViews";
+import { parsePage, useUrlParams } from "@/hooks/use-url-params";
 import DoctorCard from "./DoctorCard";
-import DoctorPagination from "./DoctorPagination";
 
-interface Doctor {
-	id: string;
-	name: string;
-	image?: string;
-	experience: number;
-	rating: number;
-	reviews: number;
-	availability: string;
-	responseTime: string;
-	degrees: string[];
-	specialties: string[];
-	hospital: string;
-	location: string;
-	consultationFee: number;
-	nextAvailable: string;
-	availabilityStatus: "available" | "busy" | "unavailable";
-}
+const PAGE_SIZE = 10;
 
-interface DoctorsListProps {
-	doctors: Doctor[];
-	totalResults: number;
-}
+export default function DoctorsList() {
+	const { get, set, clear, hasFilters } = useUrlParams();
+	const page = parsePage(get("page"));
 
-export default function DoctorsList({
-	doctors,
-	totalResults,
-}: DoctorsListProps) {
+	const query = useQuery({
+		queryKey: [
+			"public-doctors",
+			get("q"),
+			get("speciality"),
+			get("district"),
+			page,
+		],
+		queryFn: () =>
+			fetchPublicDoctors({
+				name: get("q") || undefined,
+				specialityId: get("speciality") || undefined,
+				districtId: get("district") || undefined,
+				page,
+				size: PAGE_SIZE,
+			}),
+		placeholderData: keepPreviousData,
+	});
+
+	const data = query.data;
+
 	return (
-		<div>
-			{/* Results Header */}
-			<div className="mb-6">
-				<h2 className="text-lg font-bold text-gray-900">
-					Showing {totalResults.toLocaleString()} doctors
-				</h2>
-				<p className="text-gray-600 text-sm">
-					• Filtered by location and availability
-				</p>
-			</div>
+		<div className="space-y-6">
+			<p className="text-muted-foreground" aria-live="polite">
+				{data
+					? `${data.totalItems.toLocaleString()} ${
+							data.totalItems === 1 ? "doctor" : "doctors"
+					  } found`
+					: "Searching"}
+			</p>
 
-			{/* Doctor Cards */}
-			<div className="space-y-4">
-				{doctors.map((doctor) => (
-					<DoctorCard key={doctor.id} doctor={doctor} />
-				))}
-			</div>
+			{query.isPending ? (
+				<ListSkeleton />
+			) : query.isError ? (
+				<ErrorState onRetry={() => query.refetch()} />
+			) : data && data.content.length === 0 ? (
+				<EmptyState onClear={hasFilters ? clear : undefined} />
+			) : (
+				<div
+					className={`space-y-4 ${query.isPlaceholderData ? "opacity-60" : ""}`}
+				>
+					{data?.content.map((d) => (
+						<DoctorCard key={d.id} doctor={d} />
+					))}
+				</div>
+			)}
 
-			{/* Pagination */}
-			<DoctorPagination
-				currentPage={1}
-				totalPages={20}
-				totalResults={totalResults}
-				resultsPerPage={10}
-				onPageChange={(page: number) => console.log("Page changed to:", page)}
-			/>
+			{data && data.totalPages > 1 && (
+				<DirectoryPagination
+					page={page}
+					totalPages={data.totalPages}
+					onPageChange={(p) => {
+						set({ page: String(p) });
+						window.scrollTo({ top: 0, behavior: "smooth" });
+					}}
+				/>
+			)}
 		</div>
 	);
 }

@@ -113,7 +113,7 @@ export function buildDoctorDetailSections(
 					</div>
 					{degreeInfo.institution && (
 						<div className="flex items-center gap-2">
-							<Building2 className="h-3 w-3 text-gray-500" />
+							<Building2 className="h-3 w-3 text-muted-foreground" />
 							<span className="text-sm">
 								{degreeInfo.institution.name}
 								{degreeInfo.institution.district &&
@@ -123,14 +123,14 @@ export function buildDoctorDetailSections(
 					)}
 					{degreeInfo.medicalSpeciality && (
 						<div className="flex items-center gap-2">
-							<Stethoscope className="h-3 w-3 text-gray-500" />
+							<Stethoscope className="h-3 w-3 text-muted-foreground" />
 							<span className="text-sm">
 								{degreeInfo.medicalSpeciality.name}
 							</span>
 						</div>
 					)}
 					{(degreeInfo.startDate || degreeInfo.endDate) && (
-						<div className="flex items-center gap-2 text-sm text-gray-600">
+						<div className="flex items-center gap-2 text-sm text-muted-foreground">
 							<Calendar className="h-3 w-3" />
 							<span>
 								{degreeInfo.startDate
@@ -145,7 +145,7 @@ export function buildDoctorDetailSections(
 					)}
 					{degreeInfo.grade && <div>Grade: {degreeInfo.grade}</div>}
 					{degreeInfo.description && (
-						<p className="text-sm text-gray-600">{degreeInfo.description}</p>
+						<p className="text-sm text-muted-foreground">{degreeInfo.description}</p>
 					)}
 				</div>
 			),
@@ -162,7 +162,7 @@ export function buildDoctorDetailSections(
 					</div>
 					{workplace.medicalSpeciality && (
 						<div className="flex items-center gap-2">
-							<Stethoscope className="h-3 w-3 text-gray-500" />
+							<Stethoscope className="h-3 w-3 text-muted-foreground" />
 							<span className="text-sm">
 								{workplace.medicalSpeciality.name}
 							</span>
@@ -172,7 +172,7 @@ export function buildDoctorDetailSections(
 						<div className="space-y-1">
 							{workplace.hospital.district && (
 								<div className="flex items-center gap-2">
-									<MapPin className="h-3 w-3 text-gray-500" />
+									<MapPin className="h-3 w-3 text-muted-foreground" />
 									<span className="text-sm">
 										{workplace.hospital.district.name}
 									</span>
@@ -180,7 +180,7 @@ export function buildDoctorDetailSections(
 							)}
 							{workplace.hospital.hospitalType && (
 								<div className="flex items-center gap-2">
-									<Building2 className="h-3 w-3 text-gray-500" />
+									<Building2 className="h-3 w-3 text-muted-foreground" />
 									<span className="text-sm">
 										{typeof workplace.hospital.hospitalType === "string"
 											? workplace.hospital.hospitalType
@@ -192,7 +192,7 @@ export function buildDoctorDetailSections(
 						</div>
 					)}
 					{(workplace.startDate || workplace.endDate) && (
-						<div className="flex items-center gap-2 text-sm text-gray-600">
+						<div className="flex items-center gap-2 text-sm text-muted-foreground">
 							<Calendar className="h-3 w-3" />
 							<span>
 								{workplace.startDate
@@ -225,7 +225,7 @@ export function buildDoctorDetailSections(
 					</div>
 					{assocInfo.association.associationType && (
 						<div className="flex items-center gap-2">
-							<Building2 className="h-3 w-3 text-gray-500" />
+							<Building2 className="h-3 w-3 text-muted-foreground" />
 							<span className="text-sm">
 								{assocInfo.association.associationType.bnName ||
 									assocInfo.association.associationType.displayName}
@@ -234,13 +234,13 @@ export function buildDoctorDetailSections(
 					)}
 					{assocInfo.association.district && (
 						<div className="flex items-center gap-2">
-							<MapPin className="h-3 w-3 text-gray-500" />
+							<MapPin className="h-3 w-3 text-muted-foreground" />
 							<span className="text-sm">
 								{assocInfo.association.district.name}
 							</span>
 						</div>
 					)}
-					<div className="flex items-center gap-2 text-sm text-gray-600">
+					<div className="flex items-center gap-2 text-sm text-muted-foreground">
 						<Calendar className="h-3 w-3" />
 						<span>
 							Member since: {new Date(assocInfo.startDate).toLocaleDateString()}
@@ -254,13 +254,13 @@ export function buildDoctorDetailSections(
 						<div className="space-y-1 pt-2 border-t">
 							{assocInfo.association.email && (
 								<div className="flex items-center gap-2">
-									<Mail className="h-3 w-3 text-gray-500" />
+									<Mail className="h-3 w-3 text-muted-foreground" />
 									<span className="text-sm">{assocInfo.association.email}</span>
 								</div>
 							)}
 							{assocInfo.association.phone && (
 								<div className="flex items-center gap-2">
-									<Phone className="h-3 w-3 text-gray-500" />
+									<Phone className="h-3 w-3 text-muted-foreground" />
 									<span className="text-sm">{assocInfo.association.phone}</span>
 								</div>
 							)}

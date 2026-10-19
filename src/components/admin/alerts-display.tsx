@@ -40,9 +40,9 @@ export function AlertsDisplay({ alerts }: AlertsDisplayProps) {
       default:
         return {
           icon: Info,
-          color: "text-gray-600",
-          bgColor: "bg-gray-50",
-          borderColor: "border-gray-200",
+          color: "text-muted-foreground",
+          bgColor: "bg-muted",
+          borderColor: "border-border",
           badgeVariant: "secondary" as const,
         };
     }

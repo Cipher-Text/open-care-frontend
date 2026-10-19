@@ -124,7 +124,7 @@ const DegreesManagement: React.FC = () => {
 
     return (
       <div className="flex items-center justify-between mt-6">
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-muted-foreground">
           Page {currentPage} of {totalPages} ({totalItems} total degrees)
         </div>
         <div className="flex items-center gap-2">
@@ -184,7 +184,7 @@ const DegreesManagement: React.FC = () => {
   const paginationData = getFilteredAndPaginatedData();
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-muted min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <GraduationCap className="h-6 w-6 text-blue-600" />
@@ -204,7 +204,7 @@ const DegreesManagement: React.FC = () => {
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
         {/* Search */}
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search degrees, abbreviations, or types..."
             value={searchTerm}
@@ -215,13 +215,13 @@ const DegreesManagement: React.FC = () => {
 
         {/* Degree Type Filter */}
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-700">
+          <span className="text-sm font-medium text-muted-foreground">
             Filter by Type:
           </span>
           <select
             value={filterByType}
             onChange={(e) => handleTypeFilter(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Types</option>
             {degreeTypes.map((type) => (
@@ -237,7 +237,7 @@ const DegreesManagement: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card className="p-4">
           <div className="text-2xl font-bold text-blue-600">{data.length}</div>
-          <div className="text-sm text-gray-600">Total Degrees</div>
+          <div className="text-sm text-muted-foreground">Total Degrees</div>
         </Card>
 
         {degreeTypes.map((type) => {
@@ -247,7 +247,7 @@ const DegreesManagement: React.FC = () => {
           return (
             <Card key={type.value} className="p-4">
               <div className="text-2xl font-bold text-green-600">{count}</div>
-              <div className="text-sm text-gray-600">{type.banglaName}</div>
+              <div className="text-sm text-muted-foreground">{type.banglaName}</div>
             </Card>
           );
         })}
@@ -258,7 +258,7 @@ const DegreesManagement: React.FC = () => {
         {loading && (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <div className="text-gray-600">Loading degrees...</div>
+            <div className="text-muted-foreground">Loading degrees...</div>
           </div>
         )}
 
@@ -271,7 +271,7 @@ const DegreesManagement: React.FC = () => {
         {!loading && !error && (
           <>
             <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-muted-foreground">
                 <strong>Showing:</strong> {paginationData.data.length} of{" "}
                 {paginationData.totalItems} degrees
                 {searchTerm && (
@@ -295,54 +295,54 @@ const DegreesManagement: React.FC = () => {
             {paginationData.data.length > 0 ? (
               <>
                 <div className="overflow-x-auto">
-                  <table className="w-full border-collapse border border-gray-300">
+                  <table className="w-full border-collapse border border-input">
                     <thead>
-                      <tr className="bg-gray-50">
-                        <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+                      <tr className="bg-muted">
+                        <th className="border border-input px-4 py-3 text-left font-medium">
                           ID
                         </th>
-                        <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+                        <th className="border border-input px-4 py-3 text-left font-medium">
                           Degree Name
                         </th>
-                        <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+                        <th className="border border-input px-4 py-3 text-left font-medium">
                           Abbreviation
                         </th>
-                        <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+                        <th className="border border-input px-4 py-3 text-left font-medium">
                           Degree Type
                         </th>
-                        <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+                        <th className="border border-input px-4 py-3 text-left font-medium">
                           Type (Bengali)
                         </th>
                       </tr>
                     </thead>
                     <tbody>
                       {paginationData.data.map((degree) => (
-                        <tr key={degree.id} className="hover:bg-gray-50">
-                          <td className="border border-gray-300 px-4 py-3 text-center">
+                        <tr key={degree.id} className="hover:bg-muted">
+                          <td className="border border-input px-4 py-3 text-center">
                             <Badge variant="outline">{degree.id}</Badge>
                           </td>
-                          <td className="border border-gray-300 px-4 py-3">
-                            <div className="font-medium text-gray-900">
+                          <td className="border border-input px-4 py-3">
+                            <div className="font-medium text-foreground">
                               {degree.name}
                             </div>
                           </td>
-                          <td className="border border-gray-300 px-4 py-3">
+                          <td className="border border-input px-4 py-3">
                             <code className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm font-mono">
                               {degree.abbreviation}
                             </code>
                           </td>
-                          <td className="border border-gray-300 px-4 py-3">
+                          <td className="border border-input px-4 py-3">
                             <div className="text-sm">
                               <div className="font-medium">
                                 {degree.degreeType.banglaName}
                               </div>
-                              <div className="text-gray-500">
+                              <div className="text-muted-foreground">
                                 {degree.degreeType.value}
                               </div>
                             </div>
                           </td>
-                          <td className="border border-gray-300 px-4 py-3">
-                            <span className="text-gray-700">
+                          <td className="border border-input px-4 py-3">
+                            <span className="text-muted-foreground">
                               {degree.degreeType.displayName}
                             </span>
                           </td>
@@ -358,7 +358,7 @@ const DegreesManagement: React.FC = () => {
                 )}
               </>
             ) : (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-muted-foreground">
                 {searchTerm || filterByType
                   ? "No degrees found matching your criteria"
                   : "No degrees available"}

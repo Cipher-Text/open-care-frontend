@@ -72,12 +72,12 @@ export default function HealthPage() {
     };
 
     return (
-      statusColors[status] || "bg-gray-100 text-gray-800 hover:bg-gray-100"
+      statusColors[status] || "bg-muted text-foreground hover:bg-muted"
     );
   };
 
   const getBMICategory = (bmi: number | null) => {
-    if (!bmi) return { label: "N/A", color: "bg-gray-100 text-gray-800" };
+    if (!bmi) return { label: "N/A", color: "bg-muted text-foreground" };
     if (bmi < 18.5)
       return { label: "Underweight", color: "bg-blue-100 text-blue-800" };
     if (bmi < 25)
@@ -88,7 +88,7 @@ export default function HealthPage() {
   };
 
   const getOxygenStatus = (spo2: number | null) => {
-    if (!spo2) return { label: "N/A", color: "bg-gray-100 text-gray-800" };
+    if (!spo2) return { label: "N/A", color: "bg-muted text-foreground" };
     if (spo2 >= 95)
       return { label: "Normal", color: "bg-green-100 text-green-800" };
     if (spo2 >= 90)
@@ -97,7 +97,7 @@ export default function HealthPage() {
   };
 
   const getGlucoseStatus = (glucose: number | null) => {
-    if (!glucose) return { label: "N/A", color: "bg-gray-100 text-gray-800" };
+    if (!glucose) return { label: "N/A", color: "bg-muted text-foreground" };
     if (glucose < 70)
       return { label: "Low", color: "bg-yellow-100 text-yellow-800" };
     if (glucose <= 100)
@@ -444,7 +444,7 @@ export default function HealthPage() {
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Ruler className="h-5 w-5 text-teal-500" />
+                  <Ruler className="h-5 w-5 text-primary" />
                   Body Composition
                 </CardTitle>
               </CardHeader>
@@ -521,7 +521,7 @@ export default function HealthPage() {
                             className={`h-2 w-2 rounded-full ${
                               i < vitals.sleepQuality1To5!
                                 ? "bg-indigo-500"
-                                : "bg-gray-200"
+                                : "bg-muted"
                             }`}
                           />
                         ))}

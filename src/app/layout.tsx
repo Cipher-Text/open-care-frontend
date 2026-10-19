@@ -1,14 +1,30 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans, Hind_Siliguri, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import { LayoutWrapper } from "@/components/common/LayoutWrapper";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { ClientProviders } from "@/components/common/ClientProviders";
 
-const geistSans = Geist({
-	variable: "--font-geist-sans",
+const inter = Inter({
+	variable: "--font-inter",
 	subsets: ["latin"],
+	display: "swap",
+});
+
+// Headings
+const jakarta = Plus_Jakarta_Sans({
+	variable: "--font-display-latin",
+	subsets: ["latin"],
+	display: "swap",
+});
+
+// Bengali glyphs for Bangla names and future Bangla UI copy
+const hindSiliguri = Hind_Siliguri({
+	variable: "--font-bengali",
+	subsets: ["bengali"],
+	weight: ["400", "500", "600", "700"],
+	display: "swap",
 });
 
 const geistMono = Geist_Mono({
@@ -17,9 +33,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Open Care - Healthcare Made Simple",
+	title: "Open Care - Find doctors and hospitals in Bangladesh",
 	description:
-		"Connect with certified doctors, book ambulances, access blood banks, and manage your healthcare journey - all in one platform.",
+		"Search a directory of doctors and hospitals across Bangladesh by specialty, location and type.",
 };
 
 export default function RootLayout({
@@ -30,7 +46,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+				className={`${inter.variable} ${jakarta.variable} ${hindSiliguri.variable} ${geistMono.variable} antialiased`}
 			>
 				<ClientProviders>
 					<GoogleAnalytics />

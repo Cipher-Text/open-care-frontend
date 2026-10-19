@@ -374,7 +374,7 @@ const BloodManagement: React.FC = () => {
 
     return (
       <div className="flex items-center justify-between mt-6">
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-muted-foreground">
           Page {currentPageNum + 1} of {totalPages} ({totalItems} total items)
         </div>
         <div className="flex items-center gap-2">
@@ -433,59 +433,59 @@ const BloodManagement: React.FC = () => {
 
   const renderDonorsTable = (donors: BloodDonor[]) => (
     <div className="overflow-x-auto">
-      <table className="w-full border-collapse border border-gray-300">
+      <table className="w-full border-collapse border border-input">
         <thead>
-          <tr className="bg-gray-50">
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+          <tr className="bg-muted">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               ID
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Name
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Blood Group
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Gender
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Contact
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Location
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Donations
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Status
             </th>
           </tr>
         </thead>
         <tbody>
           {donors.map((donor) => (
-            <tr key={donor.id} className="hover:bg-gray-50">
-              <td className="border border-gray-300 px-4 py-3">
+            <tr key={donor.id} className="hover:bg-muted">
+              <td className="border border-input px-4 py-3">
                 <Badge variant="outline">{donor.id}</Badge>
               </td>
-              <td className="border border-gray-300 px-4 py-3">
+              <td className="border border-input px-4 py-3">
                 <div>
                   <div className="font-medium">{donor.name}</div>
-                  <div className="text-sm text-gray-500">{donor.bnName}</div>
+                  <div className="text-sm text-muted-foreground">{donor.bnName}</div>
                 </div>
               </td>
-              <td className="border border-gray-300 px-4 py-3">
+              <td className="border border-input px-4 py-3">
                 <Badge variant="secondary" className="bg-red-100 text-red-800">
                   {donor.bloodGroup?.displayName}
                 </Badge>
               </td>
-              <td className="border border-gray-300 px-4 py-3">
+              <td className="border border-input px-4 py-3">
                 <div className="flex items-center gap-1">
                   <User className="h-4 w-4" />
                   {donor.gender?.banglaName}
                 </div>
               </td>
-              <td className="border border-gray-300 px-4 py-3">
+              <td className="border border-input px-4 py-3">
                 <div className="text-sm">
                   {donor.phone && (
                     <div className="flex items-center gap-1">
@@ -494,30 +494,30 @@ const BloodManagement: React.FC = () => {
                     </div>
                   )}
                   {donor.email && (
-                    <div className="text-gray-500">{donor.email}</div>
+                    <div className="text-muted-foreground">{donor.email}</div>
                   )}
                 </div>
               </td>
-              <td className="border border-gray-300 px-4 py-3">
+              <td className="border border-input px-4 py-3">
                 {donor.district && (
                   <div className="flex items-center gap-1 text-sm">
                     <MapPin className="h-3 w-3" />
                     <div>
                       <div>{donor.district.name}</div>
-                      <div className="text-gray-500">
+                      <div className="text-muted-foreground">
                         {donor.district.bnName}
                       </div>
                     </div>
                   </div>
                 )}
               </td>
-              <td className="border border-gray-300 px-4 py-3 text-center">
+              <td className="border border-input px-4 py-3 text-center">
                 <div>
                   <div className="font-bold text-lg">
                     {donor.bloodDonationCount || 0}
                   </div>
                   {donor.lastBloodDonationDate && (
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-muted-foreground">
                       Last:{" "}
                       {new Date(
                         donor.lastBloodDonationDate
@@ -526,7 +526,7 @@ const BloodManagement: React.FC = () => {
                   )}
                 </div>
               </td>
-              <td className="border border-gray-300 px-4 py-3">
+              <td className="border border-input px-4 py-3">
                 <Badge variant={donor.isActive ? "default" : "secondary"}>
                   {donor.isActive ? "Active" : "Inactive"}
                 </Badge>
@@ -540,67 +540,67 @@ const BloodManagement: React.FC = () => {
 
   const renderDonationsTable = (donations: BloodDonation[]) => (
     <div className="overflow-x-auto">
-      <table className="w-full border-collapse border border-gray-300">
+      <table className="w-full border-collapse border border-input">
         <thead>
-          <tr className="bg-gray-50">
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+          <tr className="bg-muted">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               ID
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Donor
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Hospital
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Date
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Component
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Quantity
             </th>
           </tr>
         </thead>
         <tbody>
           {donations.map((donation) => (
-            <tr key={donation.id} className="hover:bg-gray-50">
-              <td className="border border-gray-300 px-4 py-3">
+            <tr key={donation.id} className="hover:bg-muted">
+              <td className="border border-input px-4 py-3">
                 <Badge variant="outline">{donation.id}</Badge>
               </td>
-              <td className="border border-gray-300 px-4 py-3">
+              <td className="border border-input px-4 py-3">
                 <div>
                   <div className="font-medium">{donation.donor?.name}</div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-muted-foreground">
                     {donation.donor?.bnName}
                   </div>
                   {donation.donor?.phone && (
-                    <div className="flex items-center gap-1 text-xs text-gray-500">
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Phone className="h-3 w-3" />
                       {donation.donor.phone}
                     </div>
                   )}
                 </div>
               </td>
-              <td className="border border-gray-300 px-4 py-3">
+              <td className="border border-input px-4 py-3">
                 <div>
                   <div className="font-medium">{donation.hospital?.name}</div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-muted-foreground">
                     {donation.hospital?.bnName}
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-muted-foreground">
                     {donation.hospital?.district?.name}
                   </div>
                 </div>
               </td>
-              <td className="border border-gray-300 px-4 py-3">
+              <td className="border border-input px-4 py-3">
                 <div className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
                   {new Date(donation.donationDate).toLocaleDateString()}
                 </div>
               </td>
-              <td className="border border-gray-300 px-4 py-3">
+              <td className="border border-input px-4 py-3">
                 <Badge
                   variant="secondary"
                   className="bg-blue-100 text-blue-800"
@@ -608,7 +608,7 @@ const BloodManagement: React.FC = () => {
                   {donation.bloodComponent?.bnName}
                 </Badge>
               </td>
-              <td className="border border-gray-300 px-4 py-3 text-center">
+              <td className="border border-input px-4 py-3 text-center">
                 <div className="font-bold">{donation.quantityMl} ml</div>
               </td>
             </tr>
@@ -620,100 +620,100 @@ const BloodManagement: React.FC = () => {
 
   const renderRequisitionsTable = (requisitions: BloodRequisition[]) => (
     <div className="overflow-x-auto">
-      <table className="w-full border-collapse border border-gray-300">
+      <table className="w-full border-collapse border border-input">
         <thead>
-          <tr className="bg-gray-50">
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+          <tr className="bg-muted">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               ID
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Patient
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Requester
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Hospital
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Component
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Quantity
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Needed By
             </th>
-            <th className="border border-gray-300 px-4 py-3 text-left font-medium">
+            <th className="border border-input px-4 py-3 text-left font-medium">
               Contact
             </th>
           </tr>
         </thead>
         <tbody>
           {requisitions.map((requisition) => (
-            <tr key={requisition.id} className="hover:bg-gray-50">
-              <td className="border border-gray-300 px-4 py-3">
+            <tr key={requisition.id} className="hover:bg-muted">
+              <td className="border border-input px-4 py-3">
                 <Badge variant="outline">{requisition.id}</Badge>
               </td>
-              <td className="border border-gray-300 px-4 py-3">
+              <td className="border border-input px-4 py-3">
                 <div>
                   <div className="font-medium">{requisition.patientName}</div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-muted-foreground">
                     Age: {requisition.patientAge},{" "}
                     {requisition.patientGender?.banglaName}
                   </div>
                   {requisition.description && (
-                    <div className="text-xs text-gray-500 mt-1">
+                    <div className="text-xs text-muted-foreground mt-1">
                       {requisition.description}
                     </div>
                   )}
                 </div>
               </td>
-              <td className="border border-gray-300 px-4 py-3">
+              <td className="border border-input px-4 py-3">
                 <div>
                   <div className="font-medium">
                     {requisition.requester?.name}
                   </div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-muted-foreground">
                     {requisition.requester?.bnName}
                   </div>
                   {requisition.requester?.phone && (
-                    <div className="flex items-center gap-1 text-xs text-gray-500">
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Phone className="h-3 w-3" />
                       {requisition.requester.phone}
                     </div>
                   )}
                 </div>
               </td>
-              <td className="border border-gray-300 px-4 py-3">
+              <td className="border border-input px-4 py-3">
                 <div>
                   <div className="font-medium">
                     {requisition.hospital?.name}
                   </div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-muted-foreground">
                     {requisition.hospital?.bnName}
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-muted-foreground">
                     {requisition.hospital?.district?.name}
                   </div>
                 </div>
               </td>
-              <td className="border border-gray-300 px-4 py-3">
+              <td className="border border-input px-4 py-3">
                 <Badge variant="secondary" className="bg-red-100 text-red-800">
                   {requisition.bloodComponent?.bnName}
                 </Badge>
               </td>
-              <td className="border border-gray-300 px-4 py-3 text-center">
+              <td className="border border-input px-4 py-3 text-center">
                 <div className="font-bold">{requisition.quantityBags} bags</div>
               </td>
-              <td className="border border-gray-300 px-4 py-3">
+              <td className="border border-input px-4 py-3">
                 <div className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
                   <div>
                     <div>
                       {new Date(requisition.neededByDate).toLocaleDateString()}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-muted-foreground">
                       {Math.ceil(
                         (new Date(requisition.neededByDate).getTime() -
                           new Date().getTime()) /
@@ -724,10 +724,10 @@ const BloodManagement: React.FC = () => {
                   </div>
                 </div>
               </td>
-              <td className="border border-gray-300 px-4 py-3">
+              <td className="border border-input px-4 py-3">
                 <div>
                   <div className="font-medium">{requisition.contactPerson}</div>
-                  <div className="flex items-center gap-1 text-sm text-gray-500">
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
                     <Phone className="h-3 w-3" />
                     {requisition.contactPhone}
                   </div>
@@ -744,7 +744,7 @@ const BloodManagement: React.FC = () => {
   const activeConfig = TAB_CONFIGS.find((config) => config.name === activeTab);
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-muted min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <Droplets className="h-6 w-6 text-red-600" />
@@ -753,7 +753,7 @@ const BloodManagement: React.FC = () => {
         <div className="flex items-center gap-4">
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder={`Search ${activeConfig?.title.toLowerCase()}...`}
               value={searchTerm}
@@ -777,7 +777,7 @@ const BloodManagement: React.FC = () => {
 
       {/* Tabs */}
       <div className="mb-6">
-        <div className="border-b border-gray-200">
+        <div className="border-b border-border">
           <nav className="-mb-px flex space-x-8">
             {TAB_CONFIGS.map((config) => (
               <button
@@ -786,7 +786,7 @@ const BloodManagement: React.FC = () => {
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
                   activeTab === config.name
                     ? "border-red-500 text-red-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    : "border-transparent text-muted-foreground hover:text-muted-foreground hover:border-input"
                 }`}
               >
                 <span className="text-lg">{config.icon}</span>
@@ -805,7 +805,7 @@ const BloodManagement: React.FC = () => {
         {loading[activeTab] && (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto mb-4"></div>
-            <div className="text-gray-600">
+            <div className="text-muted-foreground">
               Loading {activeConfig?.title.toLowerCase()}...
             </div>
           </div>
@@ -820,7 +820,7 @@ const BloodManagement: React.FC = () => {
         {!loading[activeTab] && !error[activeTab] && (
           <>
             <div className="mb-4 flex justify-between items-center">
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-muted-foreground">
                 <strong>Showing:</strong> {filteredData.data.length} of{" "}
                 {filteredData.totalItems} {activeConfig?.title.toLowerCase()}
                 {searchTerm && (
@@ -848,7 +848,7 @@ const BloodManagement: React.FC = () => {
                 )}
               </>
             ) : (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-muted-foreground">
                 {searchTerm
                   ? `No results found for &quot;${searchTerm}&quot;`
                   : `No ${activeConfig?.title.toLowerCase()} available`}

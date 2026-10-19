@@ -154,13 +154,13 @@ export default function SocialOrganizationViewPage() {
             {/* Basic Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-500">
+                <label className="text-sm font-medium text-muted-foreground">
                   Name
                 </label>
                 <p className="text-sm font-semibold">{organization.name}</p>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-500">
+                <label className="text-sm font-medium text-muted-foreground">
                   Bengali Name
                 </label>
                 <p className="text-sm">{organization.bnName}</p>
@@ -170,7 +170,7 @@ export default function SocialOrganizationViewPage() {
             {/* Type and Origin */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-500">
+                <label className="text-sm font-medium text-muted-foreground">
                   Organization Type
                 </label>
                 <Badge
@@ -185,11 +185,11 @@ export default function SocialOrganizationViewPage() {
               </div>
               {organization.originCountry && (
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-500">
+                  <label className="text-sm font-medium text-muted-foreground">
                     Origin Country
                   </label>
                   <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-gray-500" />
+                    <MapPin className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm">
                       {organization.originCountry.displayNameEn ||
                         organization.originCountry.nameBn ||
@@ -203,11 +203,11 @@ export default function SocialOrganizationViewPage() {
             {/* Founded Date */}
             {organization.foundedDate && (
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-500">
+                <label className="text-sm font-medium text-muted-foreground">
                   Founded Date
                 </label>
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-gray-500" />
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">
                     {new Date(organization.foundedDate).toLocaleDateString()}
                   </span>
@@ -218,10 +218,10 @@ export default function SocialOrganizationViewPage() {
             {/* Description */}
             {organization.description && (
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-500">
+                <label className="text-sm font-medium text-muted-foreground">
                   Description
                 </label>
-                <p className="text-sm text-gray-700">
+                <p className="text-sm text-muted-foreground">
                   {organization.description}
                 </p>
               </div>
@@ -229,25 +229,25 @@ export default function SocialOrganizationViewPage() {
 
             {/* Contact Information */}
             <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-gray-700">
+              <h4 className="text-sm font-semibold text-muted-foreground">
                 Contact Information
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {organization.email && (
                   <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-gray-500" />
+                    <Mail className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm">{organization.email}</span>
                   </div>
                 )}
                 {organization.phone && (
                   <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-gray-500" />
+                    <Phone className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm">{organization.phone}</span>
                   </div>
                 )}
                 {organization.websiteUrl && (
                   <div className="flex items-center gap-2 col-span-2">
-                    <Globe className="h-4 w-4 text-gray-500" />
+                    <Globe className="h-4 w-4 text-muted-foreground" />
                     <a
                       href={organization.websiteUrl}
                       target="_blank"
@@ -260,7 +260,7 @@ export default function SocialOrganizationViewPage() {
                 )}
                 {organization.address && (
                   <div className="flex items-start gap-2 col-span-2">
-                    <MapPin className="h-4 w-4 text-gray-500 mt-0.5" />
+                    <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
                     <span className="text-sm">{organization.address}</span>
                   </div>
                 )}
@@ -273,7 +273,7 @@ export default function SocialOrganizationViewPage() {
               organization.linkedinUrl ||
               organization.youtubeUrl) && (
               <div className="space-y-4">
-                <h4 className="text-sm font-semibold text-gray-700">
+                <h4 className="text-sm font-semibold text-muted-foreground">
                   Social Media
                 </h4>
                 <div className="flex flex-wrap gap-2">
@@ -328,7 +328,7 @@ export default function SocialOrganizationViewPage() {
             {/* Tags */}
             {organization.tags && organization.tags.length > 0 && (
               <div className="space-y-4">
-                <h4 className="text-sm font-semibold text-gray-700">Tags</h4>
+                <h4 className="text-sm font-semibold text-muted-foreground">Tags</h4>
                 <div className="flex flex-wrap gap-2">
                   {organization.tags.map((tag, index) => (
                     <Badge key={index} variant="outline">

@@ -166,9 +166,9 @@ export function buildHospitalDetailSections(
 			label: doctor.profile.name,
 			value: (
 				<div className="space-y-2">
-					<div className="text-sm text-gray-600">{doctor.profile.bnName}</div>
+					<div className="text-sm text-muted-foreground">{doctor.profile.bnName}</div>
 					<div className="flex items-center gap-2">
-						<span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded">
+						<span className="text-xs font-mono bg-muted px-2 py-1 rounded">
 							{doctor.bmdcNo}
 						</span>
 						{doctor.isVerified && (
@@ -179,17 +179,17 @@ export function buildHospitalDetailSections(
 					</div>
 					{doctor.specializations && (
 						<div className="flex items-center gap-2">
-							<Stethoscope className="h-3 w-3 text-gray-500" />
+							<Stethoscope className="h-3 w-3 text-muted-foreground" />
 							<span className="text-sm">{doctor.specializations}</span>
 						</div>
 					)}
 					{doctor.yearOfExperience && (
-						<div className="text-sm text-gray-600">
+						<div className="text-sm text-muted-foreground">
 							{doctor.yearOfExperience} years experience
 						</div>
 					)}
 					{(doctor.profile.email || doctor.profile.phone) && (
-						<div className="space-y-1 pt-2 border-t text-xs text-gray-600">
+						<div className="space-y-1 pt-2 border-t text-xs text-muted-foreground">
 							{doctor.profile.email && <div>{doctor.profile.email}</div>}
 							{doctor.profile.phone && <div>{doctor.profile.phone}</div>}
 						</div>
@@ -203,9 +203,9 @@ export function buildHospitalDetailSections(
 			label: test.name,
 			value: (
 				<div className="space-y-2">
-					<div className="text-sm text-gray-600">{test.medicalTest.bnName}</div>
+					<div className="text-sm text-muted-foreground">{test.medicalTest.bnName}</div>
 					<div className="flex items-center gap-2">
-						<span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded">
+						<span className="text-xs font-mono bg-muted px-2 py-1 rounded">
 							৳{test.price.toLocaleString()}
 						</span>
 						{test.isActive ? (
@@ -215,12 +215,12 @@ export function buildHospitalDetailSections(
 						)}
 					</div>
 					{test.category && (
-						<div className="text-sm text-gray-600">
+						<div className="text-sm text-muted-foreground">
 							Category: {test.category}
 						</div>
 					)}
 					{test.testCode && (
-						<div className="text-xs text-gray-600">Code: {test.testCode}</div>
+						<div className="text-xs text-muted-foreground">Code: {test.testCode}</div>
 					)}
 					<div className="text-sm">
 						{test.isAvailable ? (
@@ -234,7 +234,7 @@ export function buildHospitalDetailSections(
 						)}
 					</div>
 					{test.description && (
-						<p className="text-sm text-gray-600 pt-2 border-t">
+						<p className="text-sm text-muted-foreground pt-2 border-t">
 							{test.description}
 						</p>
 					)}
@@ -247,12 +247,12 @@ export function buildHospitalDetailSections(
 			label: amenity.name,
 			value: (
 				<div className="space-y-2">
-					<div className="text-xs text-gray-600">
+					<div className="text-xs text-muted-foreground">
 						{amenity.type.replace(/_/g, " ")}
 					</div>
 					{amenity.price > 0 && (
 						<div className="flex items-center gap-2">
-							<DollarSign className="h-3 w-3 text-gray-500" />
+							<DollarSign className="h-3 w-3 text-muted-foreground" />
 							<span className="text-sm font-semibold">
 								৳{amenity.price.toLocaleString()}
 							</span>
@@ -278,7 +278,7 @@ export function buildHospitalDetailSections(
 	const tagsProperties: PropertyConfig[] =
 		hospital.tags?.map((tag) => ({
 			label: tag.displayName || tag.name,
-			value: <span className="text-xs text-gray-600">{tag.category}</span>,
+			value: <span className="text-xs text-muted-foreground">{tag.category}</span>,
 		})) || [];
 
 	const sections: SectionConfig[] = [

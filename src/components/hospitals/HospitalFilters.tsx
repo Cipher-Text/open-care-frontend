@@ -1,246 +1,132 @@
 "use client";
 
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
+import { useQuery } from "@tanstack/react-query";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+	fetchDistrictOptions,
+	fetchHospitalTypeOptions,
+	fetchOrganizationTypeOptions,
+} from "@/api/directory";
+import {
+	DebouncedSearch,
+	FilterSelect,
+} from "@/components/common/DirectoryControls";
+import { useUrlParams } from "@/hooks/use-url-params";
 import { Button } from "@/components/ui/button";
-import { Hospital } from "@/types/hospitals";
 
-interface HospitalFiltersProps {
-  onFilter: (hospitals: Hospital[]) => void;
-  allHospitals: Hospital[];
-}
+const STATIC = { staleTime: 60 * 60 * 1000 };
 
-export default function HospitalFilters({
-  onFilter,
-  allHospitals,
-}: HospitalFiltersProps) {
-  const [filters, setFilters] = useState({
-    hospitalName: "",
-    bengaliName: "",
-    district: "all-districts",
-    upazila: "all-upazilas",
-    union: "all-unions",
-    hospitalTypes: "all-types",
-    organizationType: "all-organizations",
-  });
+export default function HospitalFilters() {
+	const { get, set, clear, hasFilters } = useUrlParams();
 
-  const handleFilterChange = (key: string, value: string) => {
-    const newFilters = { ...filters, [key]: value };
-    setFilters(newFilters);
-    applyFilters(newFilters);
-  };
+	const districts = useQuery({
+		queryKey: ["districts"],
+		queryFn: fetchDistrictOptions,
+		...STATIC,
+	});
+	const types = useQuery({
+		queryKey: ["hospital-types"],
+		queryFn: fetchHospitalTypeOptions,
+		...STATIC,
+	});
+	const orgs = useQuery({
+		queryKey: ["organization-types"],
+		queryFn: fetchOrganizationTypeOptions,
+		...STATIC,
+	});
 
-  const applyFilters = (currentFilters: typeof filters) => {
-    const filtered = allHospitals.filter((hospital) => {
-      const hospitalTypeValue =
-        typeof hospital.hospitalType === "string"
-          ? hospital.hospitalType
-          : hospital.hospitalType.value;
-      const organizationTypeValue =
-        typeof hospital.organizationType === "string"
-          ? hospital.organizationType
-          : hospital.organizationType.value;
+	const flags = [
+		{ key: "emergency", label: "Emergency service" },
+		{ key: "ambulance", label: "Ambulance service" },
+		{ key: "blood", label: "Blood bank" },
+	];
 
-      return (
-        (!currentFilters.hospitalName ||
-          hospital.name
-            .toLowerCase()
-            .includes(currentFilters.hospitalName.toLowerCase())) &&
-        (!currentFilters.bengaliName ||
-          hospital.bnName.includes(currentFilters.bengaliName)) &&
-        (!currentFilters.district ||
-          currentFilters.district === "all-districts" ||
-          hospital.district.name === currentFilters.district) &&
-        (!currentFilters.hospitalTypes ||
-          currentFilters.hospitalTypes === "all-types" ||
-          hospitalTypeValue === currentFilters.hospitalTypes) &&
-        (!currentFilters.organizationType ||
-          currentFilters.organizationType === "all-organizations" ||
-          organizationTypeValue === currentFilters.organizationType)
-      );
-    });
-    onFilter(filtered);
-  };
+	return (
+		<form
+			role="search"
+			aria-label="Filter hospitals"
+			onSubmit={(e) => e.preventDefault()}
+			className="space-y-5 rounded-xl border border-border bg-card p-5 lg:sticky lg:top-24"
+		>
+			<h2 className="text-lg font-bold text-primary">Filters</h2>
 
-  const clearFilters = () => {
-    const clearedFilters = {
-      hospitalName: "",
-      bengaliName: "",
-      district: "all-districts",
-      upazila: "all-upazilas",
-      union: "all-unions",
-      hospitalTypes: "all-types",
-      organizationType: "all-organizations",
-    };
-    setFilters(clearedFilters);
-    onFilter(allHospitals);
-  };
+			<div className="space-y-2">
+				<Label>Hospital name</Label>
+				<DebouncedSearch
+					label="Hospital name"
+					placeholder="Search by name"
+					value={get("q")}
+					onChange={(v) => set({ q: v })}
+				/>
+			</div>
 
-  return (
-    <div className="bg-white border border-teal-200 rounded-xl p-6 h-fit sticky top-24">
-      <h3 className="text-lg font-bold text-teal-700 mb-6">Filters</h3>
+			<div className="space-y-2">
+				<Label>District</Label>
+				<FilterSelect
+					label="District"
+					allLabel="All districts"
+					value={get("district")}
+					onChange={(v) => set({ district: v })}
+					disabled={districts.isLoading}
+					options={(districts.data ?? [])
+						.slice()
+						.sort((a, b) => a.name.localeCompare(b.name))
+						.map((d) => ({ value: String(d.id), label: d.name }))}
+				/>
+			</div>
 
-      <div className="space-y-5">
-        {/* Hospital Name Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Hospital Name
-          </label>
-          <Input
-            placeholder="Enter hospital name"
-            value={filters.hospitalName}
-            onChange={(e) => handleFilterChange("hospitalName", e.target.value)}
-            className="border-gray-300 focus:border-teal-500"
-          />
-        </div>
+			<div className="space-y-2">
+				<Label>Hospital type</Label>
+				<FilterSelect
+					label="Hospital type"
+					allLabel="All types"
+					value={get("type")}
+					onChange={(v) => set({ type: v })}
+					disabled={types.isLoading}
+					options={(types.data ?? []).map((t) => ({
+						value: t.value ?? t.englishName,
+						label: t.englishName,
+					}))}
+				/>
+			</div>
 
-        {/* Bengali Name Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Bengali Name
-          </label>
-          <Input
-            placeholder="বাংলা নাম"
-            value={filters.bengaliName}
-            onChange={(e) => handleFilterChange("bengaliName", e.target.value)}
-            className="border-gray-300 focus:border-teal-500"
-          />
-        </div>
+			<div className="space-y-2">
+				<Label>Organization</Label>
+				<FilterSelect
+					label="Organization"
+					allLabel="All organizations"
+					value={get("org")}
+					onChange={(v) => set({ org: v })}
+					disabled={orgs.isLoading}
+					options={(orgs.data ?? []).map((o) => ({
+						value: o.value ?? o.englishName,
+						label: o.displayName ?? o.englishName,
+					}))}
+				/>
+			</div>
 
-        {/* District Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            District
-          </label>
-          <Select
-            value={filters.district}
-            onValueChange={(value) => handleFilterChange("district", value)}
-          >
-            <SelectTrigger className="border-gray-300 focus:border-teal-500">
-              <SelectValue placeholder="Select district(s)" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all-districts">All Districts</SelectItem>
-              <SelectItem value="Dhaka">Dhaka</SelectItem>
-              <SelectItem value="Chittagong">Chittagong</SelectItem>
-              <SelectItem value="Sylhet">Sylhet</SelectItem>
-              <SelectItem value="Rajshahi">Rajshahi</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+			<fieldset className="space-y-3">
+				<legend className="mb-2 text-sm font-medium">Services</legend>
+				{flags.map((f) => (
+					<div key={f.key} className="flex min-h-8 items-center gap-3">
+						<Checkbox
+							id={`flag-${f.key}`}
+							checked={get(f.key) === "1"}
+							onCheckedChange={(c) => set({ [f.key]: c ? "1" : undefined })}
+						/>
+						<Label htmlFor={`flag-${f.key}`} className="font-normal">
+							{f.label}
+						</Label>
+					</div>
+				))}
+			</fieldset>
 
-        {/* Upazila Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Upazila
-          </label>
-          <Select
-            value={filters.upazila}
-            onValueChange={(value) => handleFilterChange("upazila", value)}
-          >
-            <SelectTrigger className="border-gray-300 focus:border-teal-500">
-              <SelectValue placeholder="Select upazila" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all-upazilas">All Upazilas</SelectItem>
-              <SelectItem value="Dhaka Sadar">Dhaka Sadar</SelectItem>
-              <SelectItem value="Dhanmondi">Dhanmondi</SelectItem>
-              <SelectItem value="Gulshan">Gulshan</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Union Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Union
-          </label>
-          <Select
-            value={filters.union}
-            onValueChange={(value) => handleFilterChange("union", value)}
-          >
-            <SelectTrigger className="border-gray-300 focus:border-teal-500">
-              <SelectValue placeholder="Select union" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all-unions">All Unions</SelectItem>
-              <SelectItem value="Dhaka">Dhaka</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Hospital Types Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Hospital Types
-          </label>
-          <Select
-            value={filters.hospitalTypes}
-            onValueChange={(value) =>
-              handleFilterChange("hospitalTypes", value)
-            }
-          >
-            <SelectTrigger className="border-gray-300 focus:border-teal-500">
-              <SelectValue placeholder="Select type(s)" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all-types">All Types</SelectItem>
-              <SelectItem value="General">General</SelectItem>
-              <SelectItem value="Specialized">Specialized</SelectItem>
-              <SelectItem value="College">College</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Organization Type Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Organization Type
-          </label>
-          <Select
-            value={filters.organizationType}
-            onValueChange={(value) =>
-              handleFilterChange("organizationType", value)
-            }
-          >
-            <SelectTrigger className="border-gray-300 focus:border-teal-500">
-              <SelectValue placeholder="Select organization" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all-organizations">
-                All Organizations
-              </SelectItem>
-              <SelectItem value="Government">Government</SelectItem>
-              <SelectItem value="Private">Private</SelectItem>
-              <SelectItem value="Non-profit">Non-profit</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Filter Buttons */}
-        <div className="flex gap-3 pt-4">
-          <Button
-            onClick={() => applyFilters(filters)}
-            className="bg-teal-600 hover:bg-teal-700 text-white flex-1"
-          >
-            Apply
-          </Button>
-          <Button
-            variant="outline"
-            onClick={clearFilters}
-            className="border-gray-300 text-gray-600 hover:bg-gray-50"
-          >
-            Clear
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
+			{hasFilters && (
+				<Button type="button" variant="outline" className="h-11 w-full" onClick={clear}>
+					Clear all filters
+				</Button>
+			)}
+		</form>
+	);
 }

@@ -26,7 +26,7 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
 	return (
 		<>
 			<Header />
-			{children}
+			<main id="main-content">{children}</main>
 			<Footer />
 		</>
 	);

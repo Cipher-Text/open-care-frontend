@@ -1,118 +1,57 @@
+import Link from "next/link";
+import { Search, Stethoscope, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-	Search,
-	Stethoscope,
-	Ambulance,
-	Building2,
-	Pill,
-	UserCheck,
-} from "lucide-react";
 
 export default function HeroSection() {
 	return (
-		<section className="bg-gradient-to-br from-teal-50 to-emerald-100 py-20">
-			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-				<div className="grid lg:grid-cols-2 gap-12 items-center">
-					{/* Hero Content */}
-					<div className="space-y-8">
-						<div>
-							<h1 className="text-5xl lg:text-6xl font-bold">
-								<span className="text-gray-900">Your Health,</span>
-								<br />
-								<span className="text-teal-600">Our Priority</span>
-							</h1>
-							<p className="text-xl text-gray-600 mt-6 leading-relaxed">
-								Connect with certified doctors, book ambulances,
-								<br />
-								access blood banks, and manage your healthcare
-								<br />
-								journey - all in one platform.
-							</p>
-						</div>
+		<section className="bg-gradient-to-br from-primary/10 to-accent py-12 sm:py-20">
+			<div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+				<h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+					Find doctors and hospitals <span className="text-primary">across Bangladesh</span>
+				</h1>
+				<p className="mx-auto mt-5 max-w-2xl text-lg text-muted-foreground sm:text-xl">
+					Search a directory of doctors and hospitals by specialty, location and
+					type.
+				</p>
 
-						{/* Stats */}
-						<div className="flex flex-wrap gap-4">
-							<Card className="w-36 text-center border-teal-600">
-								<CardContent className="py-4">
-									<div className="text-2xl font-bold text-teal-600">1000+</div>
-									<div className="text-xs text-gray-600">Verified Doctors</div>
-								</CardContent>
-							</Card>
-							<Card className="w-36 text-center border-teal-600">
-								<CardContent className="py-4">
-									<div className="text-2xl font-bold text-teal-600">50K+</div>
-									<div className="text-xs text-gray-600">Happy Patients</div>
-								</CardContent>
-							</Card>
-							<Card className="w-36 text-center border-teal-600">
-								<CardContent className="py-4">
-									<div className="text-2xl font-bold text-teal-600">24/7</div>
-									<div className="text-xs text-gray-600">Emergency Service</div>
-								</CardContent>
-							</Card>
-						</div>
-
-						{/* CTA Buttons */}
-						<div className="flex flex-wrap gap-4">
-							<Button size="lg" className="bg-teal-600 hover:bg-teal-700">
-								<Stethoscope className="w-4 h-4 mr-2" />
-								Find a Doctor
-							</Button>
-							<Button
-								size="lg"
-								variant="outline"
-								className="border-teal-600 text-teal-600 hover:bg-teal-50"
-							>
-								<Ambulance className="w-4 h-4 mr-2" />
-								Emergency Help
-							</Button>
-						</div>
-
-						{/* Trust Indicators */}
-						<div className="text-sm text-gray-600">
-							✓ Government Licensed ✓ ISO Certified ✓ 256-bit SSL Secure ✓ HIPAA
-							Compliant
-						</div>
-					</div>
-
-					{/* Hero Image */}
-					<div className="relative">
-						<Card className="w-full h-96 border-2 border-teal-600 bg-white">
-							<CardContent className="flex items-center justify-center h-full">
-								<Building2 className="w-32 h-32 text-teal-600" />
-							</CardContent>
-						</Card>
-
-						{/* Floating Icons */}
-						<div className="absolute -top-4 -left-4 w-12 h-12 bg-teal-50 border border-teal-600 rounded-full flex items-center justify-center">
-							<UserCheck className="w-6 h-6 text-teal-600" />
-						</div>
-						<div className="absolute -top-4 -right-4 w-12 h-12 bg-teal-50 border border-teal-600 rounded-full flex items-center justify-center">
-							<Pill className="w-6 h-6 text-teal-600" />
-						</div>
-						<div className="absolute -bottom-4 -left-4 w-12 h-12 bg-teal-50 border border-teal-600 rounded-full flex items-center justify-center">
-							<Stethoscope className="w-6 h-6 text-teal-600" />
-						</div>
-						<div className="absolute -bottom-4 -right-4 w-12 h-12 bg-teal-50 border border-teal-600 rounded-full flex items-center justify-center">
-							<Ambulance className="w-6 h-6 text-teal-600" />
-						</div>
-					</div>
-				</div>
-
-				{/* Search Bar */}
-				<div className="mt-12 max-w-2xl">
-					<div className="relative">
-						<Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-						<Input
-							placeholder="Search for doctors, specialists, hospitals..."
-							className="pl-12 pr-20 h-14 rounded-full border-2 border-teal-600 text-lg"
+				<form
+					action="/doctors"
+					method="get"
+					role="search"
+					className="mx-auto mt-8 flex max-w-2xl flex-col gap-3 sm:flex-row"
+				>
+					<div className="relative flex-1">
+						<Search
+							className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
+							aria-hidden="true"
 						/>
-						<Button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-teal-600 hover:bg-teal-700 rounded-full">
-							Search
-						</Button>
+						<Input
+							name="q"
+							type="search"
+							aria-label="Search doctors, specialties or hospitals"
+							placeholder="Search doctors or hospitals"
+							className="h-12 rounded-full border-2 border-primary bg-background pl-12 text-base"
+						/>
 					</div>
+					<Button type="submit" size="lg" className="h-12 rounded-full px-8">
+						Search
+					</Button>
+				</form>
+
+				<div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+					<Button asChild size="lg" variant="outline" className="h-12">
+						<Link href="/doctors">
+							<Stethoscope className="mr-2 size-4" aria-hidden="true" />
+							Browse doctors
+						</Link>
+					</Button>
+					<Button asChild size="lg" variant="outline" className="h-12">
+						<Link href="/hospitals">
+							<Building2 className="mr-2 size-4" aria-hidden="true" />
+							Browse hospitals
+						</Link>
+					</Button>
 				</div>
 			</div>
 		</section>

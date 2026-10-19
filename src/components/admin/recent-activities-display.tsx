@@ -62,8 +62,8 @@ export function RecentActivitiesDisplay({ activities }: RecentActivitiesProps) {
       default:
         return {
           icon: Activity,
-          color: "text-gray-600",
-          bgColor: "bg-gray-50",
+          color: "text-muted-foreground",
+          bgColor: "bg-muted",
         };
     }
   };
@@ -92,7 +92,7 @@ export function RecentActivitiesDisplay({ activities }: RecentActivitiesProps) {
         return {
           icon: Clock,
           variant: "outline" as const,
-          color: "text-gray-600",
+          color: "text-muted-foreground",
         };
     }
   };
@@ -102,7 +102,7 @@ export function RecentActivitiesDisplay({ activities }: RecentActivitiesProps) {
       case "LOGIN":
         return "text-blue-600 bg-blue-50";
       case "LOGOUT":
-        return "text-gray-600 bg-gray-50";
+        return "text-muted-foreground bg-muted";
       case "REGISTERED":
         return "text-green-600 bg-green-50";
       case "UPDATED":
@@ -112,7 +112,7 @@ export function RecentActivitiesDisplay({ activities }: RecentActivitiesProps) {
       case "DELETED":
         return "text-red-700 bg-red-100";
       default:
-        return "text-gray-600 bg-gray-50";
+        return "text-muted-foreground bg-muted";
     }
   };
 

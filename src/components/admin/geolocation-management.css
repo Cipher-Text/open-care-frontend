@@ -1,7 +1,7 @@
 /* Geolocation Management Custom Styles */
 
 .geolocation-tabs {
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border);
 }
 
 .geolocation-tab {
@@ -9,13 +9,13 @@
 }
 
 .geolocation-tab:hover {
-  color: #374151;
-  border-color: #d1d5db;
+  color: var(--foreground);
+  border-color: var(--border);
 }
 
 .geolocation-tab.active {
-  color: #2563eb;
-  border-color: #2563eb;
+  color: var(--primary);
+  border-color: var(--primary);
 }
 
 .geolocation-table {
@@ -25,18 +25,18 @@
 
 .geolocation-table th,
 .geolocation-table td {
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border);
   padding: 0.75rem 1rem;
   text-align: left;
 }
 
 .geolocation-table th {
-  background-color: #f9fafb;
+  background-color: var(--muted);
   font-weight: 500;
 }
 
 .geolocation-table tbody tr:hover {
-  background-color: #f9fafb;
+  background-color: var(--muted);
 }
 
 .geolocation-pagination {

@@ -1,7 +1,7 @@
 /* Blood Management Custom Styles */
 
 .blood-management-tabs {
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border);
 }
 
 .blood-management-tab {
@@ -9,13 +9,13 @@
 }
 
 .blood-management-tab:hover {
-  color: #374151;
-  border-color: #d1d5db;
+  color: var(--foreground);
+  border-color: var(--border);
 }
 
 .blood-management-tab.active {
-  color: #dc2626;
-  border-color: #dc2626;
+  color: var(--destructive);
+  border-color: var(--destructive);
 }
 
 .blood-table {
@@ -25,25 +25,25 @@
 
 .blood-table th,
 .blood-table td {
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border);
   padding: 0.75rem 1rem;
   text-align: left;
 }
 
 .blood-table th {
-  background-color: #f9fafb;
+  background-color: var(--muted);
   font-weight: 500;
-  color: #374151;
+  color: var(--foreground);
 }
 
 .blood-table tbody tr:hover {
-  background-color: #f9fafb;
+  background-color: var(--muted);
   transition: background-color 0.2s ease;
 }
 
 .blood-group-badge {
   background-color: #fee2e2;
-  color: #991b1b;
+  color: var(--destructive);
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -51,8 +51,8 @@
 }
 
 .blood-component-badge {
-  background-color: #dbeafe;
-  color: #1e40af;
+  background-color: var(--accent);
+  color: var(--primary);
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -65,13 +65,13 @@
 }
 
 .status-inactive {
-  background-color: #f3f4f6;
-  color: #6b7280;
+  background-color: var(--muted);
+  color: var(--muted-foreground);
 }
 
 .urgent-requisition {
   background-color: #fef2f2;
-  border-left: 4px solid #ef4444;
+  border-left: 4px solid var(--destructive);
 }
 
 .contact-info {
@@ -86,7 +86,7 @@
   align-items: center;
   gap: 0.25rem;
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--muted-foreground);
 }
 
 .donation-count {
@@ -96,12 +96,12 @@
 .donation-count .count {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #dc2626;
+  color: var(--destructive);
 }
 
 .donation-count .last-date {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--muted-foreground);
   margin-top: 0.25rem;
 }
 
@@ -116,7 +116,7 @@
 
 .patient-info .details {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--muted-foreground);
 }
 
 .hospital-info {
@@ -129,21 +129,21 @@
 
 .hospital-info .bengali-name {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: var(--muted-foreground);
 }
 
 .hospital-info .location {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--muted-foreground);
 }
 
 .days-remaining {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--muted-foreground);
 }
 
 .days-remaining.urgent {
-  color: #dc2626;
+  color: var(--destructive);
   font-weight: 600;
 }
 

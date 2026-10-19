@@ -164,19 +164,19 @@ export default function AssociationViewPage() {
             {/* Basic Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-500">
+                <label className="text-sm font-medium text-muted-foreground">
                   Name
                 </label>
                 <p className="text-sm font-semibold">{association.name}</p>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-500">
+                <label className="text-sm font-medium text-muted-foreground">
                   Bengali Name
                 </label>
                 <p className="text-sm">{association.bnName}</p>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-500">
+                <label className="text-sm font-medium text-muted-foreground">
                   Short Name
                 </label>
                 <p className="text-sm">{association.shortName}</p>
@@ -186,7 +186,7 @@ export default function AssociationViewPage() {
             {/* Type and Domain */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-500">
+                <label className="text-sm font-medium text-muted-foreground">
                   Association Type
                 </label>
                 <Badge
@@ -200,7 +200,7 @@ export default function AssociationViewPage() {
                 </Badge>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-500">
+                <label className="text-sm font-medium text-muted-foreground">
                   Domain
                 </label>
                 <Badge
@@ -217,25 +217,25 @@ export default function AssociationViewPage() {
 
             {/* Contact Information */}
             <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-gray-700">
+              <h4 className="text-sm font-semibold text-muted-foreground">
                 Contact Information
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {association.email && (
                   <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-gray-500" />
+                    <Mail className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm">{association.email}</span>
                   </div>
                 )}
                 {association.phone && (
                   <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-gray-500" />
+                    <Phone className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm">{association.phone}</span>
                   </div>
                 )}
                 {association.websiteUrl && (
                   <div className="flex items-center gap-2">
-                    <Globe className="h-4 w-4 text-gray-500" />
+                    <Globe className="h-4 w-4 text-muted-foreground" />
                     <a
                       href={association.websiteUrl}
                       target="_blank"
@@ -251,14 +251,14 @@ export default function AssociationViewPage() {
 
             {/* Location Information */}
             <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-gray-700">Location</h4>
+              <h4 className="text-sm font-semibold text-muted-foreground">Location</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-500">
+                  <label className="text-sm font-medium text-muted-foreground">
                     Country
                   </label>
                   <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-gray-500" />
+                    <MapPin className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm">
                       {association.originCountry?.displayNameEn ||
                         association.originCountry?.nameBn ||
@@ -267,7 +267,7 @@ export default function AssociationViewPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-500">
+                  <label className="text-sm font-medium text-muted-foreground">
                     Division
                   </label>
                   <p className="text-sm">
@@ -275,7 +275,7 @@ export default function AssociationViewPage() {
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-500">
+                  <label className="text-sm font-medium text-muted-foreground">
                     District
                   </label>
                   <p className="text-sm">
@@ -291,7 +291,7 @@ export default function AssociationViewPage() {
               association.linkedinUrl ||
               association.youtubeUrl) && (
               <div className="space-y-4">
-                <h4 className="text-sm font-semibold text-gray-700">
+                <h4 className="text-sm font-semibold text-muted-foreground">
                   Social Media
                 </h4>
                 <div className="flex flex-wrap gap-2">
@@ -346,17 +346,17 @@ export default function AssociationViewPage() {
             {/* Additional Information */}
             {(association.foundedDate || association.description) && (
               <div className="space-y-4">
-                <h4 className="text-sm font-semibold text-gray-700">
+                <h4 className="text-sm font-semibold text-muted-foreground">
                   Additional Information
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {association.foundedDate && (
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-500">
+                      <label className="text-sm font-medium text-muted-foreground">
                         Founded Date
                       </label>
                       <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-gray-500" />
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
                         <span className="text-sm">
                           {new Date(
                             association.foundedDate
@@ -367,10 +367,10 @@ export default function AssociationViewPage() {
                   )}
                   {association.description && (
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-500">
+                      <label className="text-sm font-medium text-muted-foreground">
                         Description
                       </label>
-                      <p className="text-sm text-gray-700">
+                      <p className="text-sm text-muted-foreground">
                         {association.description}
                       </p>
                     </div>

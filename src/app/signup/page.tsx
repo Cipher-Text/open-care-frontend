@@ -95,22 +95,22 @@ export default function SignupPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-muted/50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-foreground mb-2">
             Join OpenCare
           </h1>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             Create your account to access healthcare services
           </p>
         </div>
 
         {/* Signup Form */}
-        <Card className="border border-gray-200 shadow-lg">
+        <Card className="border border-border shadow-lg">
           <CardHeader className="space-y-1 pb-6">
-            <CardTitle className="text-2xl font-bold text-center text-teal-700">
+            <CardTitle className="text-2xl font-bold text-center text-primary">
               Create Account
             </CardTitle>
           </CardHeader>
@@ -130,17 +130,17 @@ export default function SignupPage() {
                 <div className="space-y-2">
                   <Label
                     htmlFor="firstName"
-                    className="text-sm font-medium text-gray-700"
+                    className="text-sm font-medium text-muted-foreground"
                   >
                     First Name
                   </Label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                     <Input
                       id="firstName"
                       type="text"
                       placeholder="Enter first name"
-                      className={`pl-10 h-12 border-gray-300 focus:border-teal-500 focus:ring-teal-500 ${
+                      className={`pl-10 h-12 border-input focus:border-primary focus:ring-primary ${
                         errors.firstName
                           ? "border-red-500 focus:border-red-500"
                           : ""
@@ -159,17 +159,17 @@ export default function SignupPage() {
                 <div className="space-y-2">
                   <Label
                     htmlFor="lastName"
-                    className="text-sm font-medium text-gray-700"
+                    className="text-sm font-medium text-muted-foreground"
                   >
                     Last Name
                   </Label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                     <Input
                       id="lastName"
                       type="text"
                       placeholder="Enter last name"
-                      className={`pl-10 h-12 border-gray-300 focus:border-teal-500 focus:ring-teal-500 ${
+                      className={`pl-10 h-12 border-input focus:border-primary focus:ring-primary ${
                         errors.lastName
                           ? "border-red-500 focus:border-red-500"
                           : ""
@@ -189,17 +189,17 @@ export default function SignupPage() {
               <div className="space-y-2">
                 <Label
                   htmlFor="email"
-                  className="text-sm font-medium text-gray-700"
+                  className="text-sm font-medium text-muted-foreground"
                 >
                   Email Address
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                   <Input
                     id="email"
                     type="email"
                     placeholder="Enter your email"
-                    className={`pl-10 h-12 border-gray-300 focus:border-teal-500 focus:ring-teal-500 ${
+                    className={`pl-10 h-12 border-input focus:border-primary focus:ring-primary ${
                       errors.email ? "border-red-500 focus:border-red-500" : ""
                     }`}
                     {...register("email")}
@@ -214,17 +214,17 @@ export default function SignupPage() {
               <div className="space-y-2">
                 <Label
                   htmlFor="phone"
-                  className="text-sm font-medium text-gray-700"
+                  className="text-sm font-medium text-muted-foreground"
                 >
                   Phone Number
                 </Label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                   <Input
                     id="phone"
                     type="tel"
                     placeholder="Enter your phone number"
-                    className={`pl-10 h-12 border-gray-300 focus:border-teal-500 focus:ring-teal-500 ${
+                    className={`pl-10 h-12 border-input focus:border-primary focus:ring-primary ${
                       errors.phone ? "border-red-500 focus:border-red-500" : ""
                     }`}
                     {...register("phone")}
@@ -239,17 +239,17 @@ export default function SignupPage() {
               <div className="space-y-2">
                 <Label
                   htmlFor="password"
-                  className="text-sm font-medium text-gray-700"
+                  className="text-sm font-medium text-muted-foreground"
                 >
                   Password
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Create a strong password"
-                    className={`pl-10 pr-12 h-12 border-gray-300 focus:border-teal-500 focus:ring-teal-500 ${
+                    className={`pl-10 pr-12 h-12 border-input focus:border-primary focus:ring-primary ${
                       errors.password
                         ? "border-red-500 focus:border-red-500"
                         : ""
@@ -259,7 +259,7 @@ export default function SignupPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-muted-foreground"
                   >
                     {showPassword ? (
                       <EyeOff className="w-5 h-5" />
@@ -279,7 +279,7 @@ export default function SignupPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Blood Group */}
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-gray-700">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Blood Group
                   </Label>
                   <Select
@@ -287,7 +287,7 @@ export default function SignupPage() {
                     disabled={isLoadingBloodGroups || isBloodGroupsError}
                   >
                     <SelectTrigger
-                      className={`h-12 border-gray-300 focus:border-teal-500 ${
+                      className={`h-12 border-input focus:border-primary ${
                         errors.bloodGroup
                           ? "border-red-500 focus:border-red-500"
                           : ""
@@ -320,7 +320,7 @@ export default function SignupPage() {
 
                 {/* Gender */}
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-gray-700">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Gender
                   </Label>
                   <Select
@@ -328,7 +328,7 @@ export default function SignupPage() {
                     disabled={isLoadingGenders || isGendersError}
                   >
                     <SelectTrigger
-                      className={`h-12 border-gray-300 focus:border-teal-500 ${
+                      className={`h-12 border-input focus:border-primary ${
                         errors.gender
                           ? "border-red-500 focus:border-red-500"
                           : ""
@@ -361,7 +361,7 @@ export default function SignupPage() {
 
                 {/* District */}
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-gray-700">
+                  <Label className="text-sm font-medium text-muted-foreground">
                     District
                   </Label>
                   <Select
@@ -371,7 +371,7 @@ export default function SignupPage() {
                     disabled={isLoadingDistricts || isDistrictsError}
                   >
                     <SelectTrigger
-                      className={`h-12 border-gray-300 focus:border-teal-500 ${
+                      className={`h-12 border-input focus:border-primary ${
                         errors.districtId
                           ? "border-red-500 focus:border-red-500"
                           : ""
@@ -413,23 +413,23 @@ export default function SignupPage() {
                   name="terms"
                   type="checkbox"
                   required
-                  className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-primary focus:ring-primary border-input rounded"
                 />
                 <label
                   htmlFor="terms"
-                  className="ml-2 block text-sm text-gray-700"
+                  className="ml-2 block text-sm text-muted-foreground"
                 >
                   I agree to the{" "}
                   <Link
                     href="/terms"
-                    className="text-teal-600 hover:text-teal-500"
+                    className="text-primary hover:text-primary"
                   >
                     Terms of Service
                   </Link>{" "}
                   and{" "}
                   <Link
                     href="/privacy"
-                    className="text-teal-600 hover:text-teal-500"
+                    className="text-primary hover:text-primary"
                   >
                     Privacy Policy
                   </Link>
@@ -445,18 +445,18 @@ export default function SignupPage() {
                   isLoadingBloodGroups ||
                   isLoadingGenders
                 }
-                className="w-full h-12 bg-teal-600 hover:bg-teal-700 text-white font-medium"
+                className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-medium"
               >
                 {isLoading ? "Creating Account..." : "Create Account"}
               </Button>
 
               {/* Login Link */}
               <div className="text-center">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   Already have an account?{" "}
                   <Link
                     href="/login"
-                    className="text-teal-600 hover:text-teal-500 font-medium"
+                    className="text-primary hover:text-primary font-medium"
                   >
                     Sign in here
                   </Link>

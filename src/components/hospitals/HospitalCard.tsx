@@ -1,117 +1,128 @@
-"use client";
-
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import {
+	Ambulance,
+	BadgeCheck,
+	Bed,
+	Building2,
+	Droplets,
+	Globe,
+	MapPin,
+	Phone,
+	Siren,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Bed, Users } from "lucide-react";
-import { Hospital, HospitalType, OrganizationType } from "@/types/hospitals";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Hospital } from "@/types/hospitals";
 
-interface HospitalCardProps {
-  hospital: Hospital & {
-    doctors?: string;
-    services?: string;
-  };
+function safeUrl(url?: string | null) {
+	if (!url) return null;
+	const withProtocol = /^https?:\/\//i.test(url) ? url : `https://${url}`;
+	try {
+		return new URL(withProtocol).toString();
+	} catch {
+		return null;
+	}
 }
 
-const getOrganizationColor = (type: OrganizationType | string) => {
-  const typeValue = typeof type === "string" ? type : type.value;
-  switch (typeValue) {
-    case "GOVERNMENT":
-    case "Government":
-      return "bg-teal-600 text-white";
-    case "PRIVATE":
-    case "Private":
-      return "bg-emerald-600 text-white";
-    case "NON_PROFIT":
-    case "Non-profit":
-      return "bg-amber-500 text-white";
-    default:
-      return "bg-gray-500 text-white";
-  }
-};
+export default function HospitalCard({ hospital }: { hospital: Hospital }) {
+	const website = safeUrl(hospital.websiteUrl);
+	const phone = hospital.phone?.trim();
+	const location = [hospital.address, hospital.upazila?.name, hospital.district?.name]
+		.filter(Boolean)
+		.join(", ");
 
-const getHospitalTypeColor = (type: HospitalType | string) => {
-  const typeValue = typeof type === "string" ? type : type.value;
-  switch (typeValue) {
-    case "GENERAL":
-    case "General":
-      return "border-teal-500 text-teal-700";
-    case "SPECIALIZED":
-    case "Specialized":
-      return "border-teal-500 text-teal-700";
-    case "COLLEGE":
-    case "College":
-      return "border-teal-500 text-teal-700";
-    default:
-      return "border-gray-500 text-gray-700";
-  }
-};
+	return (
+		<Card className="h-full gap-0 py-0">
+			<CardContent className="flex h-full flex-col gap-4 p-5 sm:p-6">
+				<div className="flex gap-4">
+					<div className="flex size-14 shrink-0 items-center justify-center rounded-lg border-2 border-primary bg-primary/10 text-primary">
+						<Building2 className="size-7" aria-hidden="true" />
+					</div>
+					<div className="min-w-0">
+						<h3 className="flex flex-wrap items-center gap-x-2 text-lg font-bold leading-snug text-foreground">
+							{hospital.name}
+							{hospital.isVerified && (
+								<BadgeCheck
+									className="size-5 text-primary"
+									aria-label="Verified"
+								/>
+							)}
+						</h3>
+						{hospital.bnName && (
+							<p lang="bn" className="text-sm text-primary">
+								{hospital.bnName}
+							</p>
+						)}
+					</div>
+				</div>
 
-export default function HospitalCard({ hospital }: HospitalCardProps) {
-  return (
-    <Card className="border border-gray-200 hover:shadow-lg transition-shadow duration-200">
-      <CardContent className="p-6">
-        <div className="flex gap-4">
-          {/* Hospital Icon */}
-          <div className="w-15 h-15 bg-teal-50 border-2 border-teal-500 rounded-lg flex items-center justify-center flex-shrink-0">
-            <Building2 className="w-8 h-8 text-teal-700" />
-          </div>
+				<div className="flex flex-wrap gap-2">
+					{hospital.hospitalType?.englishName && (
+						<Badge variant="secondary">{hospital.hospitalType.englishName}</Badge>
+					)}
+					{hospital.organizationType?.displayName && (
+						<Badge variant="outline">{hospital.organizationType.displayName}</Badge>
+					)}
+				</div>
 
-          <div className="flex-1">
-            {/* Hospital Name and Bengali Name */}
-            <h3 className="text-lg font-bold text-gray-900 mb-1">
-              {hospital.name}
-            </h3>
-            <p className="text-sm text-teal-600 mb-3">{hospital.bnName}</p>
-            {/* Badges */}
-            <div className="flex gap-2 mb-3">
-              <Badge
-                variant="outline"
-                className={getHospitalTypeColor(hospital.hospitalType)}
-              >
-                {typeof hospital.hospitalType === "string"
-                  ? hospital.hospitalType
-                  : hospital.hospitalType.englishName}
-              </Badge>
-              <Badge
-                className={getOrganizationColor(hospital.organizationType)}
-              >
-                {typeof hospital.organizationType === "string"
-                  ? hospital.organizationType
-                  : hospital.organizationType.displayName}
-              </Badge>
-            </div>{" "}
-            {/* Hospital Info */}
-            <div className="space-y-1 mb-4 text-sm text-gray-600">
-              <div className="flex items-center gap-2">
-                <Bed className="w-4 h-4" />
-                <span>
-                  {hospital.numberOfBed} Beds • {hospital.district.name}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                <span>
-                  {hospital.doctors || "N/A"} Doctors •{" "}
-                  {hospital.services || "Full Service"}
-                </span>
-              </div>
-            </div>
-            {/* Action Buttons */}
-            <div className="flex gap-3">
-              <Button className="bg-teal-600 hover:bg-teal-700 text-white">
-                Find Doctors
-              </Button>
-              <Button
-                variant="outline"
-                className="border-teal-500 text-teal-700 hover:bg-teal-50"
-              >
-                View Details
-              </Button>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
+				<ul className="space-y-1.5 text-sm text-muted-foreground">
+					{location && (
+						<li className="flex items-start gap-2">
+							<MapPin className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+							<span>{location}</span>
+						</li>
+					)}
+					{hospital.numberOfBed > 0 && (
+						<li className="flex items-center gap-2">
+							<Bed className="size-4 shrink-0" aria-hidden="true" />
+							{hospital.numberOfBed.toLocaleString()} beds
+						</li>
+					)}
+				</ul>
+
+				{(hospital.hasEmergencyService ||
+					hospital.hasAmbulanceService ||
+					hospital.hasBloodBank) && (
+					<div className="flex flex-wrap gap-2 text-sm">
+						{hospital.hasEmergencyService && (
+							<span className="inline-flex items-center gap-1 rounded-full bg-emergency/10 px-2.5 py-1 text-emergency">
+								<Siren className="size-3.5" aria-hidden="true" /> Emergency
+							</span>
+						)}
+						{hospital.hasAmbulanceService && (
+							<span className="inline-flex items-center gap-1 rounded-full bg-emergency/10 px-2.5 py-1 text-emergency">
+								<Ambulance className="size-3.5" aria-hidden="true" /> Ambulance
+							</span>
+						)}
+						{hospital.hasBloodBank && (
+							<span className="inline-flex items-center gap-1 rounded-full bg-emergency/10 px-2.5 py-1 text-emergency">
+								<Droplets className="size-3.5" aria-hidden="true" /> Blood bank
+							</span>
+						)}
+					</div>
+				)}
+
+				{(phone || website) && (
+					<div className="mt-auto flex flex-col gap-2 pt-2 sm:flex-row">
+						{phone && (
+							<Button asChild className="h-11">
+								<a href={`tel:${phone.replace(/\s+/g, "")}`}>
+									<Phone className="mr-2 size-4" aria-hidden="true" />
+									Call
+								</a>
+							</Button>
+						)}
+						{website && (
+							<Button asChild variant="outline" className="h-11">
+								<a href={website} target="_blank" rel="noopener noreferrer">
+									<Globe className="mr-2 size-4" aria-hidden="true" />
+									Website
+								</a>
+							</Button>
+						)}
+					</div>
+				)}
+			</CardContent>
+		</Card>
+	);
 }

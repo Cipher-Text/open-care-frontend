@@ -105,7 +105,7 @@ export function RegistrationTrendsChart({
                             className={`w-full ${dataset.color} rounded-t transition-all hover:opacity-80 cursor-pointer`}
                             style={{ height: `${height}%`, minHeight: "2px" }}
                           >
-                            <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10">
+                            <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-foreground text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10">
                               {value}
                             </div>
                           </div>

@@ -156,7 +156,7 @@ export default function AmbulanceViewPage() {
             {/* Basic Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-500">
+                <label className="text-sm font-medium text-muted-foreground">
                   Vehicle Number
                 </label>
                 <p className="text-sm font-semibold font-mono">
@@ -164,7 +164,7 @@ export default function AmbulanceViewPage() {
                 </p>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-500">
+                <label className="text-sm font-medium text-muted-foreground">
                   Type
                 </label>
                 <Badge
@@ -178,7 +178,7 @@ export default function AmbulanceViewPage() {
                 </Badge>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-500">
+                <label className="text-sm font-medium text-muted-foreground">
                   Status
                 </label>
                 <div className="flex items-center gap-2">
@@ -206,7 +206,7 @@ export default function AmbulanceViewPage() {
             {/* Availability and Affiliation */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-500">
+                <label className="text-sm font-medium text-muted-foreground">
                   Availability
                 </label>
                 {ambulance.isAvailable ? (
@@ -228,7 +228,7 @@ export default function AmbulanceViewPage() {
                 )}
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-500">
+                <label className="text-sm font-medium text-muted-foreground">
                   Affiliation
                 </label>
                 {ambulance.isAffiliated ? (
@@ -252,26 +252,26 @@ export default function AmbulanceViewPage() {
 
             {/* Driver Information */}
             <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-gray-700">
+              <h4 className="text-sm font-semibold text-muted-foreground">
                 Driver Information
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-500">
+                  <label className="text-sm font-medium text-muted-foreground">
                     Driver Name
                   </label>
                   <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-gray-500" />
+                    <User className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm">{ambulance.driverName}</span>
                   </div>
                 </div>
                 {ambulance.driverPhone && (
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-500">
+                    <label className="text-sm font-medium text-muted-foreground">
                       Driver Phone
                     </label>
                     <div className="flex items-center gap-2">
-                      <Phone className="h-4 w-4 text-gray-500" />
+                      <Phone className="h-4 w-4 text-muted-foreground" />
                       <a
                         href={`tel:${ambulance.driverPhone}`}
                         className="text-sm text-blue-600 hover:underline"
@@ -286,15 +286,15 @@ export default function AmbulanceViewPage() {
 
             {/* Location Information */}
             <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-gray-700">Location</h4>
+              <h4 className="text-sm font-semibold text-muted-foreground">Location</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {ambulance.district && (
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-500">
+                    <label className="text-sm font-medium text-muted-foreground">
                       District
                     </label>
                     <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-gray-500" />
+                      <MapPin className="h-4 w-4 text-muted-foreground" />
                       <span className="text-sm">
                         {ambulance.district.name || "N/A"}
                       </span>
@@ -303,7 +303,7 @@ export default function AmbulanceViewPage() {
                 )}
                 {ambulance.upazila && (
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-500">
+                    <label className="text-sm font-medium text-muted-foreground">
                       Upazila
                     </label>
                     <p className="text-sm">{ambulance.upazila.name || "N/A"}</p>
@@ -314,7 +314,7 @@ export default function AmbulanceViewPage() {
               {/* Division Info from District */}
               {ambulance.district?.division && (
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-500">
+                  <label className="text-sm font-medium text-muted-foreground">
                     Division
                   </label>
                   <p className="text-sm">
@@ -327,23 +327,23 @@ export default function AmbulanceViewPage() {
             {/* Affiliated Hospital */}
             {ambulance.hospital && (
               <div className="space-y-4">
-                <h4 className="text-sm font-semibold text-gray-700">
+                <h4 className="text-sm font-semibold text-muted-foreground">
                   Affiliated Hospital
                 </h4>
-                <Card className="border border-gray-200">
+                <Card className="border border-border">
                   <CardContent className="p-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-500">
+                        <label className="text-sm font-medium text-muted-foreground">
                           Hospital Name
                         </label>
                         <div className="flex items-center gap-2">
-                          <Building2 className="h-4 w-4 text-gray-500" />
+                          <Building2 className="h-4 w-4 text-muted-foreground" />
                           <div>
                             <p className="text-sm font-semibold">
                               {ambulance.hospital.name}
                             </p>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-muted-foreground">
                               {ambulance.hospital.bnName}
                             </p>
                           </div>
@@ -351,7 +351,7 @@ export default function AmbulanceViewPage() {
                       </div>
                       {ambulance.hospital.numberOfBed && (
                         <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-500">
+                          <label className="text-sm font-medium text-muted-foreground">
                             Number of Beds
                           </label>
                           <p className="text-sm">
@@ -361,11 +361,11 @@ export default function AmbulanceViewPage() {
                       )}
                       {ambulance.hospital.district && (
                         <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-500">
+                          <label className="text-sm font-medium text-muted-foreground">
                             Hospital Location
                           </label>
                           <div className="flex items-center gap-2">
-                            <MapPin className="h-4 w-4 text-gray-500" />
+                            <MapPin className="h-4 w-4 text-muted-foreground" />
                             <span className="text-sm">
                               {ambulance.hospital.district.name}
                             </span>
@@ -374,7 +374,7 @@ export default function AmbulanceViewPage() {
                       )}
                       {ambulance.hospital.hospitalType && (
                         <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-500">
+                          <label className="text-sm font-medium text-muted-foreground">
                             Hospital Type
                           </label>
                           <Badge variant="outline">
@@ -392,11 +392,11 @@ export default function AmbulanceViewPage() {
 
             {/* Metadata */}
             {(ambulance.createdAt || ambulance.updatedAt) && (
-              <div className="space-y-4 pt-4 border-t border-gray-200">
-                <h4 className="text-sm font-semibold text-gray-700">
+              <div className="space-y-4 pt-4 border-t border-border">
+                <h4 className="text-sm font-semibold text-muted-foreground">
                   Record Information
                 </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-gray-500">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-muted-foreground">
                   {ambulance.createdAt && (
                     <div className="space-y-1">
                       <label className="font-medium">Created</label>

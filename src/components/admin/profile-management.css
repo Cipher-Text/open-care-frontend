@@ -1,7 +1,7 @@
 /* Profile Management Styles */
 .profile-management-container {
   min-height: 100vh;
-  background-color: #f9fafb;
+  background-color: var(--muted);
 }
 
 .profile-card {
@@ -27,7 +27,7 @@
 }
 
 .profile-table thead {
-  background-color: #f9fafb;
+  background-color: var(--muted);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -38,7 +38,7 @@
 }
 
 .profile-table tbody tr:hover {
-  background-color: #f3f4f6;
+  background-color: var(--muted);
 }
 
 /* Responsive adjustments */

@@ -84,7 +84,7 @@ const roleColors = {
 
 const statusColors = {
 	active: "bg-green-100 text-green-800",
-	inactive: "bg-gray-100 text-gray-800",
+	inactive: "bg-muted text-foreground",
 };
 
 export function UsersTable() {

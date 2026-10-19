@@ -178,34 +178,34 @@ const GeolocationManagement: React.FC = () => {
 
   const renderDivisionsTable = (divisions: Division[]) => (
     <div className="overflow-x-auto">
-      <table className="w-full border-collapse border border-gray-300">
+      <table className="w-full border-collapse border border-input">
         <thead>
-          <tr className="bg-gray-50">
-            <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+          <tr className="bg-muted">
+            <th className="border border-input px-4 py-2 text-left font-medium">
               ID
             </th>
-            <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+            <th className="border border-input px-4 py-2 text-left font-medium">
               Name
             </th>
-            <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+            <th className="border border-input px-4 py-2 text-left font-medium">
               Bengali Name
             </th>
-            <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+            <th className="border border-input px-4 py-2 text-left font-medium">
               URL
             </th>
           </tr>
         </thead>
         <tbody>
           {divisions.map((item) => (
-            <tr key={item.id} className="hover:bg-gray-50">
-              <td className="border border-gray-300 px-4 py-2">{item.id}</td>
-              <td className="border border-gray-300 px-4 py-2 font-medium">
+            <tr key={item.id} className="hover:bg-muted">
+              <td className="border border-input px-4 py-2">{item.id}</td>
+              <td className="border border-input px-4 py-2 font-medium">
                 {item.name}
               </td>
-              <td className="border border-gray-300 px-4 py-2">
+              <td className="border border-input px-4 py-2">
                 {item.bnName}
               </td>
-              <td className="border border-gray-300 px-4 py-2">
+              <td className="border border-input px-4 py-2">
                 <a
                   href={`https://${item.url}`}
                   target="_blank"
@@ -224,52 +224,52 @@ const GeolocationManagement: React.FC = () => {
 
   const renderDistrictsTable = (districts: District[]) => (
     <div className="overflow-x-auto">
-      <table className="w-full border-collapse border border-gray-300">
+      <table className="w-full border-collapse border border-input">
         <thead>
-          <tr className="bg-gray-50">
-            <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+          <tr className="bg-muted">
+            <th className="border border-input px-4 py-2 text-left font-medium">
               ID
             </th>
-            <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+            <th className="border border-input px-4 py-2 text-left font-medium">
               Name
             </th>
-            <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+            <th className="border border-input px-4 py-2 text-left font-medium">
               Bengali Name
             </th>
-            <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+            <th className="border border-input px-4 py-2 text-left font-medium">
               Division
             </th>
-            <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+            <th className="border border-input px-4 py-2 text-left font-medium">
               Coordinates
             </th>
-            <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+            <th className="border border-input px-4 py-2 text-left font-medium">
               URL
             </th>
           </tr>
         </thead>
         <tbody>
           {districts.map((item) => (
-            <tr key={item.id} className="hover:bg-gray-50">
-              <td className="border border-gray-300 px-4 py-2">{item.id}</td>
-              <td className="border border-gray-300 px-4 py-2 font-medium">
+            <tr key={item.id} className="hover:bg-muted">
+              <td className="border border-input px-4 py-2">{item.id}</td>
+              <td className="border border-input px-4 py-2 font-medium">
                 {item.name}
               </td>
-              <td className="border border-gray-300 px-4 py-2">
+              <td className="border border-input px-4 py-2">
                 {item.bnName}
               </td>
-              <td className="border border-gray-300 px-4 py-2">
+              <td className="border border-input px-4 py-2">
                 <div className="text-sm">
                   <div className="font-medium">{item.division.name}</div>
-                  <div className="text-gray-500">{item.division.bnName}</div>
+                  <div className="text-muted-foreground">{item.division.bnName}</div>
                 </div>
               </td>
-              <td className="border border-gray-300 px-4 py-2">
+              <td className="border border-input px-4 py-2">
                 <div className="text-sm">
                   <div>Lat: {parseFloat(item.lat).toFixed(4)}</div>
                   <div>Lon: {parseFloat(item.lon).toFixed(4)}</div>
                 </div>
               </td>
-              <td className="border border-gray-300 px-4 py-2">
+              <td className="border border-input px-4 py-2">
                 <a
                   href={`https://${item.url}`}
                   target="_blank"
@@ -288,56 +288,56 @@ const GeolocationManagement: React.FC = () => {
 
   const renderUpazilasTable = (upazilas: Upazila[]) => (
     <div className="overflow-x-auto">
-      <table className="w-full border-collapse border border-gray-300">
+      <table className="w-full border-collapse border border-input">
         <thead>
-          <tr className="bg-gray-50">
-            <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+          <tr className="bg-muted">
+            <th className="border border-input px-4 py-2 text-left font-medium">
               ID
             </th>
-            <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+            <th className="border border-input px-4 py-2 text-left font-medium">
               Name
             </th>
-            <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+            <th className="border border-input px-4 py-2 text-left font-medium">
               Bengali Name
             </th>
-            <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+            <th className="border border-input px-4 py-2 text-left font-medium">
               District
             </th>
-            <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+            <th className="border border-input px-4 py-2 text-left font-medium">
               Division
             </th>
-            <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+            <th className="border border-input px-4 py-2 text-left font-medium">
               URL
             </th>
           </tr>
         </thead>
         <tbody>
           {upazilas.map((item) => (
-            <tr key={item.id} className="hover:bg-gray-50">
-              <td className="border border-gray-300 px-4 py-2">{item.id}</td>
-              <td className="border border-gray-300 px-4 py-2 font-medium">
+            <tr key={item.id} className="hover:bg-muted">
+              <td className="border border-input px-4 py-2">{item.id}</td>
+              <td className="border border-input px-4 py-2 font-medium">
                 {item.name}
               </td>
-              <td className="border border-gray-300 px-4 py-2">
+              <td className="border border-input px-4 py-2">
                 {item.bnName}
               </td>
-              <td className="border border-gray-300 px-4 py-2">
+              <td className="border border-input px-4 py-2">
                 <div className="text-sm">
                   <div className="font-medium">{item.district.name}</div>
-                  <div className="text-gray-500">{item.district.bnName}</div>
+                  <div className="text-muted-foreground">{item.district.bnName}</div>
                 </div>
               </td>
-              <td className="border border-gray-300 px-4 py-2">
+              <td className="border border-input px-4 py-2">
                 <div className="text-sm">
                   <div className="font-medium">
                     {item.district.division.name}
                   </div>
-                  <div className="text-gray-500">
+                  <div className="text-muted-foreground">
                     {item.district.division.bnName}
                   </div>
                 </div>
               </td>
-              <td className="border border-gray-300 px-4 py-2">
+              <td className="border border-input px-4 py-2">
                 <a
                   href={`https://${item.url}`}
                   target="_blank"
@@ -374,7 +374,7 @@ const GeolocationManagement: React.FC = () => {
 
     return (
       <div className="flex items-center justify-between mt-4">
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-muted-foreground">
           Page {currentPage} of {totalPages} ({pagination.totalItems} total
           items)
         </div>
@@ -438,7 +438,7 @@ const GeolocationManagement: React.FC = () => {
     : null;
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-muted min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <MapPin className="h-6 w-6 text-blue-600" />
@@ -447,7 +447,7 @@ const GeolocationManagement: React.FC = () => {
         <div className="flex items-center gap-4">
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search locations..."
               value={searchTerm}
@@ -484,7 +484,7 @@ const GeolocationManagement: React.FC = () => {
 
       {/* Tabs */}
       <div className="mb-6">
-        <div className="border-b border-gray-200">
+        <div className="border-b border-border">
           <nav className="-mb-px flex space-x-8">
             {API_CONFIGS.map((config) => (
               <button
@@ -496,7 +496,7 @@ const GeolocationManagement: React.FC = () => {
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
                   activeTab === config.name
                     ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    : "border-transparent text-muted-foreground hover:text-muted-foreground hover:border-input"
                 }`}
               >
                 <span className="text-lg">{config.icon}</span>
@@ -519,7 +519,7 @@ const GeolocationManagement: React.FC = () => {
             {loading[activeConfig.name] && (
               <div className="text-center py-12">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                <div className="text-gray-600">
+                <div className="text-muted-foreground">
                   Loading {activeConfig.title}...
                 </div>
               </div>
@@ -534,7 +534,7 @@ const GeolocationManagement: React.FC = () => {
             {paginationData && !loading[activeConfig.name] && (
               <>
                 <div className="mb-4 flex justify-between items-center">
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-muted-foreground">
                     <strong>Showing:</strong> {paginationData.data.length} of{" "}
                     {paginationData.totalItems}{" "}
                     {activeConfig.title.toLowerCase()}
@@ -552,7 +552,7 @@ const GeolocationManagement: React.FC = () => {
                     {renderPagination(activeConfig.name, paginationData)}
                   </>
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-muted-foreground">
                     {searchTerm
                       ? `No results found for &quot;${searchTerm}&quot;`
                       : "No data available"}

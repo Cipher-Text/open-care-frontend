@@ -79,7 +79,7 @@ export function DashboardStats({ data }: DashboardStatsProps) {
       title: "Social Organizations",
       value: data.socialOrganizations,
       icon: HandHelping,
-      color: "text-teal-600",
+      color: "text-primary",
     },
   ];
 

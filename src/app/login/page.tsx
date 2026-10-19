@@ -46,20 +46,20 @@ export default function LoginPage() {
 	});
 
 	return (
-		<div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+		<div className="min-h-screen bg-muted/50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
 			<div className="max-w-md w-full space-y-8">
 				{/* Header */}
 				<div className="text-center">
-					<h1 className="text-3xl font-bold text-gray-900 mb-2">
+					<h1 className="text-3xl font-bold text-foreground mb-2">
 						Welcome Back
 					</h1>
-					<p className="text-gray-600">Sign in to your OpenCare account</p>
+					<p className="text-muted-foreground">Sign in to your OpenCare account</p>
 				</div>
 
 				{/* Login Form */}
-				<Card className="border border-gray-200 shadow-lg">
+				<Card className="border border-border shadow-lg">
 					<CardHeader className="space-y-1 pb-6">
-						<CardTitle className="text-2xl font-bold text-center text-teal-700">
+						<CardTitle className="text-2xl font-bold text-center text-primary">
 							Sign In
 						</CardTitle>
 					</CardHeader>
@@ -83,17 +83,17 @@ export default function LoginPage() {
 							<div className="space-y-2">
 								<Label
 									htmlFor="username"
-									className="text-sm font-medium text-gray-700"
+									className="text-sm font-medium text-muted-foreground"
 								>
 									Username
 								</Label>
 								<div className="relative">
-									<User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+									<User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
 									<Input
 										id="username"
 										type="text"
 										placeholder="Enter your username"
-										className={`pl-10 h-12 border-gray-300 focus:border-teal-500 focus:ring-teal-500 ${
+										className={`pl-10 h-12 border-input focus:border-primary focus:ring-primary ${
 											errors.username
 												? "border-red-500 focus:border-red-500"
 												: ""
@@ -112,17 +112,17 @@ export default function LoginPage() {
 							<div className="space-y-2">
 								<Label
 									htmlFor="password"
-									className="text-sm font-medium text-gray-700"
+									className="text-sm font-medium text-muted-foreground"
 								>
 									Password
 								</Label>
 								<div className="relative">
-									<Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+									<Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
 									<Input
 										id="password"
 										type={showPassword ? "text" : "password"}
 										placeholder="Enter your password"
-										className={`pl-10 pr-12 h-12 border-gray-300 focus:border-teal-500 focus:ring-teal-500 ${
+										className={`pl-10 pr-12 h-12 border-input focus:border-primary focus:ring-primary ${
 											errors.password
 												? "border-red-500 focus:border-red-500"
 												: ""
@@ -132,7 +132,7 @@ export default function LoginPage() {
 									<button
 										type="button"
 										onClick={() => setShowPassword(!showPassword)}
-										className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+										className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-muted-foreground"
 									>
 										{showPassword ? (
 											<EyeOff className="w-5 h-5" />
@@ -155,18 +155,18 @@ export default function LoginPage() {
 										id="remember-me"
 										name="remember-me"
 										type="checkbox"
-										className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+										className="h-4 w-4 text-primary focus:ring-primary border-input rounded"
 									/>
 									<label
 										htmlFor="remember-me"
-										className="ml-2 block text-sm text-gray-700"
+										className="ml-2 block text-sm text-muted-foreground"
 									>
 										Remember me
 									</label>
 								</div>
 								<Link
 									href="/forgot-password"
-									className="text-sm text-teal-600 hover:text-teal-500"
+									className="text-sm text-primary hover:text-primary"
 								>
 									Forgot password?
 								</Link>
@@ -176,18 +176,18 @@ export default function LoginPage() {
 							<Button
 								type="submit"
 								disabled={isLoading}
-								className="w-full h-12 bg-teal-600 hover:bg-teal-700 text-white font-medium"
+								className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-medium"
 							>
 								{isLoading ? "Signing In..." : "Sign In"}
 							</Button>
 
 							{/* Sign Up Link */}
 							<div className="text-center">
-								<p className="text-sm text-gray-600">
+								<p className="text-sm text-muted-foreground">
 									Don&apos;t have an account?{" "}
 									<Link
 										href="/signup"
-										className="text-teal-600 hover:text-teal-500 font-medium"
+										className="text-primary hover:text-primary font-medium"
 									>
 										Sign up here
 									</Link>

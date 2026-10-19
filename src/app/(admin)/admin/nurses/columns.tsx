@@ -90,7 +90,7 @@ export const columns: ColumnDef<NurseResponse>[] = [
       const nurse = row.original;
       return (
         <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+          <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
             {nurse.profile.imageUrl || nurse.profile.photo ? (
               <Image
                 src={nurse.profile.imageUrl || nurse.profile.photo || ""}

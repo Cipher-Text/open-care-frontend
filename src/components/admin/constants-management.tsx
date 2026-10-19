@@ -226,7 +226,7 @@ const ConstantsManagement: React.FC = () => {
   const renderSidebarItem = (api: ApiConfig) => (
     <div
       key={api.name}
-      className={`constants-sidebar-item p-3 cursor-pointer border-b border-gray-200 ${
+      className={`constants-sidebar-item p-3 cursor-pointer border-b border-border ${
         selectedApi.name === api.name ? "active" : ""
       }`}
       onClick={() => setSelectedApi(api)}
@@ -278,94 +278,94 @@ const ConstantsManagement: React.FC = () => {
 
     return (
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse border border-gray-300">
+        <table className="w-full border-collapse border border-input">
           <thead>
-            <tr className="bg-gray-50">
-              <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+            <tr className="bg-muted">
+              <th className="border border-input px-4 py-2 text-left font-medium">
                 Value
               </th>
               {hasIcon && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   Icon
                 </th>
               )}
               {hasLevelName && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   Level Name
                 </th>
               )}
               {hasLabel && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   Label
                 </th>
               )}
               {hasDisplayName && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   Display Name
                 </th>
               )}
               {hasBnName && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   Bengali Name
                 </th>
               )}
               {hasBanglaName && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   Bangla Name
                 </th>
               )}
               {hasDisplayNameEn && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   English Name
                 </th>
               )}
               {hasNameBn && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   Bengali Name
                 </th>
               )}
               {hasNameNative && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   Native Name
                 </th>
               )}
               {hasAcronym && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   Acronym
                 </th>
               )}
               {hasCategory && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   Category
                 </th>
               )}
               {hasCode && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   Code
                 </th>
               )}
               {hasPoints && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   Points
                 </th>
               )}
               {hasIsAdvertisement && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   Advertisement
                 </th>
               )}
               {hasDonationRange && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   Donation Range
                 </th>
               )}
               {hasAgeRange && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   Age Range
                 </th>
               )}
               {hasDescription && (
-                <th className="border border-gray-300 px-4 py-2 text-left font-medium">
+                <th className="border border-input px-4 py-2 text-left font-medium">
                   Description
                 </th>
               )}
@@ -373,87 +373,87 @@ const ConstantsManagement: React.FC = () => {
           </thead>
           <tbody>
             {items.map((item, index) => (
-              <tr key={index} className="hover:bg-gray-50">
-                <td className="border border-gray-300 px-4 py-2">
-                  <code className="bg-gray-100 px-2 py-1 rounded text-sm">
+              <tr key={index} className="hover:bg-muted">
+                <td className="border border-input px-4 py-2">
+                  <code className="bg-muted px-2 py-1 rounded text-sm">
                     {item.value}
                   </code>
                 </td>
                 {hasIcon && (
-                  <td className="border border-gray-300 px-4 py-2 text-center text-lg">
+                  <td className="border border-input px-4 py-2 text-center text-lg">
                     {item.icon || "-"}
                   </td>
                 )}
                 {hasLevelName && (
-                  <td className="border border-gray-300 px-4 py-2 font-medium">
+                  <td className="border border-input px-4 py-2 font-medium">
                     {item.levelName || "-"}
                   </td>
                 )}
                 {hasLabel && (
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-input px-4 py-2">
                     {item.label || "-"}
                   </td>
                 )}
                 {hasDisplayName && (
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-input px-4 py-2">
                     {item.displayName || "-"}
                   </td>
                 )}
                 {hasBnName && (
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-input px-4 py-2">
                     {item.bnName || "-"}
                   </td>
                 )}
                 {hasBanglaName && (
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-input px-4 py-2">
                     {item.banglaName || "-"}
                   </td>
                 )}
                 {hasDisplayNameEn && (
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-input px-4 py-2">
                     {item.displayNameEn || "-"}
                   </td>
                 )}
                 {hasNameBn && (
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-input px-4 py-2">
                     {item.nameBn || "-"}
                   </td>
                 )}
                 {hasNameNative && (
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-input px-4 py-2">
                     {item.nameNative || "-"}
                   </td>
                 )}
                 {hasAcronym && (
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-input px-4 py-2">
                     <code className="bg-blue-100 px-2 py-1 rounded text-sm font-medium">
                       {item.acronym || "-"}
                     </code>
                   </td>
                 )}
                 {hasCategory && (
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-input px-4 py-2">
                     <Badge variant="outline" className="text-xs">
                       {item.category || "-"}
                     </Badge>
                   </td>
                 )}
                 {hasCode && (
-                  <td className="border border-gray-300 px-4 py-2">
-                    <code className="bg-gray-100 px-2 py-1 rounded text-sm">
+                  <td className="border border-input px-4 py-2">
+                    <code className="bg-muted px-2 py-1 rounded text-sm">
                       {item.code || "-"}
                     </code>
                   </td>
                 )}
                 {hasPoints && (
-                  <td className="border border-gray-300 px-4 py-2 text-center">
+                  <td className="border border-input px-4 py-2 text-center">
                     <Badge variant="default" className="text-xs">
                       {item.points !== undefined ? item.points : "-"}
                     </Badge>
                   </td>
                 )}
                 {hasIsAdvertisement && (
-                  <td className="border border-gray-300 px-4 py-2 text-center">
+                  <td className="border border-input px-4 py-2 text-center">
                     <Badge
                       variant={item.isAdvertisement ? "default" : "secondary"}
                     >
@@ -462,7 +462,7 @@ const ConstantsManagement: React.FC = () => {
                   </td>
                 )}
                 {hasDonationRange && (
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-input px-4 py-2">
                     {item.minDonations !== undefined &&
                     item.maxDonations !== undefined
                       ? `${item.minDonations} - ${
@@ -474,14 +474,14 @@ const ConstantsManagement: React.FC = () => {
                   </td>
                 )}
                 {hasAgeRange && (
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-input px-4 py-2">
                     {item.startAge !== undefined && item.endAge !== undefined
                       ? `${item.startAge} - ${item.endAge}`
                       : "-"}
                   </td>
                 )}
                 {hasDescription && (
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="border border-input px-4 py-2">
                     {item.description || "-"}
                   </td>
                 )}
@@ -496,8 +496,8 @@ const ConstantsManagement: React.FC = () => {
   return (
     <div className="flex h-full min-h-screen">
       {/* Sidebar */}
-      <div className="constants-sidebar w-80 bg-white border-r border-gray-200 flex flex-col">
-        <div className="p-4 border-b border-gray-200">
+      <div className="constants-sidebar w-80 bg-white border-r border-border flex flex-col">
+        <div className="p-4 border-b border-border">
           <div className="flex items-center mb-4">
             <Database className="mr-2 h-5 w-5" />
             <h2 className="text-lg font-semibold">Constants</h2>
@@ -505,7 +505,7 @@ const ConstantsManagement: React.FC = () => {
 
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search constants..."
               value={searchTerm}
@@ -519,7 +519,7 @@ const ConstantsManagement: React.FC = () => {
           {searchTerm ? (
             // Show filtered results
             <div className="p-2">
-              <div className="px-3 py-2 text-sm text-gray-500">
+              <div className="px-3 py-2 text-sm text-muted-foreground">
                 Search Results ({filteredApis.length})
               </div>
               {filteredApis.map(renderSidebarItem)}
@@ -543,9 +543,9 @@ const ConstantsManagement: React.FC = () => {
         <div className="flex justify-content-between items-center mb-6">
           <div>
             <h1 className="text-2xl font-bold mb-1">{selectedApi.title}</h1>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-foreground">
               Endpoint:{" "}
-              <code className="bg-gray-100 px-2 py-1 rounded">
+              <code className="bg-muted px-2 py-1 rounded">
                 {selectedApi.endpoint}
               </code>
             </p>
@@ -568,7 +568,7 @@ const ConstantsManagement: React.FC = () => {
           {loading[selectedApi.name] && (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <div className="text-gray-600">
+              <div className="text-muted-foreground">
                 Loading {selectedApi.title}...
               </div>
             </div>
@@ -583,7 +583,7 @@ const ConstantsManagement: React.FC = () => {
           {data[selectedApi.name] && !loading[selectedApi.name] && (
             <>
               <div className="mb-4 flex justify-between items-center">
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-muted-foreground">
                   <strong>Total Records:</strong>{" "}
                   {data[selectedApi.name].length}
                 </div>
@@ -592,7 +592,7 @@ const ConstantsManagement: React.FC = () => {
               {data[selectedApi.name].length > 0 ? (
                 renderTable(data[selectedApi.name])
               ) : (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-muted-foreground">
                   No data available
                 </div>
               )}

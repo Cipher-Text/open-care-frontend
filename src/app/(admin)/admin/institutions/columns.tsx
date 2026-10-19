@@ -91,7 +91,7 @@ export const columns: ColumnDef<InstitutionResponse>[] = [
       const institution = row.original;
       return (
         <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+          <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
             {institution.imageUrl ? (
               <Image
                 src={institution.imageUrl}
@@ -101,7 +101,7 @@ export const columns: ColumnDef<InstitutionResponse>[] = [
                 className="h-10 w-10 rounded-full object-cover"
               />
             ) : (
-              <Building className="h-5 w-5 text-gray-500" />
+              <Building className="h-5 w-5 text-muted-foreground" />
             )}
           </div>
           <div>

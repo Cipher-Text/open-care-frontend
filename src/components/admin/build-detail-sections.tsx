@@ -31,12 +31,12 @@ export function buildDetailSections(
 				<div className="flex flex-wrap gap-6">
 					{section.properties.map((prop, index) => (
 						<div key={index} className="flex-1 min-w-[250px] space-y-2">
-							<label className="text-sm font-medium text-gray-500">
+							<label className="text-sm font-medium text-muted-foreground">
 								{prop.label}
 							</label>
 							<div className="flex items-center gap-2">
 								{prop.icon && (
-									<span className="text-gray-500">{prop.icon}</span>
+									<span className="text-muted-foreground">{prop.icon}</span>
 								)}
 								<div className="text-sm">{prop.value}</div>
 							</div>
