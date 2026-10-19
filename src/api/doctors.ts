@@ -2,6 +2,7 @@
 import { normalizePage, withWirePage, type WirePage } from "@/lib/pagination";
 
 import {
+	DoctorBulkImportResponse,
 	DoctorListResponse,
 	DoctorResponse,
 	Doctor,
@@ -83,4 +84,26 @@ export const updateDoctor = async (
 		message?: string;
 		data?: unknown;
 	};
+};
+
+/**
+ * Validates (dryRun = true) or imports (dryRun = false) doctors from a CSV file.
+ * Server limits: .csv only, 1 MB, 1000 rows. Existing doctors are skipped, never updated.
+ */
+export const uploadDoctorsCsv = async (
+	file: File,
+	dryRun: boolean
+): Promise<DoctorBulkImportResponse> => {
+	const body = new FormData();
+	body.append("file", file);
+	const response = await apiPost<DoctorBulkImportResponse>(
+		`/doctors/bulk?dryRun=${dryRun}`,
+		body
+	);
+
+	if (!response.ok) {
+		throw new Error(response.error || "Bulk upload failed");
+	}
+
+	return response.data as DoctorBulkImportResponse;
 };

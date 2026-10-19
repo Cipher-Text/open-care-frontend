@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
+import { Plus, Upload } from "lucide-react";
 import { fetchDoctors } from "@/api/doctors";
 import { DoctorListResponse } from "@/types/doctors";
 import { AdminHeader } from "@/components/admin/admin-header";
@@ -59,10 +59,19 @@ export default function DoctorsPage() {
 				description="Manage and monitor doctor registrations and verifications"
 			>
 				{canCreateDoctor && (
-					<Button onClick={() => router.push("/admin/doctors/new")}>
-						<Plus className="mr-2 h-4 w-4" />
-						Add Doctor
-					</Button>
+					<div className="flex gap-2">
+						<Button
+							variant="outline"
+							onClick={() => router.push("/admin/doctors/bulk-upload")}
+						>
+							<Upload className="mr-2 h-4 w-4" />
+							Bulk upload
+						</Button>
+						<Button onClick={() => router.push("/admin/doctors/add")}>
+							<Plus className="mr-2 h-4 w-4" />
+							Add Doctor
+						</Button>
+					</div>
 				)}
 			</AdminHeader>
 

@@ -39,7 +39,9 @@ export async function apiRequest<T = unknown>(
 	// Only send Content-Type with a body. On a GET it turns a simple cross-origin
 	// request into one that needs a CORS preflight (an extra OPTIONS per call).
 	const headers: Record<string, string> = {
-		...(fetchOptions.body ? { "Content-Type": "application/json" } : {}),
+		...(fetchOptions.body && !(fetchOptions.body instanceof FormData)
+			? { "Content-Type": "application/json" }
+			: {}),
 		...customHeaders,
 	};
 
@@ -125,7 +127,12 @@ export async function apiPost<T = unknown>(
 	return apiRequest<T>(endpoint, {
 		...options,
 		method: "POST",
-		body: data ? JSON.stringify(data) : undefined,
+		body:
+			data instanceof FormData
+				? data
+				: data
+				? JSON.stringify(data)
+				: undefined,
 	});
 }
 

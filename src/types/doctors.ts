@@ -379,3 +379,28 @@ export interface DoctorDegreesListResponse {
 	sort: Sort;
 	empty: boolean;
 }
+
+export type DoctorBulkImportStatus =
+	| "VALID"
+	| "CREATED"
+	| "DUPLICATE"
+	| "INVALID"
+	| "FAILED";
+
+export interface DoctorBulkImportRow {
+	rowNumber: number;
+	status: DoctorBulkImportStatus;
+	name: string | null;
+	bmdcNo: string | null;
+	messages: string[];
+}
+
+export interface DoctorBulkImportResponse {
+	dryRun: boolean;
+	totalRows: number;
+	validRows: number;
+	createdCount: number;
+	skippedCount: number;
+	errorCount: number;
+	rows: DoctorBulkImportRow[];
+}
