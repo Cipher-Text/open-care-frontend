@@ -12,6 +12,7 @@ type JwtPayload = {
 
 const ROLE_PERMISSIONS: Record<string, string[]> = {
   "super-admin": [
+    "manage-role-permissions",
     "view_super_admin_panel",
     "view_admin_panel",
     "view_moderator_panel",

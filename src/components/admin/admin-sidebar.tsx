@@ -1,6 +1,9 @@
 "use client";
 
+import { usePermissions } from "@/hooks/use-permissions";
+
 import {
+  ShieldCheck,
   Settings,
   Home,
   LogOut,
@@ -132,9 +135,20 @@ const menuItems = [
     url: "/admin/advertisement",
     icon: Megaphone,
   },
+  {
+    title: "Roles & Permissions",
+    url: "/admin/role-permissions",
+    icon: ShieldCheck,
+    permission: "manage-role-permissions",
+  },
 ];
 
 export function AdminSidebar() {
+  const { hasPermission } = usePermissions();
+  const visibleItems = menuItems.filter(
+    (item) => !("permission" in item) || hasPermission(item.permission as string)
+  );
+
   return (
     <Sidebar variant="inset">
       <SidebarHeader>
@@ -154,7 +168,7 @@ export function AdminSidebar() {
           <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
+              {visibleItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <Link href={item.url}>
                     <SidebarMenuButton>
