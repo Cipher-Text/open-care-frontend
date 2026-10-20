@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { BadgeCheck, GraduationCap, MapPin, Stethoscope, UserRound } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,7 +15,7 @@ export default function DoctorCard({ doctor }: { doctor: DoctorResponse }) {
 	const image = profile?.imageUrl || profile?.photo;
 
 	return (
-		<Card className="gap-0 py-0">
+		<Card className="relative gap-0 py-0 transition-colors hover:border-primary/50">
 			<CardContent className="flex gap-4 p-5 sm:p-6">
 				<div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-primary bg-primary/10 text-primary sm:size-20">
 					{image ? (
@@ -34,7 +35,12 @@ export default function DoctorCard({ doctor }: { doctor: DoctorResponse }) {
 				<div className="min-w-0 flex-1 space-y-2">
 					<div>
 						<h3 className="flex flex-wrap items-center gap-x-2 text-lg font-bold leading-snug text-foreground sm:text-xl">
-							{name}
+							<Link
+								href={`/doctors/${doctor.id}`}
+								className="hover:text-primary hover:underline after:absolute after:inset-0"
+							>
+								{name}
+							</Link>
 							{doctor.isVerified && (
 								<BadgeCheck className="size-5 text-primary" aria-label="Verified" />
 							)}

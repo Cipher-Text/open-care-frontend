@@ -114,8 +114,8 @@ open-care-frontend/
 ### Public Pages
 
 - **Homepage** (`/`) - Hero search, emergency strip with 999, live stats (server-cached, revalidated hourly), browse by place and facility type, claim-your-listing, FAQ
-- **Doctors** (`/doctors`) - Browse and search doctors (real API, filters in the URL)
-- **Hospitals** (`/hospitals`) - Hospital directory (real API, filters in the URL)
+- **Doctors** (`/doctors`) - Browse and search doctors (real API, filters in the URL); `/doctors/[id]` shows degrees, workplaces, associations and links
+- **Hospitals** (`/hospitals`) - Hospital directory (real API, filters in the URL); `/hospitals/[id]` shows contact buttons, directions, services and doctors
 - **Ambulances** (`/ambulances`), **Institutions** (`/institutions`)
 - **About**, **Contact**, **Privacy**, **Terms** (`/about`, `/contact`, `/privacy`, `/terms`)
 - **Login/Signup** - User authentication (`/login`, `/signup`)
@@ -154,6 +154,7 @@ The backend's local realm seeds one user per user type (see the backend README, 
 
 - **Pagination**: the backend returns `{content, currentPage (0-based), totalItems, totalPages}`. List fetchers go through `src/lib/pagination.ts` (`toWirePage`, `normalizePage`, `withWirePage`), so the UI always sees 1-based pages.
 - **Rate limit**: the API allows 100 requests per minute per client. Share one `QueryClient` (`ClientProviders`), keep reference data on the 1 h stale time and avoid polling faster than needed (`usePolling`).
+- **Detail pages** (`/doctors/[id]`, `/hospitals/[id]`) are server-rendered with a 10 minute cache via `src/lib/public-directory.ts`. They show only public professional fields: a doctor's phone, email, date of birth and blood group are never rendered.
 - **Account menu**: one `UserMenu` in the admin top bar; the sidebar has no profile block.
 - **Permissions**: UI hides actions with `usePermissions().hasPermission(...)`, which is only a convenience. The backend enforces access.
 

@@ -13,6 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
 import { Hospital } from "@/types/hospitals";
 
 function safeUrl(url?: string | null) {
@@ -36,7 +37,7 @@ export default function HospitalCard({ hospital }: { hospital: Hospital }) {
 		.join(", ");
 
 	return (
-		<Card className="h-full gap-0 py-0">
+		<Card className="relative h-full gap-0 py-0 transition-colors hover:border-primary/50">
 			<CardContent className="flex h-full flex-col gap-4 p-5 sm:p-6">
 				<div className="flex gap-4">
 					<div className="flex size-14 shrink-0 items-center justify-center rounded-lg border-2 border-primary bg-primary/10 text-primary">
@@ -44,7 +45,12 @@ export default function HospitalCard({ hospital }: { hospital: Hospital }) {
 					</div>
 					<div className="min-w-0">
 						<h3 className="flex flex-wrap items-center gap-x-2 text-lg font-bold leading-snug text-foreground">
-							{hospital.name}
+							<Link
+								href={`/hospitals/${hospital.id}`}
+								className="hover:text-primary hover:underline after:absolute after:inset-0"
+							>
+								{hospital.name}
+							</Link>
 							{hospital.isVerified && (
 								<BadgeCheck
 									className="size-5 text-primary"
@@ -107,7 +113,7 @@ export default function HospitalCard({ hospital }: { hospital: Hospital }) {
 				)}
 
 				{(phone || validEmail || website) && (
-					<div className="mt-auto flex flex-col gap-2 pt-2 sm:flex-row">
+					<div className="relative z-10 mt-auto flex flex-col gap-2 pt-2 sm:flex-row">
 						{phone && (
 							<Button asChild className="h-11">
 								<a href={`tel:${phone.replace(/\s+/g, "")}`}>

@@ -1,5 +1,7 @@
 # Open Care – Frontend Testing Plan & Strategy
 
+> Status (October 2026): **plan only. No test runner, test files or `type-check` script exist yet**; type errors surface through `npm run build`. Suggested first targets: `src/lib/pagination.ts`, `src/hooks/use-url-params.ts`, `usePermissions`, the login flow, and the bulk-upload and role-permissions pages.
+
 > Scope: **Open Care Frontend (Next.js / React)**
 > Audience: Frontend engineers, QA, reviewers
 > Goal: Ensure **trust, safety, and stability** for a healthcare platform
