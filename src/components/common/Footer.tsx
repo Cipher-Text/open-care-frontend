@@ -4,28 +4,60 @@ export default function Footer() {
 	return (
 		<footer className="bg-foreground py-12 text-background">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-				<div className="grid gap-8 sm:grid-cols-3">
+				<div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
 					<div>
 						<h3 className="mb-2 text-xl font-bold">Open Care</h3>
 						<p className="text-sm opacity-80">
-							A healthcare directory for Bangladesh.
+							A free health directory for Bangladesh. Hospitals, clinics, diagnostic centers, blood banks and
+							doctors in every district.
 						</p>
 					</div>
-					<nav aria-label="Footer">
+
+					<nav aria-label="Directory">
 						<h4 className="mb-3 font-bold">Directory</h4>
 						<ul className="space-y-2 text-sm opacity-80">
+							<li>
+								<Link href="/hospitals" className="hover:underline">
+									Hospitals and clinics
+								</Link>
+							</li>
 							<li>
 								<Link href="/doctors" className="hover:underline">
 									Doctors
 								</Link>
 							</li>
 							<li>
-								<Link href="/hospitals" className="hover:underline">
-									Hospitals
+								<Link href="/hospitals?type=BLOOD_BANK" className="hover:underline">
+									Blood banks
 								</Link>
 							</li>
 						</ul>
 					</nav>
+
+					<nav aria-label="About">
+						<h4 className="mb-3 font-bold">About</h4>
+						<ul className="space-y-2 text-sm opacity-80">
+							<li>
+								<a href="https://hub.opencarebd.com" className="hover:underline" target="_blank" rel="noopener noreferrer">
+									About the project
+								</a>
+							</li>
+							<li>
+								<Link href="/signup" className="hover:underline">
+									For doctors and facilities
+								</Link>
+							</li>
+							<li>
+								<a
+									href="mailto:hello@opencarebd.com?subject=Incorrect%20information%20on%20Open%20Care"
+									className="hover:underline"
+								>
+									Report incorrect information
+								</a>
+							</li>
+						</ul>
+					</nav>
+
 					<div>
 						<h4 className="mb-3 font-bold">Contact</h4>
 						<p className="text-sm opacity-80">
@@ -34,11 +66,18 @@ export default function Footer() {
 							</a>
 						</p>
 						<p className="mt-1 text-sm opacity-80">Dhaka, Bangladesh</p>
+						<p className="mt-4 text-sm font-medium">
+							Emergency? Call{" "}
+							<a href="tel:999" className="underline">
+								999
+							</a>
+						</p>
 					</div>
 				</div>
+
 				<div className="mt-10 border-t border-background/20 pt-6 text-center text-sm opacity-80">
-					© {new Date().getFullYear()} Open Care. Information only, not medical
-					advice.
+					© {new Date().getFullYear()} Open Care. Information only, not medical advice. Listings may be
+					incomplete or out of date.
 				</div>
 			</div>
 		</footer>

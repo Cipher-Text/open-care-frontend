@@ -1,58 +1,45 @@
-import Link from "next/link";
-import { Search, Stethoscope, Building2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import HeroSearch from "@/components/home/HeroSearch";
+import { HomeStats, formatCount } from "@/lib/public-stats";
 
-export default function HeroSection() {
+export default function HeroSection({ stats }: { stats: HomeStats }) {
+	const facts = [
+		stats.facilities != null && { value: formatCount(stats.facilities), label: "health facilities" },
+		stats.doctors != null && { value: formatCount(stats.doctors), label: "doctors" },
+		stats.upazilas != null && { value: formatCount(stats.upazilas), label: "upazilas covered" },
+		stats.districts != null && { value: formatCount(stats.districts), label: "districts" },
+	].filter(Boolean) as { value: string; label: string }[];
+
 	return (
-		<section className="bg-gradient-to-br from-primary/10 to-accent py-12 sm:py-20">
-			<div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-				<h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-					Find doctors and hospitals <span className="text-primary">across Bangladesh</span>
+		<section aria-labelledby="hero-title" className="bg-gradient-to-b from-primary/10 to-background py-12 sm:py-20">
+			<div className="mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
+				<p className="mb-3 text-sm font-medium uppercase tracking-wide text-primary">
+					Bangladesh health directory
+				</p>
+				<h1 id="hero-title" className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+					Find the right care, <span className="text-primary">close to home</span>
 				</h1>
 				<p className="mx-auto mt-5 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-					Search a directory of doctors and hospitals by specialty, location and
-					type.
+					Search hospitals, clinics, diagnostic centers, blood banks and doctors in every district of
+					Bangladesh.
 				</p>
 
-				<form
-					action="/doctors"
-					method="get"
-					role="search"
-					className="mx-auto mt-8 flex max-w-2xl flex-col gap-3 sm:flex-row"
-				>
-					<div className="relative flex-1">
-						<Search
-							className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground"
-							aria-hidden="true"
-						/>
-						<Input
-							name="q"
-							type="search"
-							aria-label="Search doctors, specialties or hospitals"
-							placeholder="Search doctors or hospitals"
-							className="h-12 rounded-full border-2 border-primary bg-background pl-12 text-base"
-						/>
-					</div>
-					<Button type="submit" size="lg" className="h-12 rounded-full px-8">
-						Search
-					</Button>
-				</form>
+				<HeroSearch districts={stats.districtList} />
 
-				<div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-					<Button asChild size="lg" variant="outline" className="h-12">
-						<Link href="/doctors">
-							<Stethoscope className="mr-2 size-4" aria-hidden="true" />
-							Browse doctors
-						</Link>
-					</Button>
-					<Button asChild size="lg" variant="outline" className="h-12">
-						<Link href="/hospitals">
-							<Building2 className="mr-2 size-4" aria-hidden="true" />
-							Browse hospitals
-						</Link>
-					</Button>
-				</div>
+				{facts.length > 0 && (
+					<dl className="mx-auto mt-10 grid max-w-3xl grid-cols-2 gap-6 sm:grid-cols-4">
+						{facts.map((f) => (
+							<div key={f.label}>
+								<dt className="sr-only">{f.label}</dt>
+								<dd className="text-2xl font-bold text-foreground sm:text-3xl" aria-label={`${f.value} ${f.label}`}>
+									{f.value}
+									<span className="mt-1 block text-sm font-normal text-muted-foreground" aria-hidden="true">
+										{f.label}
+									</span>
+								</dd>
+							</div>
+						))}
+					</dl>
+				)}
 			</div>
 		</section>
 	);
