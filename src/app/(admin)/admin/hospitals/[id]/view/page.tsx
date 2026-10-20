@@ -12,6 +12,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { DetailView } from "@/components/admin/detail-view";
 import { buildHospitalDetailSections } from "@/components/admin/build-hospital-sections";
+import { AmenitiesPanel } from "@/components/admin/hospital/amenities-panel";
+import { DoctorsPanel } from "@/components/admin/hospital/doctors-panel";
+import { MedicalTestsPanel } from "@/components/admin/hospital/medical-tests-panel";
+import { TagsPanel } from "@/components/admin/hospital/tags-panel";
 
 export default function HospitalViewPage() {
 	const params = useParams();
@@ -131,6 +135,13 @@ export default function HospitalViewPage() {
 			</AdminHeader>
 
 			<DetailView sections={buildHospitalDetailSections(hospital)} />
+
+			<div className="grid gap-6">
+				<DoctorsPanel hospitalId={hospital.id} doctors={hospital.doctors ?? []} />
+				<MedicalTestsPanel hospitalId={hospital.id} tests={hospital.tests ?? []} />
+				<AmenitiesPanel hospitalId={hospital.id} amenities={hospital.amenities ?? []} />
+				<TagsPanel hospitalId={hospital.id} tags={hospital.tags ?? []} />
+			</div>
 		</div>
 	);
 }

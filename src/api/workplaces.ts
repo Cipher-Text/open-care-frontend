@@ -27,7 +27,7 @@ export const fetchDoctorWorkplaces = async (
 	doctorId: string | number
 ): Promise<DoctorWorkplace[]> => {
 	const response = await apiGet<DoctorWorkplace[]>(
-		`/doctors/${doctorId}/workplaces/all`
+		`/doctors/${doctorId}/workplaces`
 	);
 
 	if (!response.ok) {

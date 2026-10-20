@@ -22,6 +22,7 @@ Not built: online booking, telemedicine, GPS ambulance tracking.
 - **Medical Specialties**: Manage medical specializations and departments
 - **Medical Tests**: Catalog and manage available medical tests
 - **Geolocation Management**: Administrative divisions, districts, and upazilas
+- **Hospital management**: on `/admin/hospitals/[id]/view`, add and remove doctors, medical tests and amenities, and edit tags (each action needs its permission, tags and doctors need `update-hospital`)
 - **Doctor Bulk Upload**: Import doctors from CSV with a dry-run preview
 - **Role Permissions**: Edit which permissions each role has, with an audit log
 - **Advertisements**: Create, edit and delete advertisements and advertisement types
@@ -155,6 +156,7 @@ The backend's local realm seeds one user per user type (see the backend README, 
 - **Pagination**: the backend returns `{content, currentPage (0-based), totalItems, totalPages}`. List fetchers go through `src/lib/pagination.ts` (`toWirePage`, `normalizePage`, `withWirePage`), so the UI always sees 1-based pages.
 - **Rate limit**: the API allows 100 requests per minute per client. Share one `QueryClient` (`ClientProviders`), keep reference data on the 1 h stale time and avoid polling faster than needed (`usePolling`).
 - **Detail pages** (`/doctors/[id]`, `/hospitals/[id]`) are server-rendered with a 10 minute cache via `src/lib/public-directory.ts`. They show only public professional fields: a doctor's phone, email, date of birth and blood group are never rendered.
+- **SEO**: `src/app/sitemap.ts` serves `/sitemap/0.xml` (static pages) plus chunked hospital and doctor sitemaps (5,000 records each, cached for a day), and `src/app/robots.ts` lists them and blocks `/admin`, `/login`, `/signup`, `/logout` and `/auth`. Set `NEXT_PUBLIC_SITE_URL` per environment (default `https://opencarebd.com`).
 - **Account menu**: one `UserMenu` in the admin top bar; the sidebar has no profile block.
 - **Permissions**: UI hides actions with `usePermissions().hasPermission(...)`, which is only a convenience. The backend enforces access.
 

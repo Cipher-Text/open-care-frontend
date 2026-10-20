@@ -5,14 +5,9 @@ import {
 	Globe,
 	MapPin,
 	Bed,
-	Tag as TagIcon,
-	Stethoscope,
-	FlaskConical,
 	Sparkles,
-	DollarSign,
 	CheckCircle,
 	XCircle,
-	Package,
 	Mail,
 	Phone,
 	Share2,
@@ -161,126 +156,6 @@ export function buildHospitalDetailSections(
 		},
 	];
 
-	const doctorsProperties: PropertyConfig[] =
-		hospital.doctors?.map((doctor) => ({
-			label: doctor.profile.name,
-			value: (
-				<div className="space-y-2">
-					<div className="text-sm text-muted-foreground">{doctor.profile.bnName}</div>
-					<div className="flex items-center gap-2">
-						<span className="text-xs font-mono bg-muted px-2 py-1 rounded">
-							{doctor.bmdcNo}
-						</span>
-						{doctor.isVerified && (
-							<span className="text-xs text-green-600 flex items-center gap-1">
-								<CheckCircle className="h-3 w-3" /> Verified
-							</span>
-						)}
-					</div>
-					{doctor.specializations && (
-						<div className="flex items-center gap-2">
-							<Stethoscope className="h-3 w-3 text-muted-foreground" />
-							<span className="text-sm">{doctor.specializations}</span>
-						</div>
-					)}
-					{doctor.yearOfExperience && (
-						<div className="text-sm text-muted-foreground">
-							{doctor.yearOfExperience} years experience
-						</div>
-					)}
-					{(doctor.profile.email || doctor.profile.phone) && (
-						<div className="space-y-1 pt-2 border-t text-xs text-muted-foreground">
-							{doctor.profile.email && <div>{doctor.profile.email}</div>}
-							{doctor.profile.phone && <div>{doctor.profile.phone}</div>}
-						</div>
-					)}
-				</div>
-			),
-		})) || [];
-
-	const testsProperties: PropertyConfig[] =
-		hospital.tests?.map((test) => ({
-			label: test.name,
-			value: (
-				<div className="space-y-2">
-					<div className="text-sm text-muted-foreground">{test.medicalTest.bnName}</div>
-					<div className="flex items-center gap-2">
-						<span className="text-xs font-mono bg-muted px-2 py-1 rounded">
-							৳{test.price.toLocaleString()}
-						</span>
-						{test.isActive ? (
-							<span className="text-xs text-green-600">Active</span>
-						) : (
-							<span className="text-xs text-red-600">Inactive</span>
-						)}
-					</div>
-					{test.category && (
-						<div className="text-sm text-muted-foreground">
-							Category: {test.category}
-						</div>
-					)}
-					{test.testCode && (
-						<div className="text-xs text-muted-foreground">Code: {test.testCode}</div>
-					)}
-					<div className="text-sm">
-						{test.isAvailable ? (
-							<span className="text-green-600 flex items-center gap-1">
-								<CheckCircle className="h-3 w-3" /> Available
-							</span>
-						) : (
-							<span className="text-red-600 flex items-center gap-1">
-								<XCircle className="h-3 w-3" /> Not Available
-							</span>
-						)}
-					</div>
-					{test.description && (
-						<p className="text-sm text-muted-foreground pt-2 border-t">
-							{test.description}
-						</p>
-					)}
-				</div>
-			),
-		})) || [];
-
-	const amenitiesProperties: PropertyConfig[] =
-		hospital.amenities?.map((amenity) => ({
-			label: amenity.name,
-			value: (
-				<div className="space-y-2">
-					<div className="text-xs text-muted-foreground">
-						{amenity.type.replace(/_/g, " ")}
-					</div>
-					{amenity.price > 0 && (
-						<div className="flex items-center gap-2">
-							<DollarSign className="h-3 w-3 text-muted-foreground" />
-							<span className="text-sm font-semibold">
-								৳{amenity.price.toLocaleString()}
-							</span>
-						</div>
-					)}
-					<div className="flex items-center gap-4 text-sm">
-						<span className="flex items-center gap-1">
-							<Package className="h-3 w-3" /> Total: {amenity.quantity}
-						</span>
-						<span className="flex items-center gap-1 text-green-600">
-							<CheckCircle className="h-3 w-3" /> {amenity.available}
-						</span>
-					</div>
-					{amenity.isActive ? (
-						<span className="text-xs text-green-600">Active</span>
-					) : (
-						<span className="text-xs text-red-600">Inactive</span>
-					)}
-				</div>
-			),
-		})) || [];
-
-	const tagsProperties: PropertyConfig[] =
-		hospital.tags?.map((tag) => ({
-			label: tag.displayName || tag.name,
-			value: <span className="text-xs text-muted-foreground">{tag.category}</span>,
-		})) || [];
-
 	const sections: SectionConfig[] = [
 		{
 			id: "basic",
@@ -300,35 +175,8 @@ export function buildHospitalDetailSections(
 			icon: <Sparkles className="h-5 w-5" />,
 			properties: serviceProperties,
 		},
-		{
-			id: "doctors",
-			title: `Doctors (${hospital.doctors?.length || 0})`,
-			icon: <Stethoscope className="h-5 w-5" />,
-			properties: doctorsProperties,
-			emptyMessage: "No doctors found.",
-		},
-		{
-			id: "tests",
-			title: `Medical Tests (${hospital.tests?.length || 0})`,
-			icon: <FlaskConical className="h-5 w-5" />,
-			properties: testsProperties,
-			emptyMessage: "No medical tests found.",
-		},
-		{
-			id: "amenities",
-			title: `Amenities & Services (${hospital.amenities?.length || 0})`,
-			icon: <Sparkles className="h-5 w-5" />,
-			properties: amenitiesProperties,
-			emptyMessage: "No amenities or services found.",
-		},
-		{
-			id: "tags",
-			title: "Tags",
-			icon: <TagIcon className="h-5 w-5" />,
-			properties: tagsProperties,
-			emptyMessage: "No tags found.",
-		},
 	];
 
+	// Doctors, medical tests, amenities and tags are managed on the page itself (components/admin/hospital).
 	return buildDetailSections(sections);
 }
