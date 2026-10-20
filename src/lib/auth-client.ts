@@ -1,3 +1,5 @@
+import { logout } from "@/app/logout/actions";
+
 import { LoginResponse } from "@/types/auth";
 
 /**
@@ -48,14 +50,17 @@ export function getAuthHeader(): { Authorization?: string } {
 }
 
 /**
- * Client-side logout function
+ * Client-side logout. Clears the localStorage session, then calls the server action that
+ * deletes the httpOnly auth cookies (client code cannot) and redirects to /login. Clearing
+ * only localStorage left the cookie behind, and the middleware sent /login straight back
+ * to /admin.
  */
 export function clientLogout(): void {
-  // Clear localStorage session
   clearUserSession();
 
-  // Redirect to login page
   if (typeof window !== "undefined") {
-    window.location.href = "/login";
+    logout().catch(() => {
+      window.location.href = "/login";
+    });
   }
 }

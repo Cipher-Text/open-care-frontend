@@ -23,6 +23,7 @@ import {
 } from "@/types/dashboard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import { usePolling } from "@/hooks/use-polling";
 
 export default function AdminDashboardPage() {
   const [data, setData] = useState<DashboardOverview | null>(null);
@@ -55,45 +56,24 @@ export default function AdminDashboardPage() {
     fetchData();
   }, []);
 
-  // Fetch real-time stats with auto-refresh every 10 seconds
-  useEffect(() => {
-    async function fetchRealTimeStats() {
-      try {
-        const response = await getRealTimeStats();
-
-        if (response.ok && response.data) {
-          setRealTimeData(response.data);
-        }
-      } catch (err) {
-        console.error("Failed to fetch real-time stats:", err);
-      }
+  // Auto-refreshing panels. usePolling pauses while the tab is hidden.
+  usePolling(async () => {
+    try {
+      const response = await getRealTimeStats();
+      if (response.ok && response.data) setRealTimeData(response.data);
+    } catch (err) {
+      console.error("Failed to fetch real-time stats:", err);
     }
+  }, 15000);
 
-    fetchRealTimeStats();
-    const interval = setInterval(fetchRealTimeStats, 10000); // Refresh every 10 seconds
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Fetch alerts with auto-refresh every 30 seconds
-  useEffect(() => {
-    async function fetchAlerts() {
-      try {
-        const response = await getDashboardAlerts();
-
-        if (response.ok && response.data) {
-          setAlerts(response.data);
-        }
-      } catch (err) {
-        console.error("Failed to fetch alerts:", err);
-      }
+  usePolling(async () => {
+    try {
+      const response = await getDashboardAlerts();
+      if (response.ok && response.data) setAlerts(response.data);
+    } catch (err) {
+      console.error("Failed to fetch alerts:", err);
     }
-
-    fetchAlerts();
-    const interval = setInterval(fetchAlerts, 30000); // Refresh every 30 seconds
-
-    return () => clearInterval(interval);
-  }, []);
+  }, 30000);
 
   // Fetch registration trends (one-time on mount)
   useEffect(() => {
@@ -112,25 +92,14 @@ export default function AdminDashboardPage() {
     fetchTrends();
   }, []);
 
-  // Fetch recent activities with auto-refresh every 30 seconds
-  useEffect(() => {
-    async function fetchActivities() {
-      try {
-        const response = await getRecentActivities(20);
-
-        if (response.ok && response.data) {
-          setActivities(response.data);
-        }
-      } catch (err) {
-        console.error("Failed to fetch recent activities:", err);
-      }
+  usePolling(async () => {
+    try {
+      const response = await getRecentActivities(20);
+      if (response.ok && response.data) setActivities(response.data);
+    } catch (err) {
+      console.error("Failed to fetch recent activities:", err);
     }
-
-    fetchActivities();
-    const interval = setInterval(fetchActivities, 30000); // Refresh every 30 seconds
-
-    return () => clearInterval(interval);
-  }, []);
+  }, 30000);
 
   return (
     <div className="flex flex-col">

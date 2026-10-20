@@ -45,32 +45,20 @@ export default function HospitalsPage() {
 		placeholderData: (previousData) => previousData,
 	});
 
-	// Fetch upazilas for filter dropdown
+	// Fetch upazilas for filter dropdown (reference data, cached for an hour)
 	const { data: upazilas = [], isLoading: isUpazilasLoading } = useQuery({
 		queryKey: ["upazilas"],
 		queryFn: fetchUpazilas,
+		staleTime: 60 * 60 * 1000,
 	});
 
-	// Fetch unions for filter dropdown
+	// Unions are only needed for the upazila picked in the filter: one request when chosen,
+	// not one per upazila (that was ~500 requests per page visit and tripped the rate limit)
 	const { data: unions = [], isLoading: isUnionsLoading } = useQuery({
-		queryKey: ["unions"],
-		queryFn: async () => {
-			// Fetch unions for all upazilas or you might want to fetch them conditionally
-			const allUnions = [];
-			for (const upazila of upazilas) {
-				try {
-					const upazilaUnions = await fetchUnionsByUpazila(upazila.id);
-					allUnions.push(...upazilaUnions);
-				} catch (error) {
-					console.error(
-						`Failed to fetch unions for upazila ${upazila.id}:`,
-						error
-					);
-				}
-			}
-			return allUnions;
-		},
-		enabled: upazilas.length > 0,
+		queryKey: ["unions", filters.upazilaId],
+		queryFn: () => fetchUnionsByUpazila(Number(filters.upazilaId)),
+		enabled: !!filters.upazilaId && filters.upazilaId !== "all",
+		staleTime: 60 * 60 * 1000,
 	});
 
 	const handlePageChange = (page: number) => {
