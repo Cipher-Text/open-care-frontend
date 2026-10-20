@@ -2,6 +2,8 @@
 
 This guide explains how to implement consistent detail view pages across the application using the generic detail view system.
 
+> Note: the hospital admin view no longer lists doctors, medical tests, amenities and tags as read-only sections. They are editable panels in `src/components/admin/hospital/` rendered below the detail sections of `/admin/hospitals/[id]/view`.
+
 ## Overview
 
 The detail view system consists of three main components:
