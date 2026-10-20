@@ -77,3 +77,75 @@ export const fetchHospitalTypeOptions = () =>
 
 export const fetchOrganizationTypeOptions = () =>
 	getPublic<ICommonEnum[]>("/organization-types");
+
+// ---- Ambulances and institutions (public lists) ----
+
+export interface PublicAmbulance {
+	id: number;
+	vehicleNumber: string;
+	type: { value: string; description: string } | null;
+	driverName: string | null;
+	driverPhone: string | null;
+	isAvailable: boolean;
+	isAffiliated: boolean;
+	hospital: { id: number; name: string } | null;
+	upazila: { id: number; name: string } | null;
+	district: { id: number; name: string } | null;
+}
+
+export interface AmbulanceQuery {
+	districtId?: string;
+	type?: string;
+	isAvailable?: boolean;
+	page: number;
+	size: number;
+}
+
+export const fetchPublicAmbulances = async ({
+	page,
+	...rest
+}: AmbulanceQuery): Promise<PageResult<PublicAmbulance>> =>
+	normalizePage(
+		await getPublic<WirePage<PublicAmbulance>>("/ambulances", {
+			...rest,
+			sort: "id",
+			direction: "DESC",
+			page: toWirePage(page),
+		})
+	);
+
+export interface PublicInstitution {
+	id: number;
+	acronym: string | null;
+	name: string;
+	bnName: string | null;
+	establishedYear: number | null;
+	enroll: number | null;
+	websiteUrl: string | null;
+	district: { id: number; name: string } | null;
+	upazila: { id: number; name: string } | null;
+	institutionType: { value: string; englishName: string } | null;
+	organizationType: { value: string; displayName: string } | null;
+}
+
+export interface InstitutionQuery {
+	name?: string;
+	districtId?: string;
+	organizationType?: string;
+	page: number;
+	size: number;
+}
+
+export const fetchPublicInstitutions = async ({
+	page,
+	...rest
+}: InstitutionQuery): Promise<PageResult<PublicInstitution>> =>
+	normalizePage(
+		await getPublic<WirePage<PublicInstitution>>("/institutions", {
+			...rest,
+			page: toWirePage(page),
+		})
+	);
+
+export const fetchAmbulanceTypeOptions = () =>
+	getPublic<{ value: string; description: string }[]>("/ambulance-types");

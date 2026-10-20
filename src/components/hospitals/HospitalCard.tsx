@@ -5,6 +5,7 @@ import {
 	Building2,
 	Droplets,
 	Globe,
+	Mail,
 	MapPin,
 	Phone,
 	Siren,
@@ -27,6 +28,9 @@ function safeUrl(url?: string | null) {
 export default function HospitalCard({ hospital }: { hospital: Hospital }) {
 	const website = safeUrl(hospital.websiteUrl);
 	const phone = hospital.phone?.trim();
+	// Email is the contact detail most listings have; ignore malformed values
+	const email = hospital.email?.trim();
+	const validEmail = email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : null;
 	const location = [hospital.address, hospital.upazila?.name, hospital.district?.name]
 		.filter(Boolean)
 		.join(", ");
@@ -102,13 +106,21 @@ export default function HospitalCard({ hospital }: { hospital: Hospital }) {
 					</div>
 				)}
 
-				{(phone || website) && (
+				{(phone || validEmail || website) && (
 					<div className="mt-auto flex flex-col gap-2 pt-2 sm:flex-row">
 						{phone && (
 							<Button asChild className="h-11">
 								<a href={`tel:${phone.replace(/\s+/g, "")}`}>
 									<Phone className="mr-2 size-4" aria-hidden="true" />
 									Call
+								</a>
+							</Button>
+						)}
+						{validEmail && (
+							<Button asChild variant="outline" className="h-11">
+								<a href={`mailto:${validEmail}`} aria-label={`Email ${hospital.name}`}>
+									<Mail className="mr-2 size-4" aria-hidden="true" />
+									Email
 								</a>
 							</Button>
 						)}

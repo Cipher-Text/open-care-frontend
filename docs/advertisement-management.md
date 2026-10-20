@@ -2,7 +2,13 @@
 
 ## Overview
 
-The Advertisement Management feature allows administrators to manage advertisement types and active advertisements on the OpenCare platform.
+The Advertisement Management feature allows administrators to manage advertisement types and advertisements on the OpenCare platform, including creating, editing and deleting both.
+
+### Create, edit, delete
+
+- Dialogs live in `src/components/admin/advertisements/` (`advertisement-dialog`, `advertisement-type-dialog`, `confirm-delete-dialog`, shared `form-fields`).
+- Buttons show only if the user has the matching permission: `create-advertisement`, `update-advertisement`, `delete-advertisement` and the `-advertisement-type` variants. The backend enforces the same permissions; super admin has them by default.
+- API calls (`POST`, `PUT`, `DELETE` on `/api/advertisements` and `/api/advertisement-types`) are in `src/api/advertisements.ts`.
 
 ## Features
 
@@ -49,7 +55,7 @@ Response structure:
 
 ```json
 {
-  "types": [
+  "content": [
     {
       "id": number,
       "name": string,
@@ -78,7 +84,7 @@ Response structure:
 
 ```json
 {
-  "advertisements": [
+  "content": [
     {
       "id": number,
       "title": string,
@@ -181,10 +187,6 @@ The component uses a custom CSS file with responsive design:
 
 Potential features to add:
 
-- Create new advertisement types
-- Create new advertisements
-- Edit existing advertisements
-- Delete advertisements
 - Filter by status (active/inactive)
 - Filter by date range
 - Export to CSV

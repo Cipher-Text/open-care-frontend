@@ -16,43 +16,25 @@ export default function Footer() {
 					<nav aria-label="Directory">
 						<h4 className="mb-3 font-bold">Directory</h4>
 						<ul className="space-y-2 text-sm opacity-80">
-							<li>
-								<Link href="/hospitals" className="hover:underline">
-									Hospitals and clinics
-								</Link>
-							</li>
-							<li>
-								<Link href="/doctors" className="hover:underline">
-									Doctors
-								</Link>
-							</li>
-							<li>
-								<Link href="/hospitals?type=BLOOD_BANK" className="hover:underline">
-									Blood banks
-								</Link>
-							</li>
+							<li><Link href="/hospitals" className="hover:underline">Hospitals and clinics</Link></li>
+							<li><Link href="/doctors" className="hover:underline">Doctors</Link></li>
+							<li><Link href="/ambulances" className="hover:underline">Ambulance services</Link></li>
+							<li><Link href="/hospitals?type=BLOOD_BANK" className="hover:underline">Blood banks</Link></li>
+							<li><Link href="/institutions" className="hover:underline">Medical institutions</Link></li>
 						</ul>
 					</nav>
 
-					<nav aria-label="About">
-						<h4 className="mb-3 font-bold">About</h4>
+					<nav aria-label="About and legal">
+						<h4 className="mb-3 font-bold">Open Care</h4>
 						<ul className="space-y-2 text-sm opacity-80">
+							<li><Link href="/about" className="hover:underline">About</Link></li>
+							<li><Link href="/contact" className="hover:underline">Contact</Link></li>
+							<li><Link href="/signup" className="hover:underline">For doctors and facilities</Link></li>
+							<li><Link href="/privacy" className="hover:underline">Privacy policy</Link></li>
+							<li><Link href="/terms" className="hover:underline">Terms of use</Link></li>
 							<li>
 								<a href="https://hub.opencarebd.com" className="hover:underline" target="_blank" rel="noopener noreferrer">
-									About the project
-								</a>
-							</li>
-							<li>
-								<Link href="/signup" className="hover:underline">
-									For doctors and facilities
-								</Link>
-							</li>
-							<li>
-								<a
-									href="mailto:hello@opencarebd.com?subject=Incorrect%20information%20on%20Open%20Care"
-									className="hover:underline"
-								>
-									Report incorrect information
+									Project hub
 								</a>
 							</li>
 						</ul>

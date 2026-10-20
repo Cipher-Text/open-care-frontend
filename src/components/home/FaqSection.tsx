@@ -23,7 +23,7 @@ export const FAQ_ITEMS = [
 
 export default function FaqSection() {
 	return (
-		<section aria-labelledby="faq-title" className="py-14 sm:py-16">
+		<section id="faq" aria-labelledby="faq-title" className="scroll-mt-20 py-14 sm:py-16">
 			<div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
 				<h2 id="faq-title" className="mb-8 text-center text-2xl font-bold text-foreground sm:text-3xl">
 					Common questions

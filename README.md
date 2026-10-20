@@ -7,10 +7,12 @@ A comprehensive healthcare management platform built with Next.js that connects 
 ### Patient Services
 
 - **Doctor Consultation**: Find and consult with verified doctors across various specialties
-- **Hospital Directory**: Browse hospitals with detailed information and services
-- **Ambulance Booking**: 24/7 emergency ambulance services with GPS tracking
-- **Blood Bank Network**: Connect with blood donors and blood banks for emergencies
-- **Telemedicine**: Video consultations with healthcare professionals
+- **Hospital Directory**: Browse hospitals with URL-state filters and an Email button on each card
+- **Ambulance Directory**: Public list of ambulance services, plus a red 999 emergency pill in the header
+- **Institutions**: Public institutions directory
+- **Blood donors and requisitions**: Managed in the admin dashboard (no public blood page yet)
+
+Not built: online booking, telemedicine, GPS ambulance tracking.
 
 ### Admin Dashboard
 
@@ -20,6 +22,9 @@ A comprehensive healthcare management platform built with Next.js that connects 
 - **Medical Specialties**: Manage medical specializations and departments
 - **Medical Tests**: Catalog and manage available medical tests
 - **Geolocation Management**: Administrative divisions, districts, and upazilas
+- **Doctor Bulk Upload**: Import doctors from CSV with a dry-run preview
+- **Role Permissions**: Edit which permissions each role has, with an audit log
+- **Advertisements**: Create, edit and delete advertisements and advertisement types
 - **Analytics & Reports**: Healthcare facility performance insights
 
 ## 🚀 Getting Started
@@ -70,15 +75,15 @@ open-care-frontend/
 ├── src/
 │   ├── app/                    # Next.js App Router pages
 │   │   ├── (admin)/admin/     # Admin dashboard routes (auth required)
-│   │   ├── (main)/            # Public pages (doctors, hospitals)
+│   │   ├── (main)/            # Public pages (doctors, hospitals, ambulances, institutions, about, contact, privacy, terms); the home page is src/app/page.tsx
 │   │   ├── login/ signup/ logout/ auth/refresh/
 │   ├── components/            # admin, common, doctors, hospitals, home, ui
 │   ├── api/                   # API client modules, one per backend resource
 │   ├── contexts/              # Auth context
-│   ├── hooks/                 # use-permissions, use-mobile
+│   ├── hooks/                 # use-permissions, use-url-params, use-polling, use-mobile
 │   ├── types/ validations/    # TypeScript types, Zod schemas
 │   ├── config/                # config.ts (API base URL)
-│   └── lib/                   # Utility functions
+│   └── lib/                   # api-client, auth, pagination (page-shape contract), public-stats (cached home stats), utils
 ├── middleware.ts              # Redirects unauthenticated /admin requests to /login
 ├── docs/                      # Feature docs, AI context, openapi.json
 ├── public/                    # Static assets
@@ -108,19 +113,22 @@ open-care-frontend/
 
 ### Public Pages
 
-- **Homepage** (`/`) - Hero, services, testimonials
-- **Doctors** (`/doctors`) - Browse and search doctors
-- **Hospitals** (`/hospitals`) - Hospital directory
+- **Homepage** (`/`) - Hero search, emergency strip with 999, live stats (server-cached, revalidated hourly), browse by place and facility type, claim-your-listing, FAQ
+- **Doctors** (`/doctors`) - Browse and search doctors (real API, filters in the URL)
+- **Hospitals** (`/hospitals`) - Hospital directory (real API, filters in the URL)
+- **Ambulances** (`/ambulances`), **Institutions** (`/institutions`)
+- **About**, **Contact**, **Privacy**, **Terms** (`/about`, `/contact`, `/privacy`, `/terms`)
 - **Login/Signup** - User authentication (`/login`, `/signup`)
 
 ### Admin Dashboard (`/admin`)
 
 - **Dashboard / Analytics** - Stats, charts, recent activity
-- **Doctors, Nurses, Hospitals, Institutions** - Directory management
+- **Doctors, Nurses, Hospitals, Institutions** - Directory management; `/admin/doctors/bulk-upload` for CSV import
 - **Associations / Social Organizations** - Organization management
 - **Blood, Ambulances** - Donation and emergency services
 - **Medical Specialities / Medical Tests / Degrees** - Reference data
 - **Geolocation** - Divisions, districts, upazilas
+- **Roles & Permissions** (`/admin/role-permissions`, needs `manage-role-permissions`)
 - **Advertisement, Health vitals, Users, Profile(s), Settings, Constants**
 
 ## 🔧 Configuration
@@ -134,14 +142,20 @@ NEXT_PUBLIC_API_BASE_URL=https://api.opencarebd.com/api
 
 ### Dev one-click login
 
-On `/login` a "Dev login (one click)" button appears only when `NODE_ENV` is `development` (`npm run dev`), and the server action refuses to run otherwise. Put the account in `.env.local` (git-ignored, server-side only, never `NEXT_PUBLIC_`), then restart the dev server:
+On `/login`, one-click buttons appear only when `NODE_ENV` is `development` (`npm run dev`), and the server action refuses to run otherwise. Put the accounts in `.env.local` (git-ignored, server-side only, never `NEXT_PUBLIC_`) as a JSON array, then restart the dev server:
 
 ```bash
-DEV_LOGIN_USERNAME=your-dev-user
-DEV_LOGIN_PASSWORD=your-dev-password
+DEV_LOGIN_ACCOUNTS='[{"label":"Super admin","username":"superadmin","password":"123456"},{"label":"Doctor","username":"doctor","password":"123456"}]'
 ```
 
-Use an account on a development backend, not a production admin.
+The backend's local realm seeds one user per user type (see the backend README, "Seeded dev accounts"). Use accounts on a development backend, never a production admin.
+
+### Conventions worth knowing
+
+- **Pagination**: the backend returns `{content, currentPage (0-based), totalItems, totalPages}`. List fetchers go through `src/lib/pagination.ts` (`toWirePage`, `normalizePage`, `withWirePage`), so the UI always sees 1-based pages.
+- **Rate limit**: the API allows 100 requests per minute per client. Share one `QueryClient` (`ClientProviders`), keep reference data on the 1 h stale time and avoid polling faster than needed (`usePolling`).
+- **Account menu**: one `UserMenu` in the admin top bar; the sidebar has no profile block.
+- **Permissions**: UI hides actions with `usePermissions().hasPermission(...)`, which is only a convenience. The backend enforces access.
 
 ### Build Commands
 

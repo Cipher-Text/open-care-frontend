@@ -36,6 +36,7 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
       "advertisement-positions",
       "age-groups",
       "gender-options",
+      "ambulance-types",
       "hospital-types",
       "organization-types",
     ];
