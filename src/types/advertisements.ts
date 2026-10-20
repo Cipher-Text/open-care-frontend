@@ -13,7 +13,7 @@ export interface AdvertisementType {
 }
 
 export interface AdvertisementTypesResponse {
-  types: AdvertisementType[];
+  content: AdvertisementType[];
   totalItems: number;
   totalPages: number;
   currentPage: number;

@@ -64,7 +64,7 @@ const AdvertisementManagement: React.FC = () => {
     setError("");
     try {
       const response = await getAdvertisementTypes(page, pageSize);
-      setTypes(response.types);
+      setTypes(response.content ?? []);
       setTypesTotalPages(response.totalPages);
       setTypesTotalItems(response.totalItems);
     } catch (err) {
@@ -80,7 +80,7 @@ const AdvertisementManagement: React.FC = () => {
     setError("");
     try {
       const response = await getAdvertisements(page, pageSize);
-      setAdvertisements(response.content);
+      setAdvertisements(response.content ?? []);
       setAdsTotalPages(response.totalPages);
       setAdsTotalItems(response.totalItems);
     } catch (err) {
