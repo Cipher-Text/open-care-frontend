@@ -107,3 +107,51 @@ export interface AdvertisementsResponse {
   totalPages: number;
   currentPage: number;
 }
+
+/** Body for creating or replacing an advertisement type (PUT replaces every field). */
+export interface AdvertisementTypeInput {
+  name: string;
+  description: string;
+  /** An AdvertisementPosition value such as CAROUSEL (see getAdvertisementPositions). */
+  position: string;
+  basePrice: number;
+  durationInDays: number;
+}
+
+/** Body for creating or replacing an advertisement. Views and clicks are server-managed. */
+export interface AdvertisementInput {
+  title: string;
+  content: string | null;
+  imageUrl: string | null;
+  targetUrl: string | null;
+  targetType: string;
+  targetId: number | null;
+  advTypeId: number;
+  districtId: number | null;
+  upazilaId: number | null;
+  unionId: number | null;
+  medSpecialityId: number | null;
+  ageGroup: string | null;
+  gender: string | null;
+  startTime: string;
+  endTime: string;
+  isActive: boolean;
+}
+
+export interface AdvertisementPositionOption {
+  value: string;
+  position: string;
+}
+
+export interface AgeGroupOption {
+  value: string;
+  label: string;
+  startAge: number;
+  endAge: number;
+}
+
+export interface GenderOption {
+  value: string;
+  displayName: string;
+  banglaName: string;
+}

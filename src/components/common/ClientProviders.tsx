@@ -32,6 +32,10 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
       "degrees",
       "institutions-all",
       "hospitals-all",
+      "upazilas-by-district",
+      "advertisement-positions",
+      "age-groups",
+      "gender-options",
       "hospital-types",
       "organization-types",
     ];

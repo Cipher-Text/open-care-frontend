@@ -9,13 +9,26 @@ import {
   ChevronRight,
   Eye,
   MousePointerClick,
+  Pencil,
+  Plus,
+  Trash2,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { getAdvertisementTypes, getAdvertisements } from "@/api/advertisements";
+import {
+  deleteAdvertisement,
+  deleteAdvertisementType,
+  getAdvertisementTypes,
+  getAdvertisements,
+} from "@/api/advertisements";
+import { AdvertisementDialog } from "@/components/admin/advertisements/advertisement-dialog";
+import { AdvertisementTypeDialog } from "@/components/admin/advertisements/advertisement-type-dialog";
+import { ConfirmDeleteDialog } from "@/components/admin/advertisements/confirm-delete-dialog";
+import { usePermissions } from "@/hooks/use-permissions";
 import { AdvertisementType, Advertisement } from "@/types/advertisements";
 import "./advertisement-management.css";
 
@@ -39,6 +52,29 @@ const AdvertisementManagement: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState("");
+
+  // Create / edit / delete (each action needs its own permission)
+  const { hasPermission } = usePermissions();
+  const canCreateType = hasPermission("create-advertisement-type");
+  const canUpdateType = hasPermission("update-advertisement-type");
+  const canDeleteType = hasPermission("delete-advertisement-type");
+  const canCreateAd = hasPermission("create-advertisement");
+  const canUpdateAd = hasPermission("update-advertisement");
+  const canDeleteAd = hasPermission("delete-advertisement");
+
+  const [typeDialog, setTypeDialog] = useState<{ open: boolean; type: AdvertisementType | null }>({
+    open: false,
+    type: null,
+  });
+  const [adDialog, setAdDialog] = useState<{ open: boolean; ad: Advertisement | null }>({
+    open: false,
+    ad: null,
+  });
+  const [deleting, setDeleting] = useState<
+    { kind: "type" | "ad"; id: number; label: string } | null
+  >(null);
+  const [deletePending, setDeletePending] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   // Pagination state
   const [typesPage, setTypesPage] = useState(0);
@@ -110,15 +146,69 @@ const AdvertisementManagement: React.FC = () => {
   const filteredTypes = types.filter(
     (type) =>
       type.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      type.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      type.position.position.toLowerCase().includes(searchTerm.toLowerCase())
+      (type.description ?? "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (type.position?.position ?? "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const filteredAdvertisements = advertisements.filter(
     (ad) =>
       ad.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ad.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ad.advertisementType.name.toLowerCase().includes(searchTerm.toLowerCase())
+      (ad.content ?? "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (ad.advertisementType?.name ?? "").toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const confirmDelete = async () => {
+    if (!deleting) return;
+    setDeletePending(true);
+    setDeleteError(null);
+    try {
+      if (deleting.kind === "type") await deleteAdvertisementType(deleting.id);
+      else await deleteAdvertisement(deleting.id);
+      toast.success(`${deleting.kind === "type" ? "Advertisement type" : "Advertisement"} deleted`);
+      setDeleting(null);
+      // Deleting the last row of a page would leave an empty page behind
+      const rowsOnPage = deleting.kind === "type" ? types.length : advertisements.length;
+      const page = deleting.kind === "type" ? typesPage : adsPage;
+      if (rowsOnPage === 1 && page > 0) {
+        if (deleting.kind === "type") setTypesPage(page - 1);
+        else setAdsPage(page - 1);
+      } else {
+        handleRefresh();
+      }
+    } catch (err) {
+      setDeleteError((err as Error).message);
+    } finally {
+      setDeletePending(false);
+    }
+  };
+
+  const actionCell = (
+    canEdit: boolean,
+    canRemove: boolean,
+    onEdit: () => void,
+    onDelete: () => void,
+    name: string
+  ) => (
+    <td>
+      <div className="flex gap-1">
+        {canEdit && (
+          <Button variant="ghost" size="icon" onClick={onEdit} aria-label={`Edit ${name}`}>
+            <Pencil className="h-4 w-4" />
+          </Button>
+        )}
+        {canRemove && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onDelete}
+            aria-label={`Delete ${name}`}
+            className="text-destructive hover:text-destructive"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
+    </td>
   );
 
   const renderTypesTable = () => (
@@ -132,6 +222,7 @@ const AdvertisementManagement: React.FC = () => {
             <th>Position</th>
             <th>Base Price</th>
             <th>Duration</th>
+            {(canUpdateType || canDeleteType) && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -141,12 +232,23 @@ const AdvertisementManagement: React.FC = () => {
               <td className="font-medium">{type.name}</td>
               <td className="max-w-xs">{type.description}</td>
               <td>
-                <span className="position-badge">{type.position.position}</span>
+                <span className="position-badge">{type.position?.position}</span>
               </td>
               <td className="font-semibold">
                 ৳{type.basePrice.toLocaleString()}
               </td>
               <td>{type.durationInDays} days</td>
+              {(canUpdateType || canDeleteType) &&
+                actionCell(
+                  canUpdateType,
+                  canDeleteType,
+                  () => setTypeDialog({ open: true, type }),
+                  () => {
+                    setDeleteError(null);
+                    setDeleting({ kind: "type", id: type.id, label: type.name });
+                  },
+                  type.name
+                )}
             </tr>
           ))}
         </tbody>
@@ -173,6 +275,7 @@ const AdvertisementManagement: React.FC = () => {
             <th>Duration</th>
             <th>Status</th>
             <th>Stats</th>
+            {(canUpdateAd || canDeleteAd) && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -180,42 +283,52 @@ const AdvertisementManagement: React.FC = () => {
             <tr key={ad.id}>
               <td>{ad.id}</td>
               <td>
-                <div className="relative w-[60px] h-[60px]">
-                  <Image
-                    src={ad.imageUrl}
-                    alt={ad.title}
-                    fill
-                    className="advertisement-image object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        "/placeholder-image.png";
-                    }}
-                  />
-                </div>
+                {ad.imageUrl ? (
+                  <div className="relative w-[60px] h-[60px]">
+                    <Image
+                      src={ad.imageUrl}
+                      alt={ad.title}
+                      fill
+                      className="advertisement-image object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          "/placeholder-image.png";
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <span className="text-xs text-muted-foreground">No image</span>
+                )}
               </td>
               <td>
                 <div className="font-medium">{ad.title}</div>
-                <div className="text-xs text-muted-foreground mt-1">{ad.content}</div>
+                <div className="text-xs text-muted-foreground mt-1">{ad.content ?? ""}</div>
               </td>
               <td>
-                <div className="text-sm">{ad.advertisementType.name}</div>
+                <div className="text-sm">{ad.advertisementType?.name}</div>
                 <span className="position-badge mt-1">
-                  {ad.advertisementType.position.position}
+                  {ad.advertisementType?.position?.position}
                 </span>
               </td>
               <td>
-                <a
-                  href={ad.targetUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="advertisement-link"
-                >
-                  {ad.targetType} #{ad.targetId}
-                </a>
+                {ad.targetUrl ? (
+                  <a
+                    href={ad.targetUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="advertisement-link"
+                  >
+                    {ad.targetType} {ad.targetId != null ? `#${ad.targetId}` : ""}
+                  </a>
+                ) : (
+                  <span>
+                    {ad.targetType} {ad.targetId != null ? `#${ad.targetId}` : ""}
+                  </span>
+                )}
               </td>
               <td>
                 <div className="text-sm">
-                  <div>{ad.district.name}</div>
+                  <div>{ad.district?.name ?? "All districts"}</div>
                   {ad.upazila && (
                     <div className="text-xs text-muted-foreground">
                       {ad.upazila.name}
@@ -254,6 +367,17 @@ const AdvertisementManagement: React.FC = () => {
                   </div>
                 </div>
               </td>
+              {(canUpdateAd || canDeleteAd) &&
+                actionCell(
+                  canUpdateAd,
+                  canDeleteAd,
+                  () => setAdDialog({ open: true, ad }),
+                  () => {
+                    setDeleteError(null);
+                    setDeleting({ kind: "ad", id: ad.id, label: ad.title });
+                  },
+                  ad.title
+                )}
             </tr>
           ))}
         </tbody>
@@ -316,6 +440,18 @@ const AdvertisementManagement: React.FC = () => {
             />
           </div>
         </div>
+        {activeTab === "types" && canCreateType && (
+          <Button onClick={() => setTypeDialog({ open: true, type: null })}>
+            <Plus className="w-4 h-4 mr-2" />
+            New type
+          </Button>
+        )}
+        {activeTab === "advertisements" && canCreateAd && (
+          <Button onClick={() => setAdDialog({ open: true, ad: null })}>
+            <Plus className="w-4 h-4 mr-2" />
+            New advertisement
+          </Button>
+        )}
         <Button onClick={handleRefresh} variant="outline" disabled={loading}>
           <RefreshCw
             className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`}
@@ -371,6 +507,28 @@ const AdvertisementManagement: React.FC = () => {
           </>
         )}
       </Card>
+
+      <AdvertisementTypeDialog
+        open={typeDialog.open}
+        onOpenChange={(open) => setTypeDialog((d) => ({ ...d, open }))}
+        type={typeDialog.type}
+        onSaved={handleRefresh}
+      />
+      <AdvertisementDialog
+        open={adDialog.open}
+        onOpenChange={(open) => setAdDialog((d) => ({ ...d, open }))}
+        advertisement={adDialog.ad}
+        onSaved={handleRefresh}
+      />
+      <ConfirmDeleteDialog
+        open={deleting !== null}
+        onOpenChange={(open) => !open && setDeleting(null)}
+        title={deleting?.kind === "type" ? "Delete advertisement type?" : "Delete advertisement?"}
+        description={`"${deleting?.label ?? ""}" will be permanently deleted. This cannot be undone.`}
+        error={deleteError}
+        pending={deletePending}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 };

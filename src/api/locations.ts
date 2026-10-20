@@ -63,3 +63,17 @@ export const fetchUnionsByUpazila = async (
 
 	return response.json();
 };
+
+export const fetchUpazilasByDistrict = async (
+	districtId: number
+): Promise<UpazilaResponse> => {
+	const response = await fetch(`${baseUrl}/districts/${districtId}/upazilas`);
+
+	if (!response.ok) {
+		throw new Error(
+			`Failed to fetch upazilas: ${response.status} ${response.statusText}`
+		);
+	}
+
+	return response.json();
+};
