@@ -119,7 +119,7 @@ open-care-frontend/
 - **Hospitals** (`/hospitals`) - Hospital directory (real API, filters in the URL); `/hospitals/[id]` shows contact buttons, directions, services and doctors
 - **Ambulances** (`/ambulances`), **Institutions** (`/institutions`)
 - **About**, **Contact**, **Privacy**, **Terms** (`/about`, `/contact`, `/privacy`, `/terms`)
-- **Login/Signup** - User authentication (`/login`, `/signup`)
+- **Login/Signup** - `/login` and `/signup`. Signup calls `POST /api/auth/register` (`src/api/register.ts`) and creates a regular `USER` account; passwords need an uppercase letter, a lowercase letter, a digit and one of `@#$%^&+=`
 
 ### Admin Dashboard (`/admin`)
 

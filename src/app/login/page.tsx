@@ -34,6 +34,12 @@ export default function LoginPage() {
 	useEffect(() => {
 		if (isDev) getDevLoginAccounts().then(setDevAccounts);
 	}, [isDev]);
+
+	// Set by the signup page after a successful registration
+	const [justRegistered, setJustRegistered] = useState(false);
+	useEffect(() => {
+		setJustRegistered(new URLSearchParams(window.location.search).get("registered") === "1");
+	}, []);
 	// const { refetchUser } = useAuth();
 
 	// Handle redirect on successful login
@@ -79,6 +85,14 @@ export default function LoginPage() {
 					</CardHeader>
 					<CardContent>
 						<form action={action} className="space-y-6">
+							{justRegistered && (
+								<div role="status" className="bg-green-50 border border-green-200 rounded-md p-3">
+									<p className="text-sm text-green-700">
+										Your account was created. Sign in with your email and password.
+									</p>
+								</div>
+							)}
+
 							{/* Server Error Display */}
 							{state.error && (
 								<div className="bg-red-50 border border-red-200 rounded-md p-3">

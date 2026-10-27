@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Eye, EyeOff, User, Mail, Phone, Lock } from "lucide-react";
 import { signupSchema, SignupFormData } from "@/validations/signup-schema";
+import { registerUser } from "@/api/register";
 import { fetchDistricts } from "@/api/locations";
 import { fetchBloodGroups } from "@/api/blood-groups";
 import { fetchGenders } from "@/api/gender";
@@ -47,17 +48,13 @@ export default function SignupPage() {
     setError("");
 
     try {
-      // TODO: Replace with actual API call
-      console.log("Signup data:", data);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // TODO: Handle successful signup (redirect to login or dashboard)
-      router.push("/login?message=Account created successfully");
-    } catch {
+      await registerUser(data);
+      router.push("/login?registered=1");
+    } catch (err) {
       setError(
-        "An error occurred while creating your account. Please try again."
+        err instanceof Error
+          ? err.message
+          : "An error occurred while creating your account. Please try again."
       );
     } finally {
       setIsLoading(false);
