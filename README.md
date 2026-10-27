@@ -24,6 +24,8 @@ Not built: online booking, telemedicine, GPS ambulance tracking.
 - **Geolocation Management**: Administrative divisions, districts, and upazilas
 - **Hospital management**: on `/admin/hospitals/[id]/view`, add and remove doctors, medical tests and amenities, and edit tags (each action needs its permission, tags and doctors need `update-hospital`)
 - **Doctor Bulk Upload**: Import doctors from CSV with a dry-run preview
+- **Prescriptions** (`/admin/prescriptions`, doctors with the prescription permissions): find a registered patient by exact phone, email or username, ask for consent, then write the prescription. List and search your own prescriptions, view, edit, and print or save as PDF from the browser
+- **My consents** (`/admin/consents`, any signed-in user): approve or decline a doctor's request and take back a consent you gave
 - **Role Permissions**: Edit which permissions each role has, with an audit log
 - **Advertisements**: Create, edit and delete advertisements and advertisement types
 - **Analytics & Reports**: Healthcare facility performance insights
@@ -129,6 +131,7 @@ open-care-frontend/
 - **Blood, Ambulances** - Donation and emergency services
 - **Medical Specialities / Medical Tests / Degrees** - Reference data
 - **Geolocation** - Divisions, districts, upazilas
+- **Prescriptions** (`/admin/prescriptions`, `/new`, `/[id]`, `/[id]/edit`) and **My consents** (`/admin/consents`)
 - **Roles & Permissions** (`/admin/role-permissions`, needs `manage-role-permissions`)
 - **Advertisement, Health vitals, Users, Profile(s), Settings, Constants**
 
