@@ -5,6 +5,7 @@ import { usePermissions } from "@/hooks/use-permissions";
 import {
   ShieldCheck,
   Home,
+  FileText,
   Stethoscope,
   Building2,
   Brain,
@@ -122,6 +123,17 @@ const menuItems = [
     icon: Megaphone,
   },
   {
+    title: "Prescriptions",
+    url: "/admin/prescriptions",
+    icon: FileText,
+    permission: "view-prescription",
+  },
+  {
+    title: "My consents",
+    url: "/admin/consents",
+    icon: ShieldCheck,
+  },
+  {
     title: "Roles & Permissions",
     url: "/admin/role-permissions",
     icon: ShieldCheck,
@@ -136,7 +148,7 @@ export function AdminSidebar() {
   );
 
   return (
-    <Sidebar variant="inset">
+    <Sidebar variant="inset" className="print:hidden">
       <SidebarHeader>
         <div className="flex items-center gap-2 px-4 py-2">
           <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
