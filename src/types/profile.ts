@@ -95,6 +95,10 @@ export interface UserProfile {
   union: Union | null;
   contributionPoints: number;
   isBloodDonor: boolean;
+  /** When they agreed to be listed as a blood donor; null means they have not. */
+  bloodDonorConsentAt: string | null;
+  donorSharePhone: boolean;
+  donorShareAddress: boolean;
   bloodDonationCount: number | null;
   lastBloodDonationDate: string | null;
   isVolunteer: boolean;

@@ -73,7 +73,9 @@ out();
 
 out("## Known limits");
 out();
-out("- Update and delete permissions are global: a role that may update doctors can update any doctor, and a hospital admin can change any hospital. Scoping to the person's own record or hospital is not done yet.");
+out("- Update and delete permissions are global: a hospital admin can change any hospital, and a role that holds create, delete or verify on doctors can change any doctor. Scoping to the person's own hospital is not done yet.");
+out("- A doctor holds `update-doctor` but can change only their own doctor record, degrees, associations and workplaces; the API checks this on every write. A doctor cannot verify, activate or deactivate anyone, including themselves.");
+out("- The doctor's menu entries for Institutions, Medicines and Associations are read-only: they come from `view-doctor-panel`, and the add, edit and delete buttons and API calls still need the real permission.");
 out("- Everyone signed in can use the account area: own profile, consents and health readings. Health readings are readable only by their owner.");
 out("- Prescribing is for doctors only; the super admin does not hold the prescription permissions.");
 out();

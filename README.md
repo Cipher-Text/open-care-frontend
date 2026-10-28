@@ -25,6 +25,7 @@ Not built: online booking, telemedicine, GPS ambulance tracking.
 - **Hospital management**: on `/admin/hospitals/[id]/view`, add and remove doctors, medical tests and amenities, and edit tags (each action needs its permission, tags and doctors need `update-hospital`)
 - **Doctor Bulk Upload**: Import doctors from CSV with a dry-run preview
 - **Prescriptions** (`/admin/prescriptions`, doctors with the prescription permissions): find a registered patient by exact phone, email or username, ask for consent, then write the prescription. List and search your own prescriptions, view, edit, and print or save as PDF from the browser
+- **Blood donor choice** (on `/admin/profile` and `/account/profile`): the person ticks to be listed as a blood donor and chooses whether to show their phone and address; unticking withdraws. Calls `PUT /api/profiles/self/blood-donor`
 - **My consents** (`/admin/consents`, any signed-in user): approve or decline a doctor's request and take back a consent you gave
 - **Role Permissions**: Edit which permissions each role has, with an audit log
 - **Advertisements**: Create, edit and delete advertisements and advertisement types
@@ -78,7 +79,7 @@ open-care-frontend/
 ├── src/
 │   ├── app/                    # Next.js App Router pages
 │   │   ├── (admin)/admin/     # Admin dashboard routes (auth required)
-│   │   ├── (main)/            # Public pages (doctors, hospitals, ambulances, institutions, about, contact, privacy, terms); the home page is src/app/page.tsx
+│   │   ├── (main)/            # Public pages (doctors, hospitals, ambulances, institutions, pricing, about, contact, privacy, terms); the home page is src/app/page.tsx
 │   │   ├── login/ signup/ logout/ auth/refresh/
 │   ├── components/            # admin, common, doctors, hospitals, home, ui
 │   ├── api/                   # API client modules, one per backend resource
@@ -121,18 +122,20 @@ open-care-frontend/
 - **Doctors** (`/doctors`) - Browse and search doctors (real API, filters in the URL); `/doctors/[id]` shows degrees, workplaces, associations and links
 - **Hospitals** (`/hospitals`) - Hospital directory (real API, filters in the URL); `/hospitals/[id]` shows contact buttons, directions, services and doctors
 - **Ambulances** (`/ambulances`), **Institutions** (`/institutions`)
+- **Pricing** (`/pricing?for=patients|doctors|hospitals`): Free, Plus and Pro for each audience, with prices and the features each plan includes read from `GET /api/plans` (the backend plans, so there is one place to change them) and the wording in `src/config/pricing-plans.ts`. If the API is unreachable the page says prices are unavailable. `npm run test:pricing` checks how the plans become the page. Paid plans are a waitlist (mailto) and roadmap features are labelled; nothing is sold or charged in the app yet
 - **About**, **Contact**, **Privacy**, **Terms** (`/about`, `/contact`, `/privacy`, `/terms`)
 - **Login/Signup** - `/login` and `/signup`. Signup calls `POST /api/auth/register` (`src/api/register.ts`) and creates a regular `USER` account; passwords need an uppercase letter, a lowercase letter, a digit and one of `@#$%^&+=`
 
 ### Admin Dashboard (`/admin`)
 
-- **Dashboard** (`/admin`) - one dashboard for everyone in the console: real directory totals, shortcuts for what your role can do, pending consent requests, and (super admin) the full system overview. `/admin/dashboard` redirects here. The old placeholder analytics and users pages with made-up figures were removed
+- **Dashboard** (`/admin`) - one dashboard for everyone in the console: real directory totals, shortcuts for what your role can do, pending consent requests, and (super admin) the full system overview. A doctor sees their own practice instead of directory totals (`DoctorDashboard`, data from `GET /api/me/doctor-dashboard`): items needing attention, prescriptions and patients against the previous 30 days, 12-week trend, consent outcomes, follow-ups due, profile readiness, top diagnoses and medicines. `/admin/dashboard` redirects here. The old placeholder analytics and users pages with made-up figures were removed
 - **Doctors, Nurses, Hospitals, Institutions** - Directory management; `/admin/doctors/bulk-upload` for CSV import
 - **Associations / Social Organizations** - Organization management
 - **Blood, Ambulances** - Donation and emergency services
 - **Medical Specialities / Medical Tests / Degrees** - Reference data
 - **Geolocation** - Divisions, districts, upazilas
 - **Prescriptions** (`/admin/prescriptions`, `/new`, `/[id]`, `/[id]/edit`) and **My consents** (`/admin/consents`)
+- **My doctor profile** (`/admin/doctors/me`, `view-doctor-panel`) opens the signed-in doctor's own record to edit (found through `GET /api/me/doctor`). The edit button in the Doctors list shows only on their own row, and `/admin/doctors/[id]` refuses another doctor's id, unless they administer doctors (`src/config/doctor-access.ts`, the same rule as the API's `DoctorAccess`). Doctors also get read-only **Institutions**, **Associations** and **Medicines** (`/admin/medicines`: search plus a searchable company dropdown) from `view-doctor-panel`
 - **Roles & Permissions** (`/admin/role-permissions`, needs `manage-role-permissions`)
 - **Advertisement, Health vitals, Users, Profile(s), Settings, Constants**
 

@@ -18,6 +18,7 @@
   "delete-profile",
   "delete-social-organization",
   "manage-blood",
+  "manage-subscriptions",
   "update-doctor",
   "update-hospital",
   "update-hospital-medical-test",
@@ -28,6 +29,7 @@
   "update-social-organization",
   "verify-doctor",
   "view-admin-panel",
+  "view-blood-donors",
   "view-profile"
  ],
  "association-admin": [
@@ -113,6 +115,7 @@
   "update-profile",
   "update-social-organization",
   "verify-doctor",
+  "view-blood-donors",
   "view-moderator-panel",
   "view-profile"
  ],
@@ -141,6 +144,7 @@
   "update-nurse",
   "update-profile",
   "update-social-organization",
+  "view-blood-donors",
   "view-operator-panel",
   "view-profile"
  ],
@@ -190,6 +194,7 @@
   "manage-blood",
   "manage-health-vitals",
   "manage-role-permissions",
+  "manage-subscriptions",
   "remove-user-role",
   "sync-data",
   "update-advertisement",
@@ -205,6 +210,7 @@
   "update-profile",
   "update-social-organization",
   "verify-doctor",
+  "view-blood-donors",
   "view-profile",
   "view-super-admin-panel",
   "view-user-activity"

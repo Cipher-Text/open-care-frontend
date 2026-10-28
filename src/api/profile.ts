@@ -154,3 +154,26 @@ export const getProfileById = async (
 
 	return response.data as ProfileDetailsResponse;
 };
+
+export interface BloodDonorChoice {
+	donor: boolean;
+	consentedAt: string | null;
+	sharePhone: boolean;
+	shareAddress: boolean;
+}
+
+/**
+ * Choose whether to be listed as a blood donor, and what to share. The only way to change this, and only for yourself;
+ * unticking withdraws consent.
+ */
+export const updateBloodDonorChoice = async (
+	choice: Pick<BloodDonorChoice, "donor" | "sharePhone" | "shareAddress">
+): Promise<BloodDonorChoice> => {
+	const response = await apiPut<BloodDonorChoice>("/profiles/self/blood-donor", choice);
+
+	if (!response.ok || !response.data) {
+		throw new Error(response.error || "Failed to save your blood donor choice");
+	}
+
+	return response.data;
+};

@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { DoctorResponse } from "@/types/doctors";
 import { usePermissions } from "@/hooks/use-permissions";
 import { useMyDoctor } from "@/hooks/use-my-doctor";
+import { canEditDoctor as mayEditDoctor } from "@/config/doctor-access";
 
 // Actions component to use hooks
 function ActionsCell({ doctor }: { doctor: DoctorResponse }) {
@@ -25,8 +26,7 @@ function ActionsCell({ doctor }: { doctor: DoctorResponse }) {
   const { hasPermission } = usePermissions();
   const { data: myDoctor } = useMyDoctor();
   // A doctor edits only their own record; staff who administer doctors edit any
-  const isManager = hasPermission("create-doctor") || hasPermission("delete-doctor") || hasPermission("verify-doctor");
-  const canEditDoctor = hasPermission("update-doctor") && (isManager || myDoctor?.id === doctor.id);
+  const canEditDoctor = mayEditDoctor(hasPermission, doctor.id, myDoctor?.id);
   const canDeleteDoctor = hasPermission("delete-doctor");
 
   const handleEdit = () => {

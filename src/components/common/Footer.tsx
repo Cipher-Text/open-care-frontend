@@ -28,6 +28,7 @@ export default function Footer() {
 						<h4 className="mb-3 font-bold">Open Care</h4>
 						<ul className="space-y-2 text-sm opacity-80">
 							<li><Link href="/about" className="hover:underline">About</Link></li>
+							<li><Link href="/pricing" className="hover:underline">Pricing</Link></li>
 							<li><Link href="/contact" className="hover:underline">Contact</Link></li>
 							<li><Link href="/signup" className="hover:underline">For doctors and facilities</Link></li>
 							<li><Link href="/privacy" className="hover:underline">Privacy policy</Link></li>

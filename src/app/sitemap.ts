@@ -4,7 +4,7 @@ import { siteUrl } from "@/lib/site";
 
 export const revalidate = 86400;
 
-const STATIC_PATHS = ["", "/hospitals", "/doctors", "/ambulances", "/institutions", "/about", "/contact", "/privacy", "/terms"];
+const STATIC_PATHS = ["", "/hospitals", "/doctors", "/ambulances", "/institutions", "/about", "/pricing", "/contact", "/privacy", "/terms"];
 
 export async function generateSitemaps() {
 	const { hospitalChunks, doctorChunks } = await getSitemapPlan();
