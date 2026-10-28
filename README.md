@@ -144,7 +144,8 @@ open-care-frontend/
 ### Environment Variables
 
 ```bash
-# API Configuration (defaults to https://api.opencarebd.com/api, see src/config/config.ts)
+# API Configuration (see src/config/config.ts). Required for production builds; the build fails without it.
+# Local development defaults to http://localhost:6700/api. Copy .env.example for the full list.
 NEXT_PUBLIC_API_BASE_URL=https://api.opencarebd.com/api
 ```
 
