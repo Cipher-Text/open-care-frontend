@@ -1,7 +1,7 @@
 "use client";
 
 import { usePermissions } from "@/hooks/use-permissions";
-import { visibleMenu } from "@/config/navigation-rules";
+import { groupedMenu } from "@/config/navigation-rules";
 
 import type { LucideIcon } from "lucide-react";
 import {
@@ -64,7 +64,7 @@ const ICONS: Record<string, LucideIcon> = {
 export function AdminSidebar() {
   const { hasPermission, ready } = usePermissions();
   // Nothing is listed until the token has been read, so the menu never flashes entries the person cannot use
-  const visibleItems = ready ? visibleMenu(hasPermission) : [];
+  const sections = ready ? groupedMenu(hasPermission) : [];
 
   return (
     <Sidebar variant="inset" className="print:hidden">
@@ -81,26 +81,28 @@ export function AdminSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {visibleItems.map((item) => (
-                <SidebarMenuItem key={item.id}>
-                  <Link href={item.url}>
-                    <SidebarMenuButton>
-                      {(() => {
-                        const Icon = ICONS[item.id] ?? Home;
-                        return <Icon />;
-                      })()}
-                      <span>{item.title}</span>
-                    </SidebarMenuButton>
-                  </Link>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {sections.map((section) => (
+          <SidebarGroup key={section.label ?? "top"}>
+            {section.label && <SidebarGroupLabel>{section.label}</SidebarGroupLabel>}
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {section.items.map((item) => (
+                  <SidebarMenuItem key={item.id}>
+                    <Link href={item.url}>
+                      <SidebarMenuButton>
+                        {(() => {
+                          const Icon = ICONS[item.id] ?? Home;
+                          return <Icon />;
+                        })()}
+                        <span>{item.title}</span>
+                      </SidebarMenuButton>
+                    </Link>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
 
     </Sidebar>

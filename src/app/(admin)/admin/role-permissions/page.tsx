@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { RoleMenuPreview } from "@/components/admin/role-menu-preview";
 import { usePermissions } from "@/hooks/use-permissions";
 import { RolePermissionMatrix } from "@/types/role-permissions";
 
@@ -315,6 +316,15 @@ function MappingTab() {
 					</Button>
 				</div>
 			</div>
+
+			<RoleMenuPreview
+				roles={data.roles.map((role) => ({
+					group: role.group,
+					name: role.name,
+					current: current(role.group),
+					saved: serverSet(role.group),
+				}))}
+			/>
 
 			<ConfirmDialog
 				open={confirmOpen}

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
-import { isStaff, landingPath, routeAllowed, visibleMenu } from "./navigation-rules.ts";
+import { groupedMenu, isStaff, landingPath, routeAllowed, visibleMenu } from "./navigation-rules.ts";
 
 // Run with: npm run test:nav
 // The fixture is the live role-to-permission mapping (GET /api/role-permissions as super admin).
@@ -104,4 +104,17 @@ test("the dashboard overview is for staff, and /admin/analytics and /admin/users
 	assert.equal(routeAllowed("/admin/analytics", hasFor("super-admin")), true);
 	assert.equal(routeAllowed("/admin/users", hasFor("moderator")), true);
 	assert.equal(routeAllowed("/admin/users", hasFor("doctor")), false);
+});
+
+test("the menu is grouped in a fixed order, with empty sections left out", () => {
+	const sections = (role: string) => groupedMenu(hasFor(role)).map((s) => s.label);
+	assert.deepEqual(sections("super-admin"), [null, "People", "Facilities", "Reference data", "Platform", "Account"]);
+	assert.deepEqual(sections("doctor"), [null, "People", "Clinical", "Account"]);
+	assert.deepEqual(sections("institution-admin"), [null, "Facilities", "Account"]);
+	assert.deepEqual(sections("user"), ["Account"]);
+	// Grouping never adds or removes an entry
+	for (const role of Object.keys(EXPECTED)) {
+		const flat = groupedMenu(hasFor(role)).flatMap((s) => s.items.map((r) => r.id)).sort();
+		assert.deepEqual(flat, [...menu(role)].sort(), role);
+	}
 });

@@ -18,44 +18,53 @@ export interface NavRule {
 	always?: boolean;
 	/** Reachable and guarded, but not listed in the menu. */
 	hidden?: boolean;
+	/** Menu section. The Dashboard has none and sits at the top. */
+	group?: MenuGroup;
 }
+
+export type MenuGroup = "People" | "Facilities" | "Reference data" | "Clinical" | "Platform" | "Account";
+
+/** Order of the sections in the menu. */
+export const MENU_GROUPS: MenuGroup[] = ["People", "Facilities", "Reference data", "Clinical", "Platform", "Account"];
 
 const crud = (name: string) => [`create-${name}`, `update-${name}`, `delete-${name}`];
 const MASTER = crud("master-data");
 
 export const CONSOLE_RULES: NavRule[] = [
 	{ id: "dashboard", title: "Dashboard", url: "/admin", anyOf: [] },
-	{ id: "admin-dashboard", title: "Admin Dashboard", url: "/admin/dashboard", anyOf: ["view-super-admin-panel"] },
-	{ id: "doctors", title: "Doctors", url: "/admin/doctors", anyOf: crud("doctor") },
-	{ id: "nurses", title: "Nurses", url: "/admin/nurses", anyOf: crud("nurse") },
-	{ id: "profiles", title: "Profiles", url: "/admin/profiles", anyOf: ["view-profile"] },
-	{ id: "institutions", title: "Institutions", url: "/admin/institutions", anyOf: crud("institution") },
+	{ id: "admin-dashboard", group: "Platform", title: "Admin Dashboard", url: "/admin/dashboard", anyOf: ["view-super-admin-panel"] },
+	{ id: "doctors", group: "People", title: "Doctors", url: "/admin/doctors", anyOf: crud("doctor") },
+	{ id: "nurses", group: "People", title: "Nurses", url: "/admin/nurses", anyOf: crud("nurse") },
+	{ id: "profiles", group: "People", title: "Profiles", url: "/admin/profiles", anyOf: ["view-profile"] },
+	{ id: "institutions", group: "Facilities", title: "Institutions", url: "/admin/institutions", anyOf: crud("institution") },
 	{
 		id: "hospitals",
+		group: "Facilities",
 		title: "Hospitals",
 		url: "/admin/hospitals",
 		anyOf: [...crud("hospital"), ...crud("hospital-amenity"), ...crud("hospital-medical-test")],
 	},
-	{ id: "medical-specialities", title: "Medical Specialities", url: "/admin/medical-specialities", anyOf: MASTER },
-	{ id: "medical-tests", title: "Medical Tests", url: "/admin/medical-tests", anyOf: MASTER },
-	{ id: "associations", title: "Associations", url: "/admin/associations", anyOf: MASTER },
-	{ id: "social-organizations", title: "Social Organizations", url: "/admin/social-organizations", anyOf: crud("social-organization") },
-	{ id: "ambulances", title: "Ambulances", url: "/admin/ambulances", anyOf: crud("ambulance") },
-	{ id: "constants", title: "Constants", url: "/admin/constants", anyOf: MASTER },
-	{ id: "geolocation", title: "Geolocation", url: "/admin/geolocation", anyOf: MASTER },
-	{ id: "degrees", title: "Degrees", url: "/admin/degrees", anyOf: MASTER },
-	{ id: "blood", title: "Blood Management", url: "/admin/blood", anyOf: ["manage-blood"] },
+	{ id: "medical-specialities", group: "Reference data", title: "Medical Specialities", url: "/admin/medical-specialities", anyOf: MASTER },
+	{ id: "medical-tests", group: "Reference data", title: "Medical Tests", url: "/admin/medical-tests", anyOf: MASTER },
+	{ id: "associations", group: "Reference data", title: "Associations", url: "/admin/associations", anyOf: MASTER },
+	{ id: "social-organizations", group: "Facilities", title: "Social Organizations", url: "/admin/social-organizations", anyOf: crud("social-organization") },
+	{ id: "ambulances", group: "Facilities", title: "Ambulances", url: "/admin/ambulances", anyOf: crud("ambulance") },
+	{ id: "constants", group: "Reference data", title: "Constants", url: "/admin/constants", anyOf: MASTER },
+	{ id: "geolocation", group: "Reference data", title: "Geolocation", url: "/admin/geolocation", anyOf: MASTER },
+	{ id: "degrees", group: "Reference data", title: "Degrees", url: "/admin/degrees", anyOf: MASTER },
+	{ id: "blood", group: "Facilities", title: "Blood Management", url: "/admin/blood", anyOf: ["manage-blood"] },
 	{
 		id: "advertisement",
+		group: "Platform",
 		title: "Advertisement",
 		url: "/admin/advertisement",
 		anyOf: [...crud("advertisement"), ...crud("advertisement-type")],
 	},
-	{ id: "prescriptions", title: "Prescriptions", url: "/admin/prescriptions", anyOf: ["view-prescription"] },
-	{ id: "role-permissions", title: "Roles & Permissions", url: "/admin/role-permissions", anyOf: ["manage-role-permissions"] },
+	{ id: "prescriptions", group: "Clinical", title: "Prescriptions", url: "/admin/prescriptions", anyOf: ["view-prescription"] },
+	{ id: "role-permissions", group: "Platform", title: "Roles & Permissions", url: "/admin/role-permissions", anyOf: ["manage-role-permissions"] },
 
 	// Open to everyone signed in
-	{ id: "my-consents", title: "My consents", url: "/admin/consents", anyOf: [], always: true },
+	{ id: "my-consents", group: "Account", title: "My consents", url: "/admin/consents", anyOf: [], always: true },
 	{ id: "my-profile", title: "My profile", url: "/admin/profile", anyOf: [], always: true, hidden: true },
 	{ id: "health", title: "My health", url: "/admin/health", anyOf: [], always: true, hidden: true },
 	{ id: "settings", title: "Settings", url: "/admin/settings", anyOf: [], always: true, hidden: true },
@@ -82,6 +91,19 @@ export function visibleMenu(has: Has): NavRule[] {
 		if (rule.id === "dashboard") return staff;
 		return holds(rule, has);
 	});
+}
+
+/** The menu as sections, in display order, with empty sections left out. The Dashboard comes first, alone. */
+export function groupedMenu(has: Has): { label: MenuGroup | null; items: NavRule[] }[] {
+	const items = visibleMenu(has);
+	const sections: { label: MenuGroup | null; items: NavRule[] }[] = [];
+	const top = items.filter((rule) => !rule.group);
+	if (top.length > 0) sections.push({ label: null, items: top });
+	for (const group of MENU_GROUPS) {
+		const inGroup = items.filter((rule) => rule.group === group);
+		if (inGroup.length > 0) sections.push({ label: group, items: inGroup });
+	}
+	return sections;
 }
 
 /** The rule that governs a path: the longest matching prefix, with "/admin" matching only itself. */
