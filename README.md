@@ -160,6 +160,7 @@ The backend's local realm seeds one user per user type (see the backend README, 
 - **Rate limit**: the API allows 100 requests per minute per client. Share one `QueryClient` (`ClientProviders`), keep reference data on the 1 h stale time and avoid polling faster than needed (`usePolling`).
 - **Detail pages** (`/doctors/[id]`, `/hospitals/[id]`) are server-rendered with a 10 minute cache via `src/lib/public-directory.ts`. They show only public professional fields: a doctor's phone, email, date of birth and blood group are never rendered.
 - **SEO**: `src/app/sitemap.ts` serves `/sitemap/0.xml` (static pages) plus chunked hospital and doctor sitemaps (5,000 records each, cached for a day), and `src/app/robots.ts` lists them and blocks `/admin`, `/login`, `/signup`, `/logout` and `/auth`. Set `NEXT_PUBLIC_SITE_URL` per environment (default `https://opencarebd.com`).
+- **Page guards**: `RequirePermission` (`src/components/admin/require-permission.tsx`) wraps pages that need a permission (Profiles, Admin Dashboard, Role permissions). Permissions come only from the token; the old hardcoded role map was removed because it drifted from Keycloak. The API enforces the same permissions on every route
 - **Account menu**: one `UserMenu` in the admin top bar; the sidebar has no profile block.
 - **Permissions**: UI hides actions with `usePermissions().hasPermission(...)`, which is only a convenience. The backend enforces access.
 
