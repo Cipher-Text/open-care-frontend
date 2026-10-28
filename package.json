@@ -6,7 +6,8 @@
 		"dev": "next dev --turbopack",
 		"build": "next build",
 		"start": "next start -p 5175",
-		"lint": "next lint"
+		"lint": "next lint",
+		"test:nav": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/config/navigation-rules.test.ts"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^5.2.1",

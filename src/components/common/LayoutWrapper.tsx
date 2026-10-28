@@ -10,8 +10,8 @@ interface LayoutWrapperProps {
 export function LayoutWrapper({ children }: LayoutWrapperProps) {
 	const pathname = usePathname();
 
-	// Check if the current path is an admin route or auth route
-	const isAdminRoute = pathname?.startsWith("/admin");
+	// The console (/admin), the account area (/account) and the auth pages have their own chrome
+	const isAdminRoute = pathname?.startsWith("/admin") || pathname?.startsWith("/account");
 	const isAuthRoute =
 		pathname?.startsWith("/login") ||
 		pathname?.startsWith("/signup") ||

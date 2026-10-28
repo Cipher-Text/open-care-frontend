@@ -1,7 +1,9 @@
 "use client";
 
 import { usePermissions } from "@/hooks/use-permissions";
+import { visibleMenu } from "@/config/navigation-rules";
 
+import type { LucideIcon } from "lucide-react";
 import {
   ShieldCheck,
   Home,
@@ -35,119 +37,34 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 
-// Menu items
-const menuItems = [
-  {
-    title: "Dashboard",
-    url: "/admin",
-    icon: Home,
-  },
-  {
-    title: "Admin Dashboard",
-    url: "/admin/dashboard",
-    icon: LayoutDashboard,
-    permission: "view-super-admin-panel",
-  },
-  {
-    title: "Doctors",
-    url: "/admin/doctors",
-    icon: Stethoscope,
-  },
-  {
-    title: "Nurses",
-    url: "/admin/nurses",
-    icon: HeartPulse,
-  },
-  {
-    title: "Profiles",
-    url: "/admin/profiles",
-    icon: UserCircle,
-    permission: "view-profile",
-  },
-  {
-    title: "Institutions",
-    url: "/admin/institutions",
-    icon: GraduationCap,
-  },
-  {
-    title: "Hospitals",
-    url: "/admin/hospitals",
-    icon: Building2,
-  },
-  {
-    title: "Medical Specialities",
-    url: "/admin/medical-specialities",
-    icon: Brain,
-  },
-  {
-    title: "Medical Tests",
-    url: "/admin/medical-tests",
-    icon: TestTube,
-  },
-  {
-    title: "Associations",
-    url: "/admin/associations",
-    icon: Users,
-  },
-  {
-    title: "Social Organizations",
-    url: "/admin/social-organizations",
-    icon: Heart,
-  },
-  {
-    title: "Ambulances",
-    url: "/admin/ambulances",
-    icon: Truck,
-  },
-  {
-    title: "Constants",
-    url: "/admin/constants",
-    icon: Database,
-  },
-  {
-    title: "Geolocation",
-    url: "/admin/geolocation",
-    icon: MapPin,
-  },
-  {
-    title: "Degrees",
-    url: "/admin/degrees",
-    icon: GraduationCap,
-  },
-  {
-    title: "Blood Management",
-    url: "/admin/blood",
-    icon: Droplets,
-  },
-  {
-    title: "Advertisement",
-    url: "/admin/advertisement",
-    icon: Megaphone,
-  },
-  {
-    title: "Prescriptions",
-    url: "/admin/prescriptions",
-    icon: FileText,
-    permission: "view-prescription",
-  },
-  {
-    title: "My consents",
-    url: "/admin/consents",
-    icon: ShieldCheck,
-  },
-  {
-    title: "Roles & Permissions",
-    url: "/admin/role-permissions",
-    icon: ShieldCheck,
-    permission: "manage-role-permissions",
-  },
-];
+// Icons by rule id; the list itself (what is shown, to whom) is in config/navigation-rules.ts
+const ICONS: Record<string, LucideIcon> = {
+  dashboard: Home,
+  "admin-dashboard": LayoutDashboard,
+  doctors: Stethoscope,
+  nurses: HeartPulse,
+  profiles: UserCircle,
+  institutions: Building2,
+  hospitals: Building2,
+  "medical-specialities": Brain,
+  "medical-tests": TestTube,
+  associations: Users,
+  "social-organizations": Heart,
+  ambulances: Truck,
+  constants: Database,
+  geolocation: MapPin,
+  degrees: GraduationCap,
+  blood: Droplets,
+  advertisement: Megaphone,
+  prescriptions: FileText,
+  "my-consents": ShieldCheck,
+  "role-permissions": ShieldCheck,
+};
 
 export function AdminSidebar() {
-  const { hasPermission } = usePermissions();
-  const visibleItems = menuItems.filter(
-    (item) => !("permission" in item) || hasPermission(item.permission as string)
-  );
+  const { hasPermission, ready } = usePermissions();
+  // Nothing is listed until the token has been read, so the menu never flashes entries the person cannot use
+  const visibleItems = ready ? visibleMenu(hasPermission) : [];
 
   return (
     <Sidebar variant="inset" className="print:hidden">
@@ -169,10 +86,13 @@ export function AdminSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {visibleItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.id}>
                   <Link href={item.url}>
                     <SidebarMenuButton>
-                      <item.icon />
+                      {(() => {
+                        const Icon = ICONS[item.id] ?? Home;
+                        return <Icon />;
+                      })()}
                       <span>{item.title}</span>
                     </SidebarMenuButton>
                   </Link>

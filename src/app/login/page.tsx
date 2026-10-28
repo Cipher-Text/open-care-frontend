@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, User, Lock, Zap } from "lucide-react";
 import { loginSchema, LoginFormData } from "@/validations/login-schema";
 import { devLogin, getDevLoginAccounts, submitLogin } from "./actions";
-import { redirectToAdmin } from "./redirect-actions";
+import { redirectAfterLogin } from "./redirect-actions";
 import { saveUserSession } from "@/lib/auth-client";
 // import { useAuth } from "@/contexts/auth-context";
 
@@ -53,7 +53,7 @@ export default function LoginPage() {
 
 			if (state.shouldRedirect) {
 				// Use server action for redirect to ensure proper server-side redirect
-				redirectToAdmin();
+				redirectAfterLogin();
 			}
 		}
 	}, [state.success, state.shouldRedirect, state.data]);

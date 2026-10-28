@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { getUserSession } from "@/lib/auth-client";
-import { getPermissionsFromToken, hasPermission } from "@/lib/permissions";
+import { permissionsFromToken } from "@/lib/token-permissions";
 
+/** The signed-in person's permissions, read from their access token. */
 export const usePermissions = () => {
   const [permissions, setPermissions] = useState<string[]>([]);
   // The token is read after mount, so until then "no permission" only means "not known yet"
@@ -11,14 +12,14 @@ export const usePermissions = () => {
 
   useEffect(() => {
     const token = getUserSession()?.access_token;
-    setPermissions(getPermissionsFromToken(token));
+    setPermissions([...permissionsFromToken(token)]);
     setReady(true);
   }, []);
 
-  const can = useCallback(
-    (permission: string) => hasPermission(permission, permissions),
+  const hasPermission = useCallback(
+    (permission: string) => permissions.includes(permission),
     [permissions]
   );
 
-  return { permissions, hasPermission: can, ready };
+  return { permissions, hasPermission, ready };
 };

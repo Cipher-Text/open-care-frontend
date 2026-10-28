@@ -87,7 +87,8 @@ open-care-frontend/
 │   ├── types/ validations/    # TypeScript types, Zod schemas
 │   ├── config/                # config.ts (API base URL)
 │   └── lib/                   # api-client, auth, pagination (page-shape contract), public-stats (cached home stats), utils
-├── middleware.ts              # Redirects unauthenticated /admin requests to /login
+│   ├── middleware.ts          # /admin and /account need a login; non-staff are sent to /account
+│   ├── config/                # navigation-rules.ts (menu and guards), role-permissions fixture, nav test
 ├── docs/                      # Feature docs, AI context, openapi.json
 ├── public/                    # Static assets
 ├── Dockerfile{,.dev,.qa,.prod}, deploy.sh
@@ -109,7 +110,7 @@ open-care-frontend/
 ### Backend Integration
 
 - **API Base**: `https://api.opencarebd.com/api`
-- **Authentication**: backend-issued Keycloak tokens stored in cookies (`access_token`), refreshed via `/auth/refresh`; `middleware.ts` guards `/admin`
+- **Authentication**: backend-issued Keycloak tokens stored in cookies (`access_token`), refreshed via `/auth/refresh`; `src/middleware.ts` guards `/admin` and `/account`
 - **HTTP Client**: Fetch API
 
 ## 📱 Key Pages
@@ -159,7 +160,8 @@ The backend's local realm seeds one user per user type (see the backend README, 
 - **Pagination**: the backend returns `{content, currentPage (0-based), totalItems, totalPages}`. List fetchers go through `src/lib/pagination.ts` (`toWirePage`, `normalizePage`, `withWirePage`), so the UI always sees 1-based pages.
 - **Rate limit**: the API allows 100 requests per minute per client. Share one `QueryClient` (`ClientProviders`), keep reference data on the 1 h stale time and avoid polling faster than needed (`usePolling`).
 - **Detail pages** (`/doctors/[id]`, `/hospitals/[id]`) are server-rendered with a 10 minute cache via `src/lib/public-directory.ts`. They show only public professional fields: a doctor's phone, email, date of birth and blood group are never rendered.
-- **SEO**: `src/app/sitemap.ts` serves `/sitemap/0.xml` (static pages) plus chunked hospital and doctor sitemaps (5,000 records each, cached for a day), and `src/app/robots.ts` lists them and blocks `/admin`, `/login`, `/signup`, `/logout` and `/auth`. Set `NEXT_PUBLIC_SITE_URL` per environment (default `https://opencarebd.com`).
+- **SEO**: `src/app/sitemap.ts` serves `/sitemap/0.xml` (static pages) plus chunked hospital and doctor sitemaps (1,000 records each, cached for a day), and `src/app/robots.ts` lists them and blocks `/admin`, `/login`, `/signup`, `/logout` and `/auth`. Set `NEXT_PUBLIC_SITE_URL` per environment (default `https://opencarebd.com`).
+- **Menus, guards and landing**: `src/config/navigation-rules.ts` is the one list of who sees which console page (a person sees an entry when they hold any of its permissions). It drives the sidebar, the page guard in the admin layout, `src/middleware.ts` and the redirect after login. Staff (anyone with a console permission) land in `/admin`; everyone else lands in `/account` (home, profile, consents, health). `npm run test:nav` checks the menu of all 15 roles against a snapshot of the live role mapping (`src/config/role-permissions.fixture.json`; refresh it after changing roles).
 - **Page guards**: `RequirePermission` (`src/components/admin/require-permission.tsx`) wraps pages that need a permission (Profiles, Admin Dashboard, Role permissions). Permissions come only from the token; the old hardcoded role map was removed because it drifted from Keycloak. The API enforces the same permissions on every route
 - **Account menu**: one `UserMenu` in the admin top bar; the sidebar has no profile block.
 - **Permissions**: UI hides actions with `usePermissions().hasPermission(...)`, which is only a convenience. The backend enforces access.

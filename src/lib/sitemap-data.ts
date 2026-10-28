@@ -5,7 +5,8 @@ import { baseUrl } from "@/config/config";
  * protocol allows 50,000 URLs per file). Responses are cached for a day by Next, so crawlers
  * never put load on the API.
  */
-export const CHUNK_SIZE = 5000;
+// 1,000 records is about 1.4 MB, under the 2 MB limit of Next's data cache, so each page is cached; 5,000 was not
+export const CHUNK_SIZE = 1000;
 const REVALIDATE_SECONDS = 24 * 60 * 60;
 
 export type DirectoryKind = "hospitals" | "doctors";
