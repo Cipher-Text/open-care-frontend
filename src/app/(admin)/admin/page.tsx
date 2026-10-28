@@ -8,7 +8,7 @@ import { fetchCounts, type CountKey } from "@/api/dashboard-counts";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { SuperAdminDashboard } from "@/components/admin/superadmin-dashboard";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { visibleMenu } from "@/config/navigation-rules";
+import { groupedMenu, visibleMenu } from "@/config/navigation-rules";
 import { usePermissions } from "@/hooks/use-permissions";
 
 const COUNTS: { key: CountKey; label: string; menuId: string; icon: typeof Building2 }[] = [
@@ -36,6 +36,12 @@ export default function AdminHomePage() {
 	const menu = ready ? new Set(visibleMenu(hasPermission).map((rule) => rule.id)) : new Set<string>();
 	const countRows = COUNTS.filter((row) => menu.has(row.menuId));
 	const actions = ACTIONS.filter((action) => hasPermission(action.permission));
+	// Every role gets a way in to its own areas, even when it has no totals or shortcuts above
+	const areas = ready
+		? groupedMenu(hasPermission)
+				.map((section) => ({ ...section, items: section.items.filter((rule) => rule.id !== "dashboard" && rule.id !== "my-consents") }))
+				.filter((section) => section.items.length > 0)
+		: [];
 
 	const counts = useQuery({
 		queryKey: ["dashboard-counts", countRows.map((r) => r.key).join(",")],
@@ -94,6 +100,29 @@ export default function AdminHomePage() {
 									</span>
 									<ArrowRight className="size-4 text-muted-foreground" aria-hidden="true" />
 								</Link>
+							))}
+						</CardContent>
+					</Card>
+				)}
+
+				{areas.length > 0 && (
+					<Card>
+						<CardHeader>
+							<CardTitle className="text-lg">Your areas</CardTitle>
+							<CardDescription>The parts of the console your role can work in.</CardDescription>
+						</CardHeader>
+						<CardContent className="space-y-4">
+							{areas.map((section) => (
+								<div key={section.label ?? "top"}>
+									<p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">{section.label}</p>
+									<div className="flex flex-wrap gap-2">
+										{section.items.map((rule) => (
+											<Link key={rule.id} href={rule.url} className="rounded-md border px-3 py-1.5 text-sm hover:bg-accent">
+												{rule.title}
+											</Link>
+										))}
+									</div>
+								</div>
 							))}
 						</CardContent>
 					</Card>

@@ -9,6 +9,12 @@ import { permissionsFromToken, tokenExpired } from "@/lib/token-permissions";
  * - signed-in people do not see the login and signup pages.
  */
 export function middleware(request: NextRequest) {
+	// Server actions (the login itself, the redirect after it, logout) are POSTs to the current page. Redirecting
+	// one of them breaks the action ("unexpected response"), and each action does its own checks.
+	if (request.headers.has("next-action")) {
+		return NextResponse.next();
+	}
+
 	const accessToken = request.cookies.get("access_token")?.value;
 	const { pathname } = request.nextUrl;
 
