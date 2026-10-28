@@ -126,7 +126,7 @@ open-care-frontend/
 
 ### Admin Dashboard (`/admin`)
 
-- **Dashboard / Analytics** - Stats, charts, recent activity
+- **Dashboard** (`/admin`) - one dashboard for everyone in the console: real directory totals, shortcuts for what your role can do, pending consent requests, and (super admin) the full system overview. `/admin/dashboard` redirects here. The old placeholder analytics and users pages with made-up figures were removed
 - **Doctors, Nurses, Hospitals, Institutions** - Directory management; `/admin/doctors/bulk-upload` for CSV import
 - **Associations / Social Organizations** - Organization management
 - **Blood, Ambulances** - Donation and emergency services

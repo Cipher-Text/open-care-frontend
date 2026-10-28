@@ -21,7 +21,6 @@ import {
   Droplets,
   Megaphone,
   HeartPulse,
-  LayoutDashboard,
   UserCircle,
 } from "lucide-react";
 import {
@@ -40,7 +39,6 @@ import Link from "next/link";
 // Icons by rule id; the list itself (what is shown, to whom) is in config/navigation-rules.ts
 const ICONS: Record<string, LucideIcon> = {
   dashboard: Home,
-  "admin-dashboard": LayoutDashboard,
   doctors: Stethoscope,
   nurses: HeartPulse,
   profiles: UserCircle,

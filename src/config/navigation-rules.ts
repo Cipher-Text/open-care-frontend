@@ -32,7 +32,6 @@ const MASTER = crud("master-data");
 
 export const CONSOLE_RULES: NavRule[] = [
 	{ id: "dashboard", title: "Dashboard", url: "/admin", anyOf: [] },
-	{ id: "admin-dashboard", group: "Platform", title: "Admin Dashboard", url: "/admin/dashboard", anyOf: ["view-super-admin-panel"] },
 	{ id: "doctors", group: "People", title: "Doctors", url: "/admin/doctors", anyOf: crud("doctor") },
 	{ id: "nurses", group: "People", title: "Nurses", url: "/admin/nurses", anyOf: crud("nurse") },
 	{ id: "profiles", group: "People", title: "Profiles", url: "/admin/profiles", anyOf: ["view-profile"] },
@@ -69,9 +68,8 @@ export const CONSOLE_RULES: NavRule[] = [
 	{ id: "health", title: "My health", url: "/admin/health", anyOf: [], always: true, hidden: true },
 	{ id: "settings", title: "Settings", url: "/admin/settings", anyOf: [], always: true, hidden: true },
 
-	// Guarded pages that are not in the menu
-	{ id: "users", title: "Users", url: "/admin/users", anyOf: ["view-profile"], hidden: true },
-	{ id: "analytics", title: "Analytics", url: "/admin/analytics", anyOf: ["view-super-admin-panel"], hidden: true },
+	// Guarded pages that are not in the menu: the old Admin Dashboard address redirects to the Dashboard
+	{ id: "admin-dashboard", title: "Admin Dashboard", url: "/admin/dashboard", anyOf: ["view-super-admin-panel"], hidden: true },
 ];
 
 export type Has = (permission: string) => boolean;

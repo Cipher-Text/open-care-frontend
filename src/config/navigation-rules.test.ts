@@ -22,7 +22,7 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 	"super-admin": {
 		staff: true,
 		menu: [
-			"dashboard", "admin-dashboard", "doctors", "nurses", "profiles", "institutions", "hospitals",
+			"dashboard", "doctors", "nurses", "profiles", "institutions", "hospitals",
 			"medical-specialities", "medical-tests", "associations", "social-organizations", "ambulances",
 			"constants", "geolocation", "degrees", "blood", "advertisement", "role-permissions", "my-consents",
 		],
@@ -77,7 +77,7 @@ test("a path is allowed exactly when its menu entry is visible", () => {
 	const paths: Record<string, string> = {
 		doctors: "/admin/doctors/12", hospitals: "/admin/hospitals/3/view", profiles: "/admin/profiles/9",
 		prescriptions: "/admin/prescriptions/new", "role-permissions": "/admin/role-permissions",
-		blood: "/admin/blood", "admin-dashboard": "/admin/dashboard",
+		blood: "/admin/blood",
 	};
 	for (const role of Object.keys(EXPECTED)) {
 		const visible = new Set(menu(role));
@@ -97,13 +97,14 @@ test("unknown console paths are for staff only; own pages are for everyone signe
 	}
 });
 
-test("the dashboard overview is for staff, and /admin/analytics and /admin/users follow their permission", () => {
+test("there is one Dashboard, for staff; the old Admin Dashboard address is only for the super admin", () => {
 	assert.equal(routeAllowed("/admin", hasFor("user")), false);
 	assert.equal(routeAllowed("/admin", hasFor("nurse")), true);
-	assert.equal(routeAllowed("/admin/analytics", hasFor("admin")), false);
-	assert.equal(routeAllowed("/admin/analytics", hasFor("super-admin")), true);
-	assert.equal(routeAllowed("/admin/users", hasFor("moderator")), true);
-	assert.equal(routeAllowed("/admin/users", hasFor("doctor")), false);
+	for (const role of Object.keys(EXPECTED)) {
+		assert.equal(menu(role).filter((id) => id.includes("dashboard")).length, EXPECTED[role].staff ? 1 : 0, role);
+	}
+	assert.equal(routeAllowed("/admin/dashboard", hasFor("admin")), false);
+	assert.equal(routeAllowed("/admin/dashboard", hasFor("super-admin")), true);
 });
 
 test("the menu is grouped in a fixed order, with empty sections left out", () => {
