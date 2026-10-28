@@ -5,7 +5,7 @@
  *
  * Every audience has the same three plans (Free, Plus, Pro). Plan names describe what is included; they never rank
  * a provider. Nothing is sold yet: paid plans are a waitlist, and a feature marked roadmap is planned, not built.
- * The reference for the numbers is `opencare/docs/PRICING_MODEL.md`.
+ * The reference for the numbers is `opencare/docs/proposals/PRICING_MODEL.md`.
  */
 export type Tier = "FREE" | "PLUS" | "PRO";
 export type ApiAudience = "DOCTOR" | "HOSPITAL" | "CLINIC" | "PATIENT";

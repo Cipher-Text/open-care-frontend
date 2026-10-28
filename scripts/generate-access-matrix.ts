@@ -1,4 +1,4 @@
-// Writes opencare/docs/ACCESS_MATRIX.md from the menu rules and the role-permission snapshot.
+// Writes opencare/docs/reference/ACCESS_MATRIX.md from the menu rules and the role-permission snapshot.
 // Run with: npm run docs:access   (after refreshing src/config/role-permissions.fixture.json)
 import { readFileSync, writeFileSync } from "node:fs";
 import { CONSOLE_RULES, groupedMenu, isStaff } from "../src/config/navigation-rules.ts";
@@ -80,6 +80,6 @@ out("- Everyone signed in can use the account area: own profile, consents and he
 out("- Prescribing is for doctors only; the super admin does not hold the prescription permissions.");
 out();
 
-const target = new URL("../../opencare/docs/ACCESS_MATRIX.md", import.meta.url);
+const target = new URL("../../opencare/docs/reference/ACCESS_MATRIX.md", import.meta.url);
 writeFileSync(target, lines.join("\n"));
 console.log(`Wrote ${target.pathname} (${lines.length} lines)`);
