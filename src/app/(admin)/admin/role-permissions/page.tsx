@@ -32,7 +32,7 @@ import { RolePermissionMatrix } from "@/types/role-permissions";
 const MANAGE = "manage-role-permissions";
 const SUPER_ADMIN_GROUP = "super-admin";
 
-type Tab = "mapping" | "history";
+type Tab = "mapping" | "menus" | "history";
 type Overrides = Record<string, Set<string>>;
 
 const sameSet = (a: Set<string>, b: Set<string>) =>
@@ -41,6 +41,9 @@ const sameSet = (a: Set<string>, b: Set<string>) =>
 export default function RolePermissionsPage() {
 	const { hasPermission } = usePermissions();
 	const [tab, setTab] = useState<Tab>("mapping");
+	// Edits live here so the Menus tab shows the effect of changes that are not saved yet
+	const [overrides, setOverrides] = useState<Overrides>({});
+	const unsaved = Object.keys(overrides).length;
 
 	if (!hasPermission(MANAGE)) {
 		return (
@@ -66,6 +69,18 @@ export default function RolePermissionsPage() {
 						onClick={() => setTab("mapping")}
 					>
 						Mapping
+						{unsaved > 0 && (
+							<span className="ml-1.5 rounded-full bg-amber-500 px-1.5 text-xs text-white" aria-label={`${unsaved} role${unsaved === 1 ? "" : "s"} with unsaved changes`}>
+								{unsaved}
+							</span>
+						)}
+					</Button>
+					<Button
+						variant={tab === "menus" ? "default" : "outline"}
+						aria-pressed={tab === "menus"}
+						onClick={() => setTab("menus")}
+					>
+						Menus
 					</Button>
 					<Button
 						variant={tab === "history" ? "default" : "outline"}
@@ -78,13 +93,66 @@ export default function RolePermissionsPage() {
 			</AdminHeader>
 
 			<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-				{tab === "mapping" ? <MappingTab /> : <HistoryTab />}
+				{tab === "mapping" && <MappingTab overrides={overrides} setOverrides={setOverrides} />}
+				{tab === "menus" && <MenusTab overrides={overrides} onEdit={() => setTab("mapping")} />}
+				{tab === "history" && <HistoryTab />}
 			</div>
 		</div>
 	);
 }
 
-function MappingTab() {
+function MenusTab({ overrides, onEdit }: { overrides: Overrides; onEdit: () => void }) {
+	const { data, isLoading, isError, error, refetch } = useQuery({
+		queryKey: ["role-permissions"],
+		queryFn: fetchRolePermissionMatrix,
+		staleTime: 0,
+	});
+
+	if (isLoading) return <Skeleton className="h-96 w-full" />;
+	if (isError || !data) {
+		return (
+			<Alert variant="destructive" role="alert">
+				<AlertDescription className="flex items-center gap-3">
+					{(error as Error)?.message || "Could not load roles and permissions."}
+					<Button size="sm" variant="outline" onClick={() => refetch()}>
+						Try again
+					</Button>
+				</AlertDescription>
+			</Alert>
+		);
+	}
+
+	const unsaved = Object.keys(overrides).length;
+	return (
+		<>
+			<Alert>
+				<Info className="h-4 w-4" aria-hidden="true" />
+				<AlertDescription className="flex flex-wrap items-center gap-3">
+					{unsaved > 0
+						? `This shows the changes you have not saved yet in ${unsaved} role${unsaved === 1 ? "" : "s"}. Outlined cells are different from what is saved.`
+						: "This shows what each role sees today. Change a role's permissions on the Mapping tab to preview the effect here."}
+					<Button size="sm" variant="outline" onClick={onEdit}>
+						{unsaved > 0 ? "Back to Mapping to save" : "Go to Mapping"}
+					</Button>
+				</AlertDescription>
+			</Alert>
+			<RoleMenuPreview
+				roles={data.roles.map((role) => {
+					const saved = new Set(data.mapping[role.group] ?? []);
+					return { group: role.group, name: role.name, current: overrides[role.group] ?? saved, saved };
+				})}
+			/>
+		</>
+	);
+}
+
+function MappingTab({
+	overrides,
+	setOverrides,
+}: {
+	overrides: Overrides;
+	setOverrides: React.Dispatch<React.SetStateAction<Overrides>>;
+}) {
 	const queryClient = useQueryClient();
 	const { data, isLoading, isError, error, refetch } = useQuery({
 		queryKey: ["role-permissions"],
@@ -92,7 +160,6 @@ function MappingTab() {
 		staleTime: 0,
 	});
 
-	const [overrides, setOverrides] = useState<Overrides>({});
 	const [filter, setFilter] = useState("");
 	const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -316,15 +383,6 @@ function MappingTab() {
 					</Button>
 				</div>
 			</div>
-
-			<RoleMenuPreview
-				roles={data.roles.map((role) => ({
-					group: role.group,
-					name: role.name,
-					current: current(role.group),
-					saved: serverSet(role.group),
-				}))}
-			/>
 
 			<ConfirmDialog
 				open={confirmOpen}
