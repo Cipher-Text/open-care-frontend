@@ -52,7 +52,10 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 		staff: true,
 		menu: ["dashboard", "medical-specialities", "medical-tests", "associations", "constants", "geolocation", "degrees", "my-consents"],
 	},
-	doctor: { staff: true, menu: ["dashboard", "doctors", "prescriptions", "my-consents"] },
+	doctor: {
+		staff: true,
+		menu: ["dashboard", "my-doctor-profile", "doctors", "institutions", "medicines", "associations", "prescriptions", "my-consents"],
+	},
 	nurse: { staff: true, menu: ["dashboard", "nurses", "my-consents"] },
 	user: { staff: false, menu: EVERYONE },
 	"hospital-user": { staff: false, menu: EVERYONE },
@@ -110,7 +113,7 @@ test("there is one Dashboard, for staff; the old Admin Dashboard address is only
 test("the menu is grouped in a fixed order, with empty sections left out", () => {
 	const sections = (role: string) => groupedMenu(hasFor(role)).map((s) => s.label);
 	assert.deepEqual(sections("super-admin"), [null, "People", "Facilities", "Reference data", "Platform", "Account"]);
-	assert.deepEqual(sections("doctor"), [null, "People", "Clinical", "Account"]);
+	assert.deepEqual(sections("doctor"), [null, "People", "Facilities", "Reference data", "Clinical", "Account"]);
 	assert.deepEqual(sections("institution-admin"), [null, "Facilities", "Account"]);
 	assert.deepEqual(sections("user"), ["Account"]);
 	// Grouping never adds or removes an entry

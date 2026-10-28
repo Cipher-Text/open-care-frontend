@@ -29,13 +29,16 @@ export const MENU_GROUPS: MenuGroup[] = ["People", "Facilities", "Reference data
 
 const crud = (name: string) => [`create-${name}`, `update-${name}`, `delete-${name}`];
 const MASTER = crud("master-data");
+/** Held by doctors: read-only reference lists, and their own record. Edit buttons still need the real permission. */
+const DOCTOR_PANEL = "view-doctor-panel";
 
 export const CONSOLE_RULES: NavRule[] = [
 	{ id: "dashboard", title: "Dashboard", url: "/admin", anyOf: [] },
+	{ id: "my-doctor-profile", group: "People", title: "My doctor profile", url: "/admin/doctors/me", anyOf: [DOCTOR_PANEL] },
 	{ id: "doctors", group: "People", title: "Doctors", url: "/admin/doctors", anyOf: crud("doctor") },
 	{ id: "nurses", group: "People", title: "Nurses", url: "/admin/nurses", anyOf: crud("nurse") },
 	{ id: "profiles", group: "People", title: "Profiles", url: "/admin/profiles", anyOf: ["view-profile"] },
-	{ id: "institutions", group: "Facilities", title: "Institutions", url: "/admin/institutions", anyOf: crud("institution") },
+	{ id: "institutions", group: "Facilities", title: "Institutions", url: "/admin/institutions", anyOf: [...crud("institution"), DOCTOR_PANEL] },
 	{
 		id: "hospitals",
 		group: "Facilities",
@@ -45,7 +48,8 @@ export const CONSOLE_RULES: NavRule[] = [
 	},
 	{ id: "medical-specialities", group: "Reference data", title: "Medical Specialities", url: "/admin/medical-specialities", anyOf: MASTER },
 	{ id: "medical-tests", group: "Reference data", title: "Medical Tests", url: "/admin/medical-tests", anyOf: MASTER },
-	{ id: "associations", group: "Reference data", title: "Associations", url: "/admin/associations", anyOf: MASTER },
+	{ id: "medicines", group: "Reference data", title: "Medicines", url: "/admin/medicines", anyOf: [DOCTOR_PANEL] },
+	{ id: "associations", group: "Reference data", title: "Associations", url: "/admin/associations", anyOf: [...MASTER, DOCTOR_PANEL] },
 	{ id: "social-organizations", group: "Facilities", title: "Social Organizations", url: "/admin/social-organizations", anyOf: crud("social-organization") },
 	{ id: "ambulances", group: "Facilities", title: "Ambulances", url: "/admin/ambulances", anyOf: crud("ambulance") },
 	{ id: "constants", group: "Reference data", title: "Constants", url: "/admin/constants", anyOf: MASTER },

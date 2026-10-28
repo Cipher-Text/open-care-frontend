@@ -17,12 +17,16 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DoctorResponse } from "@/types/doctors";
 import { usePermissions } from "@/hooks/use-permissions";
+import { useMyDoctor } from "@/hooks/use-my-doctor";
 
 // Actions component to use hooks
 function ActionsCell({ doctor }: { doctor: DoctorResponse }) {
   const router = useRouter();
   const { hasPermission } = usePermissions();
-  const canEditDoctor = hasPermission("update-doctor");
+  const { data: myDoctor } = useMyDoctor();
+  // A doctor edits only their own record; staff who administer doctors edit any
+  const isManager = hasPermission("create-doctor") || hasPermission("delete-doctor") || hasPermission("verify-doctor");
+  const canEditDoctor = hasPermission("update-doctor") && (isManager || myDoctor?.id === doctor.id);
   const canDeleteDoctor = hasPermission("delete-doctor");
 
   const handleEdit = () => {

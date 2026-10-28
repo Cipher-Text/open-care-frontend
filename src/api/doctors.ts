@@ -10,6 +10,7 @@ import {
 } from "@/types/doctors";
 import { AddDoctorFormData } from "@/validations/add-doctor-schema";
 import { apiGet, apiPost, apiPut, buildUrl } from "@/lib/api-client";
+import { getSelfProfile } from "@/api/profile";
 
 export const fetchDoctors = async (
 	params: Record<string, unknown> = {}
@@ -106,4 +107,17 @@ export const uploadDoctorsCsv = async (
 	}
 
 	return response.data as DoctorBulkImportResponse;
+};
+
+/** The doctor record of the signed-in person, found through their profile email. */
+export const fetchMyDoctor = async (): Promise<Doctor> => {
+	const profile = await getSelfProfile();
+	if (!profile.email) throw new Error("No doctor record is linked to this account");
+	const response = await apiGet<Doctor>(`/doctors/email/${encodeURIComponent(profile.email)}`);
+
+	if (!response.ok || !response.data) {
+		throw new Error(response.error || "No doctor record is linked to this account");
+	}
+
+	return response.data;
 };

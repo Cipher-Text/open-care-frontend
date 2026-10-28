@@ -6,6 +6,7 @@ import { ArrowRight, Building2, FileText, HeartPulse, Stethoscope, Truck, Upload
 import { fetchPendingConsents } from "@/api/consents";
 import { fetchCounts, type CountKey } from "@/api/dashboard-counts";
 import { AdminHeader } from "@/components/admin/admin-header";
+import { DoctorDashboard } from "@/components/admin/doctor-dashboard";
 import { SuperAdminDashboard } from "@/components/admin/superadmin-dashboard";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { groupedMenu, visibleMenu } from "@/config/navigation-rules";
@@ -33,8 +34,10 @@ const ACTIONS: { label: string; href: string; permission: string; icon: typeof B
  */
 export default function AdminHomePage() {
 	const { hasPermission, ready } = usePermissions();
+	// A doctor's dashboard is about their own practice; the directory totals below are for staff who run the platform
+	const isDoctor = hasPermission("view-doctor-panel") && !hasPermission("view-admin-panel") && !hasPermission("view-super-admin-panel");
 	const menu = ready ? new Set(visibleMenu(hasPermission).map((rule) => rule.id)) : new Set<string>();
-	const countRows = COUNTS.filter((row) => menu.has(row.menuId));
+	const countRows = isDoctor ? [] : COUNTS.filter((row) => menu.has(row.menuId));
 	const actions = ACTIONS.filter((action) => hasPermission(action.permission));
 	// Every role gets a way in to its own areas, even when it has no totals or shortcuts above
 	const areas = ready
@@ -63,6 +66,8 @@ export default function AdminHomePage() {
 						<p className="text-sm text-muted-foreground">Only agree if you are with the doctor right now.</p>
 					</Link>
 				)}
+
+				{isDoctor && <DoctorDashboard />}
 
 				{countRows.length > 0 && (
 					<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
