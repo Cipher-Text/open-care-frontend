@@ -30,6 +30,10 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import { AdminHeader } from "@/components/admin/admin-header";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { canManageDoctors } from "@/config/doctor-access";
+import { useMyDoctor } from "@/hooks/use-my-doctor";
+import { usePermissions } from "@/hooks/use-permissions";
 import { AddDoctorDegreeModal } from "@/components/admin/add-doctor-degree-modal";
 import { AddDoctorWorkplaceModal } from "@/components/admin/add-doctor-workplace-modal";
 
@@ -53,7 +57,7 @@ import { Doctor, DoctorDetailsResponse } from "@/types/doctors";
 import { BloodGroup } from "@/types/blood-groups";
 import { District, Upazila, Union } from "@/types/locations";
 
-export default function DoctorFormPage() {
+function DoctorFormPageContent() {
 	const router = useRouter();
 	const params = useParams();
 	const queryClient = useQueryClient();
@@ -971,4 +975,24 @@ export default function DoctorFormPage() {
 			</div>
 		</div>
 	);
+}
+
+/** A doctor may open only their own record to edit; the API refuses the save for anyone else's anyway. */
+export default function DoctorFormPage() {
+	const params = useParams();
+	const { hasPermission, ready } = usePermissions();
+	const { data: myDoctor, isLoading } = useMyDoctor();
+	const mine = myDoctor !== undefined && String(myDoctor.id) === String(params.id);
+
+	if (!ready || (!canManageDoctors(hasPermission) && isLoading)) return null;
+	if (!canManageDoctors(hasPermission) && !mine) {
+		return (
+			<div className="p-4 md:p-8">
+				<Alert>
+					<AlertDescription>You can edit only your own doctor profile.</AlertDescription>
+				</Alert>
+			</div>
+		);
+	}
+	return <DoctorFormPageContent />;
 }

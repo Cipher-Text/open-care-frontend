@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { ProfilePictureUploadModal } from "@/components/admin/profile-picture-upload-modal";
+import { BloodDonorChoice } from "@/components/account/blood-donor-choice";
 import { getUserSession } from "@/lib/auth-client";
 import { getSelfProfile } from "@/api/profile";
 import { UserProfile } from "@/types/profile";
@@ -296,6 +297,9 @@ export default function ProfilePage() {
 					</Card>
 				)}
 
+				{/* Blood donor choice (the person's own) */}
+				<BloodDonorChoice profile={profile} onSaved={(next) => setProfile({ ...profile, ...next })} />
+
 				{/* Blood Donation & Volunteer Status */}
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 					<Card>
@@ -307,9 +311,9 @@ export default function ProfilePage() {
 						</CardHeader>
 						<CardContent className="space-y-3">
 							<div className="flex items-center justify-between">
-								<span className="text-sm font-medium">Blood Donor</span>
-								<Badge variant={profile.isBloodDonor ? "default" : "secondary"}>
-									{profile.isBloodDonor ? "Yes" : "No"}
+								<span className="text-sm font-medium">Listed as a donor</span>
+								<Badge variant={profile.isBloodDonor && profile.bloodDonorConsentAt ? "default" : "secondary"}>
+									{profile.isBloodDonor && profile.bloodDonorConsentAt ? "Yes" : "No"}
 								</Badge>
 							</div>
 							{profile.isBloodDonor && (

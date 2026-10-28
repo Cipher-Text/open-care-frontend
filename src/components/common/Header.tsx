@@ -34,6 +34,7 @@ const NAV_LINKS: { href: string; label: string; match?: string }[] = [
 ];
 
 const MORE_LINKS = [
+	{ href: "/pricing", label: "Pricing" },
 	{ href: "/about", label: "About" },
 	{ href: "/contact", label: "Contact" },
 	{ href: "/#faq", label: "Help and FAQ" },

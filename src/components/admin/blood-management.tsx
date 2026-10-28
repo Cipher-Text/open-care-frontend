@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { baseUrl } from "@/config/config";
+import { apiGet } from "@/lib/api-client";
 import "./blood-management.css";
 
 // Common interfaces
@@ -100,6 +101,11 @@ interface DonorResponse {
   hasPrevious: boolean;
   hasNext: boolean;
   currentPage: number;
+}
+
+/** The API's page of donors: `content` is renamed to `donors` below. */
+interface DonorPage extends Omit<DonorResponse, "donors"> {
+  content?: BloodDonor[];
 }
 
 // Donation interfaces
@@ -205,11 +211,19 @@ const BloodManagement: React.FC = () => {
     setError((prev) => ({ ...prev, donors: "" }));
 
     try {
-      const response = await fetch(
-        `${baseUrl}/blood-donors?page=${page}&size=${ITEMS_PER_PAGE}&sortBy=bloodDonationCount&sortDir=desc`
+      // The donor list needs a login now, so this call sends the token
+      const response = await apiGet<DonorPage>(
+        `/blood-donors?page=${page}&size=${ITEMS_PER_PAGE}&sortBy=bloodDonationCount&sortDir=desc`
       );
-      if (!response.ok) throw new Error("Failed to fetch");
-      const result = await response.json();
+      if (response.status === 403) {
+        setError((prev) => ({
+          ...prev,
+          donors: "The blood donor list is included in the Plus and Pro plans.",
+        }));
+        return;
+      }
+      if (!response.ok || !response.data) throw new Error("Failed to fetch");
+      const result = response.data;
       // API returns PageResponse { content, ... }
       setDonorData({ ...result, donors: result.content ?? [] });
     } catch {

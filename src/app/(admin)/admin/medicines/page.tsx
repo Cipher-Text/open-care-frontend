@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
-import { fetchMedicines } from "@/api/medicines";
+import { fetchManufacturers, fetchMedicines } from "@/api/medicines";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -16,11 +17,15 @@ const PAGE_SIZE = 20;
 export default function MedicinesPage() {
 	const [term, setTerm] = useState("");
 	const [search, setSearch] = useState("");
+	const [manufacturer, setManufacturer] = useState("");
 	const [page, setPage] = useState(1);
 
+	const manufacturers = useQuery({ queryKey: ["medicine-manufacturers"], queryFn: fetchManufacturers, staleTime: 60 * 60 * 1000 });
+	const companyOptions = [{ value: "", label: "All companies" }, ...(manufacturers.data ?? []).map((name) => ({ value: name, label: name }))];
+
 	const { data, isLoading, isError, error } = useQuery({
-		queryKey: ["medicines", search, page],
-		queryFn: () => fetchMedicines({ term: search, page, size: PAGE_SIZE }),
+		queryKey: ["medicines", search, manufacturer, page],
+		queryFn: () => fetchMedicines({ term: search, manufacturer, page, size: PAGE_SIZE }),
 		placeholderData: (previous) => previous,
 	});
 
@@ -34,8 +39,22 @@ export default function MedicinesPage() {
 		<div className="flex flex-col">
 			<AdminHeader title="Medicines" description="Browse the medicine catalogue" />
 			<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-				<form onSubmit={submit} className="flex max-w-md gap-2">
-					<div className="relative flex-1">
+				<form onSubmit={submit} className="flex flex-wrap gap-2">
+					<div className="w-full sm:w-72">
+						<SearchableSelect
+							value={manufacturer}
+							onValueChange={(value) => {
+								setManufacturer(value);
+								setPage(1);
+							}}
+							options={companyOptions}
+							placeholder="All companies"
+							searchPlaceholder="Search companies..."
+							emptyText="No company found."
+							disabled={manufacturers.isLoading}
+						/>
+					</div>
+					<div className="relative min-w-56 flex-1 sm:max-w-sm">
 						<Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
 						<Input
 							className="pl-8"
