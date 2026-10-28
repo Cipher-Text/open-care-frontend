@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { NativeSelect } from "@/components/ui/native-select";
 
 type Target = "hospitals" | "doctors";
 
@@ -62,11 +63,11 @@ export default function HeroSearch({ districts }: { districts: { id: number; nam
 				<label className="sr-only" htmlFor="hero-district">
 					District
 				</label>
-				<select
+				<NativeSelect
 					id="hero-district"
 					value={district}
 					onChange={(e) => setDistrict(e.target.value)}
-					className="h-12 rounded-md border border-input bg-background px-3 text-base sm:w-52"
+					className="h-12 text-base sm:w-52"
 				>
 					<option value="">All districts</option>
 					{districts.map((d) => (
@@ -74,7 +75,7 @@ export default function HeroSearch({ districts }: { districts: { id: number; nam
 							{d.name}
 						</option>
 					))}
-				</select>
+				</NativeSelect>
 				<Button type="submit" size="lg" className="h-12 px-8">
 					Search
 				</Button>

@@ -35,7 +35,7 @@ export function buildHospitalDetailSections(
 				href={href}
 				target="_blank"
 				rel="noopener noreferrer"
-				className="text-blue-600 hover:underline"
+				className="text-primary hover:underline"
 			>
 				{value}
 			</a>
@@ -46,11 +46,11 @@ export function buildHospitalDetailSections(
 			return "N/A";
 		}
 		return value ? (
-			<span className="text-xs text-green-600 flex items-center gap-1">
+			<span className="text-xs text-success flex items-center gap-1">
 				<CheckCircle className="h-3 w-3" /> Yes
 			</span>
 		) : (
-			<span className="text-xs text-red-600 flex items-center gap-1">
+			<span className="text-xs text-destructive flex items-center gap-1">
 				<XCircle className="h-3 w-3" /> No
 			</span>
 		);

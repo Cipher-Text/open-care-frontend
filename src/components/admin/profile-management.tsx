@@ -23,6 +23,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getProfiles, ProfilesResponse } from "@/api/profile";
 import { getUserSession } from "@/lib/auth-client";
 import "./profile-management.css";
+import { NativeSelect } from "@/components/ui/native-select";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -220,10 +221,10 @@ const ProfileManagement: React.FC = () => {
           <span className="text-sm font-medium text-muted-foreground">
             Filter by Type:
           </span>
-          <select
+          <NativeSelect
             value={filterByUserType}
             onChange={(e) => handleUserTypeFilter(e.target.value)}
-            className="border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            className="h-9 w-auto"
           >
             <option value="">All Types</option>
             {userTypes.map((type) => (
@@ -231,21 +232,21 @@ const ProfileManagement: React.FC = () => {
                 {type.banglaName} ({type.displayName})
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
 
         {/* Sort Options */}
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-muted-foreground">Sort by:</span>
-          <select
+          <NativeSelect
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            className="h-9 w-auto"
           >
             <option value="id">ID</option>
             <option value="name">Name</option>
             <option value="userType">User Type</option>
-          </select>
+          </NativeSelect>
           <Button
             variant="outline"
             size="sm"
@@ -277,9 +278,9 @@ const ProfileManagement: React.FC = () => {
           return (
             <Card key={type.value} className="p-4">
               <div className="flex items-center gap-3">
-                <UserCheck className="h-8 w-8 text-blue-600" />
+                <UserCheck className="h-8 w-8 text-primary" />
                 <div>
-                  <div className="text-2xl font-bold text-blue-600">
+                  <div className="text-2xl font-bold text-primary">
                     {count}
                   </div>
                   <div className="text-sm text-muted-foreground">{type.banglaName}</div>
@@ -316,7 +317,7 @@ const ProfileManagement: React.FC = () => {
                   </span>
                 )}
                 {filterByUserType && (
-                  <span className="ml-2 text-blue-600">
+                  <span className="ml-2 text-primary">
                     (type:{" "}
                     {
                       userTypes.find((t) => t.value === filterByUserType)
@@ -463,7 +464,7 @@ const ProfileManagement: React.FC = () => {
                                 </Badge>
                                 {profile.isBloodDonor && (
                                   <div className="flex items-center justify-center gap-1 mt-1">
-                                    <Heart className="h-3 w-3 text-red-500 fill-red-500" />
+                                    <Heart className="h-3 w-3 text-destructive fill-destructive" />
                                     <span className="text-xs text-muted-foreground">
                                       Donor
                                     </span>

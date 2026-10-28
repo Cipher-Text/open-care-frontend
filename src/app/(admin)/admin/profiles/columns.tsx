@@ -214,7 +214,7 @@ export const columns: ColumnDef<UserProfile>[] = [
           </Badge>
           {profile.isBloodDonor && (
             <div className="flex items-center justify-center gap-1 mt-1">
-              <Heart className="h-3 w-3 text-red-500 fill-red-500" />
+              <Heart className="h-3 w-3 text-destructive fill-destructive" />
               <span className="text-xs text-muted-foreground">Donor</span>
             </div>
           )}

@@ -252,7 +252,7 @@ export default function SocialOrganizationViewPage() {
                       href={organization.websiteUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-blue-600 hover:underline"
+                      className="text-sm text-primary hover:underline"
                     >
                       {organization.websiteUrl}
                     </a>

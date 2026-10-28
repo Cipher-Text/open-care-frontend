@@ -294,7 +294,7 @@ export default function EditAssociationPage() {
         <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
           <Card>
             <CardContent className="pt-6">
-              <div className="text-center text-red-600">
+              <div className="text-center text-destructive">
                 Failed to load association data. Please try again.
                 <div className="mt-4">
                   <Button onClick={handleBack} variant="outline">

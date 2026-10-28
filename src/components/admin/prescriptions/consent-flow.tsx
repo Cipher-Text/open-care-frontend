@@ -173,7 +173,7 @@ export function ConsentFlow() {
 										<span className="text-muted-foreground">Valid until {when(request.expiresAt)}.</span>
 									</p>
 									{request.devCode && (
-										<p className="rounded bg-amber-50 px-3 py-2 text-sm text-amber-900">
+										<p className="rounded bg-warning/10 px-3 py-2 text-sm text-warning">
 											Development only: the code is <strong>{request.devCode}</strong>
 										</p>
 									)}

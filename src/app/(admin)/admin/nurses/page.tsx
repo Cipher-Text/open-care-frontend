@@ -43,7 +43,7 @@ export default function NursesPage() {
     return (
       <Card>
         <CardContent className="pt-6">
-          <div className="text-center text-red-600">
+          <div className="text-center text-destructive">
             Error loading nurses: {(error as Error)?.message || "Unknown error"}
           </div>
         </CardContent>

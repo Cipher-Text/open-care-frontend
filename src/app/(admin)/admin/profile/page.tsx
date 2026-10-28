@@ -92,7 +92,7 @@ export default function ProfilePage() {
 				<div className="flex items-center justify-center min-h-96 p-8">
 					<Card className="w-full max-w-md">
 						<CardContent className="pt-6">
-							<div className="text-center text-red-600">
+							<div className="text-center text-destructive">
 								<p>Error: {error}</p>
 							</div>
 						</CardContent>
@@ -218,7 +218,7 @@ export default function ProfilePage() {
 									Blood Group
 								</label>
 								<p className="mt-1 flex items-center gap-1">
-									<Droplets className="h-4 w-4 text-red-500" />
+									<Droplets className="h-4 w-4 text-destructive" />
 									{profile.bloodGroup?.displayName || "N/A"}
 								</p>
 							</div>
@@ -305,7 +305,7 @@ export default function ProfilePage() {
 					<Card>
 						<CardHeader>
 							<CardTitle className="flex items-center gap-2">
-								<Heart className="h-5 w-5 text-red-500" />
+								<Heart className="h-5 w-5 text-destructive" />
 								Blood Donation
 							</CardTitle>
 						</CardHeader>
@@ -340,7 +340,7 @@ export default function ProfilePage() {
 					<Card>
 						<CardHeader>
 							<CardTitle className="flex items-center gap-2">
-								<Shield className="h-5 w-5 text-blue-500" />
+								<Shield className="h-5 w-5 text-primary" />
 								Other Information
 							</CardTitle>
 						</CardHeader>
@@ -387,7 +387,7 @@ export default function ProfilePage() {
 												href={profile.facebookProfileUrl}
 												target="_blank"
 												rel="noopener noreferrer"
-												className="text-blue-600 hover:underline flex items-center gap-1"
+												className="text-primary hover:underline flex items-center gap-1"
 											>
 												View Profile
 												<ExternalLink className="h-3 w-3" />
@@ -405,7 +405,7 @@ export default function ProfilePage() {
 												href={profile.linkedinProfileUrl}
 												target="_blank"
 												rel="noopener noreferrer"
-												className="text-blue-600 hover:underline flex items-center gap-1"
+												className="text-primary hover:underline flex items-center gap-1"
 											>
 												View Profile
 												<ExternalLink className="h-3 w-3" />
@@ -423,7 +423,7 @@ export default function ProfilePage() {
 												href={profile.researchGateProfileUrl}
 												target="_blank"
 												rel="noopener noreferrer"
-												className="text-blue-600 hover:underline flex items-center gap-1"
+												className="text-primary hover:underline flex items-center gap-1"
 											>
 												View Profile
 												<ExternalLink className="h-3 w-3" />
@@ -441,7 +441,7 @@ export default function ProfilePage() {
 												href={profile.xprofileUrl}
 												target="_blank"
 												rel="noopener noreferrer"
-												className="text-blue-600 hover:underline flex items-center gap-1"
+												className="text-primary hover:underline flex items-center gap-1"
 											>
 												View Profile
 												<ExternalLink className="h-3 w-3" />

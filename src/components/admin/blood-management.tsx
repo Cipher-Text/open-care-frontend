@@ -492,7 +492,7 @@ const BloodManagement: React.FC = () => {
                 </div>
               </td>
               <td className="border border-input px-4 py-3">
-                <Badge variant="secondary" className="bg-red-100 text-red-800">
+                <Badge variant="secondary" className="bg-destructive/10 text-destructive">
                   {donor.bloodGroup?.displayName}
                 </Badge>
               </td>
@@ -620,7 +620,7 @@ const BloodManagement: React.FC = () => {
               <td className="border border-input px-4 py-3">
                 <Badge
                   variant="secondary"
-                  className="bg-blue-100 text-blue-800"
+                  className="bg-primary/10 text-primary"
                 >
                   {donation.bloodComponent?.bnName}
                 </Badge>
@@ -716,7 +716,7 @@ const BloodManagement: React.FC = () => {
                 </div>
               </td>
               <td className="border border-input px-4 py-3">
-                <Badge variant="secondary" className="bg-red-100 text-red-800">
+                <Badge variant="secondary" className="bg-destructive/10 text-destructive">
                   {requisition.bloodComponent?.bnName}
                 </Badge>
               </td>
@@ -764,7 +764,7 @@ const BloodManagement: React.FC = () => {
     <div className="p-6 bg-muted min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <Droplets className="h-6 w-6 text-red-600" />
+          <Droplets className="h-6 w-6 text-destructive" />
           <h1 className="text-2xl font-bold">Blood Management</h1>
         </div>
         <div className="flex items-center gap-4">
@@ -802,7 +802,7 @@ const BloodManagement: React.FC = () => {
                 onClick={() => handleTabChange(config.name)}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
                   activeTab === config.name
-                    ? "border-red-500 text-red-600"
+                    ? "border-destructive text-destructive"
                     : "border-transparent text-muted-foreground hover:text-muted-foreground hover:border-input"
                 }`}
               >
@@ -821,7 +821,7 @@ const BloodManagement: React.FC = () => {
       <Card className="p-6">
         {loading[activeTab] && (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-destructive mx-auto mb-4"></div>
             <div className="text-muted-foreground">
               Loading {activeConfig?.title.toLowerCase()}...
             </div>
@@ -841,7 +841,7 @@ const BloodManagement: React.FC = () => {
                 <strong>Showing:</strong> {filteredData.data.length} of{" "}
                 {filteredData.totalItems} {activeConfig?.title.toLowerCase()}
                 {searchTerm && (
-                  <span className="ml-2 text-red-600">
+                  <span className="ml-2 text-destructive">
                     (filtered by &quot;{searchTerm}&quot;)
                   </span>
                 )}

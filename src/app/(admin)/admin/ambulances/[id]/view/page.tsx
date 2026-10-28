@@ -274,7 +274,7 @@ export default function AmbulanceViewPage() {
                       <Phone className="h-4 w-4 text-muted-foreground" />
                       <a
                         href={`tel:${ambulance.driverPhone}`}
-                        className="text-sm text-blue-600 hover:underline"
+                        className="text-sm text-primary hover:underline"
                       >
                         {ambulance.driverPhone}
                       </a>

@@ -66,9 +66,9 @@ export default function HealthPage() {
 
   const getStatusBadge = (status: string) => {
     const statusColors: Record<string, string> = {
-      NORMAL_BP: "bg-green-100 text-green-800 hover:bg-green-100",
-      ELEVATED_BP: "bg-yellow-100 text-yellow-800 hover:bg-yellow-100",
-      HIGH_BP: "bg-red-100 text-red-800 hover:bg-red-100",
+      NORMAL_BP: "bg-success/15 text-success hover:bg-success/15",
+      ELEVATED_BP: "bg-warning/15 text-warning hover:bg-warning/15",
+      HIGH_BP: "bg-destructive/15 text-destructive hover:bg-destructive/15",
     };
 
     return (
@@ -79,32 +79,32 @@ export default function HealthPage() {
   const getBMICategory = (bmi: number | null) => {
     if (!bmi) return { label: "N/A", color: "bg-muted text-foreground" };
     if (bmi < 18.5)
-      return { label: "Underweight", color: "bg-blue-100 text-blue-800" };
+      return { label: "Underweight", color: "bg-primary/15 text-primary" };
     if (bmi < 25)
-      return { label: "Normal", color: "bg-green-100 text-green-800" };
+      return { label: "Normal", color: "bg-success/15 text-success" };
     if (bmi < 30)
-      return { label: "Overweight", color: "bg-yellow-100 text-yellow-800" };
-    return { label: "Obese", color: "bg-red-100 text-red-800" };
+      return { label: "Overweight", color: "bg-warning/15 text-warning" };
+    return { label: "Obese", color: "bg-destructive/15 text-destructive" };
   };
 
   const getOxygenStatus = (spo2: number | null) => {
     if (!spo2) return { label: "N/A", color: "bg-muted text-foreground" };
     if (spo2 >= 95)
-      return { label: "Normal", color: "bg-green-100 text-green-800" };
+      return { label: "Normal", color: "bg-success/15 text-success" };
     if (spo2 >= 90)
-      return { label: "Low", color: "bg-yellow-100 text-yellow-800" };
-    return { label: "Critical", color: "bg-red-100 text-red-800" };
+      return { label: "Low", color: "bg-warning/15 text-warning" };
+    return { label: "Critical", color: "bg-destructive/15 text-destructive" };
   };
 
   const getGlucoseStatus = (glucose: number | null) => {
     if (!glucose) return { label: "N/A", color: "bg-muted text-foreground" };
     if (glucose < 70)
-      return { label: "Low", color: "bg-yellow-100 text-yellow-800" };
+      return { label: "Low", color: "bg-warning/15 text-warning" };
     if (glucose <= 100)
-      return { label: "Normal", color: "bg-green-100 text-green-800" };
+      return { label: "Normal", color: "bg-success/15 text-success" };
     if (glucose <= 125)
-      return { label: "Prediabetic", color: "bg-orange-100 text-orange-800" };
-    return { label: "High", color: "bg-red-100 text-red-800" };
+      return { label: "Prediabetic", color: "bg-warning/15 text-warning" };
+    return { label: "High", color: "bg-destructive/15 text-destructive" };
   };
 
   if (loading) {
@@ -137,7 +137,7 @@ export default function HealthPage() {
           <Card className="w-full max-w-md">
             <CardContent className="pt-6">
               <div className="text-center">
-                <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+                <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">
                   Unable to Load Health Data
                 </h3>
@@ -183,7 +183,7 @@ export default function HealthPage() {
           {vitals.followUpRequired && (
             <Badge
               variant="outline"
-              className="bg-orange-50 text-orange-700 border-orange-200"
+              className="bg-warning/10 text-warning border-warning/30"
             >
               <AlertTriangle className="h-3 w-3 mr-1" />
               Follow-up Required
@@ -196,9 +196,9 @@ export default function HealthPage() {
           vitals.isFever ||
           vitals.isObesity ||
           vitals.healthAlerts) && (
-          <Card className="border-red-200 bg-red-50">
+          <Card className="border-destructive/30 bg-destructive/10">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-red-700">
+              <CardTitle className="flex items-center gap-2 text-destructive">
                 <AlertTriangle className="h-5 w-5" />
                 Health Alerts
               </CardTitle>
@@ -206,25 +206,25 @@ export default function HealthPage() {
             <CardContent>
               <div className="space-y-2">
                 {vitals.isLowOxygen && (
-                  <div className="flex items-center gap-2 text-sm text-red-700">
+                  <div className="flex items-center gap-2 text-sm text-destructive">
                     <CheckCircle2 className="h-4 w-4" />
                     Low oxygen saturation detected
                   </div>
                 )}
                 {vitals.isFever && (
-                  <div className="flex items-center gap-2 text-sm text-red-700">
+                  <div className="flex items-center gap-2 text-sm text-destructive">
                     <CheckCircle2 className="h-4 w-4" />
                     Elevated body temperature
                   </div>
                 )}
                 {vitals.isObesity && (
-                  <div className="flex items-center gap-2 text-sm text-red-700">
+                  <div className="flex items-center gap-2 text-sm text-destructive">
                     <CheckCircle2 className="h-4 w-4" />
                     BMI indicates obesity
                   </div>
                 )}
                 {vitals.healthAlerts && (
-                  <div className="flex items-center gap-2 text-sm text-red-700">
+                  <div className="flex items-center gap-2 text-sm text-destructive">
                     <CheckCircle2 className="h-4 w-4" />
                     {vitals.healthAlerts}
                   </div>
@@ -242,7 +242,7 @@ export default function HealthPage() {
               <CardTitle className="text-sm font-medium">
                 Blood Pressure
               </CardTitle>
-              <Heart className="h-4 w-4 text-red-500" />
+              <Heart className="h-4 w-4 text-destructive" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -267,7 +267,7 @@ export default function HealthPage() {
           <Card className="hover:shadow-lg transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Heart Rate</CardTitle>
-              <Activity className="h-4 w-4 text-pink-500" />
+              <Activity className="h-4 w-4 text-chart-5" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -275,13 +275,13 @@ export default function HealthPage() {
               </div>
               <p className="text-xs text-muted-foreground">beats per minute</p>
               {vitals.isTachycardia && (
-                <Badge className="mt-2 bg-red-100 text-red-800 hover:bg-red-100">
+                <Badge className="mt-2 bg-destructive/15 text-destructive hover:bg-destructive/15">
                   <TrendingUp className="h-3 w-3 mr-1" />
                   Tachycardia
                 </Badge>
               )}
               {vitals.isBradycardia && (
-                <Badge className="mt-2 bg-blue-100 text-blue-800 hover:bg-blue-100">
+                <Badge className="mt-2 bg-primary/15 text-primary hover:bg-primary/15">
                   <TrendingDown className="h-3 w-3 mr-1" />
                   Bradycardia
                 </Badge>
@@ -298,7 +298,7 @@ export default function HealthPage() {
           <Card className="hover:shadow-lg transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Temperature</CardTitle>
-              <Thermometer className="h-4 w-4 text-orange-500" />
+              <Thermometer className="h-4 w-4 text-warning" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -310,17 +310,17 @@ export default function HealthPage() {
                   : "N/A"}
               </p>
               {vitals.isFever ? (
-                <Badge className="mt-2 bg-red-100 text-red-800 hover:bg-red-100">
+                <Badge className="mt-2 bg-destructive/15 text-destructive hover:bg-destructive/15">
                   <TrendingUp className="h-3 w-3 mr-1" />
                   Fever
                 </Badge>
               ) : vitals.isHypothermia ? (
-                <Badge className="mt-2 bg-blue-100 text-blue-800 hover:bg-blue-100">
+                <Badge className="mt-2 bg-primary/15 text-primary hover:bg-primary/15">
                   <TrendingDown className="h-3 w-3 mr-1" />
                   Hypothermia
                 </Badge>
               ) : (
-                <Badge className="mt-2 bg-green-100 text-green-800 hover:bg-green-100">
+                <Badge className="mt-2 bg-success/15 text-success hover:bg-success/15">
                   <CheckCircle2 className="h-3 w-3 mr-1" />
                   Normal
                 </Badge>
@@ -334,7 +334,7 @@ export default function HealthPage() {
               <CardTitle className="text-sm font-medium">
                 Oxygen Saturation
               </CardTitle>
-              <Wind className="h-4 w-4 text-blue-500" />
+              <Wind className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -359,7 +359,7 @@ export default function HealthPage() {
           <Card className="hover:shadow-lg transition-shadow">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Weight className="h-5 w-5 text-purple-500" />
+                <Weight className="h-5 w-5 text-chart-4" />
                 Body Mass Index
               </CardTitle>
             </CardHeader>
@@ -398,7 +398,7 @@ export default function HealthPage() {
           <Card className="hover:shadow-lg transition-shadow">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Droplet className="h-5 w-5 text-red-400" />
+                <Droplet className="h-5 w-5 text-destructive" />
                 Blood Glucose
               </CardTitle>
             </CardHeader>
@@ -422,13 +422,13 @@ export default function HealthPage() {
                   </div>
                 )}
                 {vitals.isHyperglycemia && (
-                  <p className="text-xs text-red-600 flex items-center gap-1">
+                  <p className="text-xs text-destructive flex items-center gap-1">
                     <AlertTriangle className="h-3 w-3" />
                     High blood sugar detected
                   </p>
                 )}
                 {vitals.isHypoglycemia && (
-                  <p className="text-xs text-orange-600 flex items-center gap-1">
+                  <p className="text-xs text-warning flex items-center gap-1">
                     <AlertTriangle className="h-3 w-3" />
                     Low blood sugar detected
                   </p>
@@ -504,7 +504,7 @@ export default function HealthPage() {
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Sleep</CardTitle>
-                  <Moon className="h-4 w-4 text-indigo-500" />
+                  <Moon className="h-4 w-4 text-chart-1" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
@@ -520,7 +520,7 @@ export default function HealthPage() {
                             key={i}
                             className={`h-2 w-2 rounded-full ${
                               i < vitals.sleepQuality1To5!
-                                ? "bg-indigo-500"
+                                ? "bg-chart-1"
                                 : "bg-muted"
                             }`}
                           />
@@ -538,7 +538,7 @@ export default function HealthPage() {
                   <CardTitle className="text-sm font-medium">
                     Activity
                   </CardTitle>
-                  <Zap className="h-4 w-4 text-yellow-500" />
+                  <Zap className="h-4 w-4 text-warning" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
@@ -567,7 +567,7 @@ export default function HealthPage() {
                   <CardTitle className="text-sm font-medium">
                     Stress Level
                   </CardTitle>
-                  <Brain className="h-4 w-4 text-purple-500" />
+                  <Brain className="h-4 w-4 text-chart-4" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
@@ -590,7 +590,7 @@ export default function HealthPage() {
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Mood</CardTitle>
-                  <Apple className="h-4 w-4 text-green-500" />
+                  <Apple className="h-4 w-4 text-success" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">

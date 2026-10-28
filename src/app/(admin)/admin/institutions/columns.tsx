@@ -199,7 +199,7 @@ export const columns: ColumnDef<InstitutionResponse>[] = [
           href={websiteUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center text-blue-600 hover:text-blue-800 text-sm"
+          className="flex items-center text-primary hover:text-primary text-sm"
         >
           <Globe className="h-3 w-3 mr-1" />
           Visit

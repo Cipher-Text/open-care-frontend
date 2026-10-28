@@ -210,7 +210,7 @@ const GeolocationManagement: React.FC = () => {
                   href={`https://${item.url}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline text-sm"
+                  className="text-primary hover:underline text-sm"
                 >
                   {item.url}
                 </a>
@@ -274,7 +274,7 @@ const GeolocationManagement: React.FC = () => {
                   href={`https://${item.url}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline text-sm"
+                  className="text-primary hover:underline text-sm"
                 >
                   {item.url}
                 </a>
@@ -342,7 +342,7 @@ const GeolocationManagement: React.FC = () => {
                   href={`https://${item.url}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline text-sm"
+                  className="text-primary hover:underline text-sm"
                 >
                   {item.url}
                 </a>
@@ -441,7 +441,7 @@ const GeolocationManagement: React.FC = () => {
     <div className="p-6 bg-muted min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <MapPin className="h-6 w-6 text-blue-600" />
+          <MapPin className="h-6 w-6 text-primary" />
           <h1 className="text-2xl font-bold">Geolocation Management</h1>
         </div>
         <div className="flex items-center gap-4">
@@ -495,7 +495,7 @@ const GeolocationManagement: React.FC = () => {
                 }}
                 className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
                   activeTab === config.name
-                    ? "border-blue-500 text-blue-600"
+                    ? "border-primary text-primary"
                     : "border-transparent text-muted-foreground hover:text-muted-foreground hover:border-input"
                 }`}
               >
@@ -518,7 +518,7 @@ const GeolocationManagement: React.FC = () => {
           <>
             {loading[activeConfig.name] && (
               <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
                 <div className="text-muted-foreground">
                   Loading {activeConfig.title}...
                 </div>
@@ -539,7 +539,7 @@ const GeolocationManagement: React.FC = () => {
                     {paginationData.totalItems}{" "}
                     {activeConfig.title.toLowerCase()}
                     {searchTerm && (
-                      <span className="ml-2 text-blue-600">
+                      <span className="ml-2 text-primary">
                         (filtered by &quot;{searchTerm}&quot;)
                       </span>
                     )}

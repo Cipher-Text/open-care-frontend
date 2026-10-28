@@ -21,7 +21,7 @@ function Delta({ kpi }: { kpi: Kpi }) {
 	const flat = kpi.changePercent === 0;
 	const Icon = flat ? Minus : up ? ArrowUpRight : ArrowDownRight;
 	return (
-		<span className={`inline-flex items-center gap-0.5 text-xs font-medium ${flat ? "text-muted-foreground" : up ? "text-green-700" : "text-red-700"}`}>
+		<span className={`inline-flex items-center gap-0.5 text-xs font-medium ${flat ? "text-muted-foreground" : up ? "text-success" : "text-destructive"}`}>
 			<Icon className="size-3.5" aria-hidden="true" />
 			{Math.abs(kpi.changePercent)}% <span className="font-normal text-muted-foreground">vs previous period</span>
 		</span>
@@ -108,24 +108,24 @@ export function DoctorDashboard() {
 
 	const maxWeek = Math.max(1, ...data.weeklyPrescriptions.map((w) => w.prescriptions));
 	const funnel = [
-		{ label: "Approved", value: consents.approved, color: "bg-green-600" },
-		{ label: "Denied", value: consents.denied, color: "bg-red-600" },
-		{ label: "Expired", value: consents.expired, color: "bg-amber-500" },
-		{ label: "Cancelled", value: consents.cancelled, color: "bg-slate-400" },
-		{ label: "Waiting", value: consents.waiting, color: "bg-blue-500" },
+		{ label: "Approved", value: consents.approved, color: "bg-success" },
+		{ label: "Denied", value: consents.denied, color: "bg-destructive" },
+		{ label: "Expired", value: consents.expired, color: "bg-warning" },
+		{ label: "Cancelled", value: consents.cancelled, color: "bg-muted-foreground" },
+		{ label: "Waiting", value: consents.waiting, color: "bg-primary" },
 	];
 
 	return (
 		<div className="space-y-6">
 			{attention.length > 0 && (
-				<Card className="border-amber-300 bg-amber-50/60 dark:bg-amber-950/20">
+				<Card className="border-warning/30 bg-warning/10">
 					<CardHeader className="pb-2">
 						<CardTitle className="text-base">Needs your attention</CardTitle>
 					</CardHeader>
 					<CardContent className="flex flex-wrap gap-2">
 						{attention.map(({ text, href, icon: Icon }) => (
 							<Link key={text} href={href} className="inline-flex items-center gap-2 rounded-md border bg-background px-3 py-1.5 text-sm hover:bg-accent">
-								<Icon className="size-4 text-amber-600" aria-hidden="true" />
+								<Icon className="size-4 text-warning" aria-hidden="true" />
 								{text}
 							</Link>
 						))}
@@ -220,7 +220,7 @@ export function DoctorDashboard() {
 									<span className="block truncate font-medium">{item.patientName}</span>
 									<span className="text-xs text-muted-foreground">{item.prescriptionNo}</span>
 								</span>
-								<span className={`shrink-0 text-xs font-medium ${item.overdue ? "text-red-700" : "text-muted-foreground"}`}>
+								<span className={`shrink-0 text-xs font-medium ${item.overdue ? "text-destructive" : "text-muted-foreground"}`}>
 									{item.overdue ? "Overdue " : "Due "}
 									{day(item.dueDate)}
 								</span>

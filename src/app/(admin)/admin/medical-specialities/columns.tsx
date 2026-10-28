@@ -79,7 +79,7 @@ export const columns: ColumnDef<MedicalSpeciality>[] = [
       const speciality = row.original;
       return (
         <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-lg">
+          <div className="h-10 w-10 rounded-full bg-success/10 flex items-center justify-center text-lg">
             {speciality.icon}
           </div>
           <div>

@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { baseUrl } from "@/config/config";
 import "./degrees-management.css";
+import { NativeSelect } from "@/components/ui/native-select";
 
 interface DegreeType {
   value: string;
@@ -187,7 +188,7 @@ const DegreesManagement: React.FC = () => {
     <div className="p-6 bg-muted min-h-screen">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <GraduationCap className="h-6 w-6 text-blue-600" />
+          <GraduationCap className="h-6 w-6 text-primary" />
           <h1 className="text-2xl font-bold">Degrees Management</h1>
         </div>
         <Button
@@ -218,10 +219,10 @@ const DegreesManagement: React.FC = () => {
           <span className="text-sm font-medium text-muted-foreground">
             Filter by Type:
           </span>
-          <select
+          <NativeSelect
             value={filterByType}
             onChange={(e) => handleTypeFilter(e.target.value)}
-            className="border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="h-9 w-auto"
           >
             <option value="">All Types</option>
             {degreeTypes.map((type) => (
@@ -229,14 +230,14 @@ const DegreesManagement: React.FC = () => {
                 {type.banglaName} ({type.displayName})
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
       </div>
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card className="p-4">
-          <div className="text-2xl font-bold text-blue-600">{data.length}</div>
+          <div className="text-2xl font-bold text-primary">{data.length}</div>
           <div className="text-sm text-muted-foreground">Total Degrees</div>
         </Card>
 
@@ -246,7 +247,7 @@ const DegreesManagement: React.FC = () => {
           ).length;
           return (
             <Card key={type.value} className="p-4">
-              <div className="text-2xl font-bold text-green-600">{count}</div>
+              <div className="text-2xl font-bold text-success">{count}</div>
               <div className="text-sm text-muted-foreground">{type.banglaName}</div>
             </Card>
           );
@@ -257,7 +258,7 @@ const DegreesManagement: React.FC = () => {
       <Card className="p-6">
         {loading && (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
             <div className="text-muted-foreground">Loading degrees...</div>
           </div>
         )}
@@ -275,12 +276,12 @@ const DegreesManagement: React.FC = () => {
                 <strong>Showing:</strong> {paginationData.data.length} of{" "}
                 {paginationData.totalItems} degrees
                 {searchTerm && (
-                  <span className="ml-2 text-blue-600">
+                  <span className="ml-2 text-primary">
                     (filtered by &quot;{searchTerm}&quot;)
                   </span>
                 )}
                 {filterByType && (
-                  <span className="ml-2 text-green-600">
+                  <span className="ml-2 text-success">
                     (type:{" "}
                     {
                       degreeTypes.find((t) => t.value === filterByType)
@@ -327,7 +328,7 @@ const DegreesManagement: React.FC = () => {
                             </div>
                           </td>
                           <td className="border border-input px-4 py-3">
-                            <code className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm font-mono">
+                            <code className="bg-primary/10 text-primary px-2 py-1 rounded text-sm font-mono">
                               {degree.abbreviation}
                             </code>
                           </td>

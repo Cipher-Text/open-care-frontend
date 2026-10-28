@@ -269,7 +269,7 @@ export function buildDoctorDetailSections(
 									href={assocInfo.association.websiteUrl}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="text-sm text-blue-600 hover:underline flex items-center gap-2"
+									className="text-sm text-primary hover:underline flex items-center gap-2"
 								>
 									<Building2 className="h-3 w-3" />
 									{assocInfo.association.websiteUrl}

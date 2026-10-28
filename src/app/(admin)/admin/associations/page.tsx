@@ -70,7 +70,7 @@ export default function AssociationsPage() {
     return (
       <Card>
         <CardContent className="pt-6">
-          <div className="text-center text-red-600">
+          <div className="text-center text-destructive">
             Error loading associations:{" "}
             {(error as Error)?.message || "Unknown error"}
           </div>

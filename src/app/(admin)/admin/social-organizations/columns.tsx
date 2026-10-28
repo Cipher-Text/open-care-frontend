@@ -111,7 +111,7 @@ export const columns: ColumnDef<SocialOrganization>[] = [
                 href={websiteUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-500 hover:text-blue-700"
+                className="text-primary hover:text-primary"
               >
                 <ExternalLink className="h-3 w-3" />
               </a>
@@ -210,7 +210,7 @@ export const columns: ColumnDef<SocialOrganization>[] = [
               href={url || "#"}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-500 hover:text-blue-700"
+              className="text-primary hover:text-primary"
             >
               <Globe className="h-3 w-3" />
             </a>

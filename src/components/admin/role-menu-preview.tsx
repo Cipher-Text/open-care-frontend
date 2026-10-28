@@ -63,7 +63,7 @@ export function RoleMenuPreview({ roles }: { roles: RoleColumn[] }) {
 								<td className="sticky left-0 bg-background px-3 py-2 font-medium">Lands in</td>
 								{rows.entries.map(({ role, staffNow, staffBefore }) => (
 									<td key={role.group} className="px-2 py-2 text-center text-xs">
-										<span className={cn("rounded px-1.5 py-0.5", staffNow !== staffBefore && "outline outline-2 outline-amber-500")}>
+										<span className={cn("rounded px-1.5 py-0.5", staffNow !== staffBefore && "outline outline-2 outline-warning")}>
 											{staffNow ? "Console" : "Account"}
 										</span>
 									</td>
@@ -84,7 +84,7 @@ export function RoleMenuPreview({ roles }: { roles: RoleColumn[] }) {
 													className={cn(
 														"inline-flex size-6 items-center justify-center rounded",
 														shown ? "text-primary" : "text-muted-foreground/30",
-														changed && "outline outline-2 outline-amber-500"
+														changed && "outline outline-2 outline-warning"
 													)}
 													aria-label={`${role.name}: ${rule.title} ${shown ? "shown" : "hidden"}${changed ? " (changed, not saved)" : ""}`}
 												>

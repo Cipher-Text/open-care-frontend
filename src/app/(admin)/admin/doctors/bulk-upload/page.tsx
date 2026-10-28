@@ -23,6 +23,7 @@ import {
 	DoctorBulkImportRow,
 	DoctorBulkImportStatus,
 } from "@/types/doctors";
+import { Input } from "@/components/ui/input";
 
 const MAX_BYTES = 1_048_576;
 const MAX_ROWS = 1000;
@@ -206,14 +207,14 @@ export default function DoctorBulkUploadPage() {
 					</CardHeader>
 					<CardContent className="space-y-3">
 						<div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-							<input
+							<Input
 								ref={inputRef}
 								type="file"
 								accept=".csv,text/csv"
 								aria-label="Doctors CSV file"
 								disabled={busy || !!imported}
 								onChange={(e) => onFileChange(e.target.files?.[0])}
-								className="block w-full text-sm file:mr-3 file:rounded-md file:border file:border-input file:bg-background file:px-3 file:py-2 file:text-sm"
+								className="h-auto py-1.5"
 							/>
 							<Button
 								disabled={!file || busy || !!imported}

@@ -68,7 +68,7 @@ export default function MedicinesPage() {
 				<Card>
 					<CardContent className="pt-6">
 						{isError ? (
-							<div className="text-center text-red-600">
+							<div className="text-center text-destructive">
 								Error loading medicines: {(error as Error).message}
 							</div>
 						) : isLoading ? (

@@ -89,7 +89,7 @@ export default function MedicalSpecialitiesPage() {
     return (
       <Card>
         <CardContent className="pt-6">
-          <div className="text-center text-red-600">
+          <div className="text-center text-destructive">
             Error loading medical specialities:{" "}
             {(error as Error)?.message || "Unknown error"}
           </div>

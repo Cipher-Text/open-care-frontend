@@ -180,7 +180,7 @@ export const ProfilePictureUploadModal: React.FC<
 					{uploadedImageUrl ? (
 						<div className="text-center space-y-4">
 							<div className="flex justify-center">
-								<div className="w-40 h-40 rounded-lg overflow-hidden border-2 border-green-200 flex items-center justify-center bg-green-50">
+								<div className="w-40 h-40 rounded-lg overflow-hidden border-2 border-success/30 flex items-center justify-center bg-success/10">
 									{/* eslint-disable-next-line @next/next/no-img-element */}
 									<img
 										src={uploadedImageUrl}
@@ -189,11 +189,11 @@ export const ProfilePictureUploadModal: React.FC<
 									/>
 								</div>
 							</div>
-							<div className="bg-green-50 border border-green-200 rounded-lg p-3">
-								<p className="text-sm font-medium text-green-900">
+							<div className="bg-success/10 border border-success/30 rounded-lg p-3">
+								<p className="text-sm font-medium text-success">
 									✓ Upload Successful!
 								</p>
-								<p className="text-xs text-green-800 mt-1">
+								<p className="text-xs text-success mt-1">
 									Your profile picture has been updated
 								</p>
 							</div>
@@ -208,7 +208,11 @@ export const ProfilePictureUploadModal: React.FC<
 									className="w-full h-full object-cover"
 								/>
 							</div>
-							<button
+							<Button
+								type="button"
+								variant="destructive"
+								size="icon"
+								aria-label="Remove selected image"
 								onClick={() => {
 									setPreview(null);
 									setSelectedFile(null);
@@ -217,11 +221,11 @@ export const ProfilePictureUploadModal: React.FC<
 										fileInputRef.current.value = "";
 									}
 								}}
-								className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+								className="absolute -top-2 -right-2 size-6 rounded-full"
 								disabled={uploading}
 							>
 								<X className="h-4 w-4" />
-							</button>
+							</Button>
 						</div>
 					) : (
 						<div
@@ -257,14 +261,14 @@ export const ProfilePictureUploadModal: React.FC<
 
 					{/* File Info */}
 					{selectedFile && !error && (
-						<div className="bg-blue-50 border border-blue-200 rounded-lg p-3 space-y-1">
-							<p className="text-sm font-medium text-blue-900">File Details</p>
-							<p className="text-xs text-blue-800">Name: {selectedFile.name}</p>
-							<p className="text-xs text-blue-800">
+						<div className="bg-primary/10 border border-primary/30 rounded-lg p-3 space-y-1">
+							<p className="text-sm font-medium text-primary">File Details</p>
+							<p className="text-xs text-primary">Name: {selectedFile.name}</p>
+							<p className="text-xs text-primary">
 								Size: {getFileSizeDisplay(selectedFile.size)} KB
 							</p>
 							{imageDimensions && (
-								<p className="text-xs text-blue-800">
+								<p className="text-xs text-primary">
 									Dimensions: {imageDimensions.width}×{imageDimensions.height}px
 								</p>
 							)}

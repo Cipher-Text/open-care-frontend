@@ -13,6 +13,7 @@ import { loginSchema, LoginFormData } from "@/validations/login-schema";
 import { devLogin, getDevLoginAccounts, submitLogin } from "./actions";
 import { redirectAfterLogin } from "./redirect-actions";
 import { saveUserSession } from "@/lib/auth-client";
+import { Checkbox } from "@/components/ui/checkbox";
 // import { useAuth } from "@/contexts/auth-context";
 
 export default function LoginPage() {
@@ -86,8 +87,8 @@ export default function LoginPage() {
 					<CardContent>
 						<form action={action} className="space-y-6">
 							{justRegistered && (
-								<div role="status" className="bg-green-50 border border-green-200 rounded-md p-3">
-									<p className="text-sm text-green-700">
+								<div role="status" className="bg-success/10 border border-success/30 rounded-md p-3">
+									<p className="text-sm text-success">
 										Your account was created. Sign in with your email and password.
 									</p>
 								</div>
@@ -95,15 +96,15 @@ export default function LoginPage() {
 
 							{/* Server Error Display */}
 							{state.error && (
-								<div className="bg-red-50 border border-red-200 rounded-md p-3">
-									<p className="text-sm text-red-600">{state.error}</p>
+								<div className="bg-destructive/10 border border-destructive/30 rounded-md p-3">
+									<p className="text-sm text-destructive">{state.error}</p>
 								</div>
 							)}
 
 							{/* Success Message */}
 							{state.success && (
-								<div className="bg-green-50 border border-green-200 rounded-md p-3">
-									<p className="text-sm text-green-600">Login successful!</p>
+								<div className="bg-success/10 border border-success/30 rounded-md p-3">
+									<p className="text-sm text-success">Login successful!</p>
 								</div>
 							)}
 
@@ -123,14 +124,14 @@ export default function LoginPage() {
 										placeholder="Enter your username"
 										className={`pl-10 h-12 border-input focus:border-primary focus:ring-primary ${
 											errors.username
-												? "border-red-500 focus:border-red-500"
+												? "border-destructive focus:border-destructive"
 												: ""
 										}`}
 										{...register("username")}
 									/>
 								</div>
 								{errors.username && (
-									<p className="text-sm text-red-600">
+									<p className="text-sm text-destructive">
 										{errors.username.message}
 									</p>
 								)}
@@ -152,25 +153,28 @@ export default function LoginPage() {
 										placeholder="Enter your password"
 										className={`pl-10 pr-12 h-12 border-input focus:border-primary focus:ring-primary ${
 											errors.password
-												? "border-red-500 focus:border-red-500"
+												? "border-destructive focus:border-destructive"
 												: ""
 										}`}
 										{...register("password")}
 									/>
-									<button
+									<Button
 										type="button"
+										variant="ghost"
+										size="icon"
+										aria-label={showPassword ? "Hide password" : "Show password"}
 										onClick={() => setShowPassword(!showPassword)}
-										className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-muted-foreground"
+										className="absolute right-1 top-1/2 size-8 -translate-y-1/2 text-muted-foreground"
 									>
 										{showPassword ? (
 											<EyeOff className="w-5 h-5" />
 										) : (
 											<Eye className="w-5 h-5" />
 										)}
-									</button>
+									</Button>
 								</div>
 								{errors.password && (
-									<p className="text-sm text-red-600">
+									<p className="text-sm text-destructive">
 										{errors.password.message}
 									</p>
 								)}
@@ -179,12 +183,7 @@ export default function LoginPage() {
 							{/* Remember Me & Forgot Password */}
 							<div className="flex items-center justify-between">
 								<div className="flex items-center">
-									<input
-										id="remember-me"
-										name="remember-me"
-										type="checkbox"
-										className="h-4 w-4 text-primary focus:ring-primary border-input rounded"
-									/>
+									<Checkbox id="remember-me" name="remember-me" />
 									<label
 										htmlFor="remember-me"
 										className="ml-2 block text-sm text-muted-foreground"

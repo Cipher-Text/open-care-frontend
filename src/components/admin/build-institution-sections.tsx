@@ -41,11 +41,11 @@ export function buildInstitutionDetailSections(
 		{
 			label: "Affiliation Status",
 			value: institution.affiliated ? (
-				<span className="text-green-600 flex items-center gap-1">
+				<span className="text-success flex items-center gap-1">
 					<CheckCircle className="h-3 w-3" /> Affiliated
 				</span>
 			) : (
-				<span className="text-red-600 flex items-center gap-1">
+				<span className="text-destructive flex items-center gap-1">
 					<XCircle className="h-3 w-3" /> Not Affiliated
 				</span>
 			),
@@ -73,7 +73,7 @@ export function buildInstitutionDetailSections(
 			value: institution.email ? (
 				<a
 					href={`mailto:${institution.email}`}
-					className="text-blue-600 hover:underline"
+					className="text-primary hover:underline"
 				>
 					{institution.email}
 				</a>
@@ -92,7 +92,7 @@ export function buildInstitutionDetailSections(
 					href={institution.websiteUrl}
 					target="_blank"
 					rel="noopener noreferrer"
-					className="text-blue-600 hover:underline"
+					className="text-primary hover:underline"
 				>
 					{institution.websiteUrl}
 				</a>
@@ -153,7 +153,7 @@ export function buildInstitutionDetailSections(
 							href={institution.affiliatedHospital.websiteUrl}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="text-blue-600 hover:underline"
+							className="text-primary hover:underline"
 						>
 							{institution.affiliatedHospital.websiteUrl}
 						</a>

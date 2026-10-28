@@ -78,7 +78,7 @@ export default function HospitalsPage() {
 		return (
 			<Card>
 				<CardContent className="pt-6">
-					<div className="text-center text-red-600">
+					<div className="text-center text-destructive">
 						Error loading hospitals:{" "}
 						{(error as Error)?.message || "Unknown error"}
 					</div>

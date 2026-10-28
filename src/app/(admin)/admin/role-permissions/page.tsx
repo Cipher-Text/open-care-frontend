@@ -70,7 +70,7 @@ export default function RolePermissionsPage() {
 					>
 						Mapping
 						{unsaved > 0 && (
-							<span className="ml-1.5 rounded-full bg-amber-500 px-1.5 text-xs text-white" aria-label={`${unsaved} role${unsaved === 1 ? "" : "s"} with unsaved changes`}>
+							<span className="ml-1.5 rounded-full bg-warning px-1.5 text-xs text-white" aria-label={`${unsaved} role${unsaved === 1 ? "" : "s"} with unsaved changes`}>
 								{unsaved}
 							</span>
 						)}

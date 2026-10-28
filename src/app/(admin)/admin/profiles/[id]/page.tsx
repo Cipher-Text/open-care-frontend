@@ -102,7 +102,7 @@ export default function ProfileDetailsPage() {
         <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
           <Card>
             <CardContent className="pt-6">
-              <div className="text-center text-red-600">
+              <div className="text-center text-destructive">
                 Error loading profile:{" "}
                 {(error as Error)?.message || "Unknown error"}
               </div>
@@ -209,7 +209,7 @@ export default function ProfileDetailsPage() {
 
                       {profile.bloodGroup && (
                         <div className="flex items-center gap-2">
-                          <Droplet className="h-4 w-4 text-red-500" />
+                          <Droplet className="h-4 w-4 text-destructive" />
                           <div>
                             <p className="text-sm font-medium">
                               {profile.bloodGroup.displayName}
@@ -726,7 +726,7 @@ export default function ProfileDetailsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Heart className="h-5 w-5 text-red-500 fill-red-500" />
+                    <Heart className="h-5 w-5 text-destructive fill-destructive" />
                     Blood Donor Information
                   </CardTitle>
                 </CardHeader>
@@ -779,10 +779,10 @@ export default function ProfileDetailsPage() {
                         href={profile.facebookProfileUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-primary/30 bg-primary/10 hover:bg-primary/15 transition-colors"
                       >
-                        <Facebook className="h-5 w-5 text-blue-600" />
-                        <span className="text-sm font-medium text-blue-900">
+                        <Facebook className="h-5 w-5 text-primary" />
+                        <span className="text-sm font-medium text-primary">
                           Facebook Profile
                         </span>
                       </a>
@@ -792,10 +792,10 @@ export default function ProfileDetailsPage() {
                         href={profile.facebookPageUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-primary/30 bg-primary/10 hover:bg-primary/15 transition-colors"
                       >
-                        <Facebook className="h-5 w-5 text-blue-600" />
-                        <span className="text-sm font-medium text-blue-900">
+                        <Facebook className="h-5 w-5 text-primary" />
+                        <span className="text-sm font-medium text-primary">
                           Facebook Page
                         </span>
                       </a>
@@ -805,10 +805,10 @@ export default function ProfileDetailsPage() {
                         href={profile.linkedinProfileUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-primary/30 bg-primary/10 hover:bg-primary/15 transition-colors"
                       >
-                        <Linkedin className="h-5 w-5 text-blue-700" />
-                        <span className="text-sm font-medium text-blue-900">
+                        <Linkedin className="h-5 w-5 text-primary" />
+                        <span className="text-sm font-medium text-primary">
                           LinkedIn
                         </span>
                       </a>
@@ -831,10 +831,10 @@ export default function ProfileDetailsPage() {
                         href={profile.instagramProfileUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-pink-200 bg-pink-50 hover:bg-pink-100 transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-chart-5/30 bg-chart-5/10 hover:bg-chart-5/15 transition-colors"
                       >
-                        <Instagram className="h-5 w-5 text-pink-600" />
-                        <span className="text-sm font-medium text-pink-900">
+                        <Instagram className="h-5 w-5 text-chart-5" />
+                        <span className="text-sm font-medium text-chart-5">
                           Instagram
                         </span>
                       </a>
@@ -844,10 +844,10 @@ export default function ProfileDetailsPage() {
                         href={profile.youtubeChannelUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-destructive/30 bg-destructive/10 hover:bg-destructive/15 transition-colors"
                       >
-                        <Youtube className="h-5 w-5 text-red-600" />
-                        <span className="text-sm font-medium text-red-900">
+                        <Youtube className="h-5 w-5 text-destructive" />
+                        <span className="text-sm font-medium text-destructive">
                           YouTube
                         </span>
                       </a>
@@ -870,10 +870,10 @@ export default function ProfileDetailsPage() {
                         href={profile.websiteUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-violet-200 bg-violet-50 hover:bg-violet-100 transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-chart-4/30 bg-chart-4/10 hover:bg-chart-4/15 transition-colors"
                       >
-                        <Monitor className="h-5 w-5 text-violet-600" />
-                        <span className="text-sm font-medium text-violet-900">
+                        <Monitor className="h-5 w-5 text-chart-4" />
+                        <span className="text-sm font-medium text-chart-4">
                           Website
                         </span>
                       </a>
@@ -883,10 +883,10 @@ export default function ProfileDetailsPage() {
                         href={profile.blogUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-orange-200 bg-orange-50 hover:bg-orange-100 transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-warning/30 bg-warning/10 hover:bg-warning/15 transition-colors"
                       >
-                        <FileText className="h-5 w-5 text-orange-600" />
-                        <span className="text-sm font-medium text-orange-900">
+                        <FileText className="h-5 w-5 text-warning" />
+                        <span className="text-sm font-medium text-warning">
                           Blog
                         </span>
                       </a>
@@ -931,7 +931,7 @@ export default function ProfileDetailsPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Heart className="h-5 w-5 text-red-500" />
+                      <Heart className="h-5 w-5 text-destructive" />
                       Blood Donation History ({
                         profile.bloodDonationList.length
                       }{" "}
@@ -946,7 +946,7 @@ export default function ProfileDetailsPage() {
                           className="flex items-center justify-between py-2 border-b last:border-b-0"
                         >
                           <div className="flex items-center gap-3 flex-1">
-                            <Heart className="h-4 w-4 text-red-500 fill-red-500 flex-shrink-0" />
+                            <Heart className="h-4 w-4 text-destructive fill-destructive flex-shrink-0" />
                             <div className="flex items-center gap-2 flex-wrap flex-1">
                               <span className="font-medium">
                                 {donation.hospital.name}

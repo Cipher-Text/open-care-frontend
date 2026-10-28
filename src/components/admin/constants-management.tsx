@@ -426,7 +426,7 @@ const ConstantsManagement: React.FC = () => {
                 )}
                 {hasAcronym && (
                   <td className="border border-input px-4 py-2">
-                    <code className="bg-blue-100 px-2 py-1 rounded text-sm font-medium">
+                    <code className="bg-primary/10 px-2 py-1 rounded text-sm font-medium">
                       {item.acronym || "-"}
                     </code>
                   </td>
@@ -496,7 +496,7 @@ const ConstantsManagement: React.FC = () => {
   return (
     <div className="flex h-full min-h-screen">
       {/* Sidebar */}
-      <div className="constants-sidebar w-80 bg-white border-r border-border flex flex-col">
+      <div className="constants-sidebar w-80 bg-card border-r border-border flex flex-col">
         <div className="p-4 border-b border-border">
           <div className="flex items-center mb-4">
             <Database className="mr-2 h-5 w-5" />
@@ -567,7 +567,7 @@ const ConstantsManagement: React.FC = () => {
         <Card className="p-6">
           {loading[selectedApi.name] && (
             <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
               <div className="text-muted-foreground">
                 Loading {selectedApi.title}...
               </div>

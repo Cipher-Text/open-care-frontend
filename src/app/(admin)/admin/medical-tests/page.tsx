@@ -95,7 +95,7 @@ export default function MedicalTestsPage() {
         <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
           <Card>
             <CardContent className="pt-6">
-              <div className="text-center text-red-600">
+              <div className="text-center text-destructive">
                 Error loading medical tests:{" "}
                 {(error as Error)?.message || "Unknown error"}
               </div>

@@ -49,7 +49,7 @@ export function SuperAdminDashboard() {
       {error && (
         <Card>
           <CardContent className="py-10">
-            <div className="text-center text-red-600">
+            <div className="text-center text-destructive">
               <p className="font-semibold">Error</p>
               <p className="text-sm">{error}</p>
             </div>

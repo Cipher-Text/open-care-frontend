@@ -27,6 +27,7 @@ import { fetchGenders } from "@/api/gender";
 import type { District } from "@/types/locations";
 import type { BloodGroup } from "@/types/blood-groups";
 import type { Gender } from "@/types/gender";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -114,8 +115,8 @@ export default function SignupPage() {
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {error && (
-                <Alert className="border-red-200 bg-red-50">
-                  <AlertDescription className="text-red-700">
+                <Alert className="border-destructive/30 bg-destructive/10">
+                  <AlertDescription className="text-destructive">
                     {error}
                   </AlertDescription>
                 </Alert>
@@ -139,14 +140,14 @@ export default function SignupPage() {
                       placeholder="Enter first name"
                       className={`pl-10 h-12 border-input focus:border-primary focus:ring-primary ${
                         errors.firstName
-                          ? "border-red-500 focus:border-red-500"
+                          ? "border-destructive focus:border-destructive"
                           : ""
                       }`}
                       {...register("firstName")}
                     />
                   </div>
                   {errors.firstName && (
-                    <p className="text-sm text-red-600">
+                    <p className="text-sm text-destructive">
                       {errors.firstName.message}
                     </p>
                   )}
@@ -168,14 +169,14 @@ export default function SignupPage() {
                       placeholder="Enter last name"
                       className={`pl-10 h-12 border-input focus:border-primary focus:ring-primary ${
                         errors.lastName
-                          ? "border-red-500 focus:border-red-500"
+                          ? "border-destructive focus:border-destructive"
                           : ""
                       }`}
                       {...register("lastName")}
                     />
                   </div>
                   {errors.lastName && (
-                    <p className="text-sm text-red-600">
+                    <p className="text-sm text-destructive">
                       {errors.lastName.message}
                     </p>
                   )}
@@ -197,13 +198,13 @@ export default function SignupPage() {
                     type="email"
                     placeholder="Enter your email"
                     className={`pl-10 h-12 border-input focus:border-primary focus:ring-primary ${
-                      errors.email ? "border-red-500 focus:border-red-500" : ""
+                      errors.email ? "border-destructive focus:border-destructive" : ""
                     }`}
                     {...register("email")}
                   />
                 </div>
                 {errors.email && (
-                  <p className="text-sm text-red-600">{errors.email.message}</p>
+                  <p className="text-sm text-destructive">{errors.email.message}</p>
                 )}
               </div>
 
@@ -222,13 +223,13 @@ export default function SignupPage() {
                     type="tel"
                     placeholder="Enter your phone number"
                     className={`pl-10 h-12 border-input focus:border-primary focus:ring-primary ${
-                      errors.phone ? "border-red-500 focus:border-red-500" : ""
+                      errors.phone ? "border-destructive focus:border-destructive" : ""
                     }`}
                     {...register("phone")}
                   />
                 </div>
                 {errors.phone && (
-                  <p className="text-sm text-red-600">{errors.phone.message}</p>
+                  <p className="text-sm text-destructive">{errors.phone.message}</p>
                 )}
               </div>
 
@@ -248,25 +249,28 @@ export default function SignupPage() {
                     placeholder="Create a strong password"
                     className={`pl-10 pr-12 h-12 border-input focus:border-primary focus:ring-primary ${
                       errors.password
-                        ? "border-red-500 focus:border-red-500"
+                        ? "border-destructive focus:border-destructive"
                         : ""
                     }`}
                     {...register("password")}
                   />
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="icon"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-muted-foreground"
-                  >
+                    className="absolute right-1 top-1/2 size-8 -translate-y-1/2 text-muted-foreground"
+                   >
                     {showPassword ? (
                       <EyeOff className="w-5 h-5" />
                     ) : (
                       <Eye className="w-5 h-5" />
                     )}
-                  </button>
+                  </Button>
                 </div>
                 {errors.password && (
-                  <p className="text-sm text-red-600">
+                  <p className="text-sm text-destructive">
                     {errors.password.message}
                   </p>
                 )}
@@ -286,7 +290,7 @@ export default function SignupPage() {
                     <SelectTrigger
                       className={`h-12 border-input focus:border-primary ${
                         errors.bloodGroup
-                          ? "border-red-500 focus:border-red-500"
+                          ? "border-destructive focus:border-destructive"
                           : ""
                       }`}
                     >
@@ -309,7 +313,7 @@ export default function SignupPage() {
                     </SelectContent>
                   </Select>
                   {errors.bloodGroup && (
-                    <p className="text-sm text-red-600">
+                    <p className="text-sm text-destructive">
                       {errors.bloodGroup.message}
                     </p>
                   )}
@@ -327,7 +331,7 @@ export default function SignupPage() {
                     <SelectTrigger
                       className={`h-12 border-input focus:border-primary ${
                         errors.gender
-                          ? "border-red-500 focus:border-red-500"
+                          ? "border-destructive focus:border-destructive"
                           : ""
                       }`}
                     >
@@ -350,7 +354,7 @@ export default function SignupPage() {
                     </SelectContent>
                   </Select>
                   {errors.gender && (
-                    <p className="text-sm text-red-600">
+                    <p className="text-sm text-destructive">
                       {errors.gender.message}
                     </p>
                   )}
@@ -370,7 +374,7 @@ export default function SignupPage() {
                     <SelectTrigger
                       className={`h-12 border-input focus:border-primary ${
                         errors.districtId
-                          ? "border-red-500 focus:border-red-500"
+                          ? "border-destructive focus:border-destructive"
                           : ""
                       }`}
                     >
@@ -396,7 +400,7 @@ export default function SignupPage() {
                     </SelectContent>
                   </Select>
                   {errors.districtId && (
-                    <p className="text-sm text-red-600">
+                    <p className="text-sm text-destructive">
                       {errors.districtId.message}
                     </p>
                   )}
@@ -405,13 +409,7 @@ export default function SignupPage() {
 
               {/* Terms and Conditions */}
               <div className="flex items-center">
-                <input
-                  id="terms"
-                  name="terms"
-                  type="checkbox"
-                  required
-                  className="h-4 w-4 text-primary focus:ring-primary border-input rounded"
-                />
+                <Checkbox id="terms" name="terms" required />
                 <label
                   htmlFor="terms"
                   className="ml-2 block text-sm text-muted-foreground"

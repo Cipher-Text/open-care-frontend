@@ -50,7 +50,7 @@ export function BloodDonorChoice({ profile, onSaved }: { profile: UserProfile; o
 		<Card>
 			<CardHeader>
 				<CardTitle className="flex items-center gap-2">
-					<Heart className="h-5 w-5 text-red-500" />
+					<Heart className="h-5 w-5 text-destructive" />
 					Blood donor
 				</CardTitle>
 				<CardDescription>Your choice. You can change it any time.</CardDescription>

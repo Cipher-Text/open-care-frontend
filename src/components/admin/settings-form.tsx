@@ -1,3 +1,5 @@
+import { Input } from "@/components/ui/input";
+
 export function SettingsForm() {
 	return (
 		<div className="space-y-6">
@@ -10,17 +12,17 @@ export function SettingsForm() {
 			<div className="space-y-4">
 				<div>
 					<label className="text-sm font-medium">Application Name</label>
-					<input
+					<Input
 						type="text"
-						className="w-full mt-1 px-3 py-2 border border-input rounded-md"
+						className="mt-1"
 						placeholder="OpenCare"
 					/>
 				</div>
 				<div>
 					<label className="text-sm font-medium">Admin Email</label>
-					<input
+					<Input
 						type="email"
-						className="w-full mt-1 px-3 py-2 border border-input rounded-md"
+						className="mt-1"
 						placeholder="admin@opencare.com"
 					/>
 				</div>

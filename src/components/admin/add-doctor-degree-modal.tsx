@@ -214,13 +214,16 @@ export function AddDoctorDegreeModal({
 							<Card key={field.id} className="p-4 relative">
 								{/* Remove button */}
 								{fields.length > 1 && (
-									<button
+									<Button
 										type="button"
+										variant="ghost"
+										size="icon"
+										aria-label="Remove"
 										onClick={() => remove(index)}
-										className="absolute top-2 right-2 p-1 hover:bg-red-100 rounded transition-colors"
+										className="absolute top-2 right-2 size-7 text-destructive hover:bg-destructive/10 hover:text-destructive"
 									>
-										<X className="h-4 w-4 text-red-600" />
-									</button>
+										<X className="h-4 w-4" />
+									</Button>
 								)}
 
 								<div className="space-y-4">

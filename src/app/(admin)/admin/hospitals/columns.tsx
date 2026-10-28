@@ -89,8 +89,8 @@ export const columns: ColumnDef<Hospital>[] = [
       const hospital = row.original;
       return (
         <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-            <Building2 className="h-5 w-5 text-blue-600" />
+          <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+            <Building2 className="h-5 w-5 text-primary" />
           </div>
           <div>
             <div className="font-medium">{hospital.name}</div>
@@ -212,7 +212,7 @@ export const columns: ColumnDef<Hospital>[] = [
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-600 hover:underline text-sm"
+          className="text-primary hover:underline text-sm"
         >
           Visit Website
         </a>
