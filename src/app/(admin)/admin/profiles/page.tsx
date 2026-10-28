@@ -12,10 +12,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getUserSession } from "@/lib/auth-client";
 import { usePermissions } from "@/hooks/use-permissions";
+import { RequirePermission } from "@/components/admin/require-permission";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
-export default function ProfilesPage() {
+function ProfilesContent() {
   const [currentPage, setCurrentPage] = useState(0);
   const router = useRouter();
   const { hasPermission } = usePermissions();
@@ -92,5 +93,13 @@ export default function ProfilesPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function ProfilesPage() {
+  return (
+    <RequirePermission permission="view-profile">
+      <ProfilesContent />
+    </RequirePermission>
   );
 }

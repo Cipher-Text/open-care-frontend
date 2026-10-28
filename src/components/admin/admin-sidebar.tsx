@@ -46,6 +46,7 @@ const menuItems = [
     title: "Admin Dashboard",
     url: "/admin/dashboard",
     icon: LayoutDashboard,
+    permission: "view-super-admin-panel",
   },
   {
     title: "Doctors",
@@ -61,6 +62,7 @@ const menuItems = [
     title: "Profiles",
     url: "/admin/profiles",
     icon: UserCircle,
+    permission: "view-profile",
   },
   {
     title: "Institutions",

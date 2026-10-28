@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AdminHeader } from "@/components/admin/admin-header";
+import { RequirePermission } from "@/components/admin/require-permission";
 import { DashboardStats } from "@/components/admin/dashboard-stats";
 import { RealTimeStatsDisplay } from "@/components/admin/realtime-stats";
 import { AlertsDisplay } from "@/components/admin/alerts-display";
@@ -25,7 +26,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { usePolling } from "@/hooks/use-polling";
 
-export default function AdminDashboardPage() {
+function DashboardContent() {
   const [data, setData] = useState<DashboardOverview | null>(null);
   const [realTimeData, setRealTimeData] = useState<RealTimeStats | null>(null);
   const [alerts, setAlerts] = useState<Alert[]>([]);
@@ -173,5 +174,13 @@ export default function AdminDashboardPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function AdminDashboardPage() {
+  return (
+    <RequirePermission permission="view-super-admin-panel">
+      <DashboardContent />
+    </RequirePermission>
   );
 }
