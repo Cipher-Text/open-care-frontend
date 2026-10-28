@@ -29,7 +29,7 @@ export default async function sitemap({ id }: { id: number | Promise<string> }):
 	const records = await getChunk(kind, chunk);
 
 	return records.map((record) => ({
-		url: `${siteUrl}/${kind}/${record.id}`,
+		url: `${siteUrl}/${kind}/${record.slug ?? record.id}`,
 		lastModified: record.updatedAt ? new Date(record.updatedAt) : undefined,
 		changeFrequency: "monthly",
 		priority: 0.5,

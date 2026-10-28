@@ -166,6 +166,7 @@ export type Doctor = {
 	createdAt?: string;
 	updatedAt?: string;
 	id: number;
+	slug?: string | null;
 	bmdcNo: string;
 	degrees: string;
 	specializations: string;
@@ -179,6 +180,7 @@ export type Doctor = {
 
 export type Hospital = {
 	id: number;
+	slug?: string | null;
 	name: string;
 	bnName: string;
 	numberOfBed?: number;
@@ -218,6 +220,7 @@ export type DoctorWorkplace = {
 
 export type DoctorResponse = {
 	id: number;
+	slug?: string | null;
 	bmdcNo: string;
 	startDate: string;
 	yearOfExperience: number;
@@ -235,6 +238,7 @@ export type DoctorResponse = {
 
 export type DoctorDetailsResponse = {
 	id: number;
+	slug?: string | null;
 	bmdcNo: string;
 	startDate: string | null;
 	yearOfExperience: number | null;

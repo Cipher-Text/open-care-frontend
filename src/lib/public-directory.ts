@@ -23,16 +23,30 @@ async function getJson<T>(path: string): Promise<T | null> {
 	return (await response.json()) as T;
 }
 
-export async function getHospital(id: string): Promise<HospitalDetailsResponse | null> {
-	const numeric = parseId(id);
-	if (numeric == null) return null;
-	return getJson(`/hospitals/${numeric}?doctors=true&tests=true&amenities=true`);
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+/** A page's route segment is a slug; an all-digit segment may also be a legacy id (see the detail routes). */
+export function isLegacyId(segment: string): boolean {
+	return parseId(segment) != null;
 }
 
-export async function getDoctor(id: string): Promise<DoctorDetailsResponse | null> {
-	const numeric = parseId(id);
-	if (numeric == null) return null;
-	return getJson(`/doctors/${numeric}?degrees=true&workplaces=true&associations=true`);
+async function getBySegment<T extends { slug?: string | null }>(kind: "hospitals" | "doctors", segment: string, include: string) {
+	const value = decodeURIComponent(segment);
+	const numeric = parseId(value);
+	if (numeric != null) {
+		const byId = await getJson<T>(`/${kind}/${numeric}?${include}`);
+		if (byId) return byId;
+	}
+	if (!SLUG_PATTERN.test(value)) return null;
+	return getJson<T>(`/${kind}/slug/${value}?${include}`);
+}
+
+export function getHospital(segment: string): Promise<HospitalDetailsResponse | null> {
+	return getBySegment<HospitalDetailsResponse>("hospitals", segment, "doctors=true&tests=true&amenities=true");
+}
+
+export function getDoctor(segment: string): Promise<DoctorDetailsResponse | null> {
+	return getBySegment<DoctorDetailsResponse>("doctors", segment, "degrees=true&workplaces=true&associations=true");
 }
 
 /** Only http(s) links are rendered; anything else (javascript:, data:) is dropped. */
@@ -51,4 +65,12 @@ export function safeUrl(url?: string | null): string | null {
 export function validEmail(email?: string | null): string | null {
 	const value = email?.trim();
 	return value && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? value : null;
+}
+
+const PLACEHOLDERS = new Set(["not available", "n/a", "na", "none", "null", "-", "--"]);
+
+/** The data has "Not Available" and similar placeholders in text fields; show nothing instead. */
+export function clean(value?: string | null): string | null {
+	const text = value?.trim();
+	return text && !PLACEHOLDERS.has(text.toLowerCase()) ? text : null;
 }

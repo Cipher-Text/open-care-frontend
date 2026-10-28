@@ -1,23 +1,28 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { BadgeCheck, Globe, GraduationCap, MapPin, Stethoscope, UserRound } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { DetailSection, DetailShell, NOT_MEDICAL_ADVICE } from "@/components/common/DetailShell";
-import { getDoctor, safeUrl } from "@/lib/public-directory";
+import { JsonLd } from "@/components/common/JsonLd";
+import { clean, getDoctor, safeUrl } from "@/lib/public-directory";
+import { siteUrl } from "@/lib/site";
+import { doctorPath, hospitalPath } from "@/lib/paths";
 
 export const revalidate = 600;
 
-type Props = { params: Promise<{ id: string }> };
+type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-	const { id } = await params;
-	const doctor = await getDoctor(id).catch(() => null);
+	const { slug } = await params;
+	const doctor = await getDoctor(slug).catch(() => null);
 	if (!doctor) return { title: "Doctor not found | Open Care" };
 	return {
+		alternates: { canonical: doctorPath(doctor) },
+		openGraph: { type: "profile", title: `${doctor.profile.name} | Open Care`, url: doctorPath(doctor) },
 		title: `${doctor.profile.name} | Open Care`,
 		description: [doctor.specializations, doctor.degrees].filter(Boolean).join(". ") || `${doctor.profile.name} on Open Care.`,
 	};
@@ -35,14 +40,16 @@ function period(start?: string | null, end?: string | null) {
 }
 
 export default async function DoctorDetailPage({ params }: Props) {
-	const { id } = await params;
-	const doctor = await getDoctor(id);
+	const { slug } = await params;
+	const doctor = await getDoctor(slug);
 	if (!doctor) notFound();
+	// Old id-based links (and a renamed slug) land on the canonical slug URL.
+	if (doctor.slug && doctor.slug !== decodeURIComponent(slug)) permanentRedirect(doctorPath(doctor));
 
 	const { profile } = doctor;
 	const image = safeUrl((profile as { imageUrl?: string | null }).imageUrl ?? profile.photo);
 	const bnName = profile.bnName && profile.bnName !== profile.name ? profile.bnName : null;
-	const location = [profile.upazila?.name, profile.district?.name].filter(Boolean).join(", ");
+	const location = [profile.upazila?.name, profile.district?.name].map(clean).filter(Boolean).join(", ");
 	const links = [
 		{ label: "Website", url: safeUrl((profile as { websiteUrl?: string | null }).websiteUrl) },
 		{ label: "LinkedIn", url: safeUrl(profile.linkedinProfileUrl) },
@@ -57,6 +64,18 @@ export default async function DoctorDetailPage({ params }: Props) {
 
 	return (
 		<DetailShell backHref="/doctors" backLabel="All doctors">
+			<JsonLd
+				data={{
+					"@context": "https://schema.org",
+					"@type": "Physician",
+					name: profile.name,
+					url: `${siteUrl}${doctorPath(doctor)}`,
+					...(doctor.specializations && { medicalSpecialty: doctor.specializations }),
+					...(image && { image }),
+					...(links.length > 0 && { sameAs: links.map((l) => l.url) }),
+					...(location && { address: { "@type": "PostalAddress", addressLocality: location, addressCountry: "BD" } }),
+				}}
+			/>
 			<Card className="gap-0 py-0">
 				<CardContent className="space-y-4 p-5 sm:p-8">
 					<div className="flex gap-4 sm:gap-6">
@@ -132,7 +151,7 @@ export default async function DoctorDetailPage({ params }: Props) {
 					<ul className="divide-y">
 						{workplaces.map((w) => {
 							const place = w.hospital ?? w.institution;
-							const href = w.hospital ? `/hospitals/${w.hospital.id}` : null;
+							const href = w.hospital ? hospitalPath(w.hospital) : null;
 							const dates = period(w.startDate, w.endDate);
 							return (
 								<li key={w.id} className="space-y-0.5 py-2">

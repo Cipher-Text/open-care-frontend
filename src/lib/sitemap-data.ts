@@ -12,7 +12,7 @@ const REVALIDATE_SECONDS = 24 * 60 * 60;
 export type DirectoryKind = "hospitals" | "doctors";
 
 interface Page {
-	content?: { id: number; updatedAt?: string | null }[];
+	content?: { id: number; slug?: string | null; updatedAt?: string | null }[];
 	totalItems?: number;
 }
 

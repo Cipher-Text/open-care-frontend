@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { Hospital } from "@/types/hospitals";
+import { hospitalPath } from "@/lib/paths";
 
 function safeUrl(url?: string | null) {
 	if (!url) return null;
@@ -46,7 +47,7 @@ export default function HospitalCard({ hospital }: { hospital: Hospital }) {
 					<div className="min-w-0">
 						<h3 className="flex flex-wrap items-center gap-x-2 text-lg font-bold leading-snug text-foreground">
 							<Link
-								href={`/hospitals/${hospital.id}`}
+								href={hospitalPath(hospital)}
 								className="hover:text-primary hover:underline after:absolute after:inset-0"
 							>
 								{hospital.name}

@@ -4,6 +4,7 @@ import { BadgeCheck, GraduationCap, MapPin, Stethoscope, UserRound } from "lucid
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { DoctorResponse } from "@/types/doctors";
+import { doctorPath } from "@/lib/paths";
 
 export default function DoctorCard({ doctor }: { doctor: DoctorResponse }) {
 	const { profile } = doctor;
@@ -36,7 +37,7 @@ export default function DoctorCard({ doctor }: { doctor: DoctorResponse }) {
 					<div>
 						<h3 className="flex flex-wrap items-center gap-x-2 text-lg font-bold leading-snug text-foreground sm:text-xl">
 							<Link
-								href={`/doctors/${doctor.id}`}
+								href={doctorPath(doctor)}
 								className="hover:text-primary hover:underline after:absolute after:inset-0"
 							>
 								{name}

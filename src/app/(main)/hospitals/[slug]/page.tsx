@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import {
 	Ambulance,
 	BadgeCheck,
@@ -18,33 +18,41 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { DetailSection, DetailShell, Fact, NOT_MEDICAL_ADVICE } from "@/components/common/DetailShell";
-import { getHospital, safeUrl, validEmail } from "@/lib/public-directory";
+import { JsonLd } from "@/components/common/JsonLd";
+import { clean, getHospital, safeUrl, validEmail } from "@/lib/public-directory";
+import { siteUrl } from "@/lib/site";
+import { doctorPath, hospitalPath } from "@/lib/paths";
 
 export const revalidate = 600;
 
-type Props = { params: Promise<{ id: string }> };
+type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-	const { id } = await params;
-	const hospital = await getHospital(id).catch(() => null);
+	const { slug } = await params;
+	const hospital = await getHospital(slug).catch(() => null);
 	if (!hospital) return { title: "Hospital not found | Open Care" };
 	const place = [hospital.upazila?.name, hospital.district?.name].filter(Boolean).join(", ");
 	return {
+		alternates: { canonical: hospitalPath(hospital) },
+		openGraph: { type: "website", title: `${hospital.name} | Open Care`, url: hospitalPath(hospital) },
 		title: `${hospital.name} | Open Care`,
 		description: `${hospital.name}${place ? `, ${place}` : ""}. Contact details, services and doctors on Open Care.`,
 	};
 }
 
 export default async function HospitalDetailPage({ params }: Props) {
-	const { id } = await params;
-	const hospital = await getHospital(id);
+	const { slug } = await params;
+	const hospital = await getHospital(slug);
 	if (!hospital) notFound();
+	// Old id-based links (and a renamed slug) land on the canonical slug URL.
+	if (hospital.slug && hospital.slug !== decodeURIComponent(slug)) permanentRedirect(hospitalPath(hospital));
 
 	const website = safeUrl(hospital.websiteUrl);
 	const facebook = safeUrl(hospital.facebookPageUrl);
 	const email = validEmail(hospital.email);
-	const phone = hospital.phone?.trim();
+	const phone = clean(hospital.phone);
 	const location = [hospital.address, hospital.union?.name, hospital.upazila?.name, hospital.district?.name]
+		.map(clean)
 		.filter(Boolean)
 		.join(", ");
 	const hasCoords = hospital.lat != null && hospital.lon != null && hospital.lat !== "" && hospital.lon !== "";
@@ -59,6 +67,23 @@ export default async function HospitalDetailPage({ params }: Props) {
 
 	return (
 		<DetailShell backHref="/hospitals" backLabel="All hospitals">
+			<JsonLd
+				data={{
+					"@context": "https://schema.org",
+					"@type": "Hospital",
+					name: hospital.name,
+					url: `${siteUrl}${hospitalPath(hospital)}`,
+					...(phone && { telephone: phone }),
+					...(email && { email }),
+					...(website && { sameAs: [website] }),
+					...(location && {
+						address: { "@type": "PostalAddress", streetAddress: location, addressCountry: "BD" },
+					}),
+					...(hasCoords && {
+						geo: { "@type": "GeoCoordinates", latitude: Number(hospital.lat), longitude: Number(hospital.lon) },
+					}),
+				}}
+			/>
 			<Card className="gap-0 py-0">
 				<CardContent className="space-y-5 p-5 sm:p-8">
 					<div className="flex gap-4">
@@ -168,7 +193,7 @@ export default async function HospitalDetailPage({ params }: Props) {
 							}
 						/>
 					)}
-					{hospital.district?.division?.name && <Fact label="Division" value={hospital.district.division.name} />}
+					{clean(hospital.district?.division?.name) && <Fact label="Division" value={clean(hospital.district?.division?.name)} />}
 					{hospital.numberOfBed > 0 && (
 						<Fact
 							label="Beds"
@@ -199,7 +224,7 @@ export default async function HospitalDetailPage({ params }: Props) {
 					<ul className="divide-y">
 						{doctors.map((doctor) => (
 							<li key={doctor.id} className="py-2">
-								<Link href={`/doctors/${doctor.id}`} className="font-medium text-primary hover:underline">
+								<Link href={doctorPath(doctor)} className="font-medium text-primary hover:underline">
 									{doctor.profile.name}
 								</Link>
 								{doctor.specializations && (
