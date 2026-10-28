@@ -11150,6 +11150,138 @@
                     }
                 }
             }
+        },
+        "/api/doctors/slug/{slug}": {
+            "get": {
+                "tags": [
+                    "Doctor Management"
+                ],
+                "summary": "Get doctor by slug",
+                "description": "Retrieves a doctor by the slug used in the public page URL. Accepts the same include flags as get-by-id.",
+                "operationId": "getDoctorByIdBySlug",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "Doctor slug",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "degrees",
+                        "in": "query",
+                        "description": "Include doctor degrees",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "example": true
+                    },
+                    {
+                        "name": "workplaces",
+                        "in": "query",
+                        "description": "Include doctor workplaces",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "example": true
+                    },
+                    {
+                        "name": "associations",
+                        "in": "query",
+                        "description": "Include doctor associations",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "example": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DoctorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/hospitals/slug/{slug}": {
+            "get": {
+                "tags": [
+                    "Hospital Management"
+                ],
+                "summary": "Get hospital by slug",
+                "description": "Retrieves a hospital by the slug used in the public page URL. Accepts the same include flags as get-by-id.",
+                "operationId": "getHospitalByIdBySlug",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "Hospital slug",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "doctors",
+                        "in": "query",
+                        "description": "Include hospital doctors",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "example": true
+                    },
+                    {
+                        "name": "tests",
+                        "in": "query",
+                        "description": "Include hospital medical tests",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "example": true
+                    },
+                    {
+                        "name": "amenities",
+                        "in": "query",
+                        "description": "Include hospital amenities",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "example": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HospitalResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -11938,6 +12070,9 @@
                     "id": {
                         "type": "integer",
                         "format": "int64"
+                    },
+                    "slug": {
+                        "type": "string"
                     },
                     "bmdcNo": {
                         "type": "string"
