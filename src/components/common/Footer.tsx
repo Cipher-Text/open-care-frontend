@@ -27,6 +27,7 @@ export default function Footer() {
 					<nav aria-label="About and legal">
 						<h4 className="mb-3 font-bold">Open Care</h4>
 						<ul className="space-y-2 text-sm opacity-80">
+							<li><Link href="/blog" className="hover:underline">Health articles</Link></li>
 							<li><Link href="/about" className="hover:underline">About</Link></li>
 							<li><Link href="/pricing" className="hover:underline">Pricing</Link></li>
 							<li><Link href="/contact" className="hover:underline">Contact</Link></li>

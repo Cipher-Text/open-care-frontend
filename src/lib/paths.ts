@@ -11,3 +11,4 @@ function segment(record: Addressable): string {
 
 export const doctorPath = (doctor: Addressable) => `/doctors/${segment(doctor)}`;
 export const hospitalPath = (hospital: Addressable) => `/hospitals/${segment(hospital)}`;
+export const blogPath = (post: { slug: string }) => `/blog/${encodeURIComponent(post.slug)}`;
