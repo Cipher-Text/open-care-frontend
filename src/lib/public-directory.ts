@@ -1,6 +1,7 @@
 import { baseUrl } from "@/config/config";
 import type { DoctorDetailsResponse } from "@/types/doctors";
 import type { HospitalDetailsResponse } from "@/types/hospitals";
+import { displayName } from "@/lib/text";
 
 /**
  * Server-side reads for the public detail pages. Both endpoints are public, so no token is
@@ -41,12 +42,25 @@ async function getBySegment<T extends { slug?: string | null }>(kind: "hospitals
 	return getJson<T>(`/${kind}/slug/${value}?${include}`);
 }
 
-export function getHospital(segment: string): Promise<HospitalDetailsResponse | null> {
-	return getBySegment<HospitalDetailsResponse>("hospitals", segment, "doctors=true&tests=true&amenities=true");
+export async function getHospital(segment: string): Promise<HospitalDetailsResponse | null> {
+	const hospital = await getBySegment<HospitalDetailsResponse>("hospitals", segment, "doctors=true&tests=true&amenities=true");
+	if (hospital) {
+		hospital.name = displayName(hospital.name);
+		hospital.bnName = displayName(hospital.bnName);
+		for (const doctor of hospital.doctors ?? []) {
+			if (doctor?.profile) doctor.profile.name = displayName(doctor.profile.name);
+		}
+	}
+	return hospital;
 }
 
-export function getDoctor(segment: string): Promise<DoctorDetailsResponse | null> {
-	return getBySegment<DoctorDetailsResponse>("doctors", segment, "degrees=true&workplaces=true&associations=true");
+export async function getDoctor(segment: string): Promise<DoctorDetailsResponse | null> {
+	const doctor = await getBySegment<DoctorDetailsResponse>("doctors", segment, "degrees=true&workplaces=true&associations=true");
+	if (doctor?.profile) {
+		doctor.profile.name = displayName(doctor.profile.name);
+		doctor.profile.bnName = displayName(doctor.profile.bnName);
+	}
+	return doctor;
 }
 
 /** Only http(s) links are rendered; anything else (javascript:, data:) is dropped. */

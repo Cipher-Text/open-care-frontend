@@ -16,6 +16,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { Hospital } from "@/types/hospitals";
 import { hospitalPath } from "@/lib/paths";
+import { displayName } from "@/lib/text";
 
 function safeUrl(url?: string | null) {
 	if (!url) return null;
@@ -50,7 +51,7 @@ export default function HospitalCard({ hospital }: { hospital: Hospital }) {
 								href={hospitalPath(hospital)}
 								className="hover:text-primary hover:underline after:absolute after:inset-0"
 							>
-								{hospital.name}
+								{displayName(hospital.name)}
 							</Link>
 							{hospital.isVerified && (
 								<BadgeCheck
@@ -125,7 +126,7 @@ export default function HospitalCard({ hospital }: { hospital: Hospital }) {
 						)}
 						{validEmail && (
 							<Button asChild variant="outline" className="h-11">
-								<a href={`mailto:${validEmail}`} aria-label={`Email ${hospital.name}`}>
+								<a href={`mailto:${validEmail}`} aria-label={`Email ${displayName(hospital.name)}`}>
 									<Mail className="mr-2 size-4" aria-hidden="true" />
 									Email
 								</a>

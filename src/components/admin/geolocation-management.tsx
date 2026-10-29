@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
   Search,
-  MapPin,
   RefreshCw,
   ChevronLeft,
   ChevronRight,
@@ -15,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { baseUrl } from "@/config/config";
 import "./geolocation-management.css";
+import { AdminHeader } from "@/components/admin/admin-header";
 
 interface Division {
   id: number;
@@ -438,12 +438,11 @@ const GeolocationManagement: React.FC = () => {
     : null;
 
   return (
-    <div className="p-6 bg-muted min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <MapPin className="h-6 w-6 text-primary" />
-          <h1 className="text-2xl font-bold">Geolocation Management</h1>
-        </div>
+    <div className="min-h-screen bg-muted">
+      <AdminHeader
+        title="Geolocation Management"
+        description="Divisions, districts, upazilas and unions"
+      >
         <div className="flex items-center gap-4">
           {/* Search */}
           <div className="relative">
@@ -480,8 +479,9 @@ const GeolocationManagement: React.FC = () => {
             </Button>
           )}
         </div>
-      </div>
+      </AdminHeader>
 
+      <div className="p-6">
       {/* Tabs */}
       <div className="mb-6">
         <div className="border-b border-border">
@@ -563,6 +563,7 @@ const GeolocationManagement: React.FC = () => {
           </>
         )}
       </Card>
+      </div>
     </div>
   );
 };

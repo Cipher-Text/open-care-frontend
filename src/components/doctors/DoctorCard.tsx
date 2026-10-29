@@ -5,11 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { DoctorResponse } from "@/types/doctors";
 import { doctorPath } from "@/lib/paths";
+import { displayName } from "@/lib/text";
 
 export default function DoctorCard({ doctor }: { doctor: DoctorResponse }) {
 	const { profile } = doctor;
-	const name = profile?.name || "Unnamed doctor";
-	const bnName = profile?.bnName && profile.bnName !== name ? profile.bnName : null;
+	const name = displayName(profile?.name) || "Unnamed doctor";
+	const bnName = displayName(profile?.bnName) && displayName(profile?.bnName) !== name ? displayName(profile?.bnName) : null;
 	const location = [profile?.upazila?.name, profile?.district?.name]
 		.filter(Boolean)
 		.join(", ");

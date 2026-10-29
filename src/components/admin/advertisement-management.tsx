@@ -31,6 +31,7 @@ import { ConfirmDeleteDialog } from "@/components/admin/advertisements/confirm-d
 import { usePermissions } from "@/hooks/use-permissions";
 import { AdvertisementType, Advertisement } from "@/types/advertisements";
 import "./advertisement-management.css";
+import { AdminHeader } from "@/components/admin/admin-header";
 
 type TabType = "types" | "advertisements";
 
@@ -399,11 +400,12 @@ const AdvertisementManagement: React.FC = () => {
       : filteredAdvertisements.length;
 
   return (
-    <div className="advertisement-management">
-      <div className="advertisement-header">
-        <h1>📢 Advertisement Management</h1>
-        <p>Manage advertisement types and active advertisements</p>
-      </div>
+    <div>
+      <AdminHeader
+        title="Advertisement Management"
+        description="Manage advertisement types and active advertisements"
+      />
+      <div className="advertisement-management">
 
       {error && (
         <Alert variant="destructive" className="mb-4">
@@ -529,6 +531,7 @@ const AdvertisementManagement: React.FC = () => {
         pending={deletePending}
         onConfirm={confirmDelete}
       />
+      </div>
     </div>
   );
 };

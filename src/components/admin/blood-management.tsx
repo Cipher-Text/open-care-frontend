@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
   Search,
-  Droplets,
   RefreshCw,
   ChevronLeft,
   ChevronRight,
@@ -20,6 +19,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { baseUrl } from "@/config/config";
 import { apiGet } from "@/lib/api-client";
 import "./blood-management.css";
+import { AdminHeader } from "@/components/admin/admin-header";
 
 // Common interfaces
 interface BloodGroup {
@@ -761,12 +761,11 @@ const BloodManagement: React.FC = () => {
   const activeConfig = TAB_CONFIGS.find((config) => config.name === activeTab);
 
   return (
-    <div className="p-6 bg-muted min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <Droplets className="h-6 w-6 text-destructive" />
-          <h1 className="text-2xl font-bold">Blood Management</h1>
-        </div>
+    <div className="min-h-screen bg-muted">
+      <AdminHeader
+        title="Blood Management"
+        description="Blood donations, requisitions and donors"
+      >
         <div className="flex items-center gap-4">
           {/* Search */}
           <div className="relative">
@@ -790,8 +789,9 @@ const BloodManagement: React.FC = () => {
             Refresh
           </Button>
         </div>
-      </div>
+      </AdminHeader>
 
+      <div className="p-6">
       {/* Tabs */}
       <div className="mb-6">
         <div className="border-b border-border">
@@ -874,6 +874,7 @@ const BloodManagement: React.FC = () => {
           </>
         )}
       </Card>
+      </div>
     </div>
   );
 };

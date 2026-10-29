@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Search,
-  GraduationCap,
   RefreshCw,
   ChevronLeft,
   ChevronRight,
@@ -16,6 +15,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { baseUrl } from "@/config/config";
 import "./degrees-management.css";
 import { NativeSelect } from "@/components/ui/native-select";
+import { AdminHeader } from "@/components/admin/admin-header";
 
 interface DegreeType {
   value: string;
@@ -185,12 +185,11 @@ const DegreesManagement: React.FC = () => {
   const paginationData = getFilteredAndPaginatedData();
 
   return (
-    <div className="p-6 bg-muted min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <GraduationCap className="h-6 w-6 text-primary" />
-          <h1 className="text-2xl font-bold">Degrees Management</h1>
-        </div>
+    <div className="min-h-screen bg-muted">
+      <AdminHeader
+        title="Degrees Management"
+        description="Medical degrees and their abbreviations"
+      >
         <Button
           onClick={fetchData}
           disabled={loading}
@@ -199,8 +198,9 @@ const DegreesManagement: React.FC = () => {
           <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           Refresh
         </Button>
-      </div>
+      </AdminHeader>
 
+      <div className="p-6">
       {/* Filters and Search */}
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
         {/* Search */}
@@ -368,6 +368,7 @@ const DegreesManagement: React.FC = () => {
           </>
         )}
       </Card>
+      </div>
     </div>
   );
 };
