@@ -63,6 +63,7 @@ export const CONSOLE_RULES: NavRule[] = [
 		url: "/admin/advertisement",
 		anyOf: [...crud("advertisement"), ...crud("advertisement-type")],
 	},
+	{ id: "blog", group: "Platform", title: "Blog", url: "/admin/blog", anyOf: ["manage-blog"] },
 	{ id: "prescriptions", group: "Clinical", title: "Prescriptions", url: "/admin/prescriptions", anyOf: ["view-prescription"] },
 	{ id: "role-permissions", group: "Platform", title: "Roles & Permissions", url: "/admin/role-permissions", anyOf: ["manage-role-permissions"] },
 
