@@ -26,6 +26,24 @@ export const fetchDoctors = async (
 	return normalizePage(response.data);
 };
 
+/**
+ * The doctor list for the administration screen, with phone and email. Only doctor administrators may read it; anyone else
+ * (a doctor with only their own record) gets the public list, which shows no private details.
+ */
+export const fetchAdminDoctors = async (
+	params: Record<string, unknown> = {}
+): Promise<DoctorListResponse> => {
+	try {
+		const response = await apiGet<WirePage<DoctorResponse>>(buildUrl("/admin/doctors", withWirePage(params)));
+		return normalizePage(response.data);
+	} catch (error) {
+		if (error instanceof Error && error.message.startsWith("403")) {
+			return fetchDoctors(params);
+		}
+		throw error;
+	}
+};
+
 export const addDoctor = async (
 	doctorData: AddDoctorFormData
 ): Promise<{ success: boolean; message?: string; data?: unknown }> => {
@@ -43,7 +61,7 @@ export const addDoctor = async (
 };
 
 export const fetchDoctorById = async (id: string): Promise<Doctor> => {
-	const response = await apiGet<Doctor>(`/doctors/${id}`);
+	const response = await apiGet<Doctor>(`/admin/doctors/${id}`);
 
 	if (!response.ok) {
 		throw new Error(response.error || "Failed to fetch doctor");
@@ -55,7 +73,7 @@ export const fetchDoctorById = async (id: string): Promise<Doctor> => {
 export const fetchDoctorDetailsById = async (
 	id: number
 ): Promise<DoctorDetailsResponse> => {
-	const url = buildUrl(`/doctors/${id}`, {
+	const url = buildUrl(`/admin/doctors/${id}`, {
 		degrees: true,
 		workplaces: true,
 		associations: true,

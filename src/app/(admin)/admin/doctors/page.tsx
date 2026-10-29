@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Plus, Upload } from "lucide-react";
-import { fetchDoctors } from "@/api/doctors";
+import { fetchAdminDoctors } from "@/api/doctors";
 import { DoctorListResponse } from "@/types/doctors";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,7 @@ export default function DoctorsPage() {
 	} = useQuery<DoctorListResponse>({
 		queryKey: ["doctors", currentPage],
 		queryFn: () =>
-			fetchDoctors({
+			fetchAdminDoctors({
 				page: currentPage,
 				size: 10,
 			}),

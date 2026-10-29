@@ -1,51 +1,23 @@
-import { normalizePage, withWirePage } from "@/lib/pagination";
-import { baseUrl } from "@/config/config";
+import { normalizePage, withWirePage, type WirePage } from "@/lib/pagination";
+import { apiGet, buildUrl } from "@/lib/api-client";
 import { NurseListResponse, Nurse } from "@/types/nurses";
 
 interface QueryParams {
   [key: string]: string | number | boolean | undefined | null;
 }
 
-// Helper function to build query string
-const buildQueryString = (params: QueryParams): string => {
-  const queryParams = new URLSearchParams();
-
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== "") {
-      queryParams.append(key, value.toString());
-    }
-  });
-
-  return queryParams.toString();
-};
-
+// The administration endpoints return the complete profile (phone, email), so they need a login with a nurse permission.
+// The public /nurses routes show the public profile only.
 export const fetchNurses = async (
   params: QueryParams
 ): Promise<NurseListResponse> => {
-  const queryString = buildQueryString(withWirePage(params));
-  const response = await fetch(`${baseUrl}/nurses?${queryString}`, {
-    method: "GET",
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch nurses: ${response.status} ${response.statusText}`
-    );
-  }
-
-  return normalizePage(await response.json());
+  const response = await apiGet<WirePage<Nurse>>(
+    buildUrl("/admin/nurses", withWirePage(params))
+  );
+  return normalizePage(response.data);
 };
 
 export const fetchNurseById = async (id: string): Promise<Nurse> => {
-  const response = await fetch(`${baseUrl}/nurses/${id}`, {
-    method: "GET",
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch nurse: ${response.status} ${response.statusText}`
-    );
-  }
-
-  return response.json();
+  const response = await apiGet<Nurse>(`/admin/nurses/${id}`);
+  return response.data as Nurse;
 };
