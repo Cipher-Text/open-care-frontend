@@ -8,8 +8,23 @@ import {
 } from "@/components/common/DirectoryControls";
 import { Button } from "@/components/ui/button";
 import { useUrlParams } from "@/hooks/use-url-params";
+import type { MedicalSpeciality } from "@/types/doctors";
 
 const STATIC = { staleTime: 60 * 60 * 1000 };
+
+/** A sub-specialty can sit under several parents (Adolescent medicine under both Pediatrics and Internal medicine); name the parent so the repeats can be told apart. */
+function specialityOptions(list: MedicalSpeciality[]) {
+	const byId = new Map(list.map((s) => [s.id, s]));
+	const counts = new Map<string, number>();
+	for (const s of list) counts.set(s.name, (counts.get(s.name) ?? 0) + 1);
+	return list
+		.map((s) => {
+			const parent = s.parentId ? byId.get(s.parentId)?.name : undefined;
+			const repeated = (counts.get(s.name) ?? 0) > 1;
+			return { value: String(s.id), label: repeated && parent ? `${s.name} (${parent})` : s.name };
+		})
+		.sort((a, b) => a.label.localeCompare(b.label));
+}
 
 export default function DoctorFilters() {
 	const { get, set, clear, hasFilters } = useUrlParams();
@@ -45,10 +60,7 @@ export default function DoctorFilters() {
 					value={get("speciality")}
 					onChange={(v) => set({ speciality: v })}
 					disabled={specialities.isLoading}
-					options={(specialities.data ?? [])
-						.slice()
-						.sort((a, b) => a.name.localeCompare(b.name))
-						.map((s) => ({ value: String(s.id), label: s.name }))}
+					options={specialityOptions(specialities.data ?? [])}
 				/>
 				<FilterSelect
 					label="District"
