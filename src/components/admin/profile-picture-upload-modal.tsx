@@ -71,8 +71,9 @@ export const ProfilePictureUploadModal: React.FC<
 		if (!file) return;
 
 		// Validate file type
-		if (!file.type.startsWith("image/")) {
-			setError("Please select an image file (JPG, PNG, WebP, etc.)");
+		// The server reads the real type of the file and accepts only these three
+		if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+			setError("Please select a JPG, PNG or WebP image");
 			return;
 		}
 
@@ -246,7 +247,7 @@ export const ProfilePictureUploadModal: React.FC<
 					<input
 						ref={fileInputRef}
 						type="file"
-						accept="image/*"
+						accept="image/jpeg,image/png,image/webp"
 						onChange={handleFileChange}
 						className="hidden"
 					/>

@@ -117,7 +117,15 @@ export const uploadFileWithProgress = async (
 					reject(new Error("Failed to parse upload response"));
 				}
 			} else {
-				reject(new Error(`Upload failed: ${xhr.status} ${xhr.statusText}`));
+				// The backend explains a refusal (wrong type, too large, not your record) in its error body
+				let reason = `${xhr.status} ${xhr.statusText}`;
+				try {
+					const message = JSON.parse(xhr.responseText)?.message;
+					if (typeof message === "string" && message) reason = message;
+				} catch {
+					// keep the status text
+				}
+				reject(new Error(`Upload failed: ${reason}`));
 			}
 		});
 
