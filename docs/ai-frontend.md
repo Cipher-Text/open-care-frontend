@@ -86,6 +86,16 @@ Depends on: docs/ai-context.md (constitution). If conflict, ai-context.md wins.
 - Keep date/time formatting consistent.
 - Keep pagination/filter query params consistent across pages.
 
+## 10b) Languages (English and Bangla)
+
+- Public pages live in `src/app/(site)/[locale]/`: English at the current URLs, Bangla under `/bn`. Sign-in, account and console routes are in `src/app/(app)/` and are English only. Do not move a public page out of `[locale]`, and do not put a console page inside it.
+- All text on a public page goes in `src/messages/en.json` and `bn.json` (same keys in both; a missing Bangla key falls back to English). No hard-coded sentences in components. Use `useTranslations` (or `getTranslations` in async server code), never string concatenation for sentences, and ICU plurals for counts.
+- Links between public pages use `Link` from `@/i18n/navigation`. Links to `/login`, `/signup`, `/account`, `/admin` use `next/link`.
+- Every public page calls `setRequestLocale(locale)` when it uses translations, and `[slug]` pages export `generateStaticParams` returning `[]`, so they stay statically cached. Never read `cookies()` or `headers()` in a public page or the layout: it turns off caching.
+- A page that exists in Bangla sets `...bilingual(locale, path)` (`src/i18n/seo.ts`) in its metadata for canonical, `hreflang` and `index`. A page not translated yet is marked `noindex` under `/bn` by the layout.
+- Numbers and dates go through `src/lib/format.ts`, so Bangla gets Bangla digits. Show `bnName` as the main name when the language is Bangla, and never show a copy of the English name twice.
+- Bangla text is written by the team and must be checked by a native reader before release, especially legal and medical wording.
+
 ## 11) Output Format for AI Changes
 
 When generating code, always include:

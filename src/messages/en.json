@@ -1,0 +1,189 @@
+{
+  "meta": {
+    "title": "Open Care - Find doctors and hospitals in Bangladesh",
+    "description": "Search a directory of doctors and hospitals across Bangladesh by specialty, location and type."
+  },
+  "language": {
+    "switchTo": "বাংলা",
+    "switchToLabel": "Read this page in Bangla"
+  },
+  "header": {
+    "skip": "Skip to content",
+    "home": "Open Care home",
+    "main": "Main",
+    "mobile": "Mobile",
+    "menu": "Menu",
+    "openMenu": "Open menu",
+    "siteNavigation": "Site navigation",
+    "emergency": "Call 999, the national emergency number",
+    "more": "More",
+    "dashboard": "Dashboard",
+    "signIn": "Sign In",
+    "getStarted": "Get Started",
+    "nav": {
+      "hospitals": "Hospitals",
+      "doctors": "Doctors",
+      "articles": "Articles",
+      "ambulance": "Ambulance",
+      "bloodBanks": "Blood banks",
+      "institutions": "Institutions"
+    },
+    "moreLinks": {
+      "pricing": "Pricing",
+      "about": "About",
+      "contact": "Contact",
+      "faq": "Help and FAQ",
+      "professionals": "For doctors and facilities"
+    }
+  },
+  "footer": {
+    "about": "A free health directory for Bangladesh. Hospitals, clinics, diagnostic centers, blood banks and doctors in every district.",
+    "directory": "Directory",
+    "hospitals": "Hospitals and clinics",
+    "doctors": "Doctors",
+    "ambulances": "Ambulance services",
+    "bloodBanks": "Blood banks",
+    "institutions": "Medical institutions",
+    "aboutAndLegal": "About and legal",
+    "articles": "Health articles",
+    "aboutUs": "About",
+    "pricing": "Pricing",
+    "contact": "Contact",
+    "professionals": "For doctors and facilities",
+    "reviewPolicy": "Medical review policy",
+    "privacy": "Privacy policy",
+    "terms": "Terms of use",
+    "hub": "Project hub",
+    "contactTitle": "Contact",
+    "city": "Dhaka, Bangladesh",
+    "emergency": "Emergency? Call",
+    "copyright": "Open Care. Information only, not medical advice. Listings may be incomplete or out of date."
+  },
+  "blog": {
+    "title": "Health articles",
+    "heroTitle": "Health articles",
+    "heroDescription": "Plain-language health guides, in Bangla",
+    "metaDescription": "Plain-language health articles in Bangla for people in Bangladesh: symptoms, tests, hospitals and when to see a doctor.",
+    "search": "Search articles",
+    "searchButton": "Search",
+    "topics": "Topics",
+    "all": "All",
+    "none": "No articles found.",
+    "pages": "Pages",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page, number} of {total, number}",
+    "minRead": "{minutes, number} min read",
+    "breadcrumb": "Breadcrumb",
+    "related": "Related articles",
+    "needDoctor": "Need to see a doctor about this?",
+    "findDoctor": "Find a doctor: {speciality}",
+    "disclaimer": "This article is for information only and is not medical advice. If you are unwell or worried, see a doctor. In an emergency call",
+    "reviewLink": "How we review health articles",
+    "notFound": "Article not found | Open Care",
+    "articleLanguageNote": "This article is in Bangla.",
+    "emergencyNumber": "999"
+  },
+  "home": {
+    "metaTitle": "Open Care | Hospitals, clinics and doctors in Bangladesh",
+    "metaDescription": "Find hospitals, clinics, diagnostic centers, blood banks and doctors in every district of Bangladesh. Free directory, information only.",
+    "ogDescription": "Search health facilities and doctors across Bangladesh by name, district and type.",
+    "siteDescription": "Health facility and doctor directory for Bangladesh",
+    "hero": {
+      "eyebrow": "Bangladesh health directory",
+      "titleStart": "Find the right care,",
+      "titleEnd": "close to home",
+      "lead": "Search hospitals, clinics, diagnostic centers, blood banks and doctors in every district of Bangladesh.",
+      "facilities": "health facilities",
+      "doctors": "doctors",
+      "upazilas": "upazilas covered",
+      "districts": "districts"
+    },
+    "search": {
+      "label": "Search health facilities and doctors",
+      "lookingFor": "What are you looking for?",
+      "hospitalsTab": "Hospitals and clinics",
+      "doctorsTab": "Doctors",
+      "doctorName": "Doctor name",
+      "facilityName": "Facility name",
+      "hospitalPlaceholder": "Hospital or clinic name",
+      "district": "District",
+      "allDistricts": "All districts",
+      "button": "Search"
+    },
+    "emergency": {
+      "label": "Emergency help",
+      "lead": "In an emergency",
+      "tail": ", call the national emergency number right away.",
+      "call": "Call 999",
+      "bloodBank": "Find a blood bank"
+    },
+    "types": {
+      "title": "Browse by type of care",
+      "lead": "From the nearest community clinic to private hospitals.",
+      "all": "All facilities",
+      "view": "View list",
+      "names": {
+        "community": "Community clinics",
+        "diagnostic": "Diagnostic centers",
+        "private": "Private hospitals and clinics",
+        "union": "Union health centers",
+        "upazila": "Upazila health complexes",
+        "ngo": "NGO hospitals and clinics",
+        "blood": "Blood banks"
+      }
+    },
+    "place": {
+      "title": "Browse by division and district",
+      "lead": "Choose a district to see the facilities there.",
+      "districts": "{count, plural, one {# district} other {# districts}}"
+    },
+    "trust": {
+      "title": "What you can rely on",
+      "info": {
+        "title": "Information only",
+        "text": "Open Care is a directory. It does not give medical advice, diagnose conditions or recommend treatment. In an emergency, call 999."
+      },
+      "verified": {
+        "title": "Verified means checked",
+        "text": "A verified badge appears only on records that have been reviewed. Listings without it were imported and may be incomplete or out of date, so confirm details by phone before you travel."
+      },
+      "fix": {
+        "title": "Help us fix mistakes",
+        "text": "Wrong phone number, closed facility, missing doctor? Tell us and we will correct it.",
+        "action": "Report incorrect information",
+        "subject": "Incorrect information on Open Care"
+      }
+    },
+    "pro": {
+      "title": "Are you a doctor or run a health facility?",
+      "text": "Create an account to keep your details accurate. Claiming a listing and verification are rolling out, and registered accounts are the first to be invited.",
+      "create": "Create an account",
+      "update": "Ask us to update a listing",
+      "subject": "Update my listing"
+    },
+    "faq": {
+      "title": "Common questions",
+      "what": {
+        "q": "What is Open Care?",
+        "a": "A free directory that helps you find hospitals, clinics, diagnostic centers, blood banks and doctors across Bangladesh by name, district and type."
+      },
+      "verified": {
+        "q": "Is the information verified?",
+        "a": "Not yet for most records. Listings were imported and some may be incomplete or out of date. A verified badge appears only on records that have been reviewed. Please confirm details by phone before you travel."
+      },
+      "booking": {
+        "q": "Can I book an appointment here?",
+        "a": "Not at the moment. Open Care helps you find and contact a doctor or facility. Booking and other services are planned."
+      },
+      "report": {
+        "q": "How do I report a wrong or missing listing?",
+        "a": "Email hello@opencarebd.com with the name of the facility or doctor and what is wrong. If you are the doctor or facility, create an account so we can reach you."
+      },
+      "advice": {
+        "q": "Does Open Care give medical advice?",
+        "a": "No. It is an information directory only. For medical advice see a qualified doctor, and in an emergency call 999."
+      }
+    }
+  }
+}

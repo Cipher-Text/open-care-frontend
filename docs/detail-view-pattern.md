@@ -84,7 +84,7 @@ export function buildHospitalDetailSections(
 
 ### Step 2: Update Your View Page
 
-Update `src/app/(admin)/admin/[entity]/[id]/view/page.tsx`:
+Update `src/app/(app)/(admin)/admin/[entity]/[id]/view/page.tsx`:
 
 ```typescript
 "use client";

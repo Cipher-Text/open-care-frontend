@@ -1,17 +1,19 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { MapPin } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import { HomeStats } from "@/lib/public-stats";
 
 /** Divisions with their districts. Plain links, so it works without JavaScript and is crawlable. */
 export default function BrowseByPlace({ stats }: { stats: HomeStats }) {
+	const t = useTranslations("home.place");
 	if (stats.divisions.length === 0) return null;
 	return (
 		<section aria-labelledby="place-title" className="bg-muted/50 py-14 sm:py-16">
 			<div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 				<h2 id="place-title" className="text-2xl font-bold text-foreground sm:text-3xl">
-					Browse by division and district
+					{t("title")}
 				</h2>
-				<p className="mt-1 mb-8 text-muted-foreground">Choose a district to see the facilities there.</p>
+				<p className="mt-1 mb-8 text-muted-foreground">{t("lead")}</p>
 
 				<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					{stats.divisions.map((division) => (
@@ -22,7 +24,7 @@ export default function BrowseByPlace({ stats }: { stats: HomeStats }) {
 									{division.name}
 								</span>
 								<span className="text-sm text-muted-foreground">
-									{division.districts.length} districts
+									{t("districts", { count: division.districts.length })}
 									<span className="ml-2 inline-block transition-transform group-open:rotate-180" aria-hidden="true">
 										⌄
 									</span>

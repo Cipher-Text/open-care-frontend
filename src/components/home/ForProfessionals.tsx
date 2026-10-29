@@ -1,21 +1,20 @@
-import Link from "next/link";
+import NextLink from "next/link";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 
 /** Growth loop: the people best placed to correct a listing are the doctors and facilities in it. */
 export default function ForProfessionals() {
+	const t = useTranslations("home.pro");
 	return (
 		<section aria-labelledby="pro-title" className="bg-primary py-14 sm:py-16">
 			<div className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-4 text-center sm:px-6 lg:px-8">
 				<h2 id="pro-title" className="text-2xl font-bold text-primary-foreground sm:text-3xl">
-					Are you a doctor or run a health facility?
+					{t("title")}
 				</h2>
-				<p className="max-w-2xl text-lg text-primary-foreground/90">
-					Create an account to keep your details accurate. Claiming a listing and verification are rolling
-					out, and registered accounts are the first to be invited.
-				</p>
+				<p className="max-w-2xl text-lg text-primary-foreground/90">{t("text")}</p>
 				<div className="flex flex-col gap-3 sm:flex-row">
 					<Button asChild size="lg" variant="secondary" className="h-12 px-8">
-						<Link href="/signup">Create an account</Link>
+						<NextLink href="/signup">{t("create")}</NextLink>
 					</Button>
 					<Button
 						asChild
@@ -23,7 +22,7 @@ export default function ForProfessionals() {
 						variant="outline"
 						className="h-12 border-primary-foreground bg-transparent px-8 text-primary-foreground hover:bg-primary-foreground hover:text-primary"
 					>
-						<a href="mailto:hello@opencarebd.com?subject=Update%20my%20listing">Ask us to update a listing</a>
+						<a href={`mailto:hello@opencarebd.com?subject=${encodeURIComponent(t("subject"))}`}>{t("update")}</a>
 					</Button>
 				</div>
 			</div>

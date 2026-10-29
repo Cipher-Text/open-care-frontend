@@ -7,6 +7,11 @@ export const revalidate = 86400;
 
 const STATIC_PATHS = ["", "/hospitals", "/doctors", "/blog", "/medical-review-policy", "/ambulances", "/institutions", "/about", "/pricing", "/contact", "/privacy", "/terms"];
 
+/** Pages that exist in Bangla as well; only these list the /bn address and the language alternates. */
+const BILINGUAL_PATHS = new Set(["", "/blog"]);
+
+const alternates = (path: string) => ({ languages: { en: `${siteUrl}${path}`, bn: `${siteUrl}/bn${path}` } });
+
 export async function generateSitemaps() {
 	const { hospitalChunks, doctorChunks } = await getSitemapPlan();
 	return Array.from({ length: 1 + hospitalChunks + doctorChunks }, (_, id) => ({ id }));
@@ -16,21 +21,29 @@ export async function generateSitemaps() {
 export default async function sitemap({ id }: { id: number | Promise<string> }): Promise<MetadataRoute.Sitemap> {
 	const index = Number(await id);
 	if (index === 0) {
-		const staticPages = STATIC_PATHS.map((path) => ({
-			url: `${siteUrl}${path}`,
-			changeFrequency: (path === "" ? "daily" : "weekly") as "daily" | "weekly",
-			priority: path === "" ? 1 : 0.7,
-		}));
+		const staticPages = STATIC_PATHS.flatMap((path) => {
+			const entry = {
+				url: `${siteUrl}${path}`,
+				changeFrequency: (path === "" ? "daily" : "weekly") as "daily" | "weekly",
+				priority: path === "" ? 1 : 0.7,
+			};
+			if (!BILINGUAL_PATHS.has(path)) return [entry];
+			return [{ ...entry, alternates: alternates(path) }, { ...entry, url: `${siteUrl}/bn${path}`, alternates: alternates(path) }];
+		});
 		// The blog is small (one page of up to 100 posts), so its posts sit with the static pages
 		const posts = await getBlogPosts({ size: 100 }).catch(() => ({ content: [] }));
 		return [
 			...staticPages,
-			...posts.content.map((post) => ({
-				url: `${siteUrl}/blog/${post.slug}`,
-				lastModified: post.publishedAt ? new Date(post.publishedAt) : undefined,
-				changeFrequency: "monthly" as const,
-				priority: 0.6,
-			})),
+			...posts.content.flatMap((post) => {
+				const entry = {
+					url: `${siteUrl}/blog/${post.slug}`,
+					lastModified: post.publishedAt ? new Date(post.publishedAt) : undefined,
+					changeFrequency: "monthly" as const,
+					priority: 0.6,
+					alternates: alternates(`/blog/${post.slug}`),
+				};
+				return [entry, { ...entry, url: `${siteUrl}/bn/blog/${post.slug}` }];
+			}),
 		];
 	}
 

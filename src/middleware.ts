@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
+import createIntlMiddleware from "next-intl/middleware";
+import { routing } from "@/i18n/routing";
 import { isStaff } from "@/config/navigation-rules";
 import { permissionsFromToken, tokenExpired } from "@/lib/token-permissions";
 
+const intlMiddleware = createIntlMiddleware(routing);
+
+/** Routes that are not part of the language scheme: sign-in, account and console (English only, behind a login). */
+const NON_LOCALIZED = ["/admin", "/account", "/login", "/signup", "/logout", "/auth"];
+const isNonLocalized = (pathname: string) => NON_LOCALIZED.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+
 /**
+ * Public pages go through the language step (English unprefixed, Bangla under /bn); everything else keeps the login rules below.
+ *
  * Page-level routing only (what to show), never a substitute for the API's own checks:
  * - /admin and /account need a login;
  * - /admin is the staff console, so someone with no console permission is sent to /account;
@@ -15,8 +25,13 @@ export function middleware(request: NextRequest) {
 		return NextResponse.next();
 	}
 
-	const accessToken = request.cookies.get("access_token")?.value;
 	const { pathname } = request.nextUrl;
+	// Sitemap and robots are metadata routes (a file extension or one of these names), not pages
+	if (!isNonLocalized(pathname) && !/^\/(sitemap|robots)/.test(pathname) && !/\.[a-z0-9]+$/i.test(pathname)) {
+		return intlMiddleware(request);
+	}
+
+	const accessToken = request.cookies.get("access_token")?.value;
 
 	const isConsole = pathname === "/admin" || pathname.startsWith("/admin/");
 	const isAccount = pathname === "/account" || pathname.startsWith("/account/");

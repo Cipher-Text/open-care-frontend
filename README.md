@@ -78,16 +78,16 @@ npm run dev   # next dev --turbopack
 open-care-frontend/
 ├── src/
 │   ├── app/                    # Next.js App Router pages
-│   │   ├── (admin)/admin/     # Admin dashboard routes (auth required)
-│   │   ├── (main)/            # Public pages (doctors, hospitals, ambulances, institutions, pricing, about, contact, privacy, terms); the home page is src/app/page.tsx
-│   │   ├── login/ signup/ logout/ auth/refresh/
+│   │   ├── (site)/[locale]/   # Public pages in English (no prefix) and Bangla (/bn): home, doctors, hospitals, ambulances, institutions, blog, pricing, about, contact, privacy, terms. Its own root layout (html lang from the URL)
+│   │   ├── (app)/             # English-only routes with their own root layout: (admin)/admin console, (account)/account, login, signup, logout, auth
+│   ├── i18n/ messages/        # next-intl: routing (en, bn), request config, locale-aware Link, SEO helper; en.json and bn.json message files
 │   ├── components/            # admin, common, doctors, hospitals, home, ui
 │   ├── api/                   # API client modules, one per backend resource
 │   ├── contexts/              # Auth context
 │   ├── hooks/                 # use-permissions, use-url-params, use-polling, use-mobile
 │   ├── types/ validations/    # TypeScript types, Zod schemas
 │   ├── config/                # config.ts (API base URL)
-│   └── lib/                   # api-client, auth, pagination (page-shape contract), public-stats (cached home stats), utils
+│   └── lib/                   # api-client, format (numbers and dates by language), fonts, auth, pagination (page-shape contract), public-stats (cached home stats), utils
 │   ├── middleware.ts          # /admin and /account need a login; non-staff are sent to /account
 │   ├── config/                # navigation-rules.ts (menu and guards), role-permissions fixture, nav test
 ├── docs/                      # Feature docs, AI context, openapi.json

@@ -1,4 +1,4 @@
-import { logout } from "@/app/logout/actions";
+import { logout } from "@/app/(app)/logout/actions";
 
 import { LoginResponse } from "@/types/auth";
 
