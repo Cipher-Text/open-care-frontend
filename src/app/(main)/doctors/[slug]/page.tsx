@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
-import { BadgeCheck, Globe, GraduationCap, MapPin, Stethoscope, UserRound } from "lucide-react";
+import { BadgeCheck, Globe, GraduationCap, MapPin, Phone, Stethoscope, UserRound } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -51,6 +51,9 @@ export default async function DoctorDetailPage({ params }: Props) {
 	const image = safeUrl((profile as { imageUrl?: string | null }).imageUrl ?? profile.photo);
 	const bnName = profile.bnName && profile.bnName !== profile.name ? profile.bnName : null;
 	const location = [profile.upazila?.name, profile.district?.name].map(clean).filter(Boolean).join(", ");
+	// The API returns a phone only when the doctor chose to show it
+	const phone = typeof profile.phone === "string" ? profile.phone.trim() : "";
+	const phoneHref = phone ? `tel:${phone.replace(/[^\d+]/g, "")}` : null;
 	const links = [
 		{ label: "Website", url: safeUrl((profile as { websiteUrl?: string | null }).websiteUrl) },
 		{ label: "LinkedIn", url: safeUrl(profile.linkedinProfileUrl) },
@@ -127,6 +130,16 @@ export default async function DoctorDetailPage({ params }: Props) {
 							</ul>
 						</div>
 					</div>
+					{phoneHref && (
+						<div className="flex flex-wrap gap-2">
+							<Button asChild className="h-10">
+								<a href={phoneHref}>
+									<Phone className="mr-2 size-4" aria-hidden="true" />
+									Call {phone}
+								</a>
+							</Button>
+						</div>
+					)}
 					{links.length > 0 && (
 						<div className="flex flex-wrap gap-2">
 							{links.map((link) => (

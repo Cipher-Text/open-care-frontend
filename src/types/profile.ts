@@ -99,6 +99,8 @@ export interface UserProfile {
   bloodDonorConsentAt: string | null;
   donorSharePhone: boolean;
   donorShareAddress: boolean;
+  /** A doctor's choice to show their phone on the public pages. */
+  publicPhone: boolean;
   bloodDonationCount: number | null;
   lastBloodDonationDate: string | null;
   isVolunteer: boolean;

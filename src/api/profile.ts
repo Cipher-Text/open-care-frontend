@@ -196,3 +196,20 @@ export const updateHealthDataConsent = async (consent: boolean): Promise<HealthD
 
 	return response.data;
 };
+
+export interface PublicPhoneChoice {
+	show: boolean;
+}
+
+/**
+ * A doctor chooses whether the phone number on their profile is shown on the public pages. Only for yourself; hidden unless chosen.
+ */
+export const updatePublicPhone = async (show: boolean): Promise<PublicPhoneChoice> => {
+	const response = await apiPut<PublicPhoneChoice>("/profiles/self/public-phone", { show });
+
+	if (!response.ok || !response.data) {
+		throw new Error(response.error || "Failed to save your phone choice");
+	}
+
+	return response.data;
+};
