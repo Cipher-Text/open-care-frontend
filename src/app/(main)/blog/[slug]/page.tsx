@@ -97,7 +97,9 @@ export default async function BlogPostPage({ params }: Props) {
 					<a href="tel:999" className="underline">
 						999
 					</a>
-					.
+					. <Link href="/medical-review-policy" className="underline">
+						How we review health articles
+					</Link>
 				</p>
 			</article>
 

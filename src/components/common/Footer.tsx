@@ -32,6 +32,7 @@ export default function Footer() {
 							<li><Link href="/pricing" className="hover:underline">Pricing</Link></li>
 							<li><Link href="/contact" className="hover:underline">Contact</Link></li>
 							<li><Link href="/signup" className="hover:underline">For doctors and facilities</Link></li>
+							<li><Link href="/medical-review-policy" className="hover:underline">Medical review policy</Link></li>
 							<li><Link href="/privacy" className="hover:underline">Privacy policy</Link></li>
 							<li><Link href="/terms" className="hover:underline">Terms of use</Link></li>
 							<li>
