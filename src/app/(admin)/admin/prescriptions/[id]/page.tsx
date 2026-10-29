@@ -30,7 +30,7 @@ export default function PrescriptionPage() {
 						<ArrowLeft className="mr-1.5 size-4" aria-hidden="true" />
 						All prescriptions
 					</Button>
-					{data && hasPermission("update-prescription") && (
+					{data && hasPermission("update-prescription") && data.editable !== false && (
 						<Button variant="outline" asChild>
 							<Link href={`/admin/prescriptions/${data.id}/edit`}>
 								<Pencil className="mr-1.5 size-4" aria-hidden="true" />
@@ -51,6 +51,14 @@ export default function PrescriptionPage() {
 				{isError && (
 					<Alert variant="destructive">
 						<AlertDescription>{error instanceof Error ? error.message : "Failed to load the prescription"}</AlertDescription>
+					</Alert>
+				)}
+				{data && data.editable === false && (
+					<Alert className="mx-auto mb-4 max-w-3xl print:hidden">
+						<AlertDescription>
+							Editing closed{data.editableUntil ? ` on ${new Date(data.editableUntil).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })}` : ""}.
+							To correct this prescription, write a new one.
+						</AlertDescription>
 					</Alert>
 				)}
 				{data && <PrescriptionDocument prescription={data} />}

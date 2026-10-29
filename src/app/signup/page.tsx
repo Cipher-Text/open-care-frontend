@@ -28,6 +28,7 @@ import type { District } from "@/types/locations";
 import type { BloodGroup } from "@/types/blood-groups";
 import type { Gender } from "@/types/gender";
 import { Checkbox } from "@/components/ui/checkbox";
+import { GoogleSignInButton, OrDivider } from "@/components/auth/GoogleSignInButton";
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -444,6 +445,9 @@ export default function SignupPage() {
               >
                 {isLoading ? "Creating Account..." : "Create Account"}
               </Button>
+
+              <OrDivider />
+              <GoogleSignInButton label="Sign up with Google" />
 
               {/* Login Link */}
               <div className="text-center">

@@ -201,173 +201,173 @@ const DegreesManagement: React.FC = () => {
       </AdminHeader>
 
       <div className="p-6">
-      {/* Filters and Search */}
-      <div className="mb-6 flex flex-col sm:flex-row gap-4">
-        {/* Search */}
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search degrees, abbreviations, or types..."
-            value={searchTerm}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-
-        {/* Degree Type Filter */}
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-muted-foreground">
-            Filter by Type:
-          </span>
-          <NativeSelect
-            value={filterByType}
-            onChange={(e) => handleTypeFilter(e.target.value)}
-            className="h-9 w-auto"
-          >
-            <option value="">All Types</option>
-            {degreeTypes.map((type) => (
-              <option key={type.value} value={type.value}>
-                {type.banglaName} ({type.displayName})
-              </option>
-            ))}
-          </NativeSelect>
-        </div>
-      </div>
-
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card className="p-4">
-          <div className="text-2xl font-bold text-primary">{data.length}</div>
-          <div className="text-sm text-muted-foreground">Total Degrees</div>
-        </Card>
-
-        {degreeTypes.map((type) => {
-          const count = data.filter(
-            (d) => d.degreeType.value === type.value
-          ).length;
-          return (
-            <Card key={type.value} className="p-4">
-              <div className="text-2xl font-bold text-success">{count}</div>
-              <div className="text-sm text-muted-foreground">{type.banglaName}</div>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Content */}
-      <Card className="p-6">
-        {loading && (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-            <div className="text-muted-foreground">Loading degrees...</div>
+        {/* Filters and Search */}
+        <div className="mb-6 flex flex-col sm:flex-row gap-4">
+          {/* Search */}
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search degrees, abbreviations, or types..."
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="pl-10"
+            />
           </div>
-        )}
 
-        {error && (
-          <Alert className="mb-4">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
+          {/* Degree Type Filter */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-muted-foreground">
+              Filter by Type:
+            </span>
+            <NativeSelect
+              value={filterByType}
+              onChange={(e) => handleTypeFilter(e.target.value)}
+              className="h-9 w-auto"
+            >
+              <option value="">All Types</option>
+              {degreeTypes.map((type) => (
+                <option key={type.value} value={type.value}>
+                  {type.banglaName} ({type.displayName})
+                </option>
+              ))}
+            </NativeSelect>
+          </div>
+        </div>
 
-        {!loading && !error && (
-          <>
-            <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-              <div className="text-sm text-muted-foreground">
-                <strong>Showing:</strong> {paginationData.data.length} of{" "}
-                {paginationData.totalItems} degrees
-                {searchTerm && (
-                  <span className="ml-2 text-primary">
-                    (filtered by &quot;{searchTerm}&quot;)
-                  </span>
-                )}
-                {filterByType && (
-                  <span className="ml-2 text-success">
-                    (type:{" "}
-                    {
-                      degreeTypes.find((t) => t.value === filterByType)
-                        ?.banglaName
-                    }
-                    )
-                  </span>
-                )}
-              </div>
+        {/* Statistics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <Card className="p-4">
+            <div className="text-2xl font-bold text-primary">{data.length}</div>
+            <div className="text-sm text-muted-foreground">Total Degrees</div>
+          </Card>
+
+          {degreeTypes.map((type) => {
+            const count = data.filter(
+              (d) => d.degreeType.value === type.value
+            ).length;
+            return (
+              <Card key={type.value} className="p-4">
+                <div className="text-2xl font-bold text-success">{count}</div>
+                <div className="text-sm text-muted-foreground">{type.banglaName}</div>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* Content */}
+        <Card className="p-6">
+          {loading && (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+              <div className="text-muted-foreground">Loading degrees...</div>
             </div>
+          )}
 
-            {paginationData.data.length > 0 ? (
-              <>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse border border-input">
-                    <thead>
-                      <tr className="bg-muted">
-                        <th className="border border-input px-4 py-3 text-left font-medium">
-                          ID
-                        </th>
-                        <th className="border border-input px-4 py-3 text-left font-medium">
-                          Degree Name
-                        </th>
-                        <th className="border border-input px-4 py-3 text-left font-medium">
-                          Abbreviation
-                        </th>
-                        <th className="border border-input px-4 py-3 text-left font-medium">
-                          Degree Type
-                        </th>
-                        <th className="border border-input px-4 py-3 text-left font-medium">
-                          Type (Bengali)
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {paginationData.data.map((degree) => (
-                        <tr key={degree.id} className="hover:bg-muted">
-                          <td className="border border-input px-4 py-3 text-center">
-                            <Badge variant="outline">{degree.id}</Badge>
-                          </td>
-                          <td className="border border-input px-4 py-3">
-                            <div className="font-medium text-foreground">
-                              {degree.name}
-                            </div>
-                          </td>
-                          <td className="border border-input px-4 py-3">
-                            <code className="bg-primary/10 text-primary px-2 py-1 rounded text-sm font-mono">
-                              {degree.abbreviation}
-                            </code>
-                          </td>
-                          <td className="border border-input px-4 py-3">
-                            <div className="text-sm">
-                              <div className="font-medium">
-                                {degree.degreeType.banglaName}
-                              </div>
-                              <div className="text-muted-foreground">
-                                {degree.degreeType.value}
-                              </div>
-                            </div>
-                          </td>
-                          <td className="border border-input px-4 py-3">
-                            <span className="text-muted-foreground">
-                              {degree.degreeType.displayName}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+          {error && (
+            <Alert className="mb-4">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          {!loading && !error && (
+            <>
+              <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                <div className="text-sm text-muted-foreground">
+                  <strong>Showing:</strong> {paginationData.data.length} of{" "}
+                  {paginationData.totalItems} degrees
+                  {searchTerm && (
+                    <span className="ml-2 text-primary">
+                      (filtered by &quot;{searchTerm}&quot;)
+                    </span>
+                  )}
+                  {filterByType && (
+                    <span className="ml-2 text-success">
+                      (type:{" "}
+                      {
+                        degreeTypes.find((t) => t.value === filterByType)
+                          ?.banglaName
+                      }
+                      )
+                    </span>
+                  )}
                 </div>
-                {renderPagination(
-                  paginationData.totalPages,
-                  paginationData.currentPage,
-                  paginationData.totalItems
-                )}
-              </>
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                {searchTerm || filterByType
-                  ? "No degrees found matching your criteria"
-                  : "No degrees available"}
               </div>
-            )}
-          </>
-        )}
-      </Card>
+
+              {paginationData.data.length > 0 ? (
+                <>
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse border border-input">
+                      <thead>
+                        <tr className="bg-muted">
+                          <th className="border border-input px-4 py-3 text-left font-medium">
+                            ID
+                          </th>
+                          <th className="border border-input px-4 py-3 text-left font-medium">
+                            Degree Name
+                          </th>
+                          <th className="border border-input px-4 py-3 text-left font-medium">
+                            Abbreviation
+                          </th>
+                          <th className="border border-input px-4 py-3 text-left font-medium">
+                            Degree Type
+                          </th>
+                          <th className="border border-input px-4 py-3 text-left font-medium">
+                            Type (Bengali)
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {paginationData.data.map((degree) => (
+                          <tr key={degree.id} className="hover:bg-muted">
+                            <td className="border border-input px-4 py-3 text-center">
+                              <Badge variant="outline">{degree.id}</Badge>
+                            </td>
+                            <td className="border border-input px-4 py-3">
+                              <div className="font-medium text-foreground">
+                                {degree.name}
+                              </div>
+                            </td>
+                            <td className="border border-input px-4 py-3">
+                              <code className="bg-primary/10 text-primary px-2 py-1 rounded text-sm font-mono">
+                                {degree.abbreviation}
+                              </code>
+                            </td>
+                            <td className="border border-input px-4 py-3">
+                              <div className="text-sm">
+                                <div className="font-medium">
+                                  {degree.degreeType.banglaName}
+                                </div>
+                                <div className="text-muted-foreground">
+                                  {degree.degreeType.value}
+                                </div>
+                              </div>
+                            </td>
+                            <td className="border border-input px-4 py-3">
+                              <span className="text-muted-foreground">
+                                {degree.degreeType.displayName}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  {renderPagination(
+                    paginationData.totalPages,
+                    paginationData.currentPage,
+                    paginationData.totalItems
+                  )}
+                </>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  {searchTerm || filterByType
+                    ? "No degrees found matching your criteria"
+                    : "No degrees available"}
+                </div>
+              )}
+            </>
+          )}
+        </Card>
       </div>
     </div>
   );

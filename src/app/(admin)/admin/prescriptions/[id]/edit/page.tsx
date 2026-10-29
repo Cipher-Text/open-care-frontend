@@ -34,7 +34,25 @@ export default function EditPrescriptionPage() {
 								<AlertDescription>{error instanceof Error ? error.message : "Failed to load the prescription"}</AlertDescription>
 							</Alert>
 						)}
-						{data && <PrescriptionForm prescription={data} />}
+						{data && data.editable === false && (
+							<Alert>
+								<AlertDescription>
+									This prescription can no longer be edited
+									{data.editableUntil ? ` (editing closed on ${new Date(data.editableUntil).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })})` : ""}.
+									To correct it, write a new prescription.
+								</AlertDescription>
+							</Alert>
+						)}
+						{data && data.editable !== false && (
+							<>
+								{data.editableUntil && (
+									<p className="mb-4 text-sm text-muted-foreground">
+										You can edit this until {new Date(data.editableUntil).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })}. Each change keeps the earlier version.
+									</p>
+								)}
+								<PrescriptionForm prescription={data} />
+							</>
+						)}
 					</>
 				)}
 			</div>

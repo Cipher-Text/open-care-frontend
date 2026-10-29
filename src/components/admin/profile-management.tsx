@@ -203,307 +203,307 @@ const ProfileManagement: React.FC = () => {
       </AdminHeader>
 
       <div className="p-6">
-      {/* Filters and Search */}
-      <div className="mb-6 flex flex-col sm:flex-row gap-4">
-        {/* Search */}
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search profiles by name, phone, email, or user type..."
-            value={searchTerm}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-
-        {/* User Type Filter */}
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-muted-foreground">
-            Filter by Type:
-          </span>
-          <NativeSelect
-            value={filterByUserType}
-            onChange={(e) => handleUserTypeFilter(e.target.value)}
-            className="h-9 w-auto"
-          >
-            <option value="">All Types</option>
-            {userTypes.map((type) => (
-              <option key={type.value} value={type.value}>
-                {type.banglaName} ({type.displayName})
-              </option>
-            ))}
-          </NativeSelect>
-        </div>
-
-        {/* Sort Options */}
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-muted-foreground">Sort by:</span>
-          <NativeSelect
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="h-9 w-auto"
-          >
-            <option value="id">ID</option>
-            <option value="name">Name</option>
-            <option value="userType">User Type</option>
-          </NativeSelect>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setSortDir(sortDir === "ASC" ? "DESC" : "ASC")}
-          >
-            {sortDir === "ASC" ? "↑" : "↓"}
-          </Button>
-        </div>
-      </div>
-
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <UsersIcon className="h-8 w-8 text-primary" />
-            <div>
-              <div className="text-2xl font-bold text-primary">
-                {totalItems}
-              </div>
-              <div className="text-sm text-muted-foreground">Total Profiles</div>
-            </div>
+        {/* Filters and Search */}
+        <div className="mb-6 flex flex-col sm:flex-row gap-4">
+          {/* Search */}
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search profiles by name, phone, email, or user type..."
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="pl-10"
+            />
           </div>
-        </Card>
 
-        {userTypes.slice(0, 3).map((type) => {
-          const count =
-            data?.content.filter((p) => p.userType.value === type.value)
-              .length || 0;
-          return (
-            <Card key={type.value} className="p-4">
-              <div className="flex items-center gap-3">
-                <UserCheck className="h-8 w-8 text-primary" />
-                <div>
-                  <div className="text-2xl font-bold text-primary">
-                    {count}
+          {/* User Type Filter */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-muted-foreground">
+              Filter by Type:
+            </span>
+            <NativeSelect
+              value={filterByUserType}
+              onChange={(e) => handleUserTypeFilter(e.target.value)}
+              className="h-9 w-auto"
+            >
+              <option value="">All Types</option>
+              {userTypes.map((type) => (
+                <option key={type.value} value={type.value}>
+                  {type.banglaName} ({type.displayName})
+                </option>
+              ))}
+            </NativeSelect>
+          </div>
+
+          {/* Sort Options */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-muted-foreground">Sort by:</span>
+            <NativeSelect
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="h-9 w-auto"
+            >
+              <option value="id">ID</option>
+              <option value="name">Name</option>
+              <option value="userType">User Type</option>
+            </NativeSelect>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSortDir(sortDir === "ASC" ? "DESC" : "ASC")}
+            >
+              {sortDir === "ASC" ? "↑" : "↓"}
+            </Button>
+          </div>
+        </div>
+
+        {/* Statistics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <Card className="p-4">
+            <div className="flex items-center gap-3">
+              <UsersIcon className="h-8 w-8 text-primary" />
+              <div>
+                <div className="text-2xl font-bold text-primary">
+                  {totalItems}
+                </div>
+                <div className="text-sm text-muted-foreground">Total Profiles</div>
+              </div>
+            </div>
+          </Card>
+
+          {userTypes.slice(0, 3).map((type) => {
+            const count =
+              data?.content.filter((p) => p.userType.value === type.value)
+                .length || 0;
+            return (
+              <Card key={type.value} className="p-4">
+                <div className="flex items-center gap-3">
+                  <UserCheck className="h-8 w-8 text-primary" />
+                  <div>
+                    <div className="text-2xl font-bold text-primary">
+                      {count}
+                    </div>
+                    <div className="text-sm text-muted-foreground">{type.banglaName}</div>
                   </div>
-                  <div className="text-sm text-muted-foreground">{type.banglaName}</div>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* Content */}
+        <Card className="p-6">
+          {loading && (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+              <div className="text-muted-foreground">Loading profiles...</div>
+            </div>
+          )}
+
+          {error && (
+            <Alert className="mb-4">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          {!loading && !error && (
+            <>
+              <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                <div className="text-sm text-muted-foreground">
+                  <strong>Showing:</strong> {filteredData.length} profiles
+                  {searchTerm && (
+                    <span className="ml-2 text-primary">
+                      (filtered by &quot;{searchTerm}&quot;)
+                    </span>
+                  )}
+                  {filterByUserType && (
+                    <span className="ml-2 text-primary">
+                      (type:{" "}
+                      {
+                        userTypes.find((t) => t.value === filterByUserType)
+                          ?.banglaName
+                      }
+                      )
+                    </span>
+                  )}
                 </div>
               </div>
-            </Card>
-          );
-        })}
-      </div>
 
-      {/* Content */}
-      <Card className="p-6">
-        {loading && (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-            <div className="text-muted-foreground">Loading profiles...</div>
-          </div>
-        )}
-
-        {error && (
-          <Alert className="mb-4">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        {!loading && !error && (
-          <>
-            <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-              <div className="text-sm text-muted-foreground">
-                <strong>Showing:</strong> {filteredData.length} profiles
-                {searchTerm && (
-                  <span className="ml-2 text-primary">
-                    (filtered by &quot;{searchTerm}&quot;)
-                  </span>
-                )}
-                {filterByUserType && (
-                  <span className="ml-2 text-primary">
-                    (type:{" "}
-                    {
-                      userTypes.find((t) => t.value === filterByUserType)
-                        ?.banglaName
-                    }
-                    )
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {filteredData.length > 0 ? (
-              <>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse border border-input">
-                    <thead>
-                      <tr className="bg-muted">
-                        <th className="border border-input px-4 py-3 text-left font-medium">
-                          Profile
-                        </th>
-                        <th className="border border-input px-4 py-3 text-left font-medium">
-                          User Type
-                        </th>
-                        <th className="border border-input px-4 py-3 text-left font-medium">
-                          Contact
-                        </th>
-                        <th className="border border-input px-4 py-3 text-left font-medium">
-                          Gender
-                        </th>
-                        <th className="border border-input px-4 py-3 text-left font-medium">
-                          Location
-                        </th>
-                        <th className="border border-input px-4 py-3 text-left font-medium">
-                          Blood Group
-                        </th>
-                        <th className="border border-input px-4 py-3 text-center font-medium">
-                          Status
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredData.map((profile) => (
-                        <tr key={profile.id} className="hover:bg-muted">
-                          <td className="border border-input px-4 py-3">
-                            <div className="flex items-center gap-3">
-                              <Avatar className="h-10 w-10">
-                                <AvatarImage
-                                  src={profile.photoUrl || undefined}
-                                  alt={profile.name}
-                                />
-                                <AvatarFallback>
-                                  {getInitials(profile.name)}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <div className="font-medium text-foreground">
-                                  {profile.name}
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  {profile.bnName}
-                                </div>
-                                <div className="text-xs text-muted-foreground">
-                                  ID: {profile.id}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="border border-input px-4 py-3">
-                            <Badge variant="outline" className="text-xs">
-                              {profile.userType.displayName}
-                            </Badge>
-                            <div className="text-xs text-muted-foreground mt-1">
-                              {profile.userType.banglaName}
-                            </div>
-                          </td>
-                          <td className="border border-input px-4 py-3">
-                            <div className="space-y-1">
-                              {profile.phone && (
-                                <div className="flex items-center gap-1 text-sm">
-                                  <Phone className="h-3 w-3 text-muted-foreground" />
-                                  <span>{profile.phone}</span>
-                                </div>
-                              )}
-                              {profile.email && (
-                                <div className="flex items-center gap-1 text-sm">
-                                  <Mail className="h-3 w-3 text-muted-foreground" />
-                                  <span className="truncate max-w-[200px]">
-                                    {profile.email}
-                                  </span>
-                                </div>
-                              )}
-                              {!profile.phone && !profile.email && (
-                                <span className="text-muted-foreground text-sm">
-                                  No contact
-                                </span>
-                              )}
-                            </div>
-                          </td>
-                          <td className="border border-input px-4 py-3">
-                            {profile.gender ? (
-                              <div>
-                                <div className="text-sm">
-                                  {profile.gender.displayName}
-                                </div>
-                                <div className="text-xs text-muted-foreground">
-                                  {profile.gender.banglaName}
-                                </div>
-                              </div>
-                            ) : (
-                              <span className="text-muted-foreground text-sm">N/A</span>
-                            )}
-                          </td>
-                          <td className="border border-input px-4 py-3">
-                            {profile.district ? (
-                              <div className="flex items-start gap-1">
-                                <MapPin className="h-3 w-3 text-muted-foreground mt-1" />
+              {filteredData.length > 0 ? (
+                <>
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse border border-input">
+                      <thead>
+                        <tr className="bg-muted">
+                          <th className="border border-input px-4 py-3 text-left font-medium">
+                            Profile
+                          </th>
+                          <th className="border border-input px-4 py-3 text-left font-medium">
+                            User Type
+                          </th>
+                          <th className="border border-input px-4 py-3 text-left font-medium">
+                            Contact
+                          </th>
+                          <th className="border border-input px-4 py-3 text-left font-medium">
+                            Gender
+                          </th>
+                          <th className="border border-input px-4 py-3 text-left font-medium">
+                            Location
+                          </th>
+                          <th className="border border-input px-4 py-3 text-left font-medium">
+                            Blood Group
+                          </th>
+                          <th className="border border-input px-4 py-3 text-center font-medium">
+                            Status
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredData.map((profile) => (
+                          <tr key={profile.id} className="hover:bg-muted">
+                            <td className="border border-input px-4 py-3">
+                              <div className="flex items-center gap-3">
+                                <Avatar className="h-10 w-10">
+                                  <AvatarImage
+                                    src={profile.photoUrl || undefined}
+                                    alt={profile.name}
+                                  />
+                                  <AvatarFallback>
+                                    {getInitials(profile.name)}
+                                  </AvatarFallback>
+                                </Avatar>
                                 <div>
-                                  <div className="text-sm">
-                                    {profile.district.name}
+                                  <div className="font-medium text-foreground">
+                                    {profile.name}
                                   </div>
-                                  {profile.upazila && (
-                                    <div className="text-xs text-muted-foreground">
-                                      {profile.upazila.name}
-                                    </div>
-                                  )}
+                                  <div className="text-sm text-muted-foreground">
+                                    {profile.bnName}
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">
+                                    ID: {profile.id}
+                                  </div>
                                 </div>
                               </div>
-                            ) : (
-                              <span className="text-muted-foreground text-sm">N/A</span>
-                            )}
-                          </td>
-                          <td className="border border-input px-4 py-3 text-center">
-                            {profile.bloodGroup ? (
-                              <div>
-                                <Badge
-                                  variant={
-                                    profile.isBloodDonor
-                                      ? "default"
-                                      : "secondary"
-                                  }
-                                  className="text-xs"
-                                >
-                                  {profile.bloodGroup.displayName}
-                                </Badge>
-                                {profile.isBloodDonor && (
-                                  <div className="flex items-center justify-center gap-1 mt-1">
-                                    <Heart className="h-3 w-3 text-destructive fill-destructive" />
-                                    <span className="text-xs text-muted-foreground">
-                                      Donor
+                            </td>
+                            <td className="border border-input px-4 py-3">
+                              <Badge variant="outline" className="text-xs">
+                                {profile.userType.displayName}
+                              </Badge>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                {profile.userType.banglaName}
+                              </div>
+                            </td>
+                            <td className="border border-input px-4 py-3">
+                              <div className="space-y-1">
+                                {profile.phone && (
+                                  <div className="flex items-center gap-1 text-sm">
+                                    <Phone className="h-3 w-3 text-muted-foreground" />
+                                    <span>{profile.phone}</span>
+                                  </div>
+                                )}
+                                {profile.email && (
+                                  <div className="flex items-center gap-1 text-sm">
+                                    <Mail className="h-3 w-3 text-muted-foreground" />
+                                    <span className="truncate max-w-[200px]">
+                                      {profile.email}
                                     </span>
                                   </div>
                                 )}
+                                {!profile.phone && !profile.email && (
+                                  <span className="text-muted-foreground text-sm">
+                                    No contact
+                                  </span>
+                                )}
                               </div>
-                            ) : (
-                              <span className="text-muted-foreground text-sm">N/A</span>
-                            )}
-                          </td>
-                          <td className="border border-input px-4 py-3 text-center">
-                            <Badge
-                              variant={
-                                profile.isActive ? "default" : "secondary"
-                              }
-                            >
-                              {profile.isActive ? "Active" : "Inactive"}
-                            </Badge>
-                            <div className="text-xs text-muted-foreground mt-1">
-                              {profile.isVolunteer && "Volunteer"}
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                            </td>
+                            <td className="border border-input px-4 py-3">
+                              {profile.gender ? (
+                                <div>
+                                  <div className="text-sm">
+                                    {profile.gender.displayName}
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">
+                                    {profile.gender.banglaName}
+                                  </div>
+                                </div>
+                              ) : (
+                                <span className="text-muted-foreground text-sm">N/A</span>
+                              )}
+                            </td>
+                            <td className="border border-input px-4 py-3">
+                              {profile.district ? (
+                                <div className="flex items-start gap-1">
+                                  <MapPin className="h-3 w-3 text-muted-foreground mt-1" />
+                                  <div>
+                                    <div className="text-sm">
+                                      {profile.district.name}
+                                    </div>
+                                    {profile.upazila && (
+                                      <div className="text-xs text-muted-foreground">
+                                        {profile.upazila.name}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              ) : (
+                                <span className="text-muted-foreground text-sm">N/A</span>
+                              )}
+                            </td>
+                            <td className="border border-input px-4 py-3 text-center">
+                              {profile.bloodGroup ? (
+                                <div>
+                                  <Badge
+                                    variant={
+                                      profile.isBloodDonor
+                                        ? "default"
+                                        : "secondary"
+                                    }
+                                    className="text-xs"
+                                  >
+                                    {profile.bloodGroup.displayName}
+                                  </Badge>
+                                  {profile.isBloodDonor && (
+                                    <div className="flex items-center justify-center gap-1 mt-1">
+                                      <Heart className="h-3 w-3 text-destructive fill-destructive" />
+                                      <span className="text-xs text-muted-foreground">
+                                        Donor
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                              ) : (
+                                <span className="text-muted-foreground text-sm">N/A</span>
+                              )}
+                            </td>
+                            <td className="border border-input px-4 py-3 text-center">
+                              <Badge
+                                variant={
+                                  profile.isActive ? "default" : "secondary"
+                                }
+                              >
+                                {profile.isActive ? "Active" : "Inactive"}
+                              </Badge>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                {profile.isVolunteer && "Volunteer"}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  {renderPagination()}
+                </>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  {searchTerm || filterByUserType
+                    ? "No profiles found matching your criteria"
+                    : "No profiles available"}
                 </div>
-                {renderPagination()}
-              </>
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                {searchTerm || filterByUserType
-                  ? "No profiles found matching your criteria"
-                  : "No profiles available"}
-              </div>
-            )}
-          </>
-        )}
-      </Card>
+              )}
+            </>
+          )}
+        </Card>
       </div>
     </div>
   );

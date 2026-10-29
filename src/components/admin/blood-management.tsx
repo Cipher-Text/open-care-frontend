@@ -792,88 +792,88 @@ const BloodManagement: React.FC = () => {
       </AdminHeader>
 
       <div className="p-6">
-      {/* Tabs */}
-      <div className="mb-6">
-        <div className="border-b border-border">
-          <nav className="-mb-px flex space-x-8">
-            {TAB_CONFIGS.map((config) => (
-              <button
-                key={config.name}
-                onClick={() => handleTabChange(config.name)}
-                className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
-                  activeTab === config.name
-                    ? "border-destructive text-destructive"
-                    : "border-transparent text-muted-foreground hover:text-muted-foreground hover:border-input"
-                }`}
-              >
-                <span className="text-lg">{config.icon}</span>
-                {config.title}
-                <Badge variant="secondary" className="ml-1">
-                  {filteredData.totalItems}
-                </Badge>
-              </button>
-            ))}
-          </nav>
-        </div>
-      </div>
-
-      {/* Content */}
-      <Card className="p-6">
-        {loading[activeTab] && (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-destructive mx-auto mb-4"></div>
-            <div className="text-muted-foreground">
-              Loading {activeConfig?.title.toLowerCase()}...
-            </div>
+        {/* Tabs */}
+        <div className="mb-6">
+          <div className="border-b border-border">
+            <nav className="-mb-px flex space-x-8">
+              {TAB_CONFIGS.map((config) => (
+                <button
+                  key={config.name}
+                  onClick={() => handleTabChange(config.name)}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
+                    activeTab === config.name
+                      ? "border-destructive text-destructive"
+                      : "border-transparent text-muted-foreground hover:text-muted-foreground hover:border-input"
+                  }`}
+                >
+                  <span className="text-lg">{config.icon}</span>
+                  {config.title}
+                  <Badge variant="secondary" className="ml-1">
+                    {filteredData.totalItems}
+                  </Badge>
+                </button>
+              ))}
+            </nav>
           </div>
-        )}
+        </div>
 
-        {error[activeTab] && (
-          <Alert className="mb-4">
-            <AlertDescription>{error[activeTab]}</AlertDescription>
-          </Alert>
-        )}
-
-        {!loading[activeTab] && !error[activeTab] && (
-          <>
-            <div className="mb-4 flex justify-between items-center">
-              <div className="text-sm text-muted-foreground">
-                <strong>Showing:</strong> {filteredData.data.length} of{" "}
-                {filteredData.totalItems} {activeConfig?.title.toLowerCase()}
-                {searchTerm && (
-                  <span className="ml-2 text-destructive">
-                    (filtered by &quot;{searchTerm}&quot;)
-                  </span>
-                )}
+        {/* Content */}
+        <Card className="p-6">
+          {loading[activeTab] && (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-destructive mx-auto mb-4"></div>
+              <div className="text-muted-foreground">
+                Loading {activeConfig?.title.toLowerCase()}...
               </div>
             </div>
+          )}
 
-            {filteredData.data.length > 0 ? (
-              <>
-                {activeTab === "donors" &&
-                  renderDonorsTable(filteredData.data as BloodDonor[])}
-                {activeTab === "donations" &&
-                  renderDonationsTable(filteredData.data as BloodDonation[])}
-                {activeTab === "requisitions" &&
-                  renderRequisitionsTable(
-                    filteredData.data as BloodRequisition[]
+          {error[activeTab] && (
+            <Alert className="mb-4">
+              <AlertDescription>{error[activeTab]}</AlertDescription>
+            </Alert>
+          )}
+
+          {!loading[activeTab] && !error[activeTab] && (
+            <>
+              <div className="mb-4 flex justify-between items-center">
+                <div className="text-sm text-muted-foreground">
+                  <strong>Showing:</strong> {filteredData.data.length} of{" "}
+                  {filteredData.totalItems} {activeConfig?.title.toLowerCase()}
+                  {searchTerm && (
+                    <span className="ml-2 text-destructive">
+                      (filtered by &quot;{searchTerm}&quot;)
+                    </span>
                   )}
-                {renderPagination(
-                  filteredData.totalPages,
-                  filteredData.currentPage,
-                  filteredData.totalItems
-                )}
-              </>
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                {searchTerm
-                  ? `No results found for &quot;${searchTerm}&quot;`
-                  : `No ${activeConfig?.title.toLowerCase()} available`}
+                </div>
               </div>
-            )}
-          </>
-        )}
-      </Card>
+
+              {filteredData.data.length > 0 ? (
+                <>
+                  {activeTab === "donors" &&
+                    renderDonorsTable(filteredData.data as BloodDonor[])}
+                  {activeTab === "donations" &&
+                    renderDonationsTable(filteredData.data as BloodDonation[])}
+                  {activeTab === "requisitions" &&
+                    renderRequisitionsTable(
+                      filteredData.data as BloodRequisition[]
+                    )}
+                  {renderPagination(
+                    filteredData.totalPages,
+                    filteredData.currentPage,
+                    filteredData.totalItems
+                  )}
+                </>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  {searchTerm
+                    ? `No results found for &quot;${searchTerm}&quot;`
+                    : `No ${activeConfig?.title.toLowerCase()} available`}
+                </div>
+              )}
+            </>
+          )}
+        </Card>
       </div>
     </div>
   );

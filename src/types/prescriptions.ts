@@ -29,6 +29,9 @@ export interface Prescription {
 	prescriptionNo: string;
 	prescriptionDate: string;
 	updatedAt: string | null;
+	/** Whether the doctor can still edit it, and until when. Absent on older responses, which mean editable. */
+	editable?: boolean;
+	editableUntil?: string | null;
 	doctor: {
 		id: number;
 		name: string | null;

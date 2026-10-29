@@ -482,87 +482,87 @@ const GeolocationManagement: React.FC = () => {
       </AdminHeader>
 
       <div className="p-6">
-      {/* Tabs */}
-      <div className="mb-6">
-        <div className="border-b border-border">
-          <nav className="-mb-px flex space-x-8">
-            {API_CONFIGS.map((config) => (
-              <button
-                key={config.name}
-                onClick={() => {
-                  setActiveTab(config.name);
-                  setSearchTerm(""); // Clear search when switching tabs
-                }}
-                className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
-                  activeTab === config.name
-                    ? "border-primary text-primary"
-                    : "border-transparent text-muted-foreground hover:text-muted-foreground hover:border-input"
-                }`}
-              >
-                <span className="text-lg">{config.icon}</span>
-                {config.title}
-                {data[config.name] && (
-                  <Badge variant="secondary" className="ml-1">
-                    {data[config.name].length}
-                  </Badge>
-                )}
-              </button>
-            ))}
-          </nav>
+        {/* Tabs */}
+        <div className="mb-6">
+          <div className="border-b border-border">
+            <nav className="-mb-px flex space-x-8">
+              {API_CONFIGS.map((config) => (
+                <button
+                  key={config.name}
+                  onClick={() => {
+                    setActiveTab(config.name);
+                    setSearchTerm(""); // Clear search when switching tabs
+                  }}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
+                    activeTab === config.name
+                      ? "border-primary text-primary"
+                      : "border-transparent text-muted-foreground hover:text-muted-foreground hover:border-input"
+                  }`}
+                >
+                  <span className="text-lg">{config.icon}</span>
+                  {config.title}
+                  {data[config.name] && (
+                    <Badge variant="secondary" className="ml-1">
+                      {data[config.name].length}
+                    </Badge>
+                  )}
+                </button>
+              ))}
+            </nav>
+          </div>
         </div>
-      </div>
 
-      {/* Content */}
-      <Card className="p-6">
-        {activeConfig && (
-          <>
-            {loading[activeConfig.name] && (
-              <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                <div className="text-muted-foreground">
-                  Loading {activeConfig.title}...
-                </div>
-              </div>
-            )}
-
-            {error[activeConfig.name] && (
-              <Alert className="mb-4">
-                <AlertDescription>{error[activeConfig.name]}</AlertDescription>
-              </Alert>
-            )}
-
-            {paginationData && !loading[activeConfig.name] && (
-              <>
-                <div className="mb-4 flex justify-between items-center">
-                  <div className="text-sm text-muted-foreground">
-                    <strong>Showing:</strong> {paginationData.data.length} of{" "}
-                    {paginationData.totalItems}{" "}
-                    {activeConfig.title.toLowerCase()}
-                    {searchTerm && (
-                      <span className="ml-2 text-primary">
-                        (filtered by &quot;{searchTerm}&quot;)
-                      </span>
-                    )}
+        {/* Content */}
+        <Card className="p-6">
+          {activeConfig && (
+            <>
+              {loading[activeConfig.name] && (
+                <div className="text-center py-12">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                  <div className="text-muted-foreground">
+                    Loading {activeConfig.title}...
                   </div>
                 </div>
+              )}
 
-                {paginationData.data.length > 0 ? (
-                  <>
-                    {renderTable(activeConfig.name, paginationData.data)}
-                    {renderPagination(activeConfig.name, paginationData)}
-                  </>
-                ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    {searchTerm
-                      ? `No results found for &quot;${searchTerm}&quot;`
-                      : "No data available"}
+              {error[activeConfig.name] && (
+                <Alert className="mb-4">
+                  <AlertDescription>{error[activeConfig.name]}</AlertDescription>
+                </Alert>
+              )}
+
+              {paginationData && !loading[activeConfig.name] && (
+                <>
+                  <div className="mb-4 flex justify-between items-center">
+                    <div className="text-sm text-muted-foreground">
+                      <strong>Showing:</strong> {paginationData.data.length} of{" "}
+                      {paginationData.totalItems}{" "}
+                      {activeConfig.title.toLowerCase()}
+                      {searchTerm && (
+                        <span className="ml-2 text-primary">
+                          (filtered by &quot;{searchTerm}&quot;)
+                        </span>
+                      )}
+                    </div>
                   </div>
-                )}
-              </>
-            )}
-          </>
-        )}
-      </Card>
+
+                  {paginationData.data.length > 0 ? (
+                    <>
+                      {renderTable(activeConfig.name, paginationData.data)}
+                      {renderPagination(activeConfig.name, paginationData)}
+                    </>
+                  ) : (
+                    <div className="text-center py-8 text-muted-foreground">
+                      {searchTerm
+                        ? `No results found for &quot;${searchTerm}&quot;`
+                        : "No data available"}
+                    </div>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </Card>
       </div>
     </div>
   );

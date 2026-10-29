@@ -407,130 +407,130 @@ const AdvertisementManagement: React.FC = () => {
       />
       <div className="advertisement-management">
 
-      {error && (
-        <Alert variant="destructive" className="mb-4">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
+        {error && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
-      <div className="advertisement-tabs">
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            className={`advertisement-tab ${
-              activeTab === tab.id ? "active" : ""
-            }`}
-            onClick={() => setActiveTab(tab.id)}
-          >
-            {tab.icon} {tab.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="advertisement-controls">
-        <div className="advertisement-search">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              type="text"
-              placeholder={`Search ${
-                activeTab === "types" ? "types" : "advertisements"
-              }...`}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
+        <div className="advertisement-tabs">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              className={`advertisement-tab ${
+                activeTab === tab.id ? "active" : ""
+              }`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              {tab.icon} {tab.label}
+            </button>
+          ))}
         </div>
-        {activeTab === "types" && canCreateType && (
-          <Button onClick={() => setTypeDialog({ open: true, type: null })}>
-            <Plus className="w-4 h-4 mr-2" />
-            New type
-          </Button>
-        )}
-        {activeTab === "advertisements" && canCreateAd && (
-          <Button onClick={() => setAdDialog({ open: true, ad: null })}>
-            <Plus className="w-4 h-4 mr-2" />
-            New advertisement
-          </Button>
-        )}
-        <Button onClick={handleRefresh} variant="outline" disabled={loading}>
-          <RefreshCw
-            className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`}
-          />
-          Refresh
-        </Button>
-      </div>
 
-      <Card className="advertisement-content">
-        {loading && currentItems === 0 ? (
-          <div className="p-8 text-center">
-            <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-2 text-muted-foreground" />
-            <p className="text-muted-foreground">Loading...</p>
+        <div className="advertisement-controls">
+          <div className="advertisement-search">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <Input
+                type="text"
+                placeholder={`Search ${
+                  activeTab === "types" ? "types" : "advertisements"
+                }...`}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
           </div>
-        ) : (
-          <>
-            {activeTab === "types"
-              ? renderTypesTable()
-              : renderAdvertisementsTable()}
+          {activeTab === "types" && canCreateType && (
+            <Button onClick={() => setTypeDialog({ open: true, type: null })}>
+              <Plus className="w-4 h-4 mr-2" />
+              New type
+            </Button>
+          )}
+          {activeTab === "advertisements" && canCreateAd && (
+            <Button onClick={() => setAdDialog({ open: true, ad: null })}>
+              <Plus className="w-4 h-4 mr-2" />
+              New advertisement
+            </Button>
+          )}
+          <Button onClick={handleRefresh} variant="outline" disabled={loading}>
+            <RefreshCw
+              className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`}
+            />
+            Refresh
+          </Button>
+        </div>
 
-            {totalPages > 1 && (
-              <div className="advertisement-pagination">
-                <div className="pagination-info">
-                  Showing {currentPage * pageSize + 1} to{" "}
-                  {Math.min((currentPage + 1) * pageSize, totalItems)} of{" "}
-                  {totalItems} entries
-                </div>
-                <div className="pagination-controls">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 0 || loading}
-                  >
-                    <ChevronLeft className="w-4 h-4 mr-1" />
-                    Previous
-                  </Button>
-                  <span className="page-number">
-                    Page {currentPage + 1} of {totalPages}
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage >= totalPages - 1 || loading}
-                  >
-                    Next
-                    <ChevronRight className="w-4 h-4 ml-1" />
-                  </Button>
-                </div>
-              </div>
-            )}
-          </>
-        )}
-      </Card>
+        <Card className="advertisement-content">
+          {loading && currentItems === 0 ? (
+            <div className="p-8 text-center">
+              <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-2 text-muted-foreground" />
+              <p className="text-muted-foreground">Loading...</p>
+            </div>
+          ) : (
+            <>
+              {activeTab === "types"
+                ? renderTypesTable()
+                : renderAdvertisementsTable()}
 
-      <AdvertisementTypeDialog
-        open={typeDialog.open}
-        onOpenChange={(open) => setTypeDialog((d) => ({ ...d, open }))}
-        type={typeDialog.type}
-        onSaved={handleRefresh}
-      />
-      <AdvertisementDialog
-        open={adDialog.open}
-        onOpenChange={(open) => setAdDialog((d) => ({ ...d, open }))}
-        advertisement={adDialog.ad}
-        onSaved={handleRefresh}
-      />
-      <ConfirmDeleteDialog
-        open={deleting !== null}
-        onOpenChange={(open) => !open && setDeleting(null)}
-        title={deleting?.kind === "type" ? "Delete advertisement type?" : "Delete advertisement?"}
-        description={`"${deleting?.label ?? ""}" will be permanently deleted. This cannot be undone.`}
-        error={deleteError}
-        pending={deletePending}
-        onConfirm={confirmDelete}
-      />
+              {totalPages > 1 && (
+                <div className="advertisement-pagination">
+                  <div className="pagination-info">
+                    Showing {currentPage * pageSize + 1} to{" "}
+                    {Math.min((currentPage + 1) * pageSize, totalItems)} of{" "}
+                    {totalItems} entries
+                  </div>
+                  <div className="pagination-controls">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 0 || loading}
+                    >
+                      <ChevronLeft className="w-4 h-4 mr-1" />
+                      Previous
+                    </Button>
+                    <span className="page-number">
+                      Page {currentPage + 1} of {totalPages}
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage >= totalPages - 1 || loading}
+                    >
+                      Next
+                      <ChevronRight className="w-4 h-4 ml-1" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </Card>
+
+        <AdvertisementTypeDialog
+          open={typeDialog.open}
+          onOpenChange={(open) => setTypeDialog((d) => ({ ...d, open }))}
+          type={typeDialog.type}
+          onSaved={handleRefresh}
+        />
+        <AdvertisementDialog
+          open={adDialog.open}
+          onOpenChange={(open) => setAdDialog((d) => ({ ...d, open }))}
+          advertisement={adDialog.ad}
+          onSaved={handleRefresh}
+        />
+        <ConfirmDeleteDialog
+          open={deleting !== null}
+          onOpenChange={(open) => !open && setDeleting(null)}
+          title={deleting?.kind === "type" ? "Delete advertisement type?" : "Delete advertisement?"}
+          description={`"${deleting?.label ?? ""}" will be permanently deleted. This cannot be undone.`}
+          error={deleteError}
+          pending={deletePending}
+          onConfirm={confirmDelete}
+        />
       </div>
     </div>
   );

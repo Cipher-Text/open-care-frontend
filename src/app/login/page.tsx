@@ -14,7 +14,16 @@ import { devLogin, getDevLoginAccounts, submitLogin } from "./actions";
 import { redirectAfterLogin } from "./redirect-actions";
 import { saveUserSession } from "@/lib/auth-client";
 import { Checkbox } from "@/components/ui/checkbox";
+import { GoogleSignInButton, OrDivider } from "@/components/auth/GoogleSignInButton";
 // import { useAuth } from "@/contexts/auth-context";
+
+const GOOGLE_ERRORS: Record<string, string> = {
+	google_cancelled: "Google sign-in was cancelled.",
+	google_failed: "Google sign-in did not work. Please try again.",
+	google_not_configured: "Google sign-in is not available right now. Sign in with your email and password.",
+	google_email_in_use: "An account with this email already exists. Sign in with your password, or ask an administrator to link it.",
+	google_email_unverified: "Your Google email address is not verified, so we cannot create an account from it.",
+};
 
 export default function LoginPage() {
 	const [showPassword, setShowPassword] = useState(false);
@@ -38,8 +47,12 @@ export default function LoginPage() {
 
 	// Set by the signup page after a successful registration
 	const [justRegistered, setJustRegistered] = useState(false);
+	// Set by /auth/google/callback when Sign in with Google could not finish
+	const [googleError, setGoogleError] = useState<string | null>(null);
 	useEffect(() => {
-		setJustRegistered(new URLSearchParams(window.location.search).get("registered") === "1");
+		const params = new URLSearchParams(window.location.search);
+		setJustRegistered(params.get("registered") === "1");
+		setGoogleError(GOOGLE_ERRORS[params.get("error") ?? ""] ?? null);
 	}, []);
 	// const { refetchUser } = useAuth();
 
@@ -91,6 +104,12 @@ export default function LoginPage() {
 									<p className="text-sm text-success">
 										Your account was created. Sign in with your email and password.
 									</p>
+								</div>
+							)}
+
+							{googleError && (
+								<div role="alert" className="bg-destructive/10 border border-destructive/30 rounded-md p-3">
+									<p className="text-sm text-destructive">{googleError}</p>
 								</div>
 							)}
 
@@ -207,6 +226,9 @@ export default function LoginPage() {
 							>
 								{isLoading ? "Signing In..." : "Sign In"}
 							</Button>
+
+							<OrDivider />
+							<GoogleSignInButton />
 
 							{/* Development only: removed from production builds */}
 							{isDev && (

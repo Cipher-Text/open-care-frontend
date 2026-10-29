@@ -149,6 +149,18 @@ open-care-frontend/
 NEXT_PUBLIC_API_BASE_URL=https://api.opencarebd.com/api
 ```
 
+### Sign in with Google
+
+`/login` and `/signup` have a "Continue with Google" button. It goes through Keycloak (the realm's `google` identity provider), so the web app holds no Google secret: `/auth/google` sends the browser to Keycloak with `kc_idp_hint=google` and PKCE, Keycloak signs the person in with Google, and `/auth/google/callback` exchanges the one-time code for tokens on the server. The first time someone signs in, the callback calls `POST /api/profiles/self/ensure`: the backend creates their OpenCare profile (name and email from Google, type USER) and puts them in the standard `user` group, and the web app refreshes the token so it carries the roles. The district and other details are asked for afterwards in the account area.
+
+Set these server-side variables (`.env.example`): `KEYCLOAK_URL`, `KEYCLOAK_REALM`, and optionally `KEYCLOAK_CLIENT_ID` (default `open-care-frontend`). Without the first two the button explains that Google sign-in is not available.
+
+One-time setup in the Keycloak that serves the deployment (the deployed Keycloak is not changed by this repository):
+1. **Google:** in Google Cloud, create an OAuth client (type Web application) and add the Keycloak broker address as its authorized redirect URI: `<keycloak>/realms/<realm>/broker/google/endpoint`.
+2. **Identity provider:** in Keycloak, Identity providers, add or edit `google`: the Google client id and secret, and turn on **Trust Email** (Google verifies addresses).
+3. **Client:** the `open-care-frontend` client must be public, with Standard flow on and "Proof Key for Code Exchange Code Challenge Method" set to `S256`. Add `<site>/auth/google/callback` to its **Valid redirect URIs** for every address the app runs on (for example `http://localhost:3000/auth/google/callback` for local development). Keycloak refuses the sign-in with `Invalid parameter: redirect_uri` until this is done.
+4. **Same email as an existing account (chosen behaviour: link them):** duplicate the `first broker login` flow, and in its "Handle Existing Account" step remove "Confirm link existing account" and the account verification options, and add **Automatically set existing user**. Then set the `google` provider's "First login flow override" to the new flow. This is safe only because Trust Email is on and Google verifies addresses. As a backstop the backend refuses to create a second profile for an email that already has one (409).
+
 ### Dev one-click login
 
 On `/login`, one-click buttons appear only when `NODE_ENV` is `development` (`npm run dev`), and the server action refuses to run otherwise. Put the accounts in `.env.local` (git-ignored, server-side only, never `NEXT_PUBLIC_`) as a JSON array, then restart the dev server:
