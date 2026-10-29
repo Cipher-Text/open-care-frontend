@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { DetailSection, DetailShell, Fact, NOT_MEDICAL_ADVICE } from "@/components/common/DetailShell";
 import { JsonLd } from "@/components/common/JsonLd";
+import { PublicEventTracker } from "@/components/common/PublicEventTracker";
 import { clean, getHospital, safeUrl, validEmail } from "@/lib/public-directory";
 import { siteUrl } from "@/lib/site";
 import { doctorPath, hospitalPath } from "@/lib/paths";
@@ -67,6 +68,7 @@ export default async function HospitalDetailPage({ params }: Props) {
 
 	return (
 		<DetailShell backHref="/hospitals" backLabel="All hospitals">
+			{hospital.slug && <PublicEventTracker kind="HOSPITAL" slug={hospital.slug} />}
 			<JsonLd
 				data={{
 					"@context": "https://schema.org",
@@ -141,7 +143,7 @@ export default async function HospitalDetailPage({ params }: Props) {
 					<div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
 						{phone && (
 							<Button asChild className="h-11">
-								<a href={`tel:${phone.replace(/\s+/g, "")}`}>
+								<a href={`tel:${phone.replace(/\s+/g, "")}`} data-track-event="CALL">
 									<Phone className="mr-2 size-4" aria-hidden="true" />
 									Call {phone}
 								</a>
@@ -165,7 +167,7 @@ export default async function HospitalDetailPage({ params }: Props) {
 						)}
 						{directions && (
 							<Button asChild variant="outline" className="h-11">
-								<a href={directions} target="_blank" rel="noopener noreferrer">
+								<a href={directions} target="_blank" rel="noopener noreferrer" data-track-event="DIRECTIONS">
 									<Navigation className="mr-2 size-4" aria-hidden="true" />
 									Directions
 								</a>

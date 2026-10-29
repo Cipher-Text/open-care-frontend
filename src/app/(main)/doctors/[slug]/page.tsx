@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { DetailSection, DetailShell, NOT_MEDICAL_ADVICE } from "@/components/common/DetailShell";
 import { JsonLd } from "@/components/common/JsonLd";
+import { PublicEventTracker } from "@/components/common/PublicEventTracker";
 import { clean, getDoctor, safeUrl } from "@/lib/public-directory";
 import { siteUrl } from "@/lib/site";
 import { doctorPath, hospitalPath } from "@/lib/paths";
@@ -64,6 +65,7 @@ export default async function DoctorDetailPage({ params }: Props) {
 
 	return (
 		<DetailShell backHref="/doctors" backLabel="All doctors">
+			{doctor.slug && <PublicEventTracker kind="DOCTOR" slug={doctor.slug} />}
 			<JsonLd
 				data={{
 					"@context": "https://schema.org",
