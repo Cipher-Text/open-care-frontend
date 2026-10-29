@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { ProfilePictureUploadModal } from "@/components/admin/profile-picture-upload-modal";
 import { BloodDonorChoice } from "@/components/account/blood-donor-choice";
+import { HealthDataConsent } from "@/components/account/health-data-consent";
 import { getUserSession } from "@/lib/auth-client";
 import { getSelfProfile } from "@/api/profile";
 import { UserProfile } from "@/types/profile";
@@ -299,6 +300,9 @@ export default function ProfilePage() {
 
 				{/* Blood donor choice (the person's own) */}
 				<BloodDonorChoice profile={profile} onSaved={(next) => setProfile({ ...profile, ...next })} />
+
+				{/* Health data consent (the person's own) */}
+				<HealthDataConsent profile={profile} onSaved={(next) => setProfile({ ...profile, ...next })} />
 
 				{/* Blood Donation & Volunteer Status */}
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -26,6 +26,7 @@ import {
   Clock,
   Calendar,
 } from "lucide-react";
+import Link from "next/link";
 import { format } from "date-fns";
 import { Progress } from "@/components/ui/progress";
 
@@ -143,6 +144,13 @@ export default function HealthPage() {
                 </h3>
                 <p className="text-sm text-muted-foreground">
                   {error || "No health vitals found"}
+                </p>
+                <p className="text-sm text-muted-foreground mt-3">
+                  New health vitals can be saved only after you agree to health data consent in your{" "}
+                  <Link href="/account/profile" className="underline">
+                    profile
+                  </Link>
+                  .
                 </p>
               </div>
             </CardContent>

@@ -177,3 +177,22 @@ export const updateBloodDonorChoice = async (
 
 	return response.data;
 };
+
+export interface HealthDataConsent {
+	consent: boolean;
+	consentedAt: string | null;
+}
+
+/**
+ * Agree to, or withdraw, keeping health vitals. Only for yourself. Without it the backend refuses to save new vitals (422);
+ * vitals already stored stay readable and deletable.
+ */
+export const updateHealthDataConsent = async (consent: boolean): Promise<HealthDataConsent> => {
+	const response = await apiPut<HealthDataConsent>("/profiles/self/health-data-consent", { consent });
+
+	if (!response.ok || !response.data) {
+		throw new Error(response.error || "Failed to save your health data choice");
+	}
+
+	return response.data;
+};
