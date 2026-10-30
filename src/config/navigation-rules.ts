@@ -36,6 +36,7 @@ export const CONSOLE_RULES: NavRule[] = [
 	{ id: "dashboard", title: "Dashboard", url: "/admin", anyOf: [] },
 	{ id: "my-doctor-profile", group: "People", title: "My doctor profile", url: "/admin/doctors/me", anyOf: [DOCTOR_PANEL] },
 	{ id: "my-figures", group: "Facilities", title: "My page figures", url: "/admin/my-figures", anyOf: [DOCTOR_PANEL, "update-hospital"] },
+	{ id: "my-schedule", group: "People", title: "My schedule", url: "/admin/my-schedule", anyOf: [DOCTOR_PANEL] },
 	{ id: "doctors", group: "People", title: "Doctors", url: "/admin/doctors", anyOf: crud("doctor") },
 	{ id: "nurses", group: "People", title: "Nurses", url: "/admin/nurses", anyOf: crud("nurse") },
 	{ id: "profiles", group: "People", title: "Profiles", url: "/admin/profiles", anyOf: ["view-profile"] },
