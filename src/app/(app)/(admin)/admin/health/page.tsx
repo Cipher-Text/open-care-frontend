@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AdminHeader } from "@/components/admin/admin-header";
@@ -26,36 +26,37 @@ import {
   Clock,
   Calendar,
 } from "lucide-react";
-import Link from "next/link";
 import { format } from "date-fns";
 import { Progress } from "@/components/ui/progress";
+import { HealthReadings } from "@/components/health/health-readings";
 
 export default function HealthPage() {
   const [vitals, setVitals] = useState<HealthVitals | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchHealthVitals = async () => {
-      try {
-        const session = getUserSession();
-        if (!session?.access_token) {
-          throw new Error("No access token found");
-        }
-
-        const vitalsData = await getLatestHealthVitals(session.access_token);
-        setVitals(vitalsData);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to load health vitals"
-        );
-      } finally {
-        setLoading(false);
+  const fetchHealthVitals = useCallback(async () => {
+    try {
+      const session = getUserSession();
+      if (!session?.access_token) {
+        throw new Error("No access token found");
       }
-    };
 
-    fetchHealthVitals();
+      const vitalsData = await getLatestHealthVitals(session.access_token);
+      setVitals(vitalsData);
+      setError(null);
+    } catch (err) {
+      // no reading yet is the normal state of a new person, not a failure
+      setVitals(null);
+      setError(err instanceof Error ? err.message : "Failed to load health vitals");
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    void fetchHealthVitals();
+  }, [fetchHealthVitals]);
 
   const formatDate = (dateString: string) => {
     try {
@@ -127,34 +128,21 @@ export default function HealthPage() {
     );
   }
 
-  if (error || !vitals) {
+  if (!vitals) {
     return (
       <div className="flex flex-col">
-        <AdminHeader
-          title="Health Dashboard"
-          description="Monitor your vital signs and health metrics"
-        />
-        <div className="flex items-center justify-center min-h-96 p-8">
-          <Card className="w-full max-w-md">
+        <AdminHeader title="Health Dashboard" description="Your readings, kept private" />
+        <div className="flex-1 space-y-6 p-4 md:p-8">
+          <Card>
             <CardContent className="pt-6">
-              <div className="text-center">
-                <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">
-                  Unable to Load Health Data
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {error || "No health vitals found"}
-                </p>
-                <p className="text-sm text-muted-foreground mt-3">
-                  New health vitals can be saved only after you agree to health data consent in your{" "}
-                  <Link href="/account/profile" className="underline">
-                    profile
-                  </Link>
-                  .
-                </p>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                {error && !/404|not found/i.test(error)
+                  ? `We could not load your latest reading (${error}). You can still record one below.`
+                  : "You have no readings yet. Record your first one below and it will appear here."}
+              </p>
             </CardContent>
           </Card>
+          <HealthReadings onChanged={fetchHealthVitals} />
         </div>
       </div>
     );
@@ -686,6 +674,7 @@ export default function HealthPage() {
             </Card>
           )}
         </div>
+        <HealthReadings onChanged={fetchHealthVitals} />
       </div>
     </div>
   );
