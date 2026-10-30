@@ -53,3 +53,28 @@ export const deleteScheduleBlock = async (doctorId: number | string, id: number)
 	const response = await apiDelete(`/doctors/${doctorId}/schedules/${id}`);
 	if (!response.ok) throw new Error(response.error || "Could not remove the block");
 };
+
+// ---- time off
+
+export interface TimeOff {
+	id: number;
+	date: string;
+	startTime: string | null;
+	endTime: string | null;
+	wholeDay: boolean;
+	reason: string | null;
+}
+
+export const fetchTimeOff = async (doctorId: number | string) =>
+	unwrap<TimeOff[]>(await apiGet(`/doctors/${doctorId}/schedules/exceptions`), "Could not load your time off");
+
+/** `cancelBookings` cancels the visits already booked in that time and tells the patients; without it the call fails while there are any. */
+export const addTimeOff = async (
+	doctorId: number | string,
+	body: { date: string; startTime?: string; endTime?: string; reason?: string; cancelBookings?: boolean }
+) => unwrap<TimeOff>(await apiPost(`/doctors/${doctorId}/schedules/exceptions`, body), "Could not add the time off");
+
+export const removeTimeOff = async (doctorId: number | string, id: number) => {
+	const response = await apiDelete(`/doctors/${doctorId}/schedules/exceptions/${id}`);
+	if (!response.ok) throw new Error(response.error || "Could not remove the time off");
+};

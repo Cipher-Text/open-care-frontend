@@ -6,8 +6,11 @@ import { toast } from "sonner";
 import { fetchMyDoctor } from "@/api/doctors";
 import {
 	addScheduleBlock,
+	addTimeOff,
 	deleteScheduleBlock,
 	fetchSchedule,
+	fetchTimeOff,
+	removeTimeOff,
 	updateScheduleBlock,
 	type DayOfWeek,
 	type ScheduleActivity,
@@ -116,6 +119,95 @@ const toInput = (f: FormState): ScheduleInput => {
 		isActive: f.isActive,
 	};
 };
+
+const today = () => new Date().toISOString().slice(0, 10);
+
+/** Days or hours off: no one can book inside them. Booked visits must be cancelled on purpose. */
+function TimeOffCard({ doctorId }: { doctorId: number }) {
+	const queryClient = useQueryClient();
+	const [date, setDate] = useState(today());
+	const [partial, setPartial] = useState(false);
+	const [from, setFrom] = useState("09:00");
+	const [to, setTo] = useState("13:00");
+	const [reason, setReason] = useState("");
+	const list = useQuery({ queryKey: ["time-off", doctorId], queryFn: () => fetchTimeOff(doctorId), retry: false });
+	const refresh = () => {
+		void queryClient.invalidateQueries({ queryKey: ["time-off", doctorId] });
+		void queryClient.invalidateQueries({ queryKey: ["doctor-appointments"] });
+	};
+
+	const add = useMutation({
+		mutationFn: (cancelBookings: boolean) =>
+			addTimeOff(doctorId, { date, startTime: partial ? from : undefined, endTime: partial ? to : undefined, reason: reason || undefined, cancelBookings }),
+		onSuccess: () => {
+			toast.success("Time off saved");
+			setReason("");
+			refresh();
+		},
+		onError: (error) => {
+			const message = error instanceof Error ? error.message : "Could not save";
+			// the server names the patients who already booked; the doctor decides
+			if (message.includes("already booked") && window.confirm(`${message}.\n\nCancel their visits and tell them?`)) add.mutate(true);
+			else toast.error(message);
+		},
+	});
+	const remove = useMutation({
+		mutationFn: (id: number) => removeTimeOff(doctorId, id),
+		onSuccess: refresh,
+		onError: (error) => toast.error(error instanceof Error ? error.message : "Could not remove"),
+	});
+
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Time off</CardTitle>
+				<CardDescription>A day or some hours when you are away. Nobody can book inside it.</CardDescription>
+			</CardHeader>
+			<CardContent className="space-y-4">
+				<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+					<div className="space-y-2">
+						<Label htmlFor="off-date">Date</Label>
+						<Input id="off-date" type="date" min={today()} value={date} onChange={(e) => setDate(e.target.value)} />
+					</div>
+					{partial && (
+						<>
+							<div className="space-y-2">
+								<Label htmlFor="off-from">From</Label>
+								<Input id="off-from" type="time" value={from} onChange={(e) => setFrom(e.target.value)} />
+							</div>
+							<div className="space-y-2">
+								<Label htmlFor="off-to">To</Label>
+								<Input id="off-to" type="time" value={to} onChange={(e) => setTo(e.target.value)} />
+							</div>
+						</>
+					)}
+					<div className="space-y-2 sm:col-span-2">
+						<Label htmlFor="off-reason">Reason (patients see it if a visit is cancelled)</Label>
+						<Input id="off-reason" value={reason} onChange={(e) => setReason(e.target.value)} maxLength={300} placeholder="Optional" />
+					</div>
+				</div>
+				<label className="flex items-center gap-2 text-sm">
+					<input type="checkbox" checked={partial} onChange={(e) => setPartial(e.target.checked)} />
+					Only part of the day
+				</label>
+				<Button onClick={() => add.mutate(false)} disabled={add.isPending || !date}>Add time off</Button>
+				{(list.data ?? []).length > 0 && (
+					<ul className="divide-y text-sm">
+						{(list.data ?? []).map((t) => (
+							<li key={t.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
+								<span>
+									<strong>{t.date}</strong> {t.wholeDay ? "all day" : `${hm(t.startTime ?? "")} to ${hm(t.endTime ?? "")}`}
+									{t.reason ? <span className="text-muted-foreground"> · {t.reason}</span> : null}
+								</span>
+								<Button size="sm" variant="outline" disabled={remove.isPending} onClick={() => remove.mutate(t.id)}>Remove</Button>
+							</li>
+						))}
+					</ul>
+				)}
+			</CardContent>
+		</Card>
+	);
+}
 
 /** The doctor's weekly schedule: when and where they see patients, operate, teach. Patients cannot book yet. */
 export default function MySchedulePage() {
@@ -265,6 +357,8 @@ export default function MySchedulePage() {
 								</CardContent>
 							</Card>
 						)}
+
+						{doctorId !== null && <TimeOffCard doctorId={doctorId} />}
 
 						{DAYS.map((day) => {
 							const rows = blocks.filter((b) => b.dayOfWeek === day.value);
