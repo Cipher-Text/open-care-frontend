@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { HeartPulse, ShieldCheck, UserCircle } from "lucide-react";
+import { FileText, HeartPulse, ShieldCheck, UserCircle } from "lucide-react";
 import { fetchPendingConsents } from "@/api/consents";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -26,11 +26,12 @@ export default function AccountHomePage() {
 				</Link>
 			)}
 
-			<div className="grid gap-4 sm:grid-cols-3">
+			<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 				{[
 					{ href: "/account/profile", title: "My profile", text: "Your name, phone and address", icon: UserCircle },
 					{ href: "/account/consents", title: "My consents", text: "Approve, decline or take back", icon: ShieldCheck },
-					{ href: "/account/health", title: "My health", text: "Your recorded readings", icon: HeartPulse },
+					{ href: "/account/prescriptions", title: "My prescriptions", text: "What your doctors wrote for you", icon: FileText },
+	{ href: "/account/health", title: "My health", text: "Your recorded readings", icon: HeartPulse },
 				].map(({ href, title, text, icon: Icon }) => (
 					<Link key={href} href={href}>
 						<Card className="h-full transition-colors hover:border-primary/50">

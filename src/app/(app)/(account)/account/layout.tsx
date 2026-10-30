@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BadgeCheck, CalendarDays, Eye, HeartPulse, Home, ShieldCheck, Star, UserCircle } from "lucide-react";
+import { BadgeCheck, CalendarDays, Eye, FileText, HeartPulse, Home, ShieldCheck, Star, UserCircle } from "lucide-react";
 import { UserMenu } from "@/components/admin/user-menu";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +11,7 @@ const LINKS = [
 	{ href: "/account/profile", label: "My profile", icon: UserCircle },
 	{ href: "/account/consents", label: "My consents", icon: ShieldCheck },
 	{ href: "/account/health", label: "My health", icon: HeartPulse },
+	{ href: "/account/prescriptions", label: "Prescriptions", icon: FileText },
 	{ href: "/account/appointments", label: "Appointments", icon: CalendarDays },
 	{ href: "/account/reviews", label: "Reviews", icon: Star },
 	{ href: "/account/data-access", label: "Who looked", icon: Eye },

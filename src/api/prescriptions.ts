@@ -58,3 +58,25 @@ export const replacePrescription = async (id: number | string, input: Prescripti
 
 export const searchMedicines = async (q: string) =>
 	unwrap<MedicineSuggestion[]>(await apiGet(buildUrl("/prescriptions/medicines", { q })), "Failed to search medicines");
+
+// ---- the patient's own prescriptions
+
+export interface MyPrescriptionSummary {
+	id: number;
+	prescriptionNo: string;
+	prescriptionDate: string;
+	doctorName: string | null;
+	doctorSlug: string | null;
+	specializations: string | null;
+	diagnosis: string;
+	medicineCount: number;
+	hospitalName: string | null;
+	/** The doctor replaced it with a corrected copy; the old one is kept as written. */
+	replaced: boolean;
+}
+
+export const fetchMyPrescriptions = async (page: number, size: number): Promise<PageResult<MyPrescriptionSummary>> =>
+	normalizePage(unwrap<WirePage<MyPrescriptionSummary>>(await apiGet(buildUrl("/me/prescriptions", { page: toWirePage(page), size })), "Could not load your prescriptions"));
+
+export const fetchMyPrescription = async (id: number | string) =>
+	unwrap<Prescription>(await apiGet(`/me/prescriptions/${id}`), "Could not load the prescription");
