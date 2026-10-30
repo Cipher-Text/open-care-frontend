@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
 	Ambulance,
 	BadgeCheck,
@@ -17,9 +17,14 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { DetailSection, DetailShell, Fact, NOT_MEDICAL_ADVICE } from "@/components/common/DetailShell";
+import { DetailSection, DetailShell, Fact } from "@/components/common/DetailShell";
 import { JsonLd } from "@/components/common/JsonLd";
 import { PublicEventTracker } from "@/components/common/PublicEventTracker";
+import { Link, redirect } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
+import { bilingual } from "@/i18n/seo";
+import { formatNumber } from "@/lib/format";
+import { enumName, localizedNames, placeName } from "@/lib/names";
 import { clean, getHospital, safeUrl, validEmail } from "@/lib/public-directory";
 import { siteUrl } from "@/lib/site";
 import { doctorPath, hospitalPath } from "@/lib/paths";
@@ -31,33 +36,42 @@ export function generateStaticParams() {
 	return [];
 }
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = { params: Promise<{ locale: Locale; slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-	const { slug } = await params;
+	const { locale, slug } = await params;
+	const t = await getTranslations({ locale, namespace: "hospitals" });
 	const hospital = await getHospital(slug).catch(() => null);
-	if (!hospital) return { title: "Hospital not found | Open Care" };
-	const place = [hospital.upazila?.name, hospital.district?.name].filter(Boolean).join(", ");
+	if (!hospital) return { title: t("notFound") };
+	const name = localizedNames(locale, hospital.name, hospital.bnName).primary;
+	const place = [placeName(locale, hospital.upazila), placeName(locale, hospital.district)].filter(Boolean).join(", ");
 	return {
-		alternates: { canonical: hospitalPath(hospital) },
-		openGraph: { type: "website", title: `${hospital.name} | Open Care`, url: hospitalPath(hospital) },
-		title: `${hospital.name} | Open Care`,
-		description: `${hospital.name}${place ? `, ${place}` : ""}. Contact details, services and doctors on Open Care.`,
+		...bilingual(locale, hospitalPath(hospital)),
+		openGraph: { type: "website", title: `${name} | Open Care`, url: hospitalPath(hospital) },
+		title: `${name} | Open Care`,
+		description: t("metaDetailDescription", { name, place: place ? `, ${place}` : "" }),
 	};
 }
 
 export default async function HospitalDetailPage({ params }: Props) {
-	const { slug } = await params;
+	const { locale, slug } = await params;
+	setRequestLocale(locale);
+	const t = await getTranslations("hospitals");
+	const common = await getTranslations("common");
 	const hospital = await getHospital(slug);
 	if (!hospital) notFound();
-	// Old id-based links (and a renamed slug) land on the canonical slug URL.
-	if (hospital.slug && hospital.slug !== decodeURIComponent(slug)) permanentRedirect(hospitalPath(hospital));
+	// Old id-based links (and a renamed slug) land on the canonical slug URL, in the same language.
+	if (hospital.slug && hospital.slug !== decodeURIComponent(slug)) redirect({ href: hospitalPath(hospital), locale });
+
+	const names = localizedNames(locale, hospital.name, hospital.bnName);
+	const hospitalType = enumName(locale, hospital.hospitalType);
+	const organizationType = enumName(locale, hospital.organizationType);
 
 	const website = safeUrl(hospital.websiteUrl);
 	const facebook = safeUrl(hospital.facebookPageUrl);
 	const email = validEmail(hospital.email);
 	const phone = clean(hospital.phone);
-	const location = [hospital.address, hospital.union?.name, hospital.upazila?.name, hospital.district?.name]
+	const location = [hospital.address, placeName(locale, hospital.union), placeName(locale, hospital.upazila), placeName(locale, hospital.district)]
 		.map(clean)
 		.filter(Boolean)
 		.join(", ");
@@ -72,14 +86,16 @@ export default async function HospitalDetailPage({ params }: Props) {
 	const amenities = (hospital.amenities ?? []).filter((a) => a.isActive !== false);
 
 	return (
-		<DetailShell backHref="/hospitals" backLabel="All hospitals">
+		<DetailShell backHref="/hospitals" backLabel={t("back")}>
 			{hospital.slug && <PublicEventTracker kind="HOSPITAL" slug={hospital.slug} />}
 			<JsonLd
 				data={{
 					"@context": "https://schema.org",
 					"@type": "Hospital",
-					name: hospital.name,
-					url: `${siteUrl}${hospitalPath(hospital)}`,
+					name: names.primary,
+					...(names.secondary && { alternateName: names.secondary }),
+					inLanguage: locale,
+					url: `${siteUrl}${locale === "bn" ? "/bn" : ""}${hospitalPath(hospital)}`,
 					...(phone && { telephone: phone }),
 					...(email && { email }),
 					...(website && { sameAs: [website] }),
@@ -98,28 +114,24 @@ export default async function HospitalDetailPage({ params }: Props) {
 							<Building2 className="size-8 sm:size-10" aria-hidden="true" />
 						</div>
 						<div className="min-w-0">
-							<h1 className="flex flex-wrap items-center gap-x-2 text-2xl font-bold leading-tight text-foreground sm:text-3xl">
-								{hospital.name}
+							<h1 lang={names.primaryLang} className="flex flex-wrap items-center gap-x-2 text-2xl font-bold leading-tight text-foreground sm:text-3xl">
+								{names.primary}
 								{hospital.isVerified && (
-									<BadgeCheck className="size-6 text-primary" aria-label="Verified" />
+									<BadgeCheck className="size-6 text-primary" aria-label={common("verified")} />
 								)}
 							</h1>
-							{hospital.bnName && hospital.bnName !== hospital.name && (
-								<p lang="bn" className="mt-1 text-primary">
-									{hospital.bnName}
+							{names.secondary && (
+								<p lang={names.secondaryLang} className="mt-1 text-primary">
+									{names.secondary}
 								</p>
 							)}
 							<div className="mt-3 flex flex-wrap gap-2">
-								{hospital.hospitalType?.englishName && (
-									<Badge variant="secondary">{hospital.hospitalType.englishName}</Badge>
-								)}
-								{hospital.organizationType?.displayName && (
-									<Badge variant="outline">{hospital.organizationType.displayName}</Badge>
-								)}
+								{hospitalType && <Badge variant="secondary">{hospitalType}</Badge>}
+								{organizationType && <Badge variant="outline">{organizationType}</Badge>}
 								{hospital.isVerified ? (
-									<Badge>Verified listing</Badge>
+									<Badge>{common("verifiedListing")}</Badge>
 								) : (
-									<Badge variant="outline">Not yet verified</Badge>
+									<Badge variant="outline">{common("notVerified")}</Badge>
 								)}
 							</div>
 						</div>
@@ -129,17 +141,17 @@ export default async function HospitalDetailPage({ params }: Props) {
 						<div className="flex flex-wrap gap-2 text-sm">
 							{hospital.hasEmergencyService && (
 								<span className="inline-flex items-center gap-1 rounded-full bg-emergency/10 px-2.5 py-1 text-emergency">
-									<Siren className="size-3.5" aria-hidden="true" /> Emergency
+									<Siren className="size-3.5" aria-hidden="true" /> {common("emergency")}
 								</span>
 							)}
 							{hospital.hasAmbulanceService && (
 								<span className="inline-flex items-center gap-1 rounded-full bg-emergency/10 px-2.5 py-1 text-emergency">
-									<Ambulance className="size-3.5" aria-hidden="true" /> Ambulance
+									<Ambulance className="size-3.5" aria-hidden="true" /> {common("ambulance")}
 								</span>
 							)}
 							{hospital.hasBloodBank && (
 								<span className="inline-flex items-center gap-1 rounded-full bg-emergency/10 px-2.5 py-1 text-emergency">
-									<Droplets className="size-3.5" aria-hidden="true" /> Blood bank
+									<Droplets className="size-3.5" aria-hidden="true" /> {common("bloodBank")}
 								</span>
 							)}
 						</div>
@@ -150,7 +162,7 @@ export default async function HospitalDetailPage({ params }: Props) {
 							<Button asChild className="h-11">
 								<a href={`tel:${phone.replace(/\s+/g, "")}`} data-track-event="CALL">
 									<Phone className="mr-2 size-4" aria-hidden="true" />
-									Call {phone}
+									{t("callPhone", { phone })}
 								</a>
 							</Button>
 						)}
@@ -158,7 +170,7 @@ export default async function HospitalDetailPage({ params }: Props) {
 							<Button asChild variant="outline" className="h-11">
 								<a href={`mailto:${email}`}>
 									<Mail className="mr-2 size-4" aria-hidden="true" />
-									Email
+									{common("email")}
 								</a>
 							</Button>
 						)}
@@ -166,7 +178,7 @@ export default async function HospitalDetailPage({ params }: Props) {
 							<Button asChild variant="outline" className="h-11">
 								<a href={website} target="_blank" rel="noopener noreferrer">
 									<Globe className="mr-2 size-4" aria-hidden="true" />
-									Website
+									{common("website")}
 								</a>
 							</Button>
 						)}
@@ -174,24 +186,24 @@ export default async function HospitalDetailPage({ params }: Props) {
 							<Button asChild variant="outline" className="h-11">
 								<a href={directions} target="_blank" rel="noopener noreferrer" data-track-event="DIRECTIONS">
 									<Navigation className="mr-2 size-4" aria-hidden="true" />
-									Directions
+									{common("directions")}
 								</a>
 							</Button>
 						)}
 					</div>
 					{!phone && !email && !website && (
 						<p className="text-sm text-muted-foreground">
-							No contact details are listed for this facility yet.
+							{t("noContact")}
 						</p>
 					)}
 				</CardContent>
 			</Card>
 
-			<DetailSection title="About this facility">
+			<DetailSection title={t("about")}>
 				<dl className="grid gap-4 sm:grid-cols-2">
 					{location && (
 						<Fact
-							label="Location"
+							label={t("location")}
 							value={
 								<span className="flex items-start gap-1.5">
 									<MapPin className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
@@ -200,25 +212,25 @@ export default async function HospitalDetailPage({ params }: Props) {
 							}
 						/>
 					)}
-					{clean(hospital.district?.division?.name) && <Fact label="Division" value={clean(hospital.district?.division?.name)} />}
+					{clean(placeName(locale, hospital.district?.division)) && <Fact label={t("division")} value={clean(placeName(locale, hospital.district?.division))} />}
 					{hospital.numberOfBed > 0 && (
 						<Fact
-							label="Beds"
+							label={t("bedsLabel")}
 							value={
 								<span className="flex items-center gap-1.5">
 									<Bed className="size-4 text-muted-foreground" aria-hidden="true" />
-									{hospital.numberOfBed.toLocaleString()}
+									{formatNumber(hospital.numberOfBed, locale)}
 								</span>
 							}
 						/>
 					)}
-					{hospital.registrationCode && <Fact label="Registration code" value={hospital.registrationCode} />}
+					{hospital.registrationCode && <Fact label={t("registrationCode")} value={hospital.registrationCode} />}
 					{facebook && (
 						<Fact
-							label="Facebook"
+							label={t("facebook")}
 							value={
 								<a href={facebook} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-									Facebook page
+									{t("facebookPage")}
 								</a>
 							}
 						/>
@@ -227,7 +239,7 @@ export default async function HospitalDetailPage({ params }: Props) {
 			</DetailSection>
 
 			{doctors.length > 0 && (
-				<DetailSection title={`Doctors (${doctors.length})`}>
+				<DetailSection title={t("doctors", { count: doctors.length })}>
 					<ul className="divide-y">
 						{doctors.map((doctor) => (
 							<li key={doctor.id} className="py-2">
@@ -244,13 +256,13 @@ export default async function HospitalDetailPage({ params }: Props) {
 			)}
 
 			{tests.length > 0 && (
-				<DetailSection title="Tests and services">
+				<DetailSection title={t("tests")}>
 					<ul className="divide-y">
 						{tests.map((test) => (
 							<li key={test.id} className="flex items-baseline justify-between gap-3 py-2 text-sm">
 								<span className="text-foreground">{test.name || test.medicalTest?.name}</span>
 								{test.price > 0 && (
-									<span className="shrink-0 text-muted-foreground">BDT {test.price.toLocaleString()}</span>
+									<span className="shrink-0 text-muted-foreground">{t("price", { price: test.price })}</span>
 								)}
 							</li>
 						))}
@@ -259,13 +271,13 @@ export default async function HospitalDetailPage({ params }: Props) {
 			)}
 
 			{amenities.length > 0 && (
-				<DetailSection title="Amenities">
+				<DetailSection title={t("amenities")}>
 					<ul className="grid gap-2 sm:grid-cols-2">
 						{amenities.map((amenity) => (
 							<li key={amenity.id} className="flex items-baseline justify-between gap-3 text-sm">
 								<span className="text-foreground">{amenity.name}</span>
 								<span className="shrink-0 text-muted-foreground">
-									{amenity.available}/{amenity.quantity} available
+									{t("available", { available: amenity.available, quantity: amenity.quantity })}
 								</span>
 							</li>
 						))}
@@ -273,7 +285,7 @@ export default async function HospitalDetailPage({ params }: Props) {
 				</DetailSection>
 			)}
 
-			<p className="text-xs text-muted-foreground">{NOT_MEDICAL_ADVICE}</p>
+			<p className="text-xs text-muted-foreground">{common("notMedicalAdvice")}</p>
 		</DetailShell>
 	);
 }

@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { ReactNode } from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "@/i18n/navigation";
 
 /** Page frame for public detail pages: back link, then content. */
 export function DetailShell({
@@ -55,5 +55,6 @@ export function Fact({ label, value }: { label: string; value: ReactNode }) {
 	);
 }
 
+/** English text of the not-medical-advice note. Bilingual pages use the message `common.notMedicalAdvice` instead. */
 export const NOT_MEDICAL_ADVICE =
 	"Listings are information only, collected from public sources and partners. They are not medical advice. Please confirm details with the provider before you travel.";

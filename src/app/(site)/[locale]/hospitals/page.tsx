@@ -1,59 +1,30 @@
-"use client";
-
-import { Suspense, useState } from "react";
-import { SlidersHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import HospitalFilters from "@/components/hospitals/HospitalFilters";
-import HospitalsList from "@/components/hospitals/HospitalsList";
+import type { Metadata } from "next";
+import { Suspense } from "react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ListSkeleton } from "@/components/common/StateViews";
+import HospitalsDirectory from "@/components/hospitals/HospitalsDirectory";
+import type { Locale } from "@/i18n/routing";
+import { bilingual } from "@/i18n/seo";
 
-function HospitalsDirectory() {
-	const [showFilters, setShowFilters] = useState(false);
+type Props = { params: Promise<{ locale: Locale }> };
 
-	return (
-		<div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
-			{/* Filters: collapsible on mobile, sidebar on desktop */}
-			<aside className="w-full lg:w-80 lg:shrink-0">
-				<Button
-					type="button"
-					variant="outline"
-					className="h-12 w-full justify-between lg:hidden"
-					aria-expanded={showFilters}
-					aria-controls="hospital-filters"
-					onClick={() => setShowFilters((v) => !v)}
-				>
-					<span className="flex items-center gap-2">
-						<SlidersHorizontal className="size-4" aria-hidden="true" />
-						Filters
-					</span>
-					<span className="text-sm text-muted-foreground">
-						{showFilters ? "Hide" : "Show"}
-					</span>
-				</Button>
-				<div
-					id="hospital-filters"
-					className={showFilters ? "mt-3 block lg:mt-0" : "hidden lg:block"}
-				>
-					<HospitalFilters />
-				</div>
-			</aside>
-
-			<div className="min-w-0 flex-1">
-				<HospitalsList />
-			</div>
-		</div>
-	);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	const { locale } = await params;
+	const t = await getTranslations({ locale, namespace: "hospitals" });
+	return { title: t("metaListTitle"), description: t("metaListDescription"), ...bilingual(locale, "/hospitals") };
 }
 
-export default function HospitalsPage() {
+export default async function HospitalsPage({ params }: Props) {
+	const { locale } = await params;
+	setRequestLocale(locale);
+	const t = await getTranslations("hospitals");
+
 	return (
 		<div className="min-h-screen bg-muted/50">
 			<div className="bg-gradient-to-r from-primary to-primary/80 py-10 sm:py-12">
 				<div className="mx-auto max-w-7xl px-4 text-center text-primary-foreground sm:px-6 lg:px-8">
-					<h1 className="mb-2 text-2xl font-bold sm:text-3xl">Find hospitals</h1>
-					<p className="text-base sm:text-lg">
-						Search and filter hospitals by location, type and organization
-					</p>
+					<h1 className="mb-2 text-2xl font-bold sm:text-3xl">{t("heroTitle")}</h1>
+					<p className="text-base sm:text-lg">{t("heroSubtitle")}</p>
 				</div>
 			</div>
 

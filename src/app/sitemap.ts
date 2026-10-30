@@ -8,7 +8,7 @@ export const revalidate = 86400;
 const STATIC_PATHS = ["", "/hospitals", "/doctors", "/blog", "/medical-review-policy", "/ambulances", "/institutions", "/about", "/pricing", "/contact", "/privacy", "/terms"];
 
 /** Pages that exist in Bangla as well; only these list the /bn address and the language alternates. */
-const BILINGUAL_PATHS = new Set(["", "/blog"]);
+const BILINGUAL_PATHS = new Set(["", "/blog", "/hospitals"]);
 
 const alternates = (path: string) => ({ languages: { en: `${siteUrl}${path}`, bn: `${siteUrl}/bn${path}` } });
 
@@ -53,10 +53,15 @@ export default async function sitemap({ id }: { id: number | Promise<string> }):
 	const chunk = isHospital ? index - 1 : index - 1 - hospitalChunks;
 	const records = await getChunk(kind, chunk);
 
-	return records.map((record) => ({
-		url: `${siteUrl}/${kind}/${record.slug ?? record.id}`,
-		lastModified: record.updatedAt ? new Date(record.updatedAt) : undefined,
-		changeFrequency: "monthly",
-		priority: 0.5,
-	}));
+	return records.flatMap((record) => {
+		const path = `/${kind}/${record.slug ?? record.id}`;
+		const entry = {
+			url: `${siteUrl}${path}`,
+			lastModified: record.updatedAt ? new Date(record.updatedAt) : undefined,
+			changeFrequency: "monthly" as const,
+			priority: 0.5,
+		};
+		// Hospital pages exist in Bangla too; doctor pages do not yet (their /bn copy is noindex)
+		return isHospital ? [{ ...entry, alternates: alternates(path) }, { ...entry, url: `${siteUrl}/bn${path}`, alternates: alternates(path) }] : [entry];
+	});
 }

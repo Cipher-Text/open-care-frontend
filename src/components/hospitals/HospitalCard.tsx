@@ -13,10 +13,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { enumName, localizedNames, placeName } from "@/lib/names";
 import { Hospital } from "@/types/hospitals";
 import { hospitalPath } from "@/lib/paths";
-import { displayName } from "@/lib/text";
 
 function safeUrl(url?: string | null) {
 	if (!url) return null;
@@ -29,12 +30,16 @@ function safeUrl(url?: string | null) {
 }
 
 export default function HospitalCard({ hospital }: { hospital: Hospital }) {
+	const t = useTranslations("hospitals");
+	const common = useTranslations("common");
+	const locale = useLocale();
+	const names = localizedNames(locale, hospital.name, hospital.bnName);
 	const website = safeUrl(hospital.websiteUrl);
 	const phone = hospital.phone?.trim();
 	// Email is the contact detail most listings have; ignore malformed values
 	const email = hospital.email?.trim();
 	const validEmail = email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : null;
-	const location = [hospital.address, hospital.upazila?.name, hospital.district?.name]
+	const location = [hospital.address, placeName(locale, hospital.upazila), placeName(locale, hospital.district)]
 		.filter(Boolean)
 		.join(", ");
 
@@ -46,34 +51,34 @@ export default function HospitalCard({ hospital }: { hospital: Hospital }) {
 						<Building2 className="size-7" aria-hidden="true" />
 					</div>
 					<div className="min-w-0">
-						<h3 className="flex flex-wrap items-center gap-x-2 text-lg font-bold leading-snug text-foreground">
+						<h3 lang={names.primaryLang} className="flex flex-wrap items-center gap-x-2 text-lg font-bold leading-snug text-foreground">
 							<Link
 								href={hospitalPath(hospital)}
 								className="hover:text-primary hover:underline after:absolute after:inset-0"
 							>
-								{displayName(hospital.name)}
+								{names.primary}
 							</Link>
 							{hospital.isVerified && (
 								<BadgeCheck
 									className="size-5 text-primary"
-									aria-label="Verified"
+									aria-label={common("verified")}
 								/>
 							)}
 						</h3>
-						{hospital.bnName && (
-							<p lang="bn" className="text-sm text-primary">
-								{hospital.bnName}
+						{names.secondary && (
+							<p lang={names.secondaryLang} className="text-sm text-primary">
+								{names.secondary}
 							</p>
 						)}
 					</div>
 				</div>
 
 				<div className="flex flex-wrap gap-2">
-					{hospital.hospitalType?.englishName && (
-						<Badge variant="secondary">{hospital.hospitalType.englishName}</Badge>
+					{enumName(locale, hospital.hospitalType) && (
+						<Badge variant="secondary">{enumName(locale, hospital.hospitalType)}</Badge>
 					)}
-					{hospital.organizationType?.displayName && (
-						<Badge variant="outline">{hospital.organizationType.displayName}</Badge>
+					{enumName(locale, hospital.organizationType) && (
+						<Badge variant="outline">{enumName(locale, hospital.organizationType)}</Badge>
 					)}
 				</div>
 
@@ -87,7 +92,7 @@ export default function HospitalCard({ hospital }: { hospital: Hospital }) {
 					{hospital.numberOfBed > 0 && (
 						<li className="flex items-center gap-2">
 							<Bed className="size-4 shrink-0" aria-hidden="true" />
-							{hospital.numberOfBed.toLocaleString()} beds
+							{t("beds", { count: hospital.numberOfBed })}
 						</li>
 					)}
 				</ul>
@@ -98,17 +103,17 @@ export default function HospitalCard({ hospital }: { hospital: Hospital }) {
 					<div className="flex flex-wrap gap-2 text-sm">
 						{hospital.hasEmergencyService && (
 							<span className="inline-flex items-center gap-1 rounded-full bg-emergency/10 px-2.5 py-1 text-emergency">
-								<Siren className="size-3.5" aria-hidden="true" /> Emergency
+								<Siren className="size-3.5" aria-hidden="true" /> {common("emergency")}
 							</span>
 						)}
 						{hospital.hasAmbulanceService && (
 							<span className="inline-flex items-center gap-1 rounded-full bg-emergency/10 px-2.5 py-1 text-emergency">
-								<Ambulance className="size-3.5" aria-hidden="true" /> Ambulance
+								<Ambulance className="size-3.5" aria-hidden="true" /> {common("ambulance")}
 							</span>
 						)}
 						{hospital.hasBloodBank && (
 							<span className="inline-flex items-center gap-1 rounded-full bg-emergency/10 px-2.5 py-1 text-emergency">
-								<Droplets className="size-3.5" aria-hidden="true" /> Blood bank
+								<Droplets className="size-3.5" aria-hidden="true" /> {common("bloodBank")}
 							</span>
 						)}
 					</div>
@@ -120,15 +125,15 @@ export default function HospitalCard({ hospital }: { hospital: Hospital }) {
 							<Button asChild className="h-11">
 								<a href={`tel:${phone.replace(/\s+/g, "")}`}>
 									<Phone className="mr-2 size-4" aria-hidden="true" />
-									Call
+									{common("call")}
 								</a>
 							</Button>
 						)}
 						{validEmail && (
 							<Button asChild variant="outline" className="h-11">
-								<a href={`mailto:${validEmail}`} aria-label={`Email ${displayName(hospital.name)}`}>
+								<a href={`mailto:${validEmail}`} aria-label={t("emailAria", { name: names.primary })}>
 									<Mail className="mr-2 size-4" aria-hidden="true" />
-									Email
+									{common("email")}
 								</a>
 							</Button>
 						)}
@@ -136,7 +141,7 @@ export default function HospitalCard({ hospital }: { hospital: Hospital }) {
 							<Button asChild variant="outline" className="h-11">
 								<a href={website} target="_blank" rel="noopener noreferrer">
 									<Globe className="mr-2 size-4" aria-hidden="true" />
-									Website
+									{common("website")}
 								</a>
 							</Button>
 						)}

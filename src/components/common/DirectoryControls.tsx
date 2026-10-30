@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -104,10 +105,11 @@ export function DirectoryPagination({
 	totalPages: number;
 	onPageChange: (page: number) => void;
 }) {
+	const t = useTranslations("common");
 	if (totalPages <= 1) return null;
 	return (
 		<nav
-			aria-label="Pagination"
+			aria-label={t("pagination")}
 			className="flex items-center justify-between gap-3"
 		>
 			<Button
@@ -117,10 +119,10 @@ export function DirectoryPagination({
 				onClick={() => onPageChange(page - 1)}
 			>
 				<ChevronLeft className="mr-1 size-4" aria-hidden="true" />
-				Previous
+				{t("previous")}
 			</Button>
 			<span className="text-sm text-muted-foreground" aria-live="polite">
-				Page {page.toLocaleString()} of {totalPages.toLocaleString()}
+				{t("pageOf", { page, total: totalPages })}
 			</span>
 			<Button
 				variant="outline"
@@ -128,7 +130,7 @@ export function DirectoryPagination({
 				disabled={page >= totalPages}
 				onClick={() => onPageChange(page + 1)}
 			>
-				Next
+				{t("next")}
 				<ChevronRight className="ml-1 size-4" aria-hidden="true" />
 			</Button>
 		</nav>

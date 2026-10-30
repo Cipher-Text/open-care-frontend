@@ -1,6 +1,7 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { fetchPublicHospitals } from "@/api/directory";
 import {
 	DirectoryPagination,
@@ -16,12 +17,14 @@ import HospitalCard from "./HospitalCard";
 
 const PAGE_SIZE = 12;
 
+/** `label` is a key of hospitals.* in the message files. */
 const SORTS: Record<string, { sortBy: string; sortDir: "ASC" | "DESC"; label: string }> = {
-	name: { sortBy: "name", sortDir: "ASC", label: "Name (A-Z)" },
-	beds: { sortBy: "numberOfBed", sortDir: "DESC", label: "Most beds" },
+	name: { sortBy: "name", sortDir: "ASC", label: "sortName" },
+	beds: { sortBy: "numberOfBed", sortDir: "DESC", label: "sortBeds" },
 };
 
 export default function HospitalsList() {
+	const t = useTranslations("hospitals");
 	const { get, set, clear, hasFilters } = useUrlParams();
 	const page = parsePage(get("page"));
 	const sort = SORTS[get("sort")] ?? SORTS.name;
@@ -62,19 +65,15 @@ export default function HospitalsList() {
 		<div className="space-y-6">
 			<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 				<p className="text-muted-foreground" aria-live="polite">
-					{data
-						? `${data.totalItems.toLocaleString()} ${
-								data.totalItems === 1 ? "hospital" : "hospitals"
-						  } found`
-						: "Searching"}
+					{data ? t("found", { count: data.totalItems }) : t("searching")}
 				</p>
 				<div className="w-full sm:w-52">
 					<FilterSelect
-						label="Sort by"
-						allLabel={SORTS.name.label}
+						label={t("sortBy")}
+						allLabel={t(SORTS.name.label)}
 						value={get("sort") === "beds" ? "beds" : ""}
 						onChange={(v) => set({ sort: v })}
-						options={[{ value: "beds", label: SORTS.beds.label }]}
+						options={[{ value: "beds", label: t(SORTS.beds.label) }]}
 					/>
 				</div>
 			</div>

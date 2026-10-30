@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useLocale, useTranslations } from "next-intl";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
@@ -14,10 +15,13 @@ import {
 } from "@/components/common/DirectoryControls";
 import { useUrlParams } from "@/hooks/use-url-params";
 import { Button } from "@/components/ui/button";
+import { enumName, placeName } from "@/lib/names";
 
 const STATIC = { staleTime: 60 * 60 * 1000 };
 
 export default function HospitalFilters() {
+	const t = useTranslations("hospitals");
+	const locale = useLocale();
 	const { get, set, clear, hasFilters } = useUrlParams();
 
 	const districts = useQuery({
@@ -37,77 +41,77 @@ export default function HospitalFilters() {
 	});
 
 	const flags = [
-		{ key: "emergency", label: "Emergency service" },
-		{ key: "ambulance", label: "Ambulance service" },
-		{ key: "blood", label: "Blood bank" },
+		{ key: "emergency", label: t("emergencyService") },
+		{ key: "ambulance", label: t("ambulanceService") },
+		{ key: "blood", label: t("bloodBank") },
 	];
 
 	return (
 		<form
 			role="search"
-			aria-label="Filter hospitals"
+			aria-label={t("filterForm")}
 			onSubmit={(e) => e.preventDefault()}
 			className="space-y-5 rounded-xl border border-border bg-card p-5 lg:sticky lg:top-24"
 		>
-			<h2 className="text-lg font-bold text-primary">Filters</h2>
+			<h2 className="text-lg font-bold text-primary">{t("filters")}</h2>
 
 			<div className="space-y-2">
-				<Label>Hospital name</Label>
+				<Label>{t("hospitalName")}</Label>
 				<DebouncedSearch
-					label="Hospital name"
-					placeholder="Search by name"
+					label={t("hospitalName")}
+					placeholder={t("searchByName")}
 					value={get("q")}
 					onChange={(v) => set({ q: v })}
 				/>
 			</div>
 
 			<div className="space-y-2">
-				<Label>District</Label>
+				<Label>{t("district")}</Label>
 				<FilterSelect
-					label="District"
-					allLabel="All districts"
+					label={t("district")}
+					allLabel={t("allDistricts")}
 					value={get("district")}
 					onChange={(v) => set({ district: v })}
 					disabled={districts.isLoading}
 					options={(districts.data ?? [])
 						.slice()
-						.sort((a, b) => a.name.localeCompare(b.name))
-						.map((d) => ({ value: String(d.id), label: d.name }))}
+						.map((d) => ({ value: String(d.id), label: placeName(locale, d) }))
+						.sort((a, b) => a.label.localeCompare(b.label, locale))}
 				/>
 			</div>
 
 			<div className="space-y-2">
-				<Label>Hospital type</Label>
+				<Label>{t("hospitalType")}</Label>
 				<FilterSelect
-					label="Hospital type"
-					allLabel="All types"
+					label={t("hospitalType")}
+					allLabel={t("allTypes")}
 					value={get("type")}
 					onChange={(v) => set({ type: v })}
 					disabled={types.isLoading}
-					options={(types.data ?? []).map((t) => ({
-						value: t.value ?? t.englishName,
-						label: t.englishName,
+					options={(types.data ?? []).map((type) => ({
+						value: type.value ?? type.englishName,
+						label: enumName(locale, type),
 					}))}
 				/>
 			</div>
 
 			<div className="space-y-2">
-				<Label>Organization</Label>
+				<Label>{t("organization")}</Label>
 				<FilterSelect
-					label="Organization"
-					allLabel="All organizations"
+					label={t("organization")}
+					allLabel={t("allOrganizations")}
 					value={get("org")}
 					onChange={(v) => set({ org: v })}
 					disabled={orgs.isLoading}
 					options={(orgs.data ?? []).map((o) => ({
 						value: o.value ?? o.englishName,
-						label: o.displayName ?? o.englishName,
+						label: enumName(locale, o),
 					}))}
 				/>
 			</div>
 
 			<fieldset className="space-y-3">
-				<legend className="mb-2 text-sm font-medium">Services</legend>
+				<legend className="mb-2 text-sm font-medium">{t("services")}</legend>
 				{flags.map((f) => (
 					<div key={f.key} className="flex min-h-8 items-center gap-3">
 						<Checkbox
@@ -124,7 +128,7 @@ export default function HospitalFilters() {
 
 			{hasFilters && (
 				<Button type="button" variant="outline" className="h-11 w-full" onClick={clear}>
-					Clear all filters
+					{t("clearAll")}
 				</Button>
 			)}
 		</form>

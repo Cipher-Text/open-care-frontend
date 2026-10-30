@@ -94,6 +94,7 @@ Depends on: docs/ai-context.md (constitution). If conflict, ai-context.md wins.
 - Every public page calls `setRequestLocale(locale)` when it uses translations, and `[slug]` pages export `generateStaticParams` returning `[]`, so they stay statically cached. Never read `cookies()` or `headers()` in a public page or the layout: it turns off caching.
 - A page that exists in Bangla sets `...bilingual(locale, path)` (`src/i18n/seo.ts`) in its metadata for canonical, `hreflang` and `index`. A page not translated yet is marked `noindex` under `/bn` by the layout.
 - Numbers and dates go through `src/lib/format.ts`, so Bangla gets Bangla digits. Show `bnName` as the main name when the language is Bangla, and never show a copy of the English name twice.
+- Tests for this: `npm run test:i18n` (the Bangla and English message files have the same keys and placeholders; the name helper). Names come from `src/lib/names.ts` (`localizedNames`, `placeName`, `enumName`), which reads the language of each value from its letters because the imported data sometimes swaps `name` and `bnName`.
 - Bangla text is written by the team and must be checked by a native reader before release, especially legal and medical wording.
 
 ## 11) Output Format for AI Changes
