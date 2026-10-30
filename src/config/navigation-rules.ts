@@ -74,6 +74,7 @@ export const CONSOLE_RULES: NavRule[] = [
 
 	// Open to everyone signed in
 	{ id: "my-consents", group: "Account", title: "My consents", url: "/admin/consents", anyOf: [], always: true },
+	{ id: "notifications", title: "Notifications", url: "/admin/notifications", anyOf: [], always: true, hidden: true },
 	{ id: "my-profile", title: "My profile", url: "/admin/profile", anyOf: [], always: true, hidden: true },
 	{ id: "health", title: "My health", url: "/admin/health", anyOf: [], always: true, hidden: true },
 	{ id: "settings", title: "Settings", url: "/admin/settings", anyOf: [], always: true, hidden: true },

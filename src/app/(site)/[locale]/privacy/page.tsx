@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
 	return (
-		<InfoPage title="Privacy policy" description="What we collect, why, and your choices." updated="30 October 2026">
+		<InfoPage title="Privacy policy" description="What we collect, why, and your choices." updated="31 October 2026">
 			<section>
 				<h2>Browsing the directory</h2>
 				<p>
@@ -45,6 +45,10 @@ export default function PrivacyPage() {
 						<strong>Verification documents</strong> if you ask to be verified as a doctor or to claim a facility: the files
 						you send are kept privately, only staff who review verification can open them, and each time one is opened
 						it is recorded.
+					</li>
+					<li>
+						<strong>Notifications</strong> we send you about your account, such as the result of a verification request:
+						they are kept in your inbox on the site and, unless you switch it off, sent to your phone number or email address.
 					</li>
 					<li>
 						<strong>Messages</strong> you send to us by email.
