@@ -48,7 +48,7 @@ export default function PrivacyPage() {
 					</li>
 					<li>
 						<strong>Access records</strong>: when a doctor opens one of your prescriptions, or Open Care staff open your profile or health
-						readings, we record who and when. You can see these records yourself under &quot;Who looked&quot; in your account.
+						readings, or a member reads the blood donor list, we record who and when (for the donor list, what was searched for, not who was shown). You can see these records yourself under &quot;Who looked&quot; in your account.
 					</li>
 					<li>
 						<strong>Reviews</strong> if you review a doctor you were seen by: your stars, comment and the visit that proves it are kept; the review is

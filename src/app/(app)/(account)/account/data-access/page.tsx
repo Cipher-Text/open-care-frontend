@@ -13,6 +13,9 @@ const KIND: Record<DataAccessKind, string> = {
 	HEALTH_VITALS: "your health readings",
 	PRESCRIPTION: "a prescription",
 	PROFILE: "your profile details",
+	// these two are about lists and files, not about one person, so they never appear here
+	DONOR_LIST: "the blood donor list",
+	PRIVATE_FILE: "a private file",
 };
 
 /** Who opened this person's sensitive data. Using your own data is never listed. */

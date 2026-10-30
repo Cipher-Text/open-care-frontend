@@ -2,14 +2,14 @@ import { apiGet, buildUrl } from "@/lib/api-client";
 import { normalizePage, toWirePage, type WirePage } from "@/lib/pagination";
 import type { PageResult } from "@/types/common";
 
-export type DataAccessKind = "HEALTH_VITALS" | "PRESCRIPTION" | "PROFILE";
+export type DataAccessKind = "HEALTH_VITALS" | "PRESCRIPTION" | "PROFILE" | "DONOR_LIST" | "PRIVATE_FILE";
 
 export interface DataAccess {
 	id: number;
 	kind: DataAccessKind;
 	action: string;
 	detail: string | null;
-	actorType: "DOCTOR" | "STAFF";
+	actorType: "DOCTOR" | "STAFF" | "MEMBER";
 	/** A doctor by name; staff as "Open Care staff" for the person, by account name for staff. */
 	actorLabel: string;
 	actorProfileId: number | null;

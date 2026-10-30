@@ -28,7 +28,7 @@ export default function DataAccessPage() {
 
 	return (
 		<div className="flex flex-col">
-			<AdminHeader title="Data access log" description="Who opened other people's health readings, prescriptions and profiles" />
+			<AdminHeader title="Data access log" description="Who opened other people's health readings, prescriptions, profiles, the blood donor list and private files" />
 			<div className="space-y-4 p-4 pt-6 md:p-8">
 				<div className="flex flex-wrap gap-2">
 					<div className="w-full sm:w-52">
@@ -37,6 +37,8 @@ export default function DataAccessPage() {
 							<option value="HEALTH_VITALS">Health readings</option>
 							<option value="PRESCRIPTION">Prescriptions</option>
 							<option value="PROFILE">Profiles</option>
+							<option value="DONOR_LIST">Blood donor list</option>
+							<option value="PRIVATE_FILE">Private files</option>
 						</NativeSelect>
 					</div>
 					<Input className="w-full sm:w-44" inputMode="numeric" aria-label="Who looked (profile number)" placeholder="Who looked (profile no.)" value={actor} onChange={(e) => { setActor(number(e.target.value)); setPage(1); }} />
@@ -69,7 +71,7 @@ export default function DataAccessPage() {
 												{r.actorLabel} <span className="text-xs text-muted-foreground">({r.actorType.toLowerCase()}{r.actorProfileId ? ` #${r.actorProfileId}` : ""})</span>
 											</TableCell>
 											<TableCell>{r.kind.replace("_", " ").toLowerCase()}</TableCell>
-											<TableCell>{r.subjectProfileId ? `${r.subjectName ?? "Profile"} #${r.subjectProfileId}` : "Everyone (a list)"}</TableCell>
+											<TableCell>{r.subjectProfileId ? `${r.subjectName ?? "Profile"} #${r.subjectProfileId}` : r.kind === "PRIVATE_FILE" ? "A file" : r.kind === "DONOR_LIST" ? "Donors (a list)" : "Everyone (a list)"}</TableCell>
 											<TableCell>{r.action.toLowerCase().replace("_", " ")}{r.detail ? ` · ${r.detail}` : ""}</TableCell>
 										</TableRow>
 									))}
