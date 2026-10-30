@@ -97,7 +97,11 @@ export default function MyFiguresPage() {
 
 	return (
 		<div className="flex flex-col">
-			<AdminHeader title="My page figures" description="How people used your doctor page and facility pages" />
+			<AdminHeader title="My page figures" description="How people used your doctor page and facility pages">
+				<Button asChild variant="outline" size="sm">
+					<Link href="/admin/enquiries">Enquiries</Link>
+				</Button>
+			</AdminHeader>
 			<div className="space-y-4 p-4 pt-6 md:p-8">
 				<div className="w-full sm:w-48">
 					<NativeSelect aria-label="Period" value={days} onChange={(e) => setDays(Number(e.target.value))}>

@@ -47,6 +47,10 @@ export default function PrivacyPage() {
 						it is recorded.
 					</li>
 					<li>
+						<strong>Questions to facilities</strong> if you ask a verified facility a question: your name, question and the phone
+						number you give are sent to the facility so it can answer you, and are kept so the facility can see them.
+					</li>
+					<li>
 						<strong>Notifications</strong> we send you about your account, such as the result of a verification request:
 						they are kept in your inbox on the site and, unless you switch it off, sent to your phone number or email address.
 					</li>

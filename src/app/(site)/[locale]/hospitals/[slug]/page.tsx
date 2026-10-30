@@ -286,6 +286,15 @@ export default async function HospitalDetailPage({ params }: Props) {
 				</DetailSection>
 			)}
 
+			{hospital.isVerified && (
+				<p className="text-sm text-muted-foreground">
+					<NextLink href={`/account/enquiry?hospital=${hospital.id}`} className="font-medium text-primary hover:underline">
+						{t("ask")}
+					</NextLink>{" "}
+					{t("askHint")}
+				</p>
+			)}
+
 			{!hospital.isVerified && (
 				<p className="text-sm text-muted-foreground">
 					<NextLink href={`/account/verification/claim?hospital=${hospital.id}`} className="font-medium text-primary hover:underline">
