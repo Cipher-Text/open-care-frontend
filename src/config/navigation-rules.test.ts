@@ -54,7 +54,7 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 	},
 	doctor: {
 		staff: true,
-		menu: ["dashboard", "my-doctor-profile", "my-figures", "appointments", "my-schedule", "doctors", "institutions", "medicines", "associations", "prescriptions", "my-consents"],
+		menu: ["dashboard", "my-doctor-profile", "my-figures", "appointments", "reviews", "my-schedule", "doctors", "institutions", "medicines", "associations", "prescriptions", "my-consents"],
 	},
 	nurse: { staff: true, menu: ["dashboard", "nurses", "my-consents"] },
 	user: { staff: false, menu: EVERYONE },

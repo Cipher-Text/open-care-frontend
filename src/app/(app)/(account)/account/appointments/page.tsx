@@ -68,6 +68,11 @@ export default function MyAppointmentsPage() {
 										{a.cancellationReason && <p className="text-muted-foreground">Reason: {a.cancellationReason}</p>}
 										<p className="text-xs text-muted-foreground">{a.number}</p>
 									</div>
+									{a.status === "COMPLETED" && (
+										<Button asChild size="sm" variant="outline">
+											<Link href={`/account/review?doctor=${a.doctorId}`}>Review this doctor</Link>
+										</Button>
+									)}
 									{(a.status === "REQUESTED" || a.status === "CONFIRMED") && (
 										<Button size="sm" variant="outline" disabled={cancel.isPending} onClick={() => { if (window.confirm("Cancel this appointment?")) cancel.mutate(a.id); }}>
 											Cancel

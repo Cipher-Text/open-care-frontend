@@ -47,6 +47,10 @@ export default function PrivacyPage() {
 						it is recorded.
 					</li>
 					<li>
+						<strong>Reviews</strong> if you review a doctor you were seen by: your stars, comment and the visit that proves it are kept; the review is
+						shown without your name, and only moderators can see who wrote it. You can remove your review at any time.
+					</li>
+					<li>
 						<strong>Appointment requests</strong> if you ask a doctor for a visit: the time you chose, your name, the phone number
 						in your profile and the reason you write are shown to that doctor, and kept with the booking.
 					</li>
