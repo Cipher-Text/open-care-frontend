@@ -104,6 +104,8 @@ function PrescriptionsList() {
 										<Link href={`/admin/prescriptions/${p.id}`} className="font-medium text-primary hover:underline">
 											{p.prescriptionNo}
 										</Link>
+										{p.supersededById && <span className="ml-2 rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">Replaced</span>}
+										{p.replacesId && <span className="ml-2 rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">Corrected copy</span>}
 									</TableCell>
 									<TableCell>
 										{p.patientName}

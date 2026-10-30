@@ -22,6 +22,9 @@ export interface PrescriptionSummary {
 	diagnosis: string;
 	medicineCount: number;
 	hospitalName: string | null;
+	/** The prescription this one replaced, and the one that replaced this one (null while it stands). */
+	replacesId?: number | null;
+	supersededById?: number | null;
 }
 
 export interface Prescription {
@@ -32,6 +35,12 @@ export interface Prescription {
 	/** Whether the doctor can still edit it, and until when. Absent on older responses, which mean editable. */
 	editable?: boolean;
 	editableUntil?: string | null;
+	/** A prescription that could no longer be edited is corrected by a new one: these link the two. */
+	replacesId?: number | null;
+	replacesNo?: string | null;
+	supersededById?: number | null;
+	supersededByNo?: string | null;
+	supersededAt?: string | null;
 	doctor: {
 		id: number;
 		name: string | null;
@@ -99,4 +108,13 @@ export interface PrescriptionInput {
 		mealInstruction?: MealInstruction;
 		instructions?: string;
 	}[];
+}
+
+/** An earlier version of a prescription, kept by an edit inside the edit window. */
+export interface PrescriptionRevision {
+	revisionNo: number;
+	editedAt: string;
+	editedByDoctorId: number;
+	/** The prescription as it was before that edit. */
+	snapshot: Prescription;
 }

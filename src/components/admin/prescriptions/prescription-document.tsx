@@ -23,6 +23,12 @@ export function PrescriptionDocument({ prescription: p }: { prescription: Prescr
 
 	return (
 		<article className="mx-auto max-w-3xl rounded-lg border bg-white p-6 text-black shadow-sm print:max-w-none print:rounded-none print:border-0 print:p-0 print:shadow-none sm:p-10">
+			{p.supersededByNo && (
+				<p className="mb-3 border border-black px-3 py-1 text-center text-sm font-bold uppercase tracking-wide">
+					Replaced by {p.supersededByNo}: do not use
+				</p>
+			)}
+			{p.replacesNo && <p className="mb-3 text-center text-xs">Corrected copy. Replaces {p.replacesNo}.</p>}
 			<header className="border-b-2 border-black pb-4">
 				<div className="flex flex-wrap items-start justify-between gap-4">
 					<div>

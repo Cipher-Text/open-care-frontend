@@ -3,10 +3,11 @@
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Pencil, Printer } from "lucide-react";
+import { ArrowLeft, FilePlus2, Pencil, Printer } from "lucide-react";
 import { fetchPrescription } from "@/api/prescriptions";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { PrescriptionDocument } from "@/components/admin/prescriptions/prescription-document";
+import { PrescriptionHistory } from "@/components/admin/prescriptions/prescription-history";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -30,11 +31,19 @@ export default function PrescriptionPage() {
 						<ArrowLeft className="mr-1.5 size-4" aria-hidden="true" />
 						All prescriptions
 					</Button>
-					{data && hasPermission("update-prescription") && data.editable !== false && (
+					{data && hasPermission("update-prescription") && data.editable !== false && !data.supersededById && (
 						<Button variant="outline" asChild>
 							<Link href={`/admin/prescriptions/${data.id}/edit`}>
 								<Pencil className="mr-1.5 size-4" aria-hidden="true" />
 								Edit
+							</Link>
+						</Button>
+					)}
+					{data && hasPermission("create-prescription") && data.editable === false && !data.supersededById && (
+						<Button variant="outline" asChild>
+							<Link href={`/admin/prescriptions/${data.id}/replace`}>
+								<FilePlus2 className="mr-1.5 size-4" aria-hidden="true" />
+								Write a corrected copy
 							</Link>
 						</Button>
 					)}
@@ -53,15 +62,27 @@ export default function PrescriptionPage() {
 						<AlertDescription>{error instanceof Error ? error.message : "Failed to load the prescription"}</AlertDescription>
 					</Alert>
 				)}
-				{data && data.editable === false && (
+				{data && data.editable === false && !data.supersededById && (
 					<Alert className="mx-auto mb-4 max-w-3xl print:hidden">
 						<AlertDescription>
 							Editing closed{data.editableUntil ? ` on ${new Date(data.editableUntil).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })}` : ""}.
-							To correct this prescription, write a new one.
+							To correct this prescription, write a corrected copy: the old one is kept and marked as replaced.
+						</AlertDescription>
+					</Alert>
+				)}
+				{data?.supersededById && (
+					<Alert className="mx-auto mb-4 max-w-3xl print:hidden">
+						<AlertDescription>
+							This prescription was replaced{data.supersededByNo ? ` by ${data.supersededByNo}` : ""}. It is kept as it was written and cannot be edited.{" "}
+							<Link href={`/admin/prescriptions/${data.supersededById}`} className="font-medium underline">
+								Open the newer one
+							</Link>
+							.
 						</AlertDescription>
 					</Alert>
 				)}
 				{data && <PrescriptionDocument prescription={data} />}
+				{data && <PrescriptionHistory prescription={data} />}
 			</div>
 		</div>
 	);

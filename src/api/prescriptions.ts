@@ -6,6 +6,7 @@ import type {
 	MedicineSuggestion,
 	Prescription,
 	PrescriptionInput,
+	PrescriptionRevision,
 	PrescriptionSummary,
 } from "@/types/prescriptions";
 
@@ -46,6 +47,14 @@ export const createPrescription = async (input: PrescriptionInput) =>
 
 export const updatePrescription = async (id: number | string, input: PrescriptionInput) =>
 	unwrap<Prescription>(await apiPut(`/prescriptions/${id}`, input), "Failed to save the prescription");
+
+/** The earlier versions of a prescription, newest first. Each edit inside the edit window keeps the version it replaced. */
+export const fetchRevisions = async (id: number | string) =>
+	unwrap<PrescriptionRevision[]>(await apiGet(`/prescriptions/${id}/revisions`), "Failed to load the earlier versions");
+
+/** Corrects a prescription that can no longer be edited: writes a new one for the same patient and marks the old one as replaced. */
+export const replacePrescription = async (id: number | string, input: PrescriptionInput) =>
+	unwrap<Prescription>(await apiPost(`/prescriptions/${id}/replace`, input), "Failed to save the corrected prescription");
 
 export const searchMedicines = async (q: string) =>
 	unwrap<MedicineSuggestion[]>(await apiGet(buildUrl("/prescriptions/medicines", { q })), "Failed to search medicines");

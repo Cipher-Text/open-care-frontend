@@ -11,6 +11,7 @@ import { z } from "zod";
 import {
 	createPrescription,
 	fetchDoctorContext,
+	replacePrescription,
 	updatePrescription,
 } from "@/api/prescriptions";
 import { Field, OptionSelect } from "@/components/admin/advertisements/form-fields";
@@ -147,10 +148,13 @@ export interface PatientSummary {
 	gender: string | null;
 }
 
-/** A new prescription needs the consenting patient; an edit already knows its patient. */
-export function PrescriptionForm({ prescription, patient }: { prescription?: Prescription; patient?: PatientSummary }) {
+/**
+ * A new prescription needs the consenting patient; an edit already knows its patient. With `replacing`, the form starts from
+ * a prescription that can no longer be edited and saves a corrected copy: a new prescription that marks the old one as replaced.
+ */
+export function PrescriptionForm({ prescription, patient, replacing = false }: { prescription?: Prescription; patient?: PatientSummary; replacing?: boolean }) {
 	const router = useRouter();
-	const editing = !!prescription;
+	const editing = !!prescription && !replacing;
 	const subject: PatientSummary | undefined = prescription
 		? { profileId: prescription.patientProfileId ?? 0, name: prescription.patientName, age: prescription.patientAge, gender: prescription.patientGender }
 		: patient;
@@ -189,10 +193,11 @@ export function PrescriptionForm({ prescription, patient }: { prescription?: Pre
 	const save = useMutation({
 		mutationFn: (values: FormValues) => {
 			const input = toInput(values, subject?.profileId ?? 0);
+			if (prescription && replacing) return replacePrescription(prescription.id, input);
 			return prescription ? updatePrescription(prescription.id, input) : createPrescription(input);
 		},
 		onSuccess: (saved) => {
-			toast.success(editing ? "Prescription updated" : `Prescription ${saved.prescriptionNo} saved`);
+			toast.success(replacing ? `Corrected prescription ${saved.prescriptionNo} saved. The old one is marked as replaced.` : editing ? "Prescription updated" : `Prescription ${saved.prescriptionNo} saved`);
 			router.push(`/admin/prescriptions/${saved.id}`);
 		},
 	});
@@ -384,7 +389,7 @@ export function PrescriptionForm({ prescription, patient }: { prescription?: Pre
 					Cancel
 				</Button>
 				<Button type="submit" disabled={save.isPending || !subject?.profileId}>
-					{save.isPending ? "Saving..." : editing ? "Save changes" : "Save prescription"}
+					{save.isPending ? "Saving..." : replacing ? "Save corrected prescription" : editing ? "Save changes" : "Save prescription"}
 				</Button>
 			</div>
 		</form>
