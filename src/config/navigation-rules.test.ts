@@ -24,14 +24,14 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 		menu: [
 			"dashboard", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals",
 			"medical-specialities", "medical-tests", "associations", "social-organizations", "ambulances",
-			"constants", "geolocation", "degrees", "blood", "advertisement", "analytics", "role-permissions", "my-consents",
+			"constants", "geolocation", "degrees", "blood", "advertisement", "subscriptions", "analytics", "role-permissions", "my-consents",
 		],
 	},
 	admin: {
 		staff: true,
 		menu: [
 			"dashboard", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals", "medical-specialities",
-			"medical-tests", "associations", "social-organizations", "constants", "geolocation", "degrees", "blood", "my-consents",
+			"medical-tests", "associations", "social-organizations", "constants", "geolocation", "degrees", "blood", "subscriptions", "my-consents",
 		],
 	},
 	moderator: {

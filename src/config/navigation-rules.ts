@@ -65,6 +65,7 @@ export const CONSOLE_RULES: NavRule[] = [
 		anyOf: [...crud("advertisement"), ...crud("advertisement-type")],
 	},
 	{ id: "blog", group: "Platform", title: "Blog", url: "/admin/blog", anyOf: ["manage-blog"] },
+	{ id: "subscriptions", group: "Platform", title: "Plans", url: "/admin/subscriptions", anyOf: ["manage-subscriptions"] },
 	{ id: "analytics", group: "Platform", title: "Usage figures", url: "/admin/analytics", anyOf: ["view-super-admin-panel"] },
 	{ id: "prescriptions", group: "Clinical", title: "Prescriptions", url: "/admin/prescriptions", anyOf: ["view-prescription"] },
 	{ id: "role-permissions", group: "Platform", title: "Roles & Permissions", url: "/admin/role-permissions", anyOf: ["manage-role-permissions"] },
