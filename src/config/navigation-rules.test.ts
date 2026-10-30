@@ -22,7 +22,7 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 	"super-admin": {
 		staff: true,
 		menu: [
-			"dashboard", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals",
+			"dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals",
 			"medical-specialities", "medical-tests", "associations", "social-organizations", "ambulances",
 			"constants", "geolocation", "degrees", "blood", "advertisement", "subscriptions", "analytics", "role-permissions", "my-consents",
 		],
@@ -30,21 +30,21 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 	admin: {
 		staff: true,
 		menu: [
-			"dashboard", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals", "medical-specialities",
+			"dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals", "medical-specialities",
 			"medical-tests", "associations", "social-organizations", "constants", "geolocation", "degrees", "blood", "subscriptions", "my-consents",
 		],
 	},
 	moderator: {
 		staff: true,
-		menu: ["dashboard", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals", "social-organizations", "blood", "my-consents"],
+		menu: ["dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals", "social-organizations", "blood", "my-consents"],
 	},
 	operator: {
 		staff: true,
-		menu: ["dashboard", "doctors", "nurses", "profiles", "hospitals", "social-organizations", "blood", "my-consents"],
+		menu: ["dashboard", "my-figures", "doctors", "nurses", "profiles", "hospitals", "social-organizations", "blood", "my-consents"],
 	},
 	"hospital-admin": {
 		staff: true,
-		menu: ["dashboard", "doctors", "nurses", "hospitals", "ambulances", "blood", "my-consents"],
+		menu: ["dashboard", "my-figures", "doctors", "nurses", "hospitals", "ambulances", "blood", "my-consents"],
 	},
 	"institution-admin": { staff: true, menu: ["dashboard", "institutions", "my-consents"] },
 	"social-organization-admin": { staff: true, menu: ["dashboard", "social-organizations", "ambulances", "my-consents"] },
@@ -54,7 +54,7 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 	},
 	doctor: {
 		staff: true,
-		menu: ["dashboard", "my-doctor-profile", "doctors", "institutions", "medicines", "associations", "prescriptions", "my-consents"],
+		menu: ["dashboard", "my-doctor-profile", "my-figures", "doctors", "institutions", "medicines", "associations", "prescriptions", "my-consents"],
 	},
 	nurse: { staff: true, menu: ["dashboard", "nurses", "my-consents"] },
 	user: { staff: false, menu: EVERYONE },
