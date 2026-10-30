@@ -1,0 +1,12 @@
+title = "Open Care secret scan"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Files that hold placeholders or values for a developer's own machine only"
+paths = [
+  '''\.env\.example$''',
+  '''docs/''',
+  '''src/test/'''
+]
