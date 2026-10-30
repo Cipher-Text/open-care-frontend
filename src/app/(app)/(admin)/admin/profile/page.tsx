@@ -11,6 +11,7 @@ import { BloodDonorChoice } from "@/components/account/blood-donor-choice";
 import { HealthDataConsent } from "@/components/account/health-data-consent";
 import { MessageLanguageChoice } from "@/components/account/message-language-choice";
 import { PublicPhoneChoice } from "@/components/account/public-phone-choice";
+import { VerificationCard } from "@/components/account/verification-card";
 import { getUserSession } from "@/lib/auth-client";
 import { getSelfProfile } from "@/api/profile";
 import { UserProfile } from "@/types/profile";
@@ -307,6 +308,9 @@ export default function ProfilePage() {
 				{profile.userType?.value === "DOCTOR" && (
 					<PublicPhoneChoice profile={profile} onSaved={(next) => setProfile({ ...profile, ...next })} />
 				)}
+
+				{/* Verification (doctors only) */}
+				{profile.userType?.value === "DOCTOR" && <VerificationCard verified={false} />}
 
 				{/* Language of text messages (the person's own) */}
 				<MessageLanguageChoice profile={profile} onSaved={(next) => setProfile({ ...profile, ...next })} />

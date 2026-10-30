@@ -257,7 +257,9 @@
     "tests": "Tests and services",
     "price": "BDT {price, number}",
     "amenities": "Amenities",
-    "available": "{available, number}/{quantity, number} available"
+    "available": "{available, number}/{quantity, number} available",
+    "claim": "Is this your facility? Claim it",
+    "claimHint": "Claiming lets you ask Open Care to verify the facility with its registration documents."
   },
   "errors": {
     "BAD_REQUEST": "The request could not be understood. Please check what you entered.",

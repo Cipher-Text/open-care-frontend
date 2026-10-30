@@ -38,6 +38,7 @@ export const CONSOLE_RULES: NavRule[] = [
 	{ id: "doctors", group: "People", title: "Doctors", url: "/admin/doctors", anyOf: crud("doctor") },
 	{ id: "nurses", group: "People", title: "Nurses", url: "/admin/nurses", anyOf: crud("nurse") },
 	{ id: "profiles", group: "People", title: "Profiles", url: "/admin/profiles", anyOf: ["view-profile"] },
+	{ id: "verification", group: "People", title: "Verification", url: "/admin/verification", anyOf: ["verify-doctor", "verify-facility"] },
 	{ id: "institutions", group: "Facilities", title: "Institutions", url: "/admin/institutions", anyOf: [...crud("institution"), DOCTOR_PANEL] },
 	{
 		id: "hospitals",
@@ -64,6 +65,7 @@ export const CONSOLE_RULES: NavRule[] = [
 		anyOf: [...crud("advertisement"), ...crud("advertisement-type")],
 	},
 	{ id: "blog", group: "Platform", title: "Blog", url: "/admin/blog", anyOf: ["manage-blog"] },
+	{ id: "analytics", group: "Platform", title: "Usage figures", url: "/admin/analytics", anyOf: ["view-super-admin-panel"] },
 	{ id: "prescriptions", group: "Clinical", title: "Prescriptions", url: "/admin/prescriptions", anyOf: ["view-prescription"] },
 	{ id: "role-permissions", group: "Platform", title: "Roles & Permissions", url: "/admin/role-permissions", anyOf: ["manage-role-permissions"] },
 

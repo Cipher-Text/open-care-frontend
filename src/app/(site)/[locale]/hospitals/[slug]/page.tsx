@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import NextLink from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
@@ -283,6 +284,15 @@ export default async function HospitalDetailPage({ params }: Props) {
 						))}
 					</ul>
 				</DetailSection>
+			)}
+
+			{!hospital.isVerified && (
+				<p className="text-sm text-muted-foreground">
+					<NextLink href={`/account/verification/claim?hospital=${hospital.id}`} className="font-medium text-primary hover:underline">
+						{t("claim")}
+					</NextLink>{" "}
+					{t("claimHint")}
+				</p>
 			)}
 
 			<p className="text-xs text-muted-foreground">{common("notMedicalAdvice")}</p>

@@ -257,7 +257,9 @@
     "tests": "পরীক্ষা ও সেবা",
     "price": "{price, number} টাকা",
     "amenities": "সুবিধা",
-    "available": "{quantity, number} টির মধ্যে {available, number} টি আছে"
+    "available": "{quantity, number} টির মধ্যে {available, number} টি আছে",
+    "claim": "এটি কি আপনার প্রতিষ্ঠান? দাবি করুন",
+    "claimHint": "দাবি করলে নিবন্ধনের নথি দিয়ে প্রতিষ্ঠানটি যাচাই করার অনুরোধ জানাতে পারবেন।"
   },
   "errors": {
     "BAD_REQUEST": "অনুরোধটি বোঝা যায়নি। আপনি যা লিখেছেন তা দেখে নিন।",

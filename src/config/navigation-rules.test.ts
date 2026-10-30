@@ -22,21 +22,21 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 	"super-admin": {
 		staff: true,
 		menu: [
-			"dashboard", "doctors", "nurses", "profiles", "institutions", "hospitals",
+			"dashboard", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals",
 			"medical-specialities", "medical-tests", "associations", "social-organizations", "ambulances",
-			"constants", "geolocation", "degrees", "blood", "advertisement", "role-permissions", "my-consents",
+			"constants", "geolocation", "degrees", "blood", "advertisement", "analytics", "role-permissions", "my-consents",
 		],
 	},
 	admin: {
 		staff: true,
 		menu: [
-			"dashboard", "doctors", "nurses", "profiles", "institutions", "hospitals", "medical-specialities",
+			"dashboard", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals", "medical-specialities",
 			"medical-tests", "associations", "social-organizations", "constants", "geolocation", "degrees", "blood", "my-consents",
 		],
 	},
 	moderator: {
 		staff: true,
-		menu: ["dashboard", "doctors", "nurses", "profiles", "institutions", "hospitals", "social-organizations", "blood", "my-consents"],
+		menu: ["dashboard", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals", "social-organizations", "blood", "my-consents"],
 	},
 	operator: {
 		staff: true,

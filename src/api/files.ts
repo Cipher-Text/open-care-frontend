@@ -40,9 +40,17 @@ export const uploadFile = async (
 	);
 
 	if (!response.ok) {
-		throw new Error(
-			`Failed to upload file: ${response.status} ${response.statusText}`
-		);
+		// The backend says why (wrong type, too large, not your record) and names the reason with a code
+		let reason = `${response.status} ${response.statusText}`;
+		let code: string | undefined;
+		try {
+			const body = await response.json();
+			if (typeof body?.message === "string" && body.message) reason = body.message;
+			if (typeof body?.code === "string") code = body.code;
+		} catch {
+			// keep the status text
+		}
+		throw new ApiError(`Failed to upload file: ${reason}`, response.status, code);
 	}
 
 	return response.json();

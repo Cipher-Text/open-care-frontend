@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
 	return (
-		<InfoPage title="Privacy policy" description="What we collect, why, and your choices." updated="21 October 2026">
+		<InfoPage title="Privacy policy" description="What we collect, why, and your choices." updated="30 October 2026">
 			<section>
 				<h2>Browsing the directory</h2>
 				<p>
@@ -31,6 +31,20 @@ export default function PrivacyPage() {
 					<li>
 						<strong>Usage data</strong>: pages visited and basic device and browser information, collected with
 						Google Analytics to understand how the site is used.
+					</li>
+					<li>
+						<strong>Anonymous page counts</strong>: how often a doctor or facility page is opened, and how often its
+						call or directions button is used, kept as one number per page and day. No cookie, address or account is
+						attached to these counts, and your browser&apos;s Do Not Track setting is respected.
+					</li>
+					<li>
+						<strong>Searches that found nothing</strong>: the first 100 characters of the text, so we can learn which
+						spellings fail. It is not linked to you.
+					</li>
+					<li>
+						<strong>Verification documents</strong> if you ask to be verified as a doctor or to claim a facility: the files
+						you send are kept privately, only staff who review verification can open them, and each time one is opened
+						it is recorded.
 					</li>
 					<li>
 						<strong>Messages</strong> you send to us by email.
