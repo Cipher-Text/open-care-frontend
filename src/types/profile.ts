@@ -101,6 +101,8 @@ export interface UserProfile {
   donorShareAddress: boolean;
   /** A doctor's choice to show their phone on the public pages. */
   publicPhone: boolean;
+  /** The language of text messages sent to this person; null until they choose. */
+  preferredLanguage?: "bn" | "en" | null;
   bloodDonationCount: number | null;
   lastBloodDonationDate: string | null;
   isVolunteer: boolean;

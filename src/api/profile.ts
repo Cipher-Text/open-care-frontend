@@ -213,3 +213,33 @@ export const updatePublicPhone = async (show: boolean): Promise<PublicPhoneChoic
 
 	return response.data;
 };
+
+export type MessageLanguage = "bn" | "en";
+
+/**
+ * Choose the language of the text messages sent to you (for example the consent code). Only for yourself; English until chosen.
+ */
+export const updatePreferredLanguage = async (language: MessageLanguage): Promise<{ language: MessageLanguage }> => {
+	const response = await apiPut<{ language: MessageLanguage }>("/profiles/self/language", { language });
+
+	if (!response.ok || !response.data) {
+		throw new Error(response.error || "Failed to save your language");
+	}
+
+	return response.data;
+};
+
+/**
+ * Called when a signed-in person switches the site language: if they have not chosen a message language yet, the language
+ * they switched to becomes it. A choice they made on their profile is never overwritten. Best effort: failures are ignored.
+ */
+export const rememberLanguageIfUnset = async (language: MessageLanguage): Promise<void> => {
+	try {
+		const profile = await apiGet<UserProfile>("/profiles/self", { throwOnError: false });
+		if (profile.ok && profile.data && !profile.data.preferredLanguage) {
+			await apiPut("/profiles/self/language", { language }, { throwOnError: false });
+		}
+	} catch {
+		// the language switch itself must never fail because of this
+	}
+};

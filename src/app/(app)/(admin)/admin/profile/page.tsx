@@ -9,6 +9,7 @@ import { AdminHeader } from "@/components/admin/admin-header";
 import { ProfilePictureUploadModal } from "@/components/admin/profile-picture-upload-modal";
 import { BloodDonorChoice } from "@/components/account/blood-donor-choice";
 import { HealthDataConsent } from "@/components/account/health-data-consent";
+import { MessageLanguageChoice } from "@/components/account/message-language-choice";
 import { PublicPhoneChoice } from "@/components/account/public-phone-choice";
 import { getUserSession } from "@/lib/auth-client";
 import { getSelfProfile } from "@/api/profile";
@@ -306,6 +307,9 @@ export default function ProfilePage() {
 				{profile.userType?.value === "DOCTOR" && (
 					<PublicPhoneChoice profile={profile} onSaved={(next) => setProfile({ ...profile, ...next })} />
 				)}
+
+				{/* Language of text messages (the person's own) */}
+				<MessageLanguageChoice profile={profile} onSaved={(next) => setProfile({ ...profile, ...next })} />
 
 				{/* Health data consent (the person's own) */}
 				<HealthDataConsent profile={profile} onSaved={(next) => setProfile({ ...profile, ...next })} />

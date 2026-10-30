@@ -5,6 +5,7 @@ import NextLink from "next/link";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { ChevronDown, Menu, Phone } from "lucide-react";
+import { rememberLanguageIfUnset } from "@/api/profile";
 import { Link, usePathname } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -48,6 +49,7 @@ const MORE_LINKS: { href: string; label: string; local: boolean }[] = [
 function LanguageToggle({ className }: { className?: string }) {
 	const t = useTranslations("language");
 	const locale = useLocale();
+	const { isAuthenticated } = useAuth();
 	const pathname = usePathname();
 	const [search, setSearch] = useState("");
 	useEffect(() => setSearch(window.location.search), [pathname]);
@@ -61,6 +63,10 @@ function LanguageToggle({ className }: { className?: string }) {
 			href={href}
 			hrefLang={target}
 			lang={target}
+			// A signed-in person who switches language and has no message language yet gets the one they switched to
+			onClick={() => {
+				if (isAuthenticated) void rememberLanguageIfUnset(target);
+			}}
 			aria-label={t("switchToLabel")}
 			className={cn("inline-flex h-10 items-center rounded-md border px-3 text-sm font-medium hover:bg-accent", className)}
 		>
