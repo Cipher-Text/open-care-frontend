@@ -1,7 +1,7 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { fetchPublicHospitals } from "@/api/directory";
 import {
 	DirectoryPagination,
@@ -25,9 +25,12 @@ const SORTS: Record<string, { sortBy: string; sortDir: "ASC" | "DESC"; label: st
 
 export default function HospitalsList() {
 	const t = useTranslations("hospitals");
+	const locale = useLocale();
 	const { get, set, clear, hasFilters } = useUrlParams();
 	const page = parsePage(get("page"));
-	const sort = SORTS[get("sort")] ?? SORTS.name;
+	const chosen = SORTS[get("sort")] ?? SORTS.name;
+	// In Bangla, "Name (A-Z)" sorts by the Bangla name, in Bangla alphabetical order (the database collates bn_name that way)
+	const sort = chosen === SORTS.name && locale === "bn" ? { ...chosen, sortBy: "bnName" } : chosen;
 
 	const query = useQuery({
 		queryKey: [
