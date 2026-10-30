@@ -47,6 +47,10 @@ export default function PrivacyPage() {
 						it is recorded.
 					</li>
 					<li>
+						<strong>Appointment requests</strong> if you ask a doctor for a visit: the time you chose, your name, the phone number
+						in your profile and the reason you write are shown to that doctor, and kept with the booking.
+					</li>
+					<li>
 						<strong>Questions to facilities</strong> if you ask a verified facility a question: your name, question and the phone
 						number you give are sent to the facility so it can answer you, and are kept so the facility can see them.
 					</li>

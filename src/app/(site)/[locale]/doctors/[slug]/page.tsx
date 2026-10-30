@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import NextLink from "next/link";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
@@ -143,6 +144,14 @@ export default async function DoctorDetailPage({ params }: Props) {
 									Call {phone}
 								</a>
 							</Button>
+						</div>
+					)}
+					{doctor.isVerified && (
+						<div className="flex flex-wrap items-center gap-2">
+							<Button asChild variant="outline" className="h-10">
+								<NextLink href={`/account/book?doctor=${doctor.id}`}>Book a visit</NextLink>
+							</Button>
+							<span className="text-xs text-muted-foreground">Sign in to see the open times. The doctor confirms each request.</span>
 						</div>
 					)}
 					{links.length > 0 && (

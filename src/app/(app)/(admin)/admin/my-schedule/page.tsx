@@ -159,7 +159,7 @@ export default function MySchedulePage() {
 			<AdminHeader title="My schedule" description="Your weekly hours: patients, operations, teaching" />
 			<div className="space-y-6 p-4 pt-6 md:p-8">
 				<Alert>
-					<AlertDescription>Patients cannot book from this schedule yet. It is where booking will start once it is switched on; until then it is only for you.</AlertDescription>
+					<AlertDescription>If you are verified, patients can ask for a visit in the blocks you open for booking. You confirm or decline each request under Appointments. Blocks at a listed hospital and online blocks cannot be opened for booking yet.</AlertDescription>
 				</Alert>
 
 				{doctor.isError ? (
@@ -250,7 +250,7 @@ export default function MySchedulePage() {
 									{visit && (
 										<label className="flex items-center gap-2 text-sm">
 											<input type="checkbox" checked={form.isBookable} onChange={(e) => set("isBookable", e.target.checked)} />
-											Open this block for booking when booking starts
+											Let patients ask for this block (verified doctors only; your own chamber, in person)
 										</label>
 									)}
 									<label className="flex items-center gap-2 text-sm">
