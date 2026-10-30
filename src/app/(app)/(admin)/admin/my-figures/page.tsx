@@ -60,6 +60,11 @@ function SubjectCard({ subject, days }: { subject: OwnerSubject; days: number })
 				</CardDescription>
 			</CardHeader>
 			<CardContent className="space-y-4">
+				{subject.kind === "HOSPITAL" && (
+					<Button asChild size="sm" variant="outline">
+						<Link href={`/admin/hospitals/${subject.id}/view`}>Edit the test price list</Link>
+					</Button>
+				)}
 				{subject.allowed ? (
 					<>
 						<div className="grid gap-3 sm:grid-cols-3">
