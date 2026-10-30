@@ -1,3 +1,4 @@
+import { ApiError } from "@/lib/api-error";
 import { baseUrl } from "@/config/config";
 import { DocumentType, FileUploadResponse } from "@/types/file";
 import { getAuthHeader } from "@/lib/auth-client";
@@ -119,13 +120,15 @@ export const uploadFileWithProgress = async (
 			} else {
 				// The backend explains a refusal (wrong type, too large, not your record) in its error body
 				let reason = `${xhr.status} ${xhr.statusText}`;
+				let code: string | undefined;
 				try {
-					const message = JSON.parse(xhr.responseText)?.message;
-					if (typeof message === "string" && message) reason = message;
+					const body = JSON.parse(xhr.responseText);
+					if (typeof body?.message === "string" && body.message) reason = body.message;
+					if (typeof body?.code === "string") code = body.code;
 				} catch {
 					// keep the status text
 				}
-				reject(new Error(`Upload failed: ${reason}`));
+				reject(new ApiError(`Upload failed: ${reason}`, xhr.status, code));
 			}
 		});
 

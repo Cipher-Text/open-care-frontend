@@ -8,7 +8,7 @@
 		"start": "next start -p 5175",
 		"lint": "next lint",
 		"test:nav": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/config/navigation-rules.test.ts",
-		"test:i18n": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/names.test.ts src/messages/messages.test.ts",
+		"test:i18n": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/names.test.ts src/lib/api-error.test.ts src/messages/messages.test.ts",
 		"test:pricing": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/pricing-view.test.ts",
 		"docs:access": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-access-matrix.ts"
 	},

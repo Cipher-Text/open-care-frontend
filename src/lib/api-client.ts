@@ -1,6 +1,7 @@
 "use client";
 
 import { baseUrl } from "@/config/config";
+import { ApiError } from "@/lib/api-error";
 import { getAuthHeader, clientLogout } from "@/lib/auth-client";
 
 interface ApiRequestOptions extends Omit<RequestInit, "headers"> {
@@ -63,7 +64,7 @@ export async function apiRequest<T = unknown>(
 		if (response.status === 401) {
 			clientLogout();
 			if (throwOnError) {
-				throw new Error("Unauthorized. Please login again.");
+				throw new ApiError("Unauthorized. Please login again.", 401, data?.code ?? "UNAUTHENTICATED");
 			}
 			return {
 				ok: false,
@@ -74,8 +75,11 @@ export async function apiRequest<T = unknown>(
 		}
 
 		if (!response.ok && throwOnError) {
-			throw new Error(
-				data?.message || `${response.status} ${response.statusText}`
+			throw new ApiError(
+				data?.message || `${response.status} ${response.statusText}`,
+				response.status,
+				data?.code,
+				data?.details
 			);
 		}
 
