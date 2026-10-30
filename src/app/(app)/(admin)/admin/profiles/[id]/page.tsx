@@ -24,9 +24,7 @@ import {
   Instagram,
   Youtube,
   FileText,
-  Award,
   Target,
-  Zap,
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -229,123 +227,8 @@ export default function ProfileDetailsPage() {
             </Card>
 
             {/* Achievement Badges Section */}
-            {(profile.contributionBadge || profile.bloodDonationBadge) && (
+            {profile.bloodDonationBadge && (
               <div className="grid gap-4 md:grid-cols-2">
-                {/* Contribution Badge */}
-                {profile.contributionBadge && (
-                  <Card
-                    className="overflow-hidden border-2"
-                    style={{
-                      borderColor: profile.contributionBadge.badgeColor + "40",
-                    }}
-                  >
-                    <CardHeader
-                      className="pb-3"
-                      style={{
-                        backgroundColor:
-                          profile.contributionBadge.badgeColor + "10",
-                      }}
-                    >
-                      <CardTitle className="flex items-center gap-2">
-                        <Award
-                          className="h-5 w-5"
-                          style={{
-                            color: profile.contributionBadge.badgeColor,
-                          }}
-                        />
-                        <span>Contribution Badge</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="pt-6 space-y-4">
-                      {/* Badge Display */}
-                      <div className="flex items-center gap-4">
-                        <div
-                          className="h-20 w-20 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-lg"
-                          style={{
-                            backgroundColor:
-                              profile.contributionBadge.badgeColor,
-                          }}
-                        >
-                          <Award className="h-10 w-10" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-xl font-bold mb-1">
-                            {profile.contributionBadge.badgeName}
-                          </h3>
-                          <Badge
-                            className="text-xs"
-                            style={{
-                              backgroundColor:
-                                profile.contributionBadge.badgeColor + "20",
-                              color: profile.contributionBadge.badgeColor,
-                              borderColor: profile.contributionBadge.badgeColor,
-                            }}
-                          >
-                            {profile.contributionBadge.badgeLevel}
-                          </Badge>
-                        </div>
-                      </div>
-
-                      {/* Points Info */}
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-muted/50 rounded-lg p-3">
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
-                            <Zap className="h-4 w-4" />
-                            <span>Total Points</span>
-                          </div>
-                          <div className="text-2xl font-bold">
-                            {profile.contributionBadge.contributionPoints}
-                          </div>
-                        </div>
-                        <div className="bg-muted/50 rounded-lg p-3">
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
-                            <Target className="h-4 w-4" />
-                            <span>To Next Level</span>
-                          </div>
-                          <div className="text-2xl font-bold">
-                            {profile.contributionBadge.pointsToNextLevel}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Progress Bar */}
-                      {profile.contributionBadge.nextLevelMinPoints > 0 && (
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-muted-foreground">
-                              Progress to next level
-                            </span>
-                            <span
-                              className="font-semibold"
-                              style={{
-                                color: profile.contributionBadge.badgeColor,
-                              }}
-                            >
-                              {profile.contributionBadge.progressPercentage.toFixed(
-                                0
-                              )}
-                              %
-                            </span>
-                          </div>
-                          <Progress
-                            value={profile.contributionBadge.progressPercentage}
-                            className="h-3"
-                          />
-                          <div className="flex justify-between text-xs text-muted-foreground">
-                            <span>
-                              {profile.contributionBadge.currentLevelMinPoints}{" "}
-                              pts
-                            </span>
-                            <span>
-                              {profile.contributionBadge.nextLevelMinPoints} pts
-                            </span>
-                          </div>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                )}
-
                 {/* Blood Donation Badge */}
                 {profile.bloodDonationBadge && (
                   <Card

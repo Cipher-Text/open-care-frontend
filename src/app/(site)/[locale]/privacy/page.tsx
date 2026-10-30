@@ -33,7 +33,7 @@ export default function PrivacyPage() {
 						Google Analytics to understand how the site is used.
 					</li>
 					<li>
-						<strong>Anonymous page counts</strong>: how often a doctor or facility page is opened, and how often its
+						<strong>Anonymous page counts</strong>: how often a doctor or facility page is opened, how often an advertisement is shown or followed, and how often its
 						call or directions button is used, kept as one number per page and day. No cookie, address or account is
 						attached to these counts, and your browser&apos;s Do Not Track setting is respected.
 					</li>

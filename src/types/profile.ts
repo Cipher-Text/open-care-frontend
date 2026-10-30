@@ -51,17 +51,6 @@ export interface Union {
   url: string;
 }
 
-export interface ContributionBadge {
-  contributionPoints: number;
-  badgeLevel: string;
-  badgeName: string;
-  badgeColor: string;
-  pointsToNextLevel: number;
-  currentLevelMinPoints: number;
-  nextLevelMinPoints: number;
-  progressPercentage: number;
-}
-
 export interface BloodDonationBadge {
   bloodDonationCount: number;
   badgeLevel: string;
@@ -93,7 +82,6 @@ export interface UserProfile {
   district: District | null;
   upazila: Upazila | null;
   union: Union | null;
-  contributionPoints: number;
   isBloodDonor: boolean;
   /** When they agreed to be listed as a blood donor; null means they have not. */
   bloodDonorConsentAt: string | null;
@@ -117,6 +105,5 @@ export interface UserProfile {
   youtubeChannelUrl: string | null;
   websiteUrl: string | null;
   blogUrl: string | null;
-  contributionBadge: ContributionBadge | null;
   bloodDonationBadge: BloodDonationBadge | null;
 }

@@ -29,13 +29,12 @@ export async function getAdvertisements(
   page: number = 0,
   size: number = 10
 ): Promise<AdvertisementsResponse> {
-  const response = await fetch(
-    `${baseUrl}/advertisements?page=${page}&size=${size}`
-  );
+  // every ad, switched off or out of date too: staff only, so the login is sent
+  const response = await apiGet<AdvertisementsResponse>(`/advertisements?page=${page}&size=${size}`);
   if (!response.ok) {
-    throw new Error("Failed to fetch advertisements");
+    throw new Error(response.error || "Failed to fetch advertisements");
   }
-  return response.json();
+  return response.data as AdvertisementsResponse;
 }
 
 // ---- Writes (need the create/update/delete-advertisement[-type] permissions) ----

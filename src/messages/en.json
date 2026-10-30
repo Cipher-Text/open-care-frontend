@@ -85,6 +85,7 @@
     "emergencyNumber": "999"
   },
   "home": {
+    "sponsored": "Sponsored",
     "metaTitle": "Open Care | Hospitals, clinics and doctors in Bangladesh",
     "metaDescription": "Find hospitals, clinics, diagnostic centers, blood banks and doctors in every district of Bangladesh. Free directory, information only.",
     "ogDescription": "Search health facilities and doctors across Bangladesh by name, district and type.",

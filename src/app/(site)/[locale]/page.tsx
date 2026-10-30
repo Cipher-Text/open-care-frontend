@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import AdSlot from "@/components/ads/AdSlot";
 import BrowseByPlace from "@/components/home/BrowseByPlace";
 import EmergencyStrip from "@/components/home/EmergencyStrip";
 import FacilityTypes from "@/components/home/FacilityTypes";
@@ -63,6 +64,7 @@ export default async function Home({ params }: Props) {
 			<EmergencyStrip />
 			<FacilityTypes stats={stats} />
 			<BrowseByPlace stats={stats} />
+			<AdSlot position="HOME_MIDDLE" />
 			<TrustSection />
 			<ForProfessionals />
 			<FaqSection />

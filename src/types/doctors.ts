@@ -27,7 +27,6 @@ export type Profile = {
 	facebookProfileUrl?: string;
 	linkedinProfileUrl?: string;
 	researchGateProfileUrl?: string;
-	contributionPoints?: number;
 	isBloodDonor?: boolean;
 	bloodDonationCount?: number;
 	lastBloodDonationDate?: string;
@@ -149,7 +148,6 @@ export type DoctorProfile = {
 	district: District;
 	upazila: Upazila;
 	union: Union;
-	contributionPoints?: number;
 	isBloodDonor?: boolean;
 	bloodDonationCount?: number;
 	lastBloodDonationDate?: string;
