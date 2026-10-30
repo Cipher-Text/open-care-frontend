@@ -47,6 +47,10 @@ export default function PrivacyPage() {
 						it is recorded.
 					</li>
 					<li>
+						<strong>Access records</strong>: when a doctor opens one of your prescriptions, or Open Care staff open your profile or health
+						readings, we record who and when. You can see these records yourself under &quot;Who looked&quot; in your account.
+					</li>
+					<li>
 						<strong>Reviews</strong> if you review a doctor you were seen by: your stars, comment and the visit that proves it are kept; the review is
 						shown without your name, and only moderators can see who wrote it. You can remove your review at any time.
 					</li>

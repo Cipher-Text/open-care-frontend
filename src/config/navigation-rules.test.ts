@@ -24,7 +24,7 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 		menu: [
 			"dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals",
 			"medical-specialities", "medical-tests", "associations", "social-organizations", "ambulances",
-			"constants", "geolocation", "degrees", "blood", "advertisement", "subscriptions", "analytics", "role-permissions", "my-consents",
+			"constants", "geolocation", "degrees", "blood", "advertisement", "subscriptions", "data-access", "analytics", "role-permissions", "my-consents",
 		],
 	},
 	admin: {
