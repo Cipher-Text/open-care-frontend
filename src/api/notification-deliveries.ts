@@ -24,6 +24,12 @@ export interface DeliverySummary {
 	rows: { channel: DeliveryChannel; status: DeliveryStatus; total: number }[];
 }
 
+export interface SmsBalance {
+	provider: string;
+	balance: string | null;
+	message: string | null;
+}
+
 const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
 	if (!response.ok) throw new Error(response.error || fallback);
 	return response.data as T;
@@ -40,3 +46,5 @@ export const fetchDeliveries = async (filters: { status?: DeliveryStatus | ""; c
 export const fetchDeliverySummary = async (days: number) => unwrap<DeliverySummary>(await apiGet(buildUrl("/admin/notification-deliveries/summary", { days })), "Could not load the summary");
 
 export const retryDelivery = async (id: number) => unwrap<Delivery>(await apiPost(`/admin/notification-deliveries/${id}/retry`), "Could not retry");
+
+export const fetchSmsBalance = async () => unwrap<SmsBalance>(await apiGet("/admin/notification-deliveries/sms-balance"), "Could not read the SMS balance");

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { fetchDeliveries, fetchDeliverySummary, retryDelivery, type DeliveryChannel, type DeliveryStatus } from "@/api/notification-deliveries";
+import { fetchDeliveries, fetchDeliverySummary, fetchSmsBalance, retryDelivery, type DeliveryChannel, type DeliveryStatus } from "@/api/notification-deliveries";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { dateTime } from "@/components/verification/status-badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -31,6 +31,7 @@ export default function NotificationDeliveriesPage() {
 	const [page, setPage] = useState(1);
 	const list = useQuery({ queryKey: ["deliveries", status, channel, page], queryFn: () => fetchDeliveries({ status, channel, page, size: PAGE_SIZE }), retry: false, placeholderData: (previous) => previous });
 	const summary = useQuery({ queryKey: ["delivery-summary"], queryFn: () => fetchDeliverySummary(7), retry: false });
+	const balance = useQuery({ queryKey: ["sms-balance"], queryFn: fetchSmsBalance, retry: false, staleTime: 60_000 });
 	const retry = useMutation({
 		mutationFn: (id: number) => retryDelivery(id),
 		onSuccess: () => {
@@ -49,6 +50,23 @@ export default function NotificationDeliveriesPage() {
 		<div className="flex flex-col">
 			<AdminHeader title="Message delivery" description="Text messages and email queued by Open Care" />
 			<div className="space-y-4 p-4 pt-6 md:p-8">
+				<Card>
+					<CardContent className="flex flex-wrap items-center justify-between gap-3 pt-6">
+						<div>
+							<p className="text-sm text-muted-foreground">SMS balance{balance.data && balance.data.provider !== "unknown" ? ` (${balance.data.provider})` : ""}</p>
+							{balance.isLoading ? (
+								<Skeleton className="mt-1 h-7 w-28" />
+							) : balance.isError ? (
+								<p className="text-sm text-destructive">{balance.error instanceof Error ? balance.error.message : "Could not read the SMS balance"}</p>
+							) : balance.data?.balance != null ? (
+								<p className="text-2xl font-semibold">{balance.data.balance}</p>
+							) : (
+								<p className="text-sm">{balance.data?.message ?? "Not available"}</p>
+							)}
+						</div>
+						<Button size="sm" variant="outline" disabled={balance.isFetching} onClick={() => void balance.refetch()}>Refresh</Button>
+					</CardContent>
+				</Card>
 				{summary.data && (
 					<p className="text-sm text-muted-foreground">
 						Last {summary.data.days} days: {total("SENT")} sent, {total("FAILED")} gave up, {total("PENDING")} waiting, {total("SKIPPED")} not sent because the provider is log only.
