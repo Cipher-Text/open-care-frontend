@@ -286,7 +286,7 @@ export function AdvertisementDialog({
 									)}
 								/>
 							</Field>
-							<Field id="ad-upazila" label="Upazila">
+							<Field id="ad-upazila" label="Upazila / Thana">
 								<Controller
 									control={control}
 									name="upazilaId"

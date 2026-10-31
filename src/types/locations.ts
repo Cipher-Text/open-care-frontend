@@ -21,6 +21,8 @@ export type Upazila = {
 	name: string;
 	bnName: string;
 	url: string;
+	/** THANA for a metropolitan police station area (for example in Dhaka city), otherwise UPAZILA. */
+	type?: "UPAZILA" | "THANA";
 };
 
 export type Union = {

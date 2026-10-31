@@ -539,7 +539,7 @@ export default function AddHospitalPage() {
 										name="upazilaId"
 										render={({ field }) => (
 											<FormItem>
-												<FormLabel>Upazila</FormLabel>
+												<FormLabel>Upazila / Thana</FormLabel>
 												<Select
 													onValueChange={(value) => {
 														const upazilaId = Number(value);

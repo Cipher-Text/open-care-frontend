@@ -460,7 +460,7 @@ export default function ProfileDetailsPage() {
                   )}
                   {profile.upazila && (
                     <div>
-                      <p className="text-sm font-medium">Upazila</p>
+                      <p className="text-sm font-medium">Upazila / Thana</p>
                       <p className="text-sm text-muted-foreground">
                         {profile.upazila.name} ({profile.upazila.bnName})
                       </p>

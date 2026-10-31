@@ -112,7 +112,7 @@ export function buildInstitutionDetailSections(
 			icon: <MapPin className="h-4 w-4" />,
 		},
 		{ label: "District", value: institution.district?.name || "N/A" },
-		{ label: "Upazila", value: institution.upazila?.name || "N/A" },
+		{ label: "Upazila / Thana", value: institution.upazila?.name || "N/A" },
 		{ label: "Latitude", value: institution.lat || "N/A" },
 		{ label: "Longitude", value: institution.lon || "N/A" },
 	];

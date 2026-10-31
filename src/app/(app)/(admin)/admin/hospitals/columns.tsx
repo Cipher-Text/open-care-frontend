@@ -182,7 +182,7 @@ export const columns: ColumnDef<Hospital>[] = [
             <span>{hospital.district?.name || "District not set"}</span>
           </div>
           <div className="text-xs text-muted-foreground ml-4">
-            {hospital.upazila?.name || "Upazila not set"}
+            {hospital.upazila?.name || "Upazila or thana not set"}
           </div>
         </div>
       );

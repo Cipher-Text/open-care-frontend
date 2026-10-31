@@ -774,7 +774,7 @@ function DoctorFormPageContent() {
 												name="upazilaId"
 												render={({ field }) => (
 													<FormItem>
-														<FormLabel>Upazila</FormLabel>
+														<FormLabel>Upazila / Thana</FormLabel>
 														<FormControl>
 															<SearchableSelect
 																value={field.value?.toString()}

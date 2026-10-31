@@ -157,10 +157,10 @@ export function DataTable<TData, TValue>({
 
 					<Select value={selectedUpazilaId} onValueChange={handleUpazilaChange}>
 						<SelectTrigger className="w-[200px]">
-							<SelectValue placeholder="Select Upazila" />
+							<SelectValue placeholder="Select upazila or thana" />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="all">All Upazilas</SelectItem>
+							<SelectItem value="all">All upazilas and thanas</SelectItem>
 							{isUpazilasLoading ? (
 								<SelectItem value="loading" disabled>
 									Loading...

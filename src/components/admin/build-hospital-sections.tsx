@@ -119,7 +119,7 @@ export function buildHospitalDetailSections(
 			value: hospital.district?.name || "N/A",
 			icon: <MapPin className="h-4 w-4" />,
 		},
-		{ label: "Upazila", value: hospital.upazila?.name || "N/A" },
+		{ label: "Upazila / Thana", value: hospital.upazila?.name || "N/A" },
 		{ label: "Union", value: hospital.union?.name || "N/A" },
 		{
 			label: "Division",

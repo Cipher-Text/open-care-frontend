@@ -81,7 +81,7 @@ export function buildDoctorDetailSections(
 			value: doctor.profile.district?.name || "N/A",
 			icon: <MapPin className="h-4 w-4" />,
 		},
-		{ label: "Upazila", value: doctor.profile.upazila?.name || "N/A" },
+		{ label: "Upazila / Thana", value: doctor.profile.upazila?.name || "N/A" },
 		{ label: "Address", value: doctor.profile.address || "N/A" },
 		{
 			label: "Gender",

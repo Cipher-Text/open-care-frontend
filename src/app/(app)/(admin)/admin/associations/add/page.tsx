@@ -557,7 +557,7 @@ export default function AddAssociationPage() {
                     name="upazilaId"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Upazila</FormLabel>
+                        <FormLabel>Upazila / Thana</FormLabel>
                         <Select
                           onValueChange={(value) =>
                             field.onChange(
