@@ -48,6 +48,19 @@ export const refreshToken = async (
 };
 
 /**
+ * Ends the session in Keycloak (the refresh token stops working) and records the logout. Best effort: the caller
+ * clears its own cookies whether or not this succeeds.
+ */
+export const logoutSession = async (refreshToken: string): Promise<void> => {
+	await fetch(`${baseUrl}/auth/logout`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ refreshToken }),
+		signal: AbortSignal.timeout(5000),
+	});
+};
+
+/**
  * Make an authenticated API request with automatic token refresh
  */
 export const authenticatedFetch = async (

@@ -1,9 +1,20 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { clearAuthTokens } from "@/lib/auth";
+import { logoutSession } from "@/api/auth";
+import { clearAuthTokens, getRefreshToken } from "@/lib/auth";
 
 export async function logout() {
+	try {
+		// End the session in Keycloak too, so a copied refresh token stops working. A failure must not keep the person signed in.
+		const refreshToken = await getRefreshToken();
+		if (refreshToken) {
+			await logoutSession(refreshToken).catch((error) => console.error("Could not end the session in Keycloak:", error));
+		}
+	} catch (error) {
+		console.error("Could not read the refresh token:", error);
+	}
+
 	try {
 		// Clear all auth tokens from cookies
 		await clearAuthTokens();
