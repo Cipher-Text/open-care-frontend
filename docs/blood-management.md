@@ -4,14 +4,17 @@
 
 The Blood Management System provides a comprehensive interface for managing blood-related operations including donors, donations, and requisitions. This admin panel section allows administrators to view, search, and manage blood bank operations with server-side pagination and real-time data.
 
+> Status (October 2026): the screen is **read-only** (no create, edit or delete buttons; the backend has write routes but no screen uses them). Needs `manage-blood`. Checked against the code and by type check and lint only; not tried in a browser. The access rules are in `opencare/docs/features/blood-management.md`.
+
 ## Features
 
 ### ✅ Implemented
 
 - **Three-Tab Interface**: Donors, Requisitions, and Donations
 - **Server-side Pagination**: 10 items per page with proper API pagination
-- **Advanced Search**: Multi-field search with client-side filtering
+- **Search**: a box that filters the rows on the current page only (client side)
 - **Real-time Data**: Live data from blood management APIs
+- **Plan message**: a 403 on the donors or donations tab shows "The blood donor list is included in the Plus and Pro plans." (or the donations version)
 - **Responsive Design**: Mobile-friendly interface
 - **Rich Data Display**: Comprehensive information for each entity
 - **Contact Information**: Phone numbers and contact persons
@@ -22,17 +25,20 @@ The Blood Management System provides a comprehensive interface for managing bloo
 
 #### 1. Blood Donors (`/api/blood-donors`)
 
+- **Needs a login**: the call goes through `apiGet` and sends the token. Plus and Pro members and staff with `view-blood-donors` can read it
 - **Pagination**: `page`, `size`, `sortBy`, `sortDir` parameters
 - **Default Sort**: By donation count (descending)
-- **Fields**: id, name, bnName, phone, email, gender, bloodGroup, address, district, upazila, union, bloodDonationCount, lastBloodDonationDate, imageUrl, isActive
+- **Fields** (the interface below lists what the screen can show; the API returns a phone only if the donor shares it and never returns an email): id, name, bnName, phone, email, gender, bloodGroup, address, district, upazila, union, bloodDonationCount, lastBloodDonationDate, imageUrl, isActive
 
 #### 2. Blood Donations (`/api/blood-donations`)
 
+- **Needs a login**: the donations tab sends the token too (it used to send none). Same access rule as the donor list
 - **Pagination**: `page`, `size` parameters
 - **Fields**: id, donor, hospital, donationDate, bloodGroup, quantityMl, bloodComponent
 
 #### 3. Blood Requisitions (`/api/blood-requisitions`)
 
+- **Public**: this tab sends no token, because requisitions are public
 - **Pagination**: `page`, `size` parameters
 - **Fields**: id, requester, patientName, patientAge, patientGender, bloodGroup, bloodComponent, quantityBags, neededByDate, hospital, contactPerson, contactPhone, description, district, status, fulfilledDate
 
@@ -116,7 +122,7 @@ src/
 - **Donor Information**: Full name (English & Bengali)
 - **Blood Group**: Prominently displayed with red styling
 - **Gender**: Visual gender indicator
-- **Contact Details**: Phone and email (when available)
+- **Contact Details**: Phone (only if the donor shares it) and email (the API does not return one, so it normally shows nothing)
 - **Location**: District information with map pin icon
 - **Donation History**: Count and last donation date
 - **Status**: Active/Inactive indicator
@@ -196,8 +202,8 @@ src/
 ### Optimization
 
 - **Server-side Pagination**: Reduces data transfer
-- **Client-side Search**: Fast filtering of current page
-- **Lazy Loading**: Data loaded only when tab is active
+- **Client-side Search**: Filters the current page only
+- **Lazy Loading**: Data is loaded only for the active tab
 - **Efficient State Management**: Minimal re-renders
 
 ### Error Handling
@@ -205,6 +211,7 @@ src/
 - **API Error States**: Graceful error messaging
 - **Loading Indicators**: Spinner animations during data fetch
 - **Retry Capability**: Refresh button for failed requests
+- **No row actions**: there is no Add, Edit, View or Delete button on any tab
 
 ## Usage Guide
 
@@ -230,7 +237,7 @@ src/
 
 ## Integration with Base URL
 
-The system uses `http://localhost:6700/api` as the base URL, making it easy to:
+The calls use `baseUrl` from `src/config/config.ts` (`NEXT_PUBLIC_API_BASE_URL`; local development defaults to `http://localhost:6700/api`, and a production build fails without the variable), making it easy to:
 
 - **Environment Configuration**: Switch between dev/staging/prod
 - **API Versioning**: Update endpoints as needed
@@ -265,18 +272,8 @@ The system uses `http://localhost:6700/api` as the base URL, making it easy to:
 - **Sorting**: Configurable sort parameters
 - **Error Handling**: Proper HTTP status codes
 
-### Performance Metrics
+### Performance and browser support
 
-- **Initial Load**: < 2 seconds
-- **Tab Switching**: < 500ms
-- **Search Response**: < 100ms
-- **Pagination**: < 300ms
-
-### Browser Support
-
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
+Not measured. No timing targets or browser matrix have been tested for this screen.
 
 This Blood Management System provides a comprehensive solution for managing blood bank operations with excellent user experience, real-time data, and scalable architecture.

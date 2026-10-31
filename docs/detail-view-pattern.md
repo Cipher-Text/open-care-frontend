@@ -4,6 +4,8 @@ This guide explains how to implement consistent detail view pages across the app
 
 > Note: the hospital admin view no longer lists doctors, medical tests, amenities and tags as read-only sections. They are editable panels in `src/components/admin/hospital/` rendered below the detail sections of `/admin/hospitals/[id]/view`.
 
+> Which pages use it today (October 2026): the admin view pages for doctors (`build-doctor-sections.tsx`), hospitals (`build-hospital-sections.tsx`) and institutions (`build-institution-sections.tsx`). The associations, social organizations and ambulances view pages exist (`/admin/<name>/[id]/view`) but are written by hand and do not use `DetailView`. Checked against the code; not tried in a browser.
+
 ## Overview
 
 The detail view system consists of three main components:
@@ -19,7 +21,8 @@ src/components/admin/
 ├── detail-view.tsx                    # Generic DetailView component
 ├── build-detail-sections.tsx          # Configuration interfaces and builder utility
 ├── build-doctor-sections.tsx          # Doctor-specific section configurations
-├── build-hospital-sections.tsx        # (To be created for hospitals)
+├── build-hospital-sections.tsx        # Hospital-specific section configurations
+├── build-institution-sections.tsx     # Institution-specific section configurations
 └── ...
 ```
 
@@ -27,7 +30,7 @@ src/components/admin/
 
 ### Step 1: Create Entity-Specific Section Builder
 
-Create a new file `src/components/admin/build-[entity]-sections.tsx` (e.g., `build-hospital-sections.tsx`):
+Create a new file `src/components/admin/build-[entity]-sections.tsx` (for example `build-hospital-sections.tsx`, which already exists):
 
 ```typescript
 "use client";
@@ -95,9 +98,10 @@ import { ArrowLeft } from "lucide-react";
 import { fetchHospitalDetailsById } from "@/api/hospitals";
 import { DetailView } from "@/components/admin/detail-view";
 import { buildHospitalDetailSections } from "@/components/admin/build-hospital-sections";
+import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlertDestructive } from "@/components/common/alerts";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function HospitalViewPage() {
 	const params = useParams();
@@ -125,10 +129,9 @@ export default function HospitalViewPage() {
 
 	if (error) {
 		return (
-			<AlertDestructive
-				title="Error"
-				message="Failed to load hospital details"
-			/>
+			<Alert variant="destructive">
+				<AlertDescription>Failed to load hospital details</AlertDescription>
+			</Alert>
 		);
 	}
 
@@ -149,6 +152,8 @@ export default function HospitalViewPage() {
 	);
 }
 ```
+
+The real hospital page (`src/app/(app)/(admin)/admin/hospitals/[id]/view/page.tsx`) is the full version of this: it opens with `AdminHeader` and a Back button, shows skeleton, error and not-found states, and renders the editable panels below the sections.
 
 ## Configuration Types
 
@@ -236,7 +241,7 @@ const sections: SectionConfig[] = [
 					{items.map((item) => (
 						<div key={item.id} className="border rounded-lg p-4">
 							<h4 className="font-semibold">{item.name}</h4>
-							<p className="text-sm text-gray-600">{item.description}</p>
+							<p className="text-sm text-muted-foreground">{item.description}</p>
 						</div>
 					))}
 				</div>
@@ -259,7 +264,7 @@ const itemProperties: PropertyConfig[] = items.map((item) => ({
 				<span className="text-sm">{item.description}</span>
 			</div>
 			{item.metadata && (
-				<div className="text-xs text-gray-600">
+				<div className="text-xs text-muted-foreground">
 					{Object.entries(item.metadata).map(([key, val]) => (
 						<div key={key}>
 							{key}: {val}

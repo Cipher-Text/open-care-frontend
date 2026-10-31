@@ -1,6 +1,6 @@
 # Open Care — AI Context (Constitution)
 
-Last updated: 2025-12-26
+Last updated: 2026-10-31
 Scope: Applies to ALL Open Care repos (frontend, backend, infra, tools).
 
 ## 1) Project Identity
@@ -50,6 +50,10 @@ Open Care is a healthcare information + service platform for Bangladesh that con
 - Use Keycloak as source of authentication identity (user id, roles/claims).
 - Use least privilege: roles/permissions should be granular and explicit.
 
+## 4b) Languages
+
+- Public pages are English and Bangla (Bangla under `/bn`); sign-in, account and console screens are English only. Bangla text needs a native reader before release. Details in `docs/ai-frontend.md` section 10b.
+
 ## 5) Data & Domain Language (Keep Consistent)
 
 Key entities (examples, adapt to repo reality):
@@ -59,7 +63,7 @@ Key entities (examples, adapt to repo reality):
 - Hospital / Institution / Organization
 - Appointment (scheduled interaction)
 - Advertisement (campaign + targeting + logs)
-- Location hierarchy (Division → District → Upazila → Union)
+- Location hierarchy (Division → District → Upazila → Union); inside metropolitan police areas the local unit is a thana, stored with the upazilas and shown as "Upazila / Thana"
   Rules:
 - Use consistent naming in code, DTOs, and UI labels.
 - Do not rename domain terms casually.
@@ -75,6 +79,7 @@ Key entities (examples, adapt to repo reality):
 
 - `page`, `size`, optional `sort`
 - Response includes: `items`, `page`, `size`, `total`
+- What this platform actually returns: `{content, currentPage (0-based), totalItems, totalPages}`. The frontend reads it through `src/lib/pagination.ts` and the UI sees 1-based pages
 
 ### Error shape (preferred)
 
@@ -101,6 +106,7 @@ Return a consistent JSON error object, e.g.
   - permission checks
   - serialization/deserialization contracts (DTOs)
 - Prefer fast tests; avoid brittle UI snapshot tests unless already used.
+- Frontend today: Node's built-in test runner only, `npm run test:nav`, `test:i18n` and `test:pricing` (pure logic, not run in CI). No browser tests. Say plainly when a screen was not tried in a browser.
 
 ## 9) Performance & Reliability
 

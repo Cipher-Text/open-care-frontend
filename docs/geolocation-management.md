@@ -4,6 +4,8 @@
 
 The Geolocation Management feature provides a dedicated interface for managing Bangladesh's administrative divisions data. This admin panel section allows administrators to view divisions, districts, and upazilas in a tabbed interface with frontend pagination and search functionality.
 
+> Status (October 2026): the screen is a **read-only viewer** (divisions, districts, upazilas; no Add, Edit, View or Delete button). The page subtitle mentions unions but no union list exists. The upazila list includes the thanas (inside metropolitan police areas the local unit is a thana, stored in the upazila table) and does not show their `type`. Forms that pick a place read "Upazila / Thana" (hospitals, institutions, associations); on the hospital forms upazila and union are optional and no longer default to 1. Checked against the code and by type check and lint only; not tried in a browser. See `opencare/docs/features/geolocation.md`.
+
 ## Features
 
 ### ✅ Implemented
@@ -31,7 +33,7 @@ The Geolocation Management feature provides a dedicated interface for managing B
 
 3. **Upazilas** (`/api/upazilas`)
    - Fields: id, name, bnName, url, district (with division)
-   - Total: ~500+ upazilas
+   - Total: ~500+ upazilas plus the thanas (about 600 rows with the 110 thanas seeded)
    - Shows parent district and division information
 
 ## File Structure
@@ -141,7 +143,7 @@ interface Upazila {
 
 - **Lazy Loading**: Data loaded only when tab is selected
 - **State Management**: Efficient React state handling
-- **Search Optimization**: Debounced search (if needed)
+- **Search**: plain client-side filtering, no debounce
 
 ## Usage Guide
 
@@ -207,27 +209,13 @@ interface Upazila {
 
 ## Technical Specifications
 
-### Browser Support
-
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
-
 ### Dependencies
 
-- React 18+
-- Next.js 13+
-- TypeScript 4.9+
-- Tailwind CSS 3+
-- Lucide React (icons)
+- React 19, Next.js 15, TypeScript 5, Tailwind CSS 4, Lucide React (icons); see `package.json`
 
-### Performance Metrics
+### Browser support and performance
 
-- **Initial Load**: < 2 seconds
-- **Tab Switching**: < 100ms
-- **Search Response**: < 50ms
-- **Pagination**: < 50ms
+Not measured. No browser matrix or timing targets have been tested for this screen.
 
 ## Data Accuracy
 

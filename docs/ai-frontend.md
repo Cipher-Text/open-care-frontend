@@ -1,15 +1,16 @@
 # Open Care Frontend — AI Rules (Bylaws)
 
-Last updated: 2025-12-26
+Last updated: 2026-10-31
 Applies to: Frontend repository only
 Depends on: docs/ai-context.md (constitution). If conflict, ai-context.md wins.
 
 ## 1) Stack & Defaults
 
-- Framework: Next.js (React)
-- Language: TypeScript (preferred). If repo is JS, follow existing.
-- Styling/UI: Follow existing repo standard (Tailwind/MUI/shadcn/etc.). Do not introduce a new UI framework unless asked.
-- State management: Use existing approach (React Query/SWR/Redux/Zustand/etc.). Do not add a new one unless asked.
+- Framework: Next.js 15 (App Router) with React 19, TypeScript, Tailwind CSS 4
+- Styling/UI: shadcn/ui components (`src/components/ui`) on Radix, with color tokens from `src/app/globals.css`. Do not introduce a new UI framework unless asked.
+- State management: TanStack React Query for server data, React Hook Form with Zod for forms. Do not add a new one unless asked.
+- Language files: next-intl for the public pages (see 10b).
+- Route groups: `src/app/(site)/[locale]/` holds the public pages (English and Bangla); `src/app/(app)/` holds sign-in, signup, logout, `/account` and the `/admin` console (English only).
 
 ## 2) Frontend Responsibility Boundaries (Non-negotiable)
 
@@ -37,10 +38,10 @@ Depends on: docs/ai-context.md (constitution). If conflict, ai-context.md wins.
 
 ## 5) Auth & Session Handling
 
-- Auth is via Keycloak (OIDC/JWT) (follow repo implementation).
+- Auth is via Keycloak (OIDC/JWT): the backend issues the tokens, the web app keeps them in cookies (`src/lib/auth.ts`) and `src/middleware.ts` guards `/admin` and `/account`. Logging out also ends the Keycloak session (`src/app/(app)/logout/actions.ts`).
 - Keep token handling secure:
-  - prefer httpOnly cookies if already used
-  - avoid storing tokens in localStorage unless that is existing repo standard
+  - do not store tokens in localStorage
+  - menus and guards come from `src/config/navigation-rules.ts`; the API still enforces every permission
 - UI permission checks are for UX only (hide/show), not for security.
 
 ## 6) UX Standards (Consistency)
@@ -73,12 +74,15 @@ Depends on: docs/ai-context.md (constitution). If conflict, ai-context.md wins.
 
 ## 9) Testing Bylaws (Minimal Must-Haves)
 
-- Follow existing test setup (Jest/Vitest/Playwright/Cypress).
+- The only test setup is Node's built-in runner (`node --test`), with three scripts: `npm run test:nav` (menu and guard rules for all roles, 20 tests), `npm run test:i18n` (name helper, error messages, matching Bangla and English message files, 13 tests) and `npm run test:pricing` (8 tests). Run `test:nav` after changing `navigation-rules.ts` or the role snapshot, and `test:i18n` after changing a message file.
+- `npm run docs:access` regenerates `opencare/docs/reference/ACCESS_MATRIX.md` from `src/config/role-permissions.fixture.json`; refresh the fixture first.
+- CI runs only the build, not these tests. No component or browser tests exist (see `docs/testing-frontend.md`); say so when a screen was not checked in a browser.
 - Add tests only where they provide real value:
   - critical form validation
   - critical rendering paths
   - basic navigation smoke tests (if e2e exists)
 - Do not introduce a new test framework unless asked.
+- Signed-in and console screens are English only. Public Bangla pages today: home, doctors list, doctor page (with reviews), blog, hospitals list and hospital page; the other public pages are not translated yet and are marked `noindex` under `/bn`. Bangla text was written by the team and needs a native review.
 
 ## 10) UI & API Contract Discipline
 

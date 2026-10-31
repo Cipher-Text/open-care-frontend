@@ -1,6 +1,14 @@
 # Open Care – Frontend Testing Plan & Strategy
 
-> Status (October 2026): **plan only. No test runner, test files or `type-check` script exist yet**; type errors surface through `npm run build`. Suggested first targets: `src/lib/pagination.ts`, `src/hooks/use-url-params.ts`, `usePermissions`, the login flow, and the bulk-upload and role-permissions pages.
+> Status (October 2026): **the rest of this document is still a plan** (Jest, RTL, MSW, Playwright, axe and Lighthouse are not installed; there are no component, integration or E2E tests, and no `type-check` script; type errors surface through `npm run build`). What exists today is a small set of pure-logic tests that run on Node's built-in test runner (`node --test`, no extra package), checked on October 31, 2026:
+>
+> | Script | What it runs | Result |
+> |---|---|---|
+> | `npm run test:nav` | `src/config/navigation-rules.test.ts`: menu, landing page and path guards for all 15 roles against `src/config/role-permissions.fixture.json`, plus grouping and Dashboard rules | 20 tests, all pass |
+> | `npm run test:i18n` | `src/lib/names.test.ts` (Bangla/English name helper), `src/lib/api-error.test.ts` (error messages by code), `src/messages/messages.test.ts` (`en.json` and `bn.json` have the same keys, no empty message, same placeholders) | 13 tests, all pass |
+> | `npm run test:pricing` | `src/lib/pricing-view.test.ts`: how the plans from the API become the pricing page | 8 tests, all pass |
+>
+> `npm run docs:access` is not a test: it writes `opencare/docs/reference/ACCESS_MATRIX.md` from the menu rules and the role snapshot (refresh the snapshot first). `npm run lint` runs `next lint`. **CI (`.github/workflows/ci.yml`) runs only `npm ci` and `npm run build` (then a Trivy scan); it does not run these tests yet.** Nothing here tests how a screen looks or behaves: most screens (verification, notifications, booking and schedule, enquiries, reviews, data access log, my prescriptions, my figures, plans, and the Bangla pages) have not been checked in a browser. Suggested next targets: `src/lib/pagination.ts`, `src/hooks/use-url-params.ts`, `usePermissions`, the login flow, and the bulk-upload and role-permissions pages. Bangla wording needs a native reader; no test can check it.
 
 > Scope: **Open Care Frontend (Next.js / React)**
 > Audience: Frontend engineers, QA, reviewers
@@ -200,6 +208,7 @@ Test full pages with mocked APIs:
 
 ### Localization (Bangla)
 
+- Today: `npm run test:i18n` checks that the Bangla and English message files match (keys, placeholders). Rendering, wrapping and dates in Bangla are not tested.
 - Bangla text rendering & wrapping
 - Date/number formatting consistency
 

@@ -4,11 +4,15 @@
 
 The Advertisement Management feature allows administrators to manage advertisement types and advertisements on the OpenCare platform, including creating, editing and deleting both.
 
+> Status (October 2026): checked against the code and by type check and lint only; not tried in a browser. The rules and open issues are in `opencare/docs/features/advertisements.md`. The advertisement and type lists on this screen now need a login with an advertisement permission (the screen sends its token); the public site reads only live ads, through `GET /api/advertisements/active`.
+
 ### Create, edit, delete
 
 - Dialogs live in `src/components/admin/advertisements/` (`advertisement-dialog`, `advertisement-type-dialog`, `confirm-delete-dialog`, shared `form-fields`).
 - Buttons show only if the user has the matching permission: `create-advertisement`, `update-advertisement`, `delete-advertisement` and the `-advertisement-type` variants. The backend enforces the same permissions; super admin has them by default.
 - API calls (`POST`, `PUT`, `DELETE` on `/api/advertisements` and `/api/advertisement-types`) are in `src/api/advertisements.ts`.
+- These are the only admin lists whose Delete buttons work; the Delete buttons on the other admin lists were removed because they did nothing.
+- On the public home page, `src/components/ads/AdSlot.tsx` and `AdCard.tsx` draw one live ad labelled "Sponsored" at position `HOME_MIDDLE` and count a view and a click. No other page has a slot.
 
 ## Features
 

@@ -2,17 +2,22 @@
 
 A comprehensive healthcare management platform built with Next.js that connects patients with certified doctors, hospitals, ambulance services, and blood banks across Bangladesh.
 
+> Status (October 2026): the type check, lint and the three small Node test scripts below pass, but **most screens were not tried in a browser** (the newer ones in particular: verification, notifications, booking, schedule, enquiries, reviews, who looked, my prescriptions, my figures, plans). The Bangla text was written by the team and needs a native review before release. Source of truth per feature: `opencare/docs/features/`.
+
 ## 🌟 Features
 
 ### Patient Services
 
-- **Doctor Consultation**: Find and consult with verified doctors across various specialties
+- **Doctor Directory**: Find verified doctors across specialties
 - **Hospital Directory**: Browse hospitals with URL-state filters and an Email button on each card
+- **Bangla**: the home page, doctors list, doctor page (with reviews), blog and hospitals list and page also exist in Bangla under `/bn`; the other public pages and every signed-in screen are English only
 - **Ambulance Directory**: Public list of ambulance services, plus a red 999 emergency pill in the header
 - **Institutions**: Public institutions directory
 - **Blood donors and requisitions**: Managed in the admin dashboard (no public blood page yet)
 
-Not built: online booking, telemedicine, GPS ambulance tracking.
+Signed-in patients (`/account`, English only): ask a verified doctor for a chamber visit (`/account/book`, `/account/appointments`), send a facility an enquiry (`/account/enquiry`), review a doctor after a completed visit (`/account/review`, `/account/reviews`), see their prescriptions (`/account/prescriptions`), see who looked at their data (`/account/data-access`), and claim or check verification (`/account/verification`). Booking is a request the doctor confirms; the phone-code step, payment and online sessions are not built.
+
+Not built: telemedicine, GPS ambulance tracking.
 
 ### Admin Dashboard
 
@@ -27,8 +32,12 @@ Not built: online booking, telemedicine, GPS ambulance tracking.
 - **Prescriptions** (`/admin/prescriptions`, doctors with the prescription permissions): find a registered patient by exact phone, email or username, ask for consent, then write the prescription. List and search your own prescriptions, view, edit, and print or save as PDF from the browser
 - **Blood donor choice** (on `/admin/profile` and `/account/profile`): the person ticks to be listed as a blood donor and chooses whether to show their phone and address; unticking withdraws. Calls `PUT /api/profiles/self/blood-donor`
 - **My consents** (`/admin/consents`, any signed-in user): approve or decline a doctor's request and take back a consent you gave
+- **Verification** (`/admin/verification`, `verify-doctor` or `verify-facility`): review doctor and facility requests; each case has a BMDC register check card (the reviewer looks the number up on the BMDC site and records the result; nothing is sent from the app). The admin doctors list can filter by verification status and by "verified more than the review period ago"
+- **Notifications and message delivery**: `/admin/notifications` (everyone signed in) is the inbox; `/admin/notification-deliveries` (`view-user-activity`) lists queued text messages and email with retry and shows the SMS balance
+- **Doctor practice**: `/admin/appointments` (answer visit requests), `/admin/my-schedule` (weekly hours and time off), `/admin/reviews` (what patients wrote), `/admin/my-figures` (page views, calls and directions, for doctors and hospital admins), `/admin/enquiries` (facility enquiries; reachable by URL, not in the menu)
+- **Platform**: `/admin/review-moderation`, `/admin/data-access` (who opened other people's health data, prescriptions, profiles, the donor list and private files), `/admin/subscriptions` (Plans: put a doctor, facility or patient on a plan), `/admin/blog`
 - **Role Permissions**: Edit which permissions each role has, with an audit log
-- **Advertisements**: Create, edit and delete advertisements and advertisement types
+- **Advertisements**: Create, edit and delete advertisements and advertisement types (the only admin lists whose Delete buttons work; the Delete buttons on the other lists, and Add, Edit or View buttons that had no page, were removed)
 - **Analytics & Reports**: Healthcare facility performance insights
 
 ## 🚀 Getting Started
@@ -80,7 +89,7 @@ open-care-frontend/
 │   ├── app/                    # Next.js App Router pages
 │   │   ├── (site)/[locale]/   # Public pages in English (no prefix) and Bangla (/bn): home, doctors, hospitals, ambulances, institutions, blog, pricing, about, contact, privacy, terms. Its own root layout (html lang from the URL)
 │   │   ├── (app)/             # English-only routes with their own root layout: (admin)/admin console, (account)/account, login, signup, logout, auth
-│   ├── i18n/ messages/        # next-intl: routing (en, bn), request config, locale-aware Link, SEO helper; en.json and bn.json message files
+│   ├── i18n/ messages/        # next-intl: routing (en, bn), request config (a missing Bangla message falls back to English), locale-aware Link, SEO helper; en.json and bn.json message files and their test
 │   ├── components/            # admin, common, doctors, hospitals, home, ui
 │   ├── api/                   # API client modules, one per backend resource
 │   ├── contexts/              # Auth context
@@ -90,7 +99,8 @@ open-care-frontend/
 │   └── lib/                   # api-client, format (numbers and dates by language), fonts, auth, pagination (page-shape contract), public-stats (cached home stats), utils
 │   ├── middleware.ts          # /admin and /account need a login; non-staff are sent to /account
 │   ├── config/                # navigation-rules.ts (menu and guards), role-permissions fixture, nav test
-├── docs/                      # Feature docs, AI context, openapi.json
+├── docs/                      # Frontend docs, AI context, openapi.json (the feature docs live in opencare/docs/features)
+├── scripts/                   # generate-access-matrix.ts (npm run docs:access)
 ├── public/                    # Static assets
 ├── Dockerfile{,.dev,.qa,.prod}, deploy.sh
 └── .github/workflows/ci.yml
@@ -120,11 +130,12 @@ open-care-frontend/
 
 - **Homepage** (`/`) - Hero search, emergency strip with 999, live stats (server-cached, revalidated hourly), browse by place and facility type, claim-your-listing, FAQ
 - **Doctors** (`/doctors`) - Browse and search doctors (real API, filters in the URL); `/doctors/[slug]` shows degrees, workplaces, associations and links
+- **Bangla** (`/bn`, `/bn/doctors`, `/bn/doctors/[slug]`, `/bn/hospitals`, `/bn/hospitals/[slug]`, `/bn/blog`): the pages above plus the blog; `/bn/...` of any other public page shows English and is `noindex`
 - **Hospitals** (`/hospitals`) - Hospital directory (real API, filters in the URL); `/hospitals/[slug]` shows contact buttons, directions, services and doctors
 - **Ambulances** (`/ambulances`), **Institutions** (`/institutions`)
 - **Pricing** (`/pricing?for=patients|doctors|hospitals`): Free, Plus and Pro for each audience, with prices and the features each plan includes read from `GET /api/plans` (the backend plans, so there is one place to change them) and the wording in `src/config/pricing-plans.ts`. If the API is unreachable the page says prices are unavailable. `npm run test:pricing` checks how the plans become the page. Paid plans are a waitlist (mailto) and roadmap features are labelled; nothing is sold or charged in the app yet
 - **About**, **Contact**, **Privacy**, **Terms** (`/about`, `/contact`, `/privacy`, `/terms`)
-- **Login/Signup** - `/login` and `/signup`. Signup calls `POST /api/auth/register` (`src/api/register.ts`) and creates a regular `USER` account; passwords need an uppercase letter, a lowercase letter, a digit and one of `@#$%^&+=`
+- **Login/Signup** - `/login` and `/signup` (the "Forgot password?" link opens an email to support; there is no self-service reset page; logging out also ends the Keycloak session). Signup calls `POST /api/auth/register` (`src/api/register.ts`) and creates a regular `USER` account; passwords need an uppercase letter, a lowercase letter, a digit and one of `@#$%^&+=`
 
 ### Admin Dashboard (`/admin`)
 
@@ -136,8 +147,9 @@ open-care-frontend/
 - **Geolocation** - Divisions, districts, upazilas
 - **Prescriptions** (`/admin/prescriptions`, `/new`, `/[id]`, `/[id]/edit`) and **My consents** (`/admin/consents`)
 - **My doctor profile** (`/admin/doctors/me`, `view-doctor-panel`) opens the signed-in doctor's own record to edit (found through `GET /api/me/doctor`). The edit button in the Doctors list shows only on their own row, and `/admin/doctors/[id]` refuses another doctor's id, unless they administer doctors (`src/config/doctor-access.ts`, the same rule as the API's `DoctorAccess`). Doctors also get read-only **Institutions**, **Associations** and **Medicines** (`/admin/medicines`: search plus a searchable company dropdown) from `view-doctor-panel`
+- **Verification, Notifications, Message delivery, Appointments, My schedule, Reviews, Review moderation, My page figures, Data access log, Plans, Blog**: see the Admin Dashboard list above
 - **Roles & Permissions** (`/admin/role-permissions`, needs `manage-role-permissions`)
-- **Advertisement, Health vitals, Users, Profile(s), Settings, Constants**
+- **Advertisement, Health vitals, Profile(s), Settings, Constants**
 
 ## 🔧 Configuration
 
@@ -180,8 +192,8 @@ The backend's local realm seeds one user per user type (see the backend README, 
 - **Page headers**: admin pages open with `AdminHeader` (title, short description, actions on the right); public directory and information pages use `PageHero`. Do not write a page-level `<h1>` by hand.
 - **Page counters**: `PublicEventTracker` (`src/components/common/PublicEventTracker.tsx`) on the doctor and hospital pages sends anonymous view, call and directions counts to `POST /api/public/events` (kind, slug and event type only, nothing about the visitor; nothing is sent when Do Not Track or Global Privacy Control is on). A link opts in with `data-track-event="CALL"` or `"DIRECTIONS"`.
 - **Display names**: imported names can carry leading spaces and zero-width characters, so show them through `displayName` (`src/lib/text.ts`); the public detail data layer already does.
-- **SEO**: `src/app/sitemap.ts` serves `/sitemap/0.xml` (static pages) plus chunked hospital and doctor sitemaps (1,000 records each, cached for a day), and `src/app/robots.ts` lists them and blocks `/admin`, `/login`, `/signup`, `/logout` and `/auth`. Set `NEXT_PUBLIC_SITE_URL` per environment (default `https://opencarebd.com`).
-- **Menus, guards and landing**: `src/config/navigation-rules.ts` is the one list of who sees which console page (a person sees an entry when they hold any of its permissions). It drives the sidebar, the page guard in the admin layout, `src/middleware.ts` and the redirect after login. Staff (anyone with a console permission) land in `/admin`; everyone else lands in `/account` (home, profile, consents, health). The menu is grouped into People, Facilities, Reference data, Clinical, Platform and Account. Permissions come from `GET /api/me/capabilities` (Keycloak, so role changes apply without a new login) with the token as fallback. The Roles & Permissions screen has three tabs: Mapping (edit permissions), Menus (what each role will see, including changes not saved yet, with differences outlined) and History. `npm run docs:access` regenerates `opencare/docs/reference/ACCESS_MATRIX.md`. `npm run test:nav` checks the menu of all 15 roles against a snapshot of the live role mapping (`src/config/role-permissions.fixture.json`; refresh it after changing roles).
+- **SEO**: `src/app/sitemap.ts` serves `/sitemap/0.xml` (static pages and blog posts) plus chunked hospital and doctor sitemaps (1,000 records each, cached for a day); the pages that exist in Bangla (home, doctors, hospitals, blog, and every doctor, hospital and blog page) are listed at both the English and the `/bn` address with language alternates, and `src/app/robots.ts` lists them and blocks `/admin`, `/login`, `/signup`, `/logout` and `/auth`. Set `NEXT_PUBLIC_SITE_URL` per environment (default `https://opencarebd.com`).
+- **Menus, guards and landing**: `src/config/navigation-rules.ts` is the one list of who sees which console page (a person sees an entry when they hold any of its permissions). It drives the sidebar, the page guard in the admin layout, `src/middleware.ts` and the redirect after login. Staff (anyone with a console permission) land in `/admin`; everyone else lands in `/account` (home, profile, consents, health). The menu is grouped into People, Facilities, Reference data, Clinical, Platform and Account. Permissions come from `GET /api/me/capabilities` (Keycloak, so role changes apply without a new login) with the token as fallback. The Roles & Permissions screen has three tabs: Mapping (edit permissions), Menus (what each role will see, including changes not saved yet, with differences outlined) and History. `npm run docs:access` regenerates `opencare/docs/reference/ACCESS_MATRIX.md`. `npm run test:nav` (20 tests) checks the menu of all 15 roles against a snapshot of the live role mapping (`src/config/role-permissions.fixture.json`; refresh it after changing roles).
 - **Page guards**: `RequirePermission` (`src/components/admin/require-permission.tsx`) wraps pages that need a permission (Profiles, Admin Dashboard, Role permissions). Permissions come only from the token; the old hardcoded role map was removed because it drifted from Keycloak. The API enforces the same permissions on every route
 - **Account menu**: one `UserMenu` in the admin top bar; the sidebar has no profile block.
 - **Permissions**: UI hides actions with `usePermissions().hasPermission(...)`, which is only a convenience. The backend enforces access.
@@ -200,22 +212,34 @@ npm run start
 
 # Linting
 npm run lint
+
+# Tests (Node's built-in runner; not run in CI yet)
+npm run test:nav       # menu and guards for all 15 roles (20 tests)
+npm run test:i18n      # names, API error messages, en.json/bn.json parity (13 tests)
+npm run test:pricing   # pricing page view (8 tests)
+
+# Regenerate opencare/docs/reference/ACCESS_MATRIX.md from the menu rules and src/config/role-permissions.fixture.json
+npm run docs:access
 ```
 
 ## 📊 Admin Features
 
 ### Blood Management System
 
-- **Donors**: Track blood donors with contact information
-- **Requisitions**: Manage blood requests from hospitals
-- **Donations**: Monitor blood donation records
+`/admin/blood` is a read-only viewer (needs `manage-blood`); there is no screen to create or edit these records.
+
+- **Donors**: Donor list (needs a login; Plus and Pro plans or staff; the screen sends the token)
+- **Requisitions**: Blood requests (public data)
+- **Donations**: Donation records (needs a login like the donor list; the screen sends the token)
 - **Search & Filter**: Advanced filtering across all blood data
 
 ### Geolocation Management
 
+Read-only viewer. Hospital, institution and association forms label the field "Upazila / Thana"; on the hospital forms upazila and union are optional and no longer default to 1.
+
 - **Divisions**: Administrative divisions of Bangladesh
 - **Districts**: District-level location data
-- **Upazilas**: Sub-district administrative units
+- **Upazilas**: Sub-district administrative units, including thanas in metropolitan police areas
 - **Hierarchical Data**: Parent-child location relationships
 
 ### Doctor Administration
@@ -253,7 +277,7 @@ npm run lint
 
 ### Testing
 
-No test runner or `type-check` script is configured yet; see `docs/testing-frontend.md` for the plan. Type errors surface through `npm run build`.
+Only small pure-logic tests exist (`test:nav`, `test:i18n`, `test:pricing`, on Node's built-in runner); there is no component, browser or `type-check` script yet, and CI runs the build only. See `docs/testing-frontend.md`. Type errors surface through `npm run build`.
 
 ## 📖 Documentation
 

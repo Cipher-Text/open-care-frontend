@@ -4,6 +4,8 @@
 
 The Degrees Management feature provides a comprehensive interface for managing academic degrees data. This admin panel section allows administrators to view, search, and filter academic degrees with their types, abbreviations, and classifications.
 
+> Status (October 2026): the screen is a **read-only viewer** (no Add, Edit, View or Delete button; those list buttons that did nothing were removed). The menu entry "Degrees" is under Reference data and needs a master-data permission. It does not show the Bangla name (`bnName`) the API now returns. Checked against the code and by type check and lint only; not tried in a browser. See `opencare/docs/features/degrees.md`.
+
 ## Features
 
 ### ✅ Implemented
@@ -18,7 +20,7 @@ The Degrees Management feature provides a comprehensive interface for managing a
 
 ### 📋 API Endpoint
 
-- **Degrees** (`/api/degrees`)
+- **Degrees** (`/api/degrees`, a public read; fetched once with `fetch(`${baseUrl}/degrees`)`, then filtered and paged in the browser)
   - Fields: id, name, abbreviation, degreeType
   - Total: Variable number of degrees
   - Nested degreeType with value, displayName, banglaName
@@ -113,7 +115,6 @@ src/
 - **Client-side Processing**: Fast filtering and pagination
 - **Efficient State Management**: Optimized React state handling
 - **Smart Re-rendering**: Minimal component updates
-- **Search Debouncing**: Smooth search experience
 
 ### Responsive Design
 
@@ -223,18 +224,8 @@ const degreeTypes = [
 - **Error Handling**: Graceful error states with retry options
 - **Loading States**: Smooth loading experience
 
-## Browser Support
+## Browser Support and Performance
 
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
-
-## Performance Metrics
-
-- **Initial Load**: < 2 seconds
-- **Search Response**: < 50ms
-- **Filter Application**: < 100ms
-- **Pagination**: < 50ms
+Not measured. No browser matrix or timing targets have been tested for this screen.
 
 This Degrees Management system provides a comprehensive solution for managing academic degree data with excellent user experience and performance optimization.
