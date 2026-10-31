@@ -6,15 +6,18 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
+import type { RegisterCheckResult } from "@/types/verification";
 import {
 	approveVerification,
 	fetchDocumentLink,
 	fetchVerificationDetail,
+	recordRegisterCheck,
 	rejectVerification,
 	revokeVerification,
 	startVerificationReview,
 } from "@/api/verification";
 import { AdminHeader } from "@/components/admin/admin-header";
+import { RegisterCheckCard } from "@/components/verification/register-check";
 import { dateTime, VerificationStatusBadge } from "@/components/verification/status-badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -39,6 +42,11 @@ export default function VerificationReviewPage() {
 	const done = (message: string) => () => { toast.success(message); setText(""); refresh(); };
 	const review = useMutation({ mutationFn: () => startVerificationReview(id), onSuccess: done("Marked as being reviewed by you"), onError: failed });
 	const approve = useMutation({ mutationFn: () => approveVerification(id, text.trim() || undefined), onSuccess: done("Approved"), onError: failed });
+	const registerCheck = useMutation({
+		mutationFn: (v: { result: RegisterCheckResult; note: string }) => recordRegisterCheck(id, v.result, v.note),
+		onSuccess: () => { toast.success("Check recorded"); refresh(); },
+		onError: failed,
+	});
 	const reject = useMutation({ mutationFn: () => rejectVerification(id, text.trim()), onSuccess: done("Not approved: the person will see the reason"), onError: failed });
 	const revoke = useMutation({ mutationFn: () => revokeVerification(id, text.trim()), onSuccess: done("Verification withdrawn"), onError: failed });
 
@@ -53,7 +61,10 @@ export default function VerificationReviewPage() {
 	};
 
 	const open = data?.status === "PENDING" || data?.status === "UNDER_REVIEW";
-	const busy = review.isPending || approve.isPending || reject.isPending || revoke.isPending;
+	const busy = review.isPending || approve.isPending || reject.isPending || revoke.isPending || registerCheck.isPending;
+	// A doctor request can be approved only after the BMDC register check matched (the server enforces it too)
+	const needsRegisterCheck = data?.subjectType === "DOCTOR";
+	const mayApprove = !needsRegisterCheck || data?.registerResult === "MATCH";
 	const publicPath = data?.subjectSlug ? (data.subjectType === "DOCTOR" ? `/doctors/${data.subjectSlug}` : `/hospitals/${data.subjectSlug}`) : null;
 
 	return (
@@ -124,12 +135,16 @@ export default function VerificationReviewPage() {
 							</CardContent>
 						</Card>
 
+						{needsRegisterCheck && open && (
+							<RegisterCheckCard verification={data} disabled={busy} onRecord={(result, note) => registerCheck.mutate({ result, note })} />
+						)}
+
 						{(open || data.status === "VERIFIED") && (
 							<Card>
 								<CardHeader>
 									<CardTitle className="text-base">Decision</CardTitle>
 									<CardDescription>
-										Check the registration number against the BMDC register (doctors) or the facility&apos;s registration, and that the documents match the record. A reason is
+										For a doctor, record the BMDC register check above first. For a facility, check its registration, and that the documents match the record. A reason is
 										required to reject or withdraw; the person sees it.
 									</CardDescription>
 								</CardHeader>
@@ -146,7 +161,7 @@ export default function VerificationReviewPage() {
 										)}
 										{open && (
 											<>
-												<Button onClick={() => approve.mutate()} disabled={busy}>
+												<Button onClick={() => approve.mutate()} disabled={busy || !mayApprove} title={mayApprove ? undefined : "Record a matching BMDC register check first"}>
 													Approve
 												</Button>
 												<Button variant="destructive" onClick={() => reject.mutate()} disabled={busy || !text.trim()}>

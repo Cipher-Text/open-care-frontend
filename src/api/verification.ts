@@ -1,7 +1,7 @@
 import { apiGet, apiPost, buildUrl } from "@/lib/api-client";
 import { normalizePage, toWirePage, type WirePage } from "@/lib/pagination";
 import type { PageResult } from "@/types/common";
-import type { VerificationCase, VerificationStats, VerificationStatus, VerificationSubject } from "@/types/verification";
+import type { RegisterCheckResult, VerificationCase, VerificationStats, VerificationStatus, VerificationSubject } from "@/types/verification";
 
 const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
 	if (!response.ok) throw new Error(response.error || fallback);
@@ -55,6 +55,10 @@ export const startVerificationReview = async (id: number | string) =>
 
 export const approveVerification = async (id: number | string, note?: string) =>
 	unwrap<VerificationCase>(await apiPost(`/admin/verification/${id}/approve`, note ? { note } : undefined), "Could not approve");
+
+/** What the reviewer found when they looked the doctor's number up in the BMDC register by hand. A doctor request can be approved only after a MATCH. */
+export const recordRegisterCheck = async (id: number | string, result: RegisterCheckResult, note?: string) =>
+	unwrap<VerificationCase>(await apiPost(`/admin/verification/${id}/register-check`, { result, note: note || undefined }), "Could not record the check");
 
 export const rejectVerification = async (id: number | string, reason: string) =>
 	unwrap<VerificationCase>(await apiPost(`/admin/verification/${id}/reject`, { note: reason }), "Could not reject");
