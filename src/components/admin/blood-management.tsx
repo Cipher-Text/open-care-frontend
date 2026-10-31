@@ -137,6 +137,11 @@ interface DonationResponse {
   currentPage: number;
 }
 
+/** The API's page of donations: `content` is renamed to `donations` below. */
+interface DonationPage extends Omit<DonationResponse, "donations"> {
+  content?: BloodDonation[];
+}
+
 // Requisition interfaces
 interface BloodRequisition {
   id: number;
@@ -238,11 +243,19 @@ const BloodManagement: React.FC = () => {
     setError((prev) => ({ ...prev, donations: "" }));
 
     try {
-      const response = await fetch(
-        `${baseUrl}/blood-donations?page=${page}&size=${ITEMS_PER_PAGE}`
+      // Donations show donors' names, so like the donor list this needs a login and sends the token
+      const response = await apiGet<DonationPage>(
+        `/blood-donations?page=${page}&size=${ITEMS_PER_PAGE}`
       );
-      if (!response.ok) throw new Error("Failed to fetch");
-      const result = await response.json();
+      if (response.status === 403) {
+        setError((prev) => ({
+          ...prev,
+          donations: "The blood donations list is included in the Plus and Pro plans.",
+        }));
+        return;
+      }
+      if (!response.ok || !response.data) throw new Error("Failed to fetch");
+      const result = response.data;
       // API returns PageResponse { content, ... }
       setDonationData({ ...result, donations: result.content ?? [] });
     } catch {
