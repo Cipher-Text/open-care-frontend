@@ -8,7 +8,6 @@ import {
   MapPin,
   Eye,
   Pencil,
-  Trash2,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -28,7 +27,6 @@ function ActionsCell({ doctor }: { doctor: DoctorResponse }) {
   const { data: myDoctor } = useMyDoctor();
   // A doctor edits only their own record; staff who administer doctors edit any
   const canEditDoctor = mayEditDoctor(hasPermission, doctor.id, myDoctor?.id);
-  const canDeleteDoctor = hasPermission("delete-doctor");
 
   const handleEdit = () => {
     router.push(`/admin/doctors/${doctor.id}`);
@@ -38,7 +36,6 @@ function ActionsCell({ doctor }: { doctor: DoctorResponse }) {
     router.push(`/admin/doctors/${doctor.id}/view`);
   };
 
-  const handleDelete = () => {};
 
   return (
     <div className="flex items-center justify-end gap-1">
@@ -60,17 +57,6 @@ function ActionsCell({ doctor }: { doctor: DoctorResponse }) {
           aria-label="Edit doctor"
         >
           <Pencil className="h-4 w-4" />
-        </Button>
-      )}
-      {canDeleteDoctor && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-destructive"
-          onClick={handleDelete}
-          aria-label="Delete doctor"
-        >
-          <Trash2 className="h-4 w-4" />
         </Button>
       )}
     </div>

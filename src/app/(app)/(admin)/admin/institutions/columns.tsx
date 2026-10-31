@@ -9,7 +9,6 @@ import {
   Calendar,
   Eye,
   Pencil,
-  Trash2,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -24,7 +23,6 @@ function ActionsCell({ institution }: { institution: InstitutionResponse }) {
   const router = useRouter();
   const { hasPermission } = usePermissions();
   const canEditInstitution = hasPermission("update-institution");
-  const canDeleteInstitution = hasPermission("delete-institution");
 
   const handleEdit = () => {
     router.push(`/admin/institutions/${institution.id}`);
@@ -34,7 +32,6 @@ function ActionsCell({ institution }: { institution: InstitutionResponse }) {
     router.push(`/admin/institutions/${institution.id}/view`);
   };
 
-  const handleDelete = () => {};
 
   return (
     <div className="flex items-center justify-end gap-1">
@@ -56,17 +53,6 @@ function ActionsCell({ institution }: { institution: InstitutionResponse }) {
           aria-label="Edit institution"
         >
           <Pencil className="h-4 w-4" />
-        </Button>
-      )}
-      {canDeleteInstitution && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-destructive"
-          onClick={handleDelete}
-          aria-label="Delete institution"
-        >
-          <Trash2 className="h-4 w-4" />
         </Button>
       )}
     </div>

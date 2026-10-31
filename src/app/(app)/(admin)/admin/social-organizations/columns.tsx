@@ -7,8 +7,6 @@ import {
   Phone,
   Mail,
   ExternalLink,
-  Pencil,
-  Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -18,7 +16,6 @@ import {
   SocialOrganizationType,
   OriginCountry,
 } from "@/types/social-organizations";
-import { usePermissions } from "@/hooks/use-permissions";
 
 const getOrganizationTypeBadgeVariant = (type: string) => {
   switch (type) {
@@ -36,17 +33,12 @@ const getOrganizationTypeBadgeVariant = (type: string) => {
 // Actions component to use hooks
 function ActionsCell({ organization }: { organization: SocialOrganization }) {
   const router = useRouter();
-  const { hasPermission } = usePermissions();
-  const canEditOrganization = hasPermission("update-social-organization");
-  const canDeleteOrganization = hasPermission("delete-social-organization");
 
   const handleViewDetails = () => {
     router.push(`/admin/social-organizations/${organization.id}/view`);
   };
 
-  const handleEdit = () => {};
 
-  const handleDelete = () => {};
 
   return (
     <div className="flex items-center justify-end gap-1">
@@ -59,28 +51,6 @@ function ActionsCell({ organization }: { organization: SocialOrganization }) {
       >
         <Eye className="h-4 w-4" />
       </Button>
-      {canEditOrganization && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8"
-          onClick={handleEdit}
-          aria-label="Edit social organization"
-        >
-          <Pencil className="h-4 w-4" />
-        </Button>
-      )}
-      {canDeleteOrganization && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-destructive"
-          onClick={handleDelete}
-          aria-label="Delete social organization"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      )}
     </div>
   );
 }

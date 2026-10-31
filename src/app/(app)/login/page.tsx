@@ -1,5 +1,6 @@
 "use client";
 
+import { CONTACT_EMAIL } from "@/components/common/InfoPage";
 import { useActionState, useState, useEffect, startTransition } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -210,12 +211,13 @@ export default function LoginPage() {
 										Remember me
 									</label>
 								</div>
-								<Link
-									href="/forgot-password"
+								{/* There is no self-service reset page yet: the person emails support */}
+								<a
+									href={`mailto:${CONTACT_EMAIL}?subject=Password%20reset`}
 									className="text-sm text-primary hover:text-primary"
 								>
 									Forgot password?
-								</Link>
+								</a>
 							</div>
 
 							{/* Submit Button */}

@@ -9,7 +9,6 @@ import {
   Heart,
   Eye,
   Pencil,
-  Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -24,7 +23,6 @@ function ActionsCell({ profile }: { profile: UserProfile }) {
   const router = useRouter();
   const { hasPermission } = usePermissions();
   const canEditProfile = hasPermission("update-profile");
-  const canDeleteProfile = hasPermission("delete-profile");
 
   const handleViewProfile = () => {
     router.push(`/admin/profiles/${profile.id}`);
@@ -34,7 +32,6 @@ function ActionsCell({ profile }: { profile: UserProfile }) {
     router.push(`/admin/profiles/${profile.id}`);
   };
 
-  const handleDelete = () => {};
 
   return (
     <div className="flex items-center justify-end gap-1">
@@ -56,17 +53,6 @@ function ActionsCell({ profile }: { profile: UserProfile }) {
           aria-label="Edit profile"
         >
           <Pencil className="h-4 w-4" />
-        </Button>
-      )}
-      {canDeleteProfile && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-destructive"
-          onClick={handleDelete}
-          aria-label="Delete profile"
-        >
-          <Trash2 className="h-4 w-4" />
         </Button>
       )}
     </div>

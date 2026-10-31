@@ -10,32 +10,22 @@ import {
   CheckCircle,
   XCircle,
   User,
-  Pencil,
-  Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Ambulance } from "@/types/ambulances";
-import { usePermissions } from "@/hooks/use-permissions";
 
 // Actions component to use hooks
 function ActionsCell({ ambulance }: { ambulance: Ambulance }) {
   const router = useRouter();
-  const { hasPermission } = usePermissions();
-  const canEditAmbulance = hasPermission("update-ambulance");
-  const canDeleteAmbulance = hasPermission("delete-ambulance");
 
-  const handleEdit = () => {
-    router.push(`/admin/ambulances/${ambulance.id}`);
-  };
 
   const handleViewDetails = () => {
     router.push(`/admin/ambulances/${ambulance.id}/view`);
   };
 
-  const handleDelete = () => {};
 
   return (
     <div className="flex items-center justify-end gap-1">
@@ -48,28 +38,6 @@ function ActionsCell({ ambulance }: { ambulance: Ambulance }) {
       >
         <Eye className="h-4 w-4" />
       </Button>
-      {canEditAmbulance && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8"
-          onClick={handleEdit}
-          aria-label="Edit ambulance"
-        >
-          <Pencil className="h-4 w-4" />
-        </Button>
-      )}
-      {canDeleteAmbulance && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-destructive"
-          onClick={handleDelete}
-          aria-label="Delete ambulance"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      )}
     </div>
   );
 }

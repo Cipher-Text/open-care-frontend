@@ -8,7 +8,6 @@ import {
   Bed,
   Eye,
   Pencil,
-  Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -22,7 +21,6 @@ function ActionsCell({ hospital }: { hospital: Hospital }) {
   const router = useRouter();
   const { hasPermission } = usePermissions();
   const canEditHospital = hasPermission("update-hospital");
-  const canDeleteHospital = hasPermission("delete-hospital");
 
   const handleEdit = () => {
     router.push(`/admin/hospitals/${hospital.id}`);
@@ -32,7 +30,6 @@ function ActionsCell({ hospital }: { hospital: Hospital }) {
     router.push(`/admin/hospitals/${hospital.id}/view`);
   };
 
-  const handleDelete = () => {};
 
   return (
     <div className="flex items-center justify-end gap-1">
@@ -54,17 +51,6 @@ function ActionsCell({ hospital }: { hospital: Hospital }) {
           aria-label="Edit hospital"
         >
           <Pencil className="h-4 w-4" />
-        </Button>
-      )}
-      {canDeleteHospital && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-destructive"
-          onClick={handleDelete}
-          aria-label="Delete hospital"
-        >
-          <Trash2 className="h-4 w-4" />
         </Button>
       )}
     </div>

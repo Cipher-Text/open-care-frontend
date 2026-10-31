@@ -2,15 +2,11 @@
 
 import { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
 import { fetchMedicalSpecialities } from "@/api/medical-specialities";
 import { MedicalSpecialitiesListResponse } from "@/types/medical-specialities";
 import { AdminHeader } from "@/components/admin/admin-header";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePermissions } from "@/hooks/use-permissions";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
@@ -20,9 +16,6 @@ export default function MedicalSpecialitiesPage() {
     search: "",
     type: "",
   });
-  const router = useRouter();
-  const { hasPermission } = usePermissions();
-  const canCreateSpeciality = hasPermission("create-master-data");
 
   // Fetch medical specialities with filters
   const {
@@ -104,12 +97,6 @@ export default function MedicalSpecialitiesPage() {
         title="Medical Specialities Management"
         description="Manage and monitor medical specialities and their associated doctors"
       >
-        {canCreateSpeciality && (
-          <Button onClick={() => router.push("/admin/medical-specialities/add")}>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Speciality
-          </Button>
-        )}
       </AdminHeader>
 
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">

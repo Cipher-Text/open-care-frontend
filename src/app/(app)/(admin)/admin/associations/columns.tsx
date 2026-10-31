@@ -8,7 +8,6 @@ import {
   MapPin,
   Building2,
   Pencil,
-  Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -22,7 +21,6 @@ function ActionsCell({ association }: { association: Association }) {
   const router = useRouter();
   const { hasPermission } = usePermissions();
   const canEditAssociation = hasPermission("update-master-data");
-  const canDeleteAssociation = hasPermission("delete-master-data");
 
   const handleEdit = () => {
     router.push(`/admin/associations/${association.id}`);
@@ -32,7 +30,6 @@ function ActionsCell({ association }: { association: Association }) {
     router.push(`/admin/associations/${association.id}/view`);
   };
 
-  const handleDelete = () => {};
 
   return (
     <div className="flex items-center justify-end gap-1">
@@ -54,17 +51,6 @@ function ActionsCell({ association }: { association: Association }) {
           aria-label="Edit association"
         >
           <Pencil className="h-4 w-4" />
-        </Button>
-      )}
-      {canDeleteAssociation && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-destructive"
-          onClick={handleDelete}
-          aria-label="Delete association"
-        >
-          <Trash2 className="h-4 w-4" />
         </Button>
       )}
     </div>
