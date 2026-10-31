@@ -1,7 +1,8 @@
-import NextLink from "next/link";
+import { getLocale, getTranslations } from "next-intl/server";
 import { baseUrl } from "@/config/config";
 import type { PublicReview, ReviewSummary } from "@/types/review";
 import { ReportReview } from "@/components/reviews/ReportReview";
+import { formatDate } from "@/lib/format";
 import { Stars } from "@/components/reviews/Stars";
 
 async function get<T>(path: string): Promise<T | null> {
@@ -13,11 +14,12 @@ async function get<T>(path: string): Promise<T | null> {
 	}
 }
 
+/** `label` is a key of reviews.* in the message files. */
 const DIMENSIONS: { key: keyof PublicReview; label: string }[] = [
-	{ key: "scoreExplanation", label: "Explained clearly" },
-	{ key: "scoreTime", label: "Time for the patient" },
-	{ key: "scoreListening", label: "Listened carefully" },
-	{ key: "scoreBehaviour", label: "Friendly behaviour" },
+	{ key: "scoreExplanation", label: "explanation" },
+	{ key: "scoreTime", label: "time" },
+	{ key: "scoreListening", label: "listening" },
+	{ key: "scoreBehaviour", label: "behaviour" },
 ];
 
 /**
@@ -25,6 +27,9 @@ const DIMENSIONS: { key: keyof PublicReview; label: string }[] = [
  * without a name, and cannot be bought or hidden. The average appears from five reviews.
  */
 export async function DoctorReviews({ doctorId }: { doctorId: number }) {
+	const t = await getTranslations("reviews");
+	const locale = await getLocale();
+	const stars = (value: number) => t("outOfFive", { count: Math.max(0, Math.min(5, Math.round(value))) });
 	const [summary, page] = await Promise.all([
 		get<ReviewSummary>(`/doctors/${doctorId}/reviews/summary`),
 		get<{ content?: PublicReview[] }>(`/doctors/${doctorId}/reviews?page=0&size=10`),
@@ -37,34 +42,35 @@ export async function DoctorReviews({ doctorId }: { doctorId: number }) {
 		<section aria-labelledby="reviews-heading" className="space-y-4 rounded-lg border p-4">
 			<div className="flex flex-wrap items-center justify-between gap-2">
 				<h2 id="reviews-heading" className="text-lg font-semibold">
-					Patient reviews {total > 0 ? `(${total})` : ""}
+					{total > 0 ? t("headingCount", { count: total }) : t("heading")}
 				</h2>
-				<NextLink href={`/account/review?doctor=${doctorId}`} className="text-sm font-medium text-primary hover:underline">
-					Write a review
-				</NextLink>
+				{/* The review form is a signed-in screen outside the language scheme, so a plain link */}
+				<a href={`/account/review?doctor=${doctorId}`} className="text-sm font-medium text-primary hover:underline">
+					{t("write")}
+				</a>
 			</div>
 
 			{total === 0 ? (
-				<p className="text-sm text-muted-foreground">No reviews yet. Only patients who were seen by this doctor can write one.</p>
+				<p className="text-sm text-muted-foreground">{t("none")}</p>
 			) : (
 				<div className="grid gap-4 sm:grid-cols-[12rem_1fr]">
 					<div className="space-y-1">
 						{summary?.average != null ? (
 							<>
 								<p className="text-3xl font-semibold tabular-nums">{summary.average.toFixed(1)}</p>
-								<Stars value={summary.average} />
-								{summary.recommendPercent != null && <p className="text-sm text-muted-foreground">{summary.recommendPercent}% would recommend</p>}
+								<Stars value={summary.average} label={stars(summary.average)} />
+								{summary.recommendPercent != null && <p className="text-sm text-muted-foreground">{t("recommend", { percent: summary.recommendPercent })}</p>}
 							</>
 						) : (
-							<p className="text-sm text-muted-foreground">The average appears after {summary?.minimumForAverage ?? 5} reviews.</p>
+							<p className="text-sm text-muted-foreground">{t("averageAfter", { count: summary?.minimumForAverage ?? 5 })}</p>
 						)}
 					</div>
-					<ul className="space-y-1" aria-label="Reviews by stars">
-						{[5, 4, 3, 2, 1].map((stars) => {
-							const count = summary?.distribution?.[stars - 1] ?? 0;
+					<ul className="space-y-1" aria-label={t("byStars")}>
+						{[5, 4, 3, 2, 1].map((star) => {
+							const count = summary?.distribution?.[star - 1] ?? 0;
 							return (
-								<li key={stars} className="flex items-center gap-2 text-xs">
-									<span className="w-10 shrink-0">{stars} stars</span>
+								<li key={star} className="flex items-center gap-2 text-xs">
+									<span className="w-14 shrink-0">{t("stars", { stars: star })}</span>
 									<span className="h-2 flex-1 overflow-hidden rounded bg-muted">
 										<span className="block h-full bg-amber-500" style={{ width: `${(count / max) * 100}%` }} />
 									</span>
@@ -81,18 +87,18 @@ export async function DoctorReviews({ doctorId }: { doctorId: number }) {
 					{reviews.map((r) => (
 						<li key={r.id} className="space-y-1 py-3 text-sm">
 							<p className="flex flex-wrap items-center gap-2">
-								<Stars value={r.overall} />
-								<span className="font-medium">Verified patient</span>
-								{r.date && <span className="text-xs text-muted-foreground">{r.date}</span>}
-								{r.wouldRecommend && <span className="text-xs text-muted-foreground">· Would recommend</span>}
+								<Stars value={r.overall} label={stars(r.overall)} />
+								<span className="font-medium">{t("verifiedPatient")}</span>
+								{r.date && <span className="text-xs text-muted-foreground">{formatDate(r.date, locale) ?? r.date}</span>}
+								{r.wouldRecommend && <span className="text-xs text-muted-foreground">· {t("wouldRecommend")}</span>}
 							</p>
 							{r.comment && <p>{r.comment}</p>}
 							<p className="flex flex-wrap gap-x-3 text-xs text-muted-foreground">
-								{DIMENSIONS.map((d) => (r[d.key] != null ? <span key={d.key}>{d.label}: {String(r[d.key])}/5</span> : null))}
+								{DIMENSIONS.map((d) => (r[d.key] != null ? <span key={d.key}>{t("score", { label: t(d.label), score: Number(r[d.key]) })}</span> : null))}
 							</p>
 							{r.reply && (
 								<p className="rounded-md bg-muted/50 p-2 text-sm">
-									<span className="font-medium">Reply from the doctor{r.reply.date ? `, ${r.reply.date}` : ""}:</span> {r.reply.text}
+									<span className="font-medium">{r.reply.date ? t("replyDated", { date: formatDate(r.reply.date, locale) ?? r.reply.date }) : t("reply")}</span> {r.reply.text}
 								</p>
 							)}
 							<ReportReview reviewId={r.id} />
@@ -100,9 +106,7 @@ export async function DoctorReviews({ doctorId }: { doctorId: number }) {
 					))}
 				</ul>
 			)}
-			<p className="text-xs text-muted-foreground">
-				Reviews are written by patients who were seen by this doctor, checked before they appear, and shown without a name. Open Care does not sell or remove reviews.
-			</p>
+			<p className="text-xs text-muted-foreground">{t("footer")}</p>
 		</section>
 	);
 }

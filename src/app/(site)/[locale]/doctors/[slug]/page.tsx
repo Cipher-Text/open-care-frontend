@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
 import NextLink from "next/link";
 import Image from "next/image";
-import Link from "next/link";
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BadgeCheck, Globe, GraduationCap, MapPin, Phone, Stethoscope, UserRound } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { DetailSection, DetailShell, NOT_MEDICAL_ADVICE } from "@/components/common/DetailShell";
+import { DetailSection, DetailShell } from "@/components/common/DetailShell";
 import { JsonLd } from "@/components/common/JsonLd";
 import { PublicEventTracker } from "@/components/common/PublicEventTracker";
 import { DoctorReviews } from "@/components/reviews/DoctorReviews";
+import { Link, redirect } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
+import { bilingual } from "@/i18n/seo";
+import { localizedNames, placeName } from "@/lib/names";
 import { clean, getDoctor, safeUrl } from "@/lib/public-directory";
 import { siteUrl } from "@/lib/site";
 import { doctorPath, hospitalPath } from "@/lib/paths";
@@ -22,47 +26,53 @@ export function generateStaticParams() {
 	return [];
 }
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = { params: Promise<{ locale: Locale; slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-	const { slug } = await params;
+	const { locale, slug } = await params;
+	const t = await getTranslations({ locale, namespace: "doctors" });
 	const doctor = await getDoctor(slug).catch(() => null);
-	if (!doctor) return { title: "Doctor not found | Open Care" };
+	if (!doctor) return { title: t("notFound") };
+	const name = localizedNames(locale, doctor.profile.name, doctor.profile.bnName).primary;
 	return {
-		alternates: { canonical: doctorPath(doctor) },
-		openGraph: { type: "profile", title: `${doctor.profile.name} | Open Care`, url: doctorPath(doctor) },
-		title: `${doctor.profile.name} | Open Care`,
-		description: [doctor.specializations, doctor.degrees].filter(Boolean).join(". ") || `${doctor.profile.name} on Open Care.`,
+		...bilingual(locale, doctorPath(doctor)),
+		openGraph: { type: "profile", title: `${name} | Open Care`, url: doctorPath(doctor) },
+		title: `${name} | Open Care`,
+		description: [doctor.specializations, doctor.degrees].filter(Boolean).join(". ") || t("metaDetailFallback", { name }),
 	};
 }
 
-function year(date?: string | null) {
-	return date ? date.slice(0, 4) : null;
-}
-
-function period(start?: string | null, end?: string | null) {
-	const from = year(start);
-	const to = year(end);
-	if (!from && !to) return null;
-	return `${from ?? "?"} to ${to ?? "present"}`;
+/** The year of a stored date, in Bangla digits under /bn and without a thousands separator. */
+function year(date: string | null | undefined, locale: string) {
+	return date ? new Intl.NumberFormat(locale === "bn" ? "bn-BD" : "en-US", { useGrouping: false }).format(Number(date.slice(0, 4))) : null;
 }
 
 export default async function DoctorDetailPage({ params }: Props) {
-	const { slug } = await params;
+	const { locale, slug } = await params;
+	setRequestLocale(locale);
+	const t = await getTranslations("doctors");
+	const common = await getTranslations("common");
 	const doctor = await getDoctor(slug);
 	if (!doctor) notFound();
-	// Old id-based links (and a renamed slug) land on the canonical slug URL.
-	if (doctor.slug && doctor.slug !== decodeURIComponent(slug)) permanentRedirect(doctorPath(doctor));
+	// Old id-based links (and a renamed slug) land on the canonical slug URL, in the same language.
+	if (doctor.slug && doctor.slug !== decodeURIComponent(slug)) redirect({ href: doctorPath(doctor), locale });
+
+	const period = (start?: string | null, end?: string | null) => {
+		const from = year(start, locale);
+		const to = year(end, locale);
+		if (!from && !to) return null;
+		return t("periodRange", { from: from ?? t("periodUnknown"), to: to ?? t("periodPresent") });
+	};
 
 	const { profile } = doctor;
 	const image = safeUrl((profile as { imageUrl?: string | null }).imageUrl ?? profile.photo);
-	const bnName = profile.bnName && profile.bnName !== profile.name ? profile.bnName : null;
-	const location = [profile.upazila?.name, profile.district?.name].map(clean).filter(Boolean).join(", ");
+	const names = localizedNames(locale, profile.name, profile.bnName);
+	const location = [placeName(locale, profile.upazila), placeName(locale, profile.district)].map(clean).filter(Boolean).join(", ");
 	// The API returns a phone only when the doctor chose to show it
 	const phone = typeof profile.phone === "string" ? profile.phone.trim() : "";
 	const phoneHref = phone ? `tel:${phone.replace(/[^\d+]/g, "")}` : null;
 	const links = [
-		{ label: "Website", url: safeUrl((profile as { websiteUrl?: string | null }).websiteUrl) },
+		{ label: common("website"), url: safeUrl((profile as { websiteUrl?: string | null }).websiteUrl) },
 		{ label: "LinkedIn", url: safeUrl(profile.linkedinProfileUrl) },
 		{ label: "Facebook", url: safeUrl(profile.facebookProfileUrl) },
 		{ label: "ResearchGate", url: safeUrl(profile.researchGateProfileUrl) },
@@ -74,14 +84,16 @@ export default async function DoctorDetailPage({ params }: Props) {
 	const associations = (doctor.doctorAssociations ?? []).filter((a) => a.association);
 
 	return (
-		<DetailShell backHref="/doctors" backLabel="All doctors">
+		<DetailShell backHref="/doctors" backLabel={t("back")}>
 			{doctor.slug && <PublicEventTracker kind="DOCTOR" slug={doctor.slug} />}
 			<JsonLd
 				data={{
 					"@context": "https://schema.org",
 					"@type": "Physician",
-					name: profile.name,
-					url: `${siteUrl}${doctorPath(doctor)}`,
+					name: names.primary,
+						...(names.secondary && { alternateName: names.secondary }),
+						inLanguage: locale,
+						url: `${siteUrl}${locale === "bn" ? "/bn" : ""}${doctorPath(doctor)}`,
 					...(doctor.specializations && { medicalSpecialty: doctor.specializations }),
 					...(image && { image }),
 					...(links.length > 0 && { sameAs: links.map((l) => l.url) }),
@@ -99,21 +111,21 @@ export default async function DoctorDetailPage({ params }: Props) {
 							)}
 						</div>
 						<div className="min-w-0 space-y-2">
-							<h1 className="flex flex-wrap items-center gap-x-2 text-2xl font-bold leading-tight text-foreground sm:text-3xl">
-								{profile.name}
-								{doctor.isVerified && <BadgeCheck className="size-6 text-primary" aria-label="Verified" />}
-							</h1>
-							{bnName && (
-								<p lang="bn" className="text-primary">
-									{bnName}
-								</p>
-							)}
+							<h1 lang={names.primaryLang} className="flex flex-wrap items-center gap-x-2 text-2xl font-bold leading-tight text-foreground sm:text-3xl">
+									{names.primary}
+									{doctor.isVerified && <BadgeCheck className="size-6 text-primary" aria-label={common("verified")} />}
+								</h1>
+								{names.secondary && (
+									<p lang={names.secondaryLang} className="text-primary">
+										{names.secondary}
+									</p>
+								)}
 							<div className="flex flex-wrap gap-2">
-								<Badge variant="outline">BMDC {doctor.bmdcNo}</Badge>
+								<Badge variant="outline">{t("bmdc", { number: doctor.bmdcNo })}</Badge>
 								{doctor.yearOfExperience ? (
-									<Badge variant="secondary">{doctor.yearOfExperience} years experience</Badge>
+									<Badge variant="secondary">{t("experience", { count: doctor.yearOfExperience })}</Badge>
 								) : null}
-								{doctor.isVerified ? <Badge>Verified listing</Badge> : <Badge variant="outline">Not yet verified</Badge>}
+								{doctor.isVerified ? <Badge>{common("verifiedListing")}</Badge> : <Badge variant="outline">{common("notVerified")}</Badge>}
 							</div>
 							<ul className="space-y-1.5 text-sm text-muted-foreground">
 								{doctor.specializations && (
@@ -142,17 +154,17 @@ export default async function DoctorDetailPage({ params }: Props) {
 							<Button asChild className="h-10">
 								<a href={phoneHref}>
 									<Phone className="mr-2 size-4" aria-hidden="true" />
-									Call {phone}
-								</a>
+									{t("callPhone", { phone })}
+</a>
 							</Button>
 						</div>
 					)}
 					{doctor.isVerified && (
 						<div className="flex flex-wrap items-center gap-2">
 							<Button asChild variant="outline" className="h-10">
-								<NextLink href={`/account/book?doctor=${doctor.id}`}>Book a visit</NextLink>
+								<NextLink href={`/account/book?doctor=${doctor.id}`}>{t("bookVisit")}</NextLink>
 							</Button>
-							<span className="text-xs text-muted-foreground">Sign in to see the open times. The doctor confirms each request.</span>
+							<span className="text-xs text-muted-foreground">{t("bookHint")}</span>
 						</div>
 					)}
 					{links.length > 0 && (
@@ -171,13 +183,13 @@ export default async function DoctorDetailPage({ params }: Props) {
 			</Card>
 
 			{doctor.description && (
-				<DetailSection title="About">
+				<DetailSection title={t("about")}>
 					<p className="whitespace-pre-line leading-relaxed text-muted-foreground">{doctor.description}</p>
 				</DetailSection>
 			)}
 
 			{workplaces.length > 0 && (
-				<DetailSection title="Where they practise">
+				<DetailSection title={t("practise")}>
 					<ul className="divide-y">
 						{workplaces.map((w) => {
 							const place = w.hospital ?? w.institution;
@@ -206,7 +218,7 @@ export default async function DoctorDetailPage({ params }: Props) {
 			)}
 
 			{degrees.length > 0 && (
-				<DetailSection title="Education and training">
+				<DetailSection title={t("education")}>
 					<ul className="divide-y">
 						{degrees.map((d) => {
 							const dates = period(d.startDate, d.endDate);
@@ -228,7 +240,7 @@ export default async function DoctorDetailPage({ params }: Props) {
 			)}
 
 			{associations.length > 0 && (
-				<DetailSection title="Associations">
+				<DetailSection title={t("associations")}>
 					<ul className="divide-y">
 						{associations.map((a) => (
 							<li key={a.id} className="py-2 text-sm">
@@ -249,7 +261,7 @@ export default async function DoctorDetailPage({ params }: Props) {
 
 			{doctor.id != null && <DoctorReviews doctorId={doctor.id} />}
 
-			<p className="text-xs text-muted-foreground">{NOT_MEDICAL_ADVICE}</p>
+			<p className="text-xs text-muted-foreground">{common("notMedicalAdvice")}</p>
 		</DetailShell>
 	);
 }

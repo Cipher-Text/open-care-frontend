@@ -1,17 +1,20 @@
 import Image from "next/image";
-import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 import { BadgeCheck, GraduationCap, MapPin, Stethoscope, UserRound } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { DoctorResponse } from "@/types/doctors";
+import { Link } from "@/i18n/navigation";
+import { localizedNames, placeName } from "@/lib/names";
 import { doctorPath } from "@/lib/paths";
-import { displayName } from "@/lib/text";
 
 export default function DoctorCard({ doctor }: { doctor: DoctorResponse }) {
+	const t = useTranslations("doctors");
+	const common = useTranslations("common");
+	const locale = useLocale();
 	const { profile } = doctor;
-	const name = displayName(profile?.name) || "Unnamed doctor";
-	const bnName = displayName(profile?.bnName) && displayName(profile?.bnName) !== name ? displayName(profile?.bnName) : null;
-	const location = [profile?.upazila?.name, profile?.district?.name]
+	const names = localizedNames(locale, profile?.name, profile?.bnName);
+	const location = [placeName(locale, profile?.upazila), placeName(locale, profile?.district)]
 		.filter(Boolean)
 		.join(", ");
 	const image = profile?.imageUrl || profile?.photo;
@@ -36,29 +39,29 @@ export default function DoctorCard({ doctor }: { doctor: DoctorResponse }) {
 
 				<div className="min-w-0 flex-1 space-y-2">
 					<div>
-						<h3 className="flex flex-wrap items-center gap-x-2 text-lg font-bold leading-snug text-foreground sm:text-xl">
+						<h3 lang={names.primaryLang} className="flex flex-wrap items-center gap-x-2 text-lg font-bold leading-snug text-foreground sm:text-xl">
 							<Link
 								href={doctorPath(doctor)}
 								className="hover:text-primary hover:underline after:absolute after:inset-0"
 							>
-								{name}
+								{names.primary || t("unnamed")}
 							</Link>
 							{doctor.isVerified && (
-								<BadgeCheck className="size-5 text-primary" aria-label="Verified" />
+								<BadgeCheck className="size-5 text-primary" aria-label={common("verified")} />
 							)}
 						</h3>
-						{bnName && (
-							<p lang="bn" className="text-sm text-primary">
-								{bnName}
+						{names.secondary && (
+							<p lang={names.secondaryLang} className="text-sm text-primary">
+								{names.secondary}
 							</p>
 						)}
 					</div>
 
 					<div className="flex flex-wrap gap-2">
-						<Badge variant="outline">BMDC {doctor.bmdcNo}</Badge>
+						<Badge variant="outline">{t("bmdc", { number: doctor.bmdcNo })}</Badge>
 						{doctor.yearOfExperience ? (
 							<Badge variant="secondary">
-								{doctor.yearOfExperience} years experience
+								{t("experience", { count: doctor.yearOfExperience })}
 							</Badge>
 						) : null}
 					</div>

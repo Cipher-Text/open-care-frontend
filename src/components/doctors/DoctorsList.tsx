@@ -1,6 +1,7 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { fetchPublicDoctors } from "@/api/directory";
 import { DirectoryPagination } from "@/components/common/DirectoryControls";
 import {
@@ -14,6 +15,7 @@ import DoctorCard from "./DoctorCard";
 const PAGE_SIZE = 10;
 
 export default function DoctorsList() {
+	const t = useTranslations("doctors");
 	const { get, set, clear, hasFilters } = useUrlParams();
 	const page = parsePage(get("page"));
 
@@ -41,11 +43,7 @@ export default function DoctorsList() {
 	return (
 		<div className="space-y-6">
 			<p className="text-muted-foreground" aria-live="polite">
-				{data
-					? `${data.totalItems.toLocaleString()} ${
-							data.totalItems === 1 ? "doctor" : "doctors"
-					  } found`
-					: "Searching"}
+				{data ? t("found", { count: data.totalItems }) : t("searching")}
 			</p>
 
 			{query.isPending ? (
