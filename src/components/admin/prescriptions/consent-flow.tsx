@@ -167,9 +167,11 @@ export function ConsentFlow() {
 							{request?.status === "PENDING" && (
 								<div className="space-y-3">
 									<p className="text-sm">
-										{request.maskedPhone
+										{request.maskedPhone && request.smsSent !== false
 											? `A 6-digit code was texted to ${request.maskedPhone}. Ask the patient for it, or ask them to approve in their Open Care account.`
-											: "This patient has no phone on their profile. Ask them to approve in their Open Care account."}{" "}
+											: request.maskedPhone
+												? `The text to ${request.maskedPhone} could not be sent. Ask the patient to approve in their Open Care account.`
+												: "This patient has no phone on their profile. Ask them to approve in their Open Care account."}{" "}
 										<span className="text-muted-foreground">Valid until {when(request.expiresAt)}.</span>
 									</p>
 									{request.devCode && (
@@ -177,7 +179,7 @@ export function ConsentFlow() {
 											Development only: the code is <strong>{request.devCode}</strong>
 										</p>
 									)}
-									{request.maskedPhone && (
+									{request.maskedPhone && request.smsSent !== false && (
 										<form
 											className="flex flex-wrap items-end gap-3"
 											onSubmit={(e) => {

@@ -19,6 +19,8 @@ export interface ConsentRequest {
 	attemptsLeft: number;
 	/** Only present when the backend runs with app.consent.expose-dev-code (development). */
 	devCode: string | null;
+	/** Only on the answer to a new request: false when the text was not sent (no phone, a failure, or no provider connected). */
+	smsSent: boolean | null;
 }
 
 export interface DoctorGrant {
