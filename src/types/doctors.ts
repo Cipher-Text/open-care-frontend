@@ -1,3 +1,4 @@
+import type { VerificationStatus } from "@/types/verification";
 import type { PageResult } from "@/types/common";
 import { District, Division, Union, Upazila } from "./locations";
 import { Sort, Pageable } from "./common";
@@ -227,6 +228,10 @@ export type DoctorResponse = {
 	description: string;
 	isActive: boolean;
 	isVerified: boolean;
+	/** Administration lists only: where the verification stands, since when, and whether it is older than the review period. */
+	verificationStatus?: VerificationStatus;
+	verifiedAt?: string | null;
+	reviewDue?: boolean;
 	profile: Profile;
 	doctorDegrees: DoctorDegree[];
 	doctorWorkplaces: DoctorWorkplace[];

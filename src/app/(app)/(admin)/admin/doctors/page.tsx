@@ -6,6 +6,12 @@ import { useRouter } from "next/navigation";
 import { Plus, Upload } from "lucide-react";
 import { fetchAdminDoctors } from "@/api/doctors";
 import { DoctorListResponse } from "@/types/doctors";
+import type { VerificationStatus } from "@/types/verification";
+import { statusLabel } from "@/components/verification/status-badge";
+import { FilterSelect } from "@/components/common/DirectoryControls";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { ALL } from "@/hooks/use-url-params";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,8 +20,13 @@ import { usePermissions } from "@/hooks/use-permissions";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
+/** The states staff filter by. DRAFT and WITHDRAWN never show on a doctor (the record carries the status of the latest submitted case). */
+const STATUS_FILTERS: VerificationStatus[] = ["VERIFIED", "PENDING", "UNDER_REVIEW", "REJECTED", "REVOKED", "NONE"];
+
 export default function DoctorsPage() {
 	const [currentPage, setCurrentPage] = useState(1);
+	const [status, setStatus] = useState("");
+	const [reviewDue, setReviewDue] = useState(false);
 	const router = useRouter();
 	const { hasPermission } = usePermissions();
 	const canCreateDoctor = hasPermission("create-doctor");
@@ -26,11 +37,13 @@ export default function DoctorsPage() {
 		isError,
 		error,
 	} = useQuery<DoctorListResponse>({
-		queryKey: ["doctors", currentPage],
+		queryKey: ["doctors", currentPage, status, reviewDue],
 		queryFn: () =>
 			fetchAdminDoctors({
 				page: currentPage,
 				size: 10,
+				verificationStatus: status || undefined,
+				reviewDue: reviewDue || undefined,
 			}),
 		placeholderData: (previousData) => previousData,
 	});
@@ -78,6 +91,31 @@ export default function DoctorsPage() {
 			<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
 				<Card>
 					<CardContent className="pt-6">
+						<div className="mb-4 flex flex-wrap items-center gap-4" role="group" aria-label="Verification filters">
+							<div className="w-full sm:w-56">
+								<FilterSelect
+									label="Verification status"
+									allLabel="Any verification status"
+									value={status}
+									onChange={(v) => {
+										setStatus(v === ALL ? "" : v);
+										setCurrentPage(1);
+									}}
+									options={STATUS_FILTERS.map((s) => ({ value: s, label: statusLabel(s) }))}
+								/>
+							</div>
+							<div className="flex items-center gap-2">
+								<Checkbox
+									id="review-due"
+									checked={reviewDue}
+									onCheckedChange={(checked) => {
+										setReviewDue(checked === true);
+										setCurrentPage(1);
+									}}
+								/>
+								<Label htmlFor="review-due">Verified more than the review period ago</Label>
+							</div>
+						</div>
 						{isLoading ? (
 							<div className="space-y-4">
 								<Skeleton className="h-8 w-full" />

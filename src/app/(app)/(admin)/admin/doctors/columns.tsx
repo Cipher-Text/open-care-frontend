@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DoctorResponse } from "@/types/doctors";
+import { VerificationStatusBadge } from "@/components/verification/status-badge";
 import { usePermissions } from "@/hooks/use-permissions";
 import { useMyDoctor } from "@/hooks/use-my-doctor";
 import { canEditDoctor as mayEditDoctor } from "@/config/doctor-access";
@@ -201,11 +202,27 @@ export const columns: ColumnDef<DoctorResponse>[] = [
     accessorKey: "isVerified",
     header: "Verification",
     cell: ({ row }) => {
-      const isVerified = row.getValue("isVerified") as boolean;
+      const doctor = row.original;
+      // A list from an older server has no workflow state: fall back to the badge flag
+      if (!doctor.verificationStatus) {
+        return (
+          <Badge variant={doctor.isVerified ? "default" : "destructive"}>
+            {doctor.isVerified ? "Verified" : "Unverified"}
+          </Badge>
+        );
+      }
       return (
-        <Badge variant={isVerified ? "default" : "destructive"}>
-          {isVerified ? "Verified" : "Unverified"}
-        </Badge>
+        <div className="flex flex-col items-start gap-1">
+          <div className="flex flex-wrap gap-1">
+            <VerificationStatusBadge status={doctor.verificationStatus} />
+            {doctor.reviewDue && <Badge variant="outline">Review due</Badge>}
+          </div>
+          {doctor.verificationStatus === "VERIFIED" && (
+            <span className="text-xs text-muted-foreground">
+              {doctor.verifiedAt ? `Verified ${new Date(doctor.verifiedAt).toLocaleDateString("en-GB", { dateStyle: "medium" })}` : "Date not kept"}
+            </span>
+          )}
+        </div>
       );
     },
   },
