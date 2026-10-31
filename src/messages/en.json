@@ -175,7 +175,7 @@
       },
       "booking": {
         "q": "Can I book an appointment here?",
-        "a": "Not at the moment. Open Care helps you find and contact a doctor or facility. Booking and other services are planned."
+        "a": "For some doctors, yes. A verified doctor who takes requests shows a \"Book a visit\" button on their page: you ask for a time and the doctor confirms it. Hospital and online appointments are not available yet."
       },
       "report": {
         "q": "How do I report a wrong or missing listing?",

@@ -98,8 +98,8 @@ export default function AddHospitalPage() {
 			bnName: "",
 			numberOfBed: 1,
 			districtId: 1,
-			upazilaId: 1,
-			unionId: 1,
+			upazilaId: undefined,
+			unionId: undefined,
 			hospitalType: "",
 			organizationType: "",
 			lat: undefined,
@@ -132,17 +132,10 @@ export default function AddHospitalPage() {
 					!Number.isNaN(Number(formValues.districtId))
 				? Number(formValues.districtId)
 				: null;
-		const upazilaId =
-			typeof formValues.upazilaId === "number"
-				? formValues.upazilaId
-				: typeof formValues.upazilaId === "string" &&
-					formValues.upazilaId.trim() !== "" &&
-					!Number.isNaN(Number(formValues.upazilaId))
-				? Number(formValues.upazilaId)
-				: null;
+		const upazilaId = typeof formValues.upazilaId === "number" ? formValues.upazilaId : null;
 
 		setSelectedDistrictId(districtId ?? 1);
-		setSelectedUpazilaId(upazilaId ?? 1);
+		setSelectedUpazilaId(upazilaId);
 	}, [form]);
 
 	// Filter upazilas based on selected district
@@ -497,8 +490,8 @@ export default function AddHospitalPage() {
 														field.onChange(districtId);
 														setSelectedDistrictId(districtId);
 														// Reset upazila and union when district changes
-														form.setValue("upazilaId", 1);
-														form.setValue("unionId", 1);
+														form.setValue("upazilaId", undefined);
+														form.setValue("unionId", undefined);
 														setSelectedUpazilaId(null);
 													}}
 													value={
@@ -546,7 +539,7 @@ export default function AddHospitalPage() {
 														field.onChange(upazilaId);
 														setSelectedUpazilaId(upazilaId);
 														// Reset union when upazila changes
-														form.setValue("unionId", 1);
+														form.setValue("unionId", undefined);
 													}}
 													value={
 														typeof field.value === "number" ||
@@ -587,7 +580,7 @@ export default function AddHospitalPage() {
 										name="unionId"
 										render={({ field }) => (
 											<FormItem>
-												<FormLabel>Union</FormLabel>
+												<FormLabel>Union (optional)</FormLabel>
 												<Select
 													onValueChange={(value) =>
 														field.onChange(Number(value))

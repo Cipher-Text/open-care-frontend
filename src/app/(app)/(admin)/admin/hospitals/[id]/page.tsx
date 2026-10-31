@@ -152,8 +152,8 @@ export default function HospitalFormPage() {
       bnName: "",
       numberOfBed: 1,
       districtId: 1,
-      upazilaId: 1,
-      unionId: 1,
+      upazilaId: undefined,
+      unionId: undefined,
       hospitalType: "",
       organizationType: "",
       lat: undefined,
@@ -189,7 +189,7 @@ export default function HospitalFormPage() {
   // Populate form when editing
   useEffect(() => {
     if (isEditing && hospitalData) {
-      const upazilaId = hospitalData.upazila?.id ?? hospitalData.union?.upazila?.id ?? 1;
+      const upazilaId = hospitalData.upazila?.id ?? hospitalData.union?.upazila?.id ?? undefined;
       const districtId =
         hospitalData.upazila?.district?.id ??
         hospitalData.district?.id ??
@@ -202,7 +202,7 @@ export default function HospitalFormPage() {
         numberOfBed: hospitalData.numberOfBed ?? 1,
         districtId: districtId,
         upazilaId: upazilaId,
-        unionId: hospitalData.union?.id ?? 1,
+        unionId: hospitalData.union?.id ?? undefined,
         hospitalType:
           hospitalData.hospitalType?.value ??
           hospitalData.hospitalType?.englishName ??
@@ -243,7 +243,7 @@ export default function HospitalFormPage() {
         isActive: hospitalData.isActive ?? true,
       }); // Set selected location values for dropdowns
       setSelectedDistrictId(districtId);
-      setSelectedUpazilaId(upazilaId);
+      setSelectedUpazilaId(upazilaId ?? null);
     }
   }, [hospitalData, isEditing, form]);
 
@@ -279,17 +279,10 @@ export default function HospitalFormPage() {
             !Number.isNaN(Number(formValues.districtId))
           ? Number(formValues.districtId)
           : null;
-      const upazilaId =
-        typeof formValues.upazilaId === "number"
-          ? formValues.upazilaId
-          : typeof formValues.upazilaId === "string" &&
-            formValues.upazilaId.trim() !== "" &&
-            !Number.isNaN(Number(formValues.upazilaId))
-          ? Number(formValues.upazilaId)
-          : null;
+      const upazilaId = typeof formValues.upazilaId === "number" ? formValues.upazilaId : null;
 
       setSelectedDistrictId(districtId ?? 1);
-      setSelectedUpazilaId(upazilaId ?? 1);
+      setSelectedUpazilaId(upazilaId);
     }
   }, [isEditing, form]);
 
@@ -724,8 +717,8 @@ export default function HospitalFormPage() {
                             field.onChange(districtId);
                             setSelectedDistrictId(districtId);
                             // Reset upazila and union when district changes
-                            form.setValue("upazilaId", 1);
-                            form.setValue("unionId", 1);
+                            form.setValue("upazilaId", undefined);
+                            form.setValue("unionId", undefined);
                             setSelectedUpazilaId(null);
                           }}
                           value={
@@ -773,7 +766,7 @@ export default function HospitalFormPage() {
                             field.onChange(upazilaId);
                             setSelectedUpazilaId(upazilaId);
                             // Reset union when upazila changes
-                            form.setValue("unionId", 1);
+                            form.setValue("unionId", undefined);
                           }}
                           value={
                             typeof field.value === "number" ||
@@ -814,7 +807,7 @@ export default function HospitalFormPage() {
                     name="unionId"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Union</FormLabel>
+                        <FormLabel>Union (optional)</FormLabel>
                         <Select
                           onValueChange={(value) =>
                             field.onChange(Number(value))

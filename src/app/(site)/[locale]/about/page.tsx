@@ -59,8 +59,10 @@ export default async function AboutPage() {
 			<section>
 				<h2>What is coming</h2>
 				<p>
-					Planned work includes verified profiles for doctors and facilities, appointment booking, and a Bangla
-					interface. These are plans, not promises of dates.
+					Doctors and facilities can already ask to be verified, and a patient can ask a verified doctor for a visit,
+					which the doctor confirms. The Bangla version covers the public doctor pages and the blog so far; the
+					screens you see after signing in are still in English. Still planned: hospital and online appointments and
+					more translation. These are plans, not promises of dates.
 				</p>
 			</section>
 

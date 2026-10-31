@@ -8,7 +8,7 @@ export const revalidate = 86400;
 const STATIC_PATHS = ["", "/hospitals", "/doctors", "/blog", "/medical-review-policy", "/ambulances", "/institutions", "/about", "/pricing", "/contact", "/privacy", "/terms"];
 
 /** Pages that exist in Bangla as well; only these list the /bn address and the language alternates. */
-const BILINGUAL_PATHS = new Set(["", "/blog", "/hospitals"]);
+const BILINGUAL_PATHS = new Set(["", "/blog", "/hospitals", "/doctors"]);
 
 const alternates = (path: string) => ({ languages: { en: `${siteUrl}${path}`, bn: `${siteUrl}/bn${path}` } });
 
@@ -61,7 +61,8 @@ export default async function sitemap({ id }: { id: number | Promise<string> }):
 			changeFrequency: "monthly" as const,
 			priority: 0.5,
 		};
-		// Hospital pages exist in Bangla too; doctor pages do not yet (their /bn copy is noindex)
-		return isHospital ? [{ ...entry, alternates: alternates(path) }, { ...entry, url: `${siteUrl}/bn${path}`, alternates: alternates(path) }] : [entry];
+		// Hospital and doctor pages exist in Bangla too (their pages declare the same language alternates), so list both addresses;
+		// a chunk of 1,000 records gives 2,000 URLs, well under the 50,000 a sitemap file may hold
+		return [{ ...entry, alternates: alternates(path) }, { ...entry, url: `${siteUrl}/bn${path}`, alternates: alternates(path) }];
 	});
 }

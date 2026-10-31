@@ -8,8 +8,10 @@ export const addHospitalSchema = z.object({
 
   // Location
   districtId: z.coerce.number().min(1, "District is required"),
-  upazilaId: z.coerce.number().min(1, "Upazila is required"),
-  unionId: z.coerce.number().min(1, "Union is required"),
+  // Upazila (or thana) and union are optional: many facilities have none, and a thana has no unions. Never filled in
+  // with a made-up number, which would place the facility in the wrong place.
+  upazilaId: z.number().min(1).optional(),
+  unionId: z.number().min(1).optional(),
   lat: z.coerce
     .number()
     .min(-90)
