@@ -76,8 +76,16 @@
   "view-hospital-admin-panel"
  ],
  "hospital-user": [
+  "create-hospital-amenity",
+  "create-hospital-medical-test",
   "create-profile",
-  "update-profile"
+  "delete-hospital-amenity",
+  "delete-hospital-medical-test",
+  "update-hospital",
+  "update-hospital-amenity",
+  "update-hospital-medical-test",
+  "update-profile",
+  "view-hospital-admin-panel"
  ],
  "institution-admin": [
   "create-institution",

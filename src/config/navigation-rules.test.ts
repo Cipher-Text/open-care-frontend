@@ -58,7 +58,8 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 	},
 	nurse: { staff: true, menu: ["dashboard", "nurses", "my-consents"] },
 	user: { staff: false, menu: EVERYONE },
-	"hospital-user": { staff: false, menu: EVERYONE },
+	// a plain user whose facility claim was approved joins this group, which holds the facility permissions only
+	"hospital-user": { staff: true, menu: ["dashboard", "my-figures", "hospitals", "my-consents"] },
 	"institution-user": { staff: false, menu: EVERYONE },
 	"social-organization-user": { staff: false, menu: EVERYONE },
 	"association-user": { staff: false, menu: EVERYONE },
