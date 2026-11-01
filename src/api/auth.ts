@@ -23,6 +23,13 @@ export const login = async (
 	return response.json();
 };
 
+/** The backend answered a refresh with this status; the caller decides whether it means the session is over. */
+export class RefreshFailedError extends Error {
+	constructor(readonly status: number) {
+		super(`Failed to refresh token: ${status}`);
+	}
+}
+
 /**
  * Refresh access token using refresh token
  */
@@ -40,9 +47,7 @@ export const refreshToken = async (
 	});
 
 	if (!response.ok) {
-		throw new Error(
-			`Failed to refresh token: ${response.status} ${response.statusText}`
-		);
+		throw new RefreshFailedError(response.status);
 	}
 
 	return response.json();

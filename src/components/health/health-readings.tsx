@@ -13,24 +13,12 @@ import { Label } from "@/components/ui/label";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { clearedFields, readingGone, type ReadingFormValues } from "@/lib/reading-form";
 
 const PAGE_SIZE = 10;
 
 /** The form's text boxes; numbers are converted when sending. */
-interface FormState {
-	recordedAt: string;
-	systolic: string;
-	diastolic: string;
-	heartRate: string;
-	glucose: string;
-	glucoseType: string;
-	weight: string;
-	height: string;
-	temperature: string;
-	oxygen: string;
-	symptoms: string;
-	notes: string;
-}
+type FormState = ReadingFormValues;
 
 const nowLocal = () => {
 	const d = new Date();
@@ -114,14 +102,33 @@ export function HealthReadings({ onChanged }: { onChanged: () => void }) {
 		onError: (error) => toast.error(error instanceof Error ? error.message : "Could not save your choice"),
 	});
 
+	// A reading may already have been changed or deleted (another tab, a list not yet refreshed): say so, and show the real list
+	const staleReading = () => {
+		toast.info("That reading was already changed or deleted. Your list has been refreshed.");
+		setEditing(null);
+		refresh();
+	};
+
 	const save = useMutation({
-		mutationFn: () => (editing === "new" ? addReading(toInput(form)) : changeReading(editing as number, toInput(form))),
+		mutationFn: () => {
+			if (editing === "new") return addReading(toInput(form));
+			const original = rows.find((r) => r.id === editing);
+			const cleared = original ? clearedFields(original, form) : [];
+			if (cleared.length > 0) {
+				// A change keeps the values left blank, so it cannot remove one
+				throw new Error(`A change cannot remove ${cleared.join(", ")}. Keep the value, or delete this reading and record a new one.`);
+			}
+			return changeReading(editing as number, toInput(form));
+		},
 		onSuccess: () => {
 			toast.success(editing === "new" ? "Reading saved" : "Reading changed");
 			setEditing(null);
 			refresh();
 		},
-		onError: (error) => toast.error(error instanceof Error ? error.message : "Could not save the reading"),
+		onError: (error) => {
+			if (readingGone(error)) return staleReading();
+			toast.error(error instanceof Error ? error.message : "Could not save the reading");
+		},
 	});
 
 	const remove = useMutation({
@@ -130,7 +137,10 @@ export function HealthReadings({ onChanged }: { onChanged: () => void }) {
 			toast.success("Reading deleted");
 			refresh();
 		},
-		onError: (error) => toast.error(error instanceof Error ? error.message : "Could not delete the reading"),
+		onError: (error) => {
+			if (readingGone(error)) return staleReading();
+			toast.error(error instanceof Error ? error.message : "Could not delete the reading");
+		},
 	});
 
 	const set = <K extends keyof FormState>(key: K, value: FormState[K]) => setForm((f) => ({ ...f, [key]: value }));

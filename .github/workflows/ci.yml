@@ -30,7 +30,7 @@ jobs:
         run: npm ci
 
       - name: Test
-        run: npm run test:nav && npm run test:i18n && npm run test:pricing && npm run test:bff
+        run: npm run test:nav && npm run test:i18n && npm run test:pricing && npm run test:bff && npm run test:vitals
 
       - name: Build
         run: npm run build

@@ -11,6 +11,7 @@
 		"test:i18n": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/names.test.ts src/lib/api-error.test.ts src/messages/messages.test.ts",
 		"test:pricing": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/pricing-view.test.ts",
 		"test:bff": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/bff-proxy.test.ts",
+		"test:vitals": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/reading-form.test.ts",
 		"docs:access": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-access-matrix.ts"
 	},
 	"dependencies": {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { baseUrl } from "@/config/config";
-import { clientHeaderOk, downstreamHeaders, proxyTimeoutMs, upstreamHeaders, upstreamUrl } from "@/lib/bff-proxy";
+import { clientHeaderOk, downstreamHeaders, proxyTimeoutMs, SessionUnavailableError, trustedProxyHops, upstreamHeaders, upstreamUrl } from "@/lib/bff-proxy";
 import { fetchWithTimeout } from "@/lib/http";
 import { currentAccessToken } from "@/lib/session-server";
 
@@ -25,8 +25,9 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
 	// Buffered, so the request can be sent again after a token renewal
 	const body = hasBody ? await request.arrayBuffer() : undefined;
 
+	const hops = trustedProxyHops(process.env.TRUSTED_PROXY_HOPS);
 	const send = (token?: string) =>
-		fetchWithTimeout(target, { method: request.method, headers: upstreamHeaders(request.headers, token), body, cache: "no-store", redirect: "manual" }, proxyTimeoutMs(request.method, path));
+		fetchWithTimeout(target, { method: request.method, headers: upstreamHeaders(request.headers, token, hops), body, cache: "no-store", redirect: "manual" }, proxyTimeoutMs(request.method, path));
 
 	try {
 		let token = await currentAccessToken();
@@ -39,6 +40,10 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
 		const noBody = response.status === 204 || response.status === 304 || request.method === "HEAD";
 		return new NextResponse(noBody ? null : response.body, { status: response.status, headers: downstreamHeaders(response.headers) });
 	} catch (error) {
+		if (error instanceof SessionUnavailableError) {
+			// The session could not be renewed right now: say so (503), never 401, which would sign the person out
+			return NextResponse.json({ statusCode: 503, error: "Service Unavailable", message: "Your session could not be renewed just now. Try again in a moment.", code: "SESSION_UNAVAILABLE" }, { status: 503, headers: { "retry-after": "5" } });
+		}
 		if (error instanceof DOMException && (error.name === "TimeoutError" || error.name === "AbortError")) {
 			return NextResponse.json({ statusCode: 504, error: "Gateway Timeout", message: "The service took too long to answer", code: "UPSTREAM_TIMEOUT" }, { status: 504 });
 		}

@@ -218,7 +218,8 @@ npm run lint
 npm run test:nav       # menu and guards for all 15 roles (20 tests)
 npm run test:i18n      # names, API error messages, en.json/bn.json parity (13 tests)
 npm run test:pricing   # pricing page view (8 tests)
-npm run test:bff       # the same-origin proxy rules (5 tests)
+npm run test:bff       # the same-origin proxy rules (11 tests)
+npm run test:vitals    # the health readings screen rules (3 tests)
 
 # Regenerate opencare/docs/reference/ACCESS_MATRIX.md from the menu rules and src/config/role-permissions.fixture.json
 npm run docs:access
@@ -279,7 +280,7 @@ Read-only viewer. Hospital, institution and association forms label the field "U
 
 ### Testing
 
-Only small pure-logic tests exist (`test:nav`, `test:i18n`, `test:pricing`, `test:bff`, on Node's built-in runner); there is no component, browser or `type-check` script yet, and CI runs these tests and the build. See `docs/testing-frontend.md`. Type errors surface through `npm run build`.
+Only small pure-logic tests exist (`test:nav`, `test:i18n`, `test:pricing`, `test:bff`, `test:vitals`, on Node's built-in runner); there is no component, browser or `type-check` script yet, and CI runs these tests and the build. See `docs/testing-frontend.md`. Type errors surface through `npm run build`.
 
 ## 📖 Documentation
 
