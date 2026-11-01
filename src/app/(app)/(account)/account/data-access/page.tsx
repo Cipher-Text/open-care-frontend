@@ -41,7 +41,7 @@ function DonorViews() {
 			<CardHeader>
 				<CardTitle className="text-base">Who looked at my blood donor listing</CardTitle>
 				<CardDescription>
-					You are on the blood donor list, which Plus and Pro members and Open Care staff can open. Each day someone opens it and your listing is shown, it is recorded here: members by a shortened name, staff only as &quot;Open Care staff&quot;, how many times that day, and what the listing showed of you (your phone and address only if you chose to share them). You can change what you share, or leave the list, under your profile.
+					You are on the blood donor list, which Plus and Pro members and Open Care staff can open. Each day someone opens it and your listing is shown, it is recorded here: a member only as &quot;An Open Care member&quot;, staff only as &quot;Open Care staff&quot;, how many times that day, and what the listing showed of you (your phone and address only if you chose to share them). You can change what you share, or leave the list, under your profile.
 				</CardDescription>
 			</CardHeader>
 			<CardContent>

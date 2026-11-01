@@ -48,7 +48,7 @@ export default function PrivacyPage() {
 					</li>
 					<li>
 						<strong>Access records</strong>: when a doctor opens one of your prescriptions, or Open Care staff open your profile or health
-						readings, or a member reads the blood donor list, we record who and when. For the donor list the entry also keeps what was searched for. If you are on the donor list, each day someone opens it and your listing is shown, you see that under &quot;Who looked&quot; in your account: a member by a shortened name, staff only as &quot;Open Care staff&quot;, how many times, and what the listing showed of you (your phone and address only if you chose to share them). You can see the other records yourself in the same place.
+						readings, or a member reads the blood donor list, we record who and when. For the donor list the entry also keeps what was searched for. If you are on the donor list, each day someone opens it and your listing is shown, you see that under &quot;Who looked&quot; in your account: a member only as &quot;An Open Care member&quot;, staff only as &quot;Open Care staff&quot;, how many times, and what the listing showed of you (your phone and address only if you chose to share them). Who the member or staff member was stays with Open Care staff (the record of who opened the donor list), who can look it up if you report a problem. You can see the other records yourself in the same place.
 					</li>
 					<li>
 						<strong>Reviews</strong> if you review a doctor you were seen by: your stars, comment and the visit that proves it are kept; the review is

@@ -36,7 +36,7 @@ export const fetchDataAccess = async (filters: { kind?: DataAccessKind | ""; act
 		)
 	);
 
-/** One viewer's reads of the signed-in donor's listing on one day. A member is shown by a shortened name, staff only as "Open Care staff". */
+/** One viewer's reads of the signed-in donor's listing on one day. A member is shown only as "An Open Care member", staff only as "Open Care staff". */
 export interface DonorView {
 	id: number;
 	date: string;
