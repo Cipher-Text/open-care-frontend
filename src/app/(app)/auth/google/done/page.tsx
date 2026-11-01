@@ -2,16 +2,13 @@
 
 import { useEffect } from "react";
 import { redirectAfterLogin } from "@/app/(app)/login/redirect-actions";
-import { saveUserSession } from "@/lib/auth-client";
-import { readSessionForClient } from "../actions";
+import { resetSession } from "@/lib/session-client";
 
-/** Last step of Sign in with Google: keep the session like the password login does, then go to the right area. */
+/** Last step of Sign in with Google: the server already set the httpOnly cookies, so only go to the right area. */
 export default function GoogleSignInDonePage() {
 	useEffect(() => {
-		readSessionForClient().then((session) => {
-			if (session) saveUserSession(session);
-			return redirectAfterLogin();
-		});
+		resetSession();
+		void redirectAfterLogin();
 	}, []);
 
 	return (

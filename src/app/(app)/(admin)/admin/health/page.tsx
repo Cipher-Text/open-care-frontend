@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AdminHeader } from "@/components/admin/admin-header";
-import { getUserSession } from "@/lib/auth-client";
 import { getLatestHealthVitals } from "@/api/health-vitals";
 import { HealthVitals } from "@/types/health-vitals";
 import {
@@ -37,12 +36,7 @@ export default function HealthPage() {
 
   const fetchHealthVitals = useCallback(async () => {
     try {
-      const session = getUserSession();
-      if (!session?.access_token) {
-        throw new Error("No access token found");
-      }
-
-      const vitalsData = await getLatestHealthVitals(session.access_token);
+      const vitalsData = await getLatestHealthVitals();
       setVitals(vitalsData);
       setError(null);
     } catch (err) {

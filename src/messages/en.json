@@ -356,5 +356,14 @@
     "reasonPersonalDetails": "Shows personal details",
     "reasonSpam": "Spam or an advertisement",
     "reasonOther": "Something else"
+  },
+  "errorPages": {
+    "title": "Something went wrong",
+    "body": "This page could not be shown. Try again, or go back to the home page.",
+    "retry": "Try again",
+    "home": "Go to the home page",
+    "reference": "Reference: {id}",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "The address does not exist, or it has moved."
   }
 }

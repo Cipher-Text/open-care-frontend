@@ -12,7 +12,6 @@ import { HealthDataConsent } from "@/components/account/health-data-consent";
 import { MessageLanguageChoice } from "@/components/account/message-language-choice";
 import { PublicPhoneChoice } from "@/components/account/public-phone-choice";
 import { VerificationCard } from "@/components/account/verification-card";
-import { getUserSession } from "@/lib/auth-client";
 import { getSelfProfile } from "@/api/profile";
 import { UserProfile } from "@/types/profile";
 import {
@@ -38,11 +37,6 @@ export default function ProfilePage() {
 
 	const fetchProfile = async () => {
 		try {
-			const session = getUserSession();
-			if (!session?.access_token) {
-				throw new Error("No access token found");
-			}
-
 			const profileData = await getSelfProfile();
 			setProfile(profileData);
 		} catch (err) {
@@ -483,7 +477,6 @@ export default function ProfilePage() {
 						fetchProfile();
 					}}
 					entityId={profile.id}
-					token={getUserSession()?.access_token}
 				/>
 			)}
 		</div>

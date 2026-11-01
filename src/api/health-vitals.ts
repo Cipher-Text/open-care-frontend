@@ -1,4 +1,3 @@
-import { baseUrl } from "@/config/config";
 import { apiDelete, apiGet, apiPatch, apiPost, buildUrl } from "@/lib/api-client";
 import { normalizePage, toWirePage, type WirePage } from "@/lib/pagination";
 import type { PageResult } from "@/types/common";
@@ -7,24 +6,12 @@ import { HealthVitals } from "@/types/health-vitals";
 /**
  * Get latest health vitals for the current user
  */
-export const getLatestHealthVitals = async (
-  token: string
-): Promise<HealthVitals> => {
-  const response = await fetch(`${baseUrl}/health-vitals/self/latest`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
-
+export const getLatestHealthVitals = async (): Promise<HealthVitals> => {
+  const response = await apiGet<HealthVitals>("/health-vitals/self/latest");
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch health vitals: ${response.status} ${response.statusText}`
-    );
+    throw new Error(`Failed to fetch health vitals: ${response.status} ${response.statusText}`);
   }
-
-  return response.json();
+  return response.data as HealthVitals;
 };
 
 // ---- recording and managing readings (the person's own)

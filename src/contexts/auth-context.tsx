@@ -1,11 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { LoginResponse } from "@/types/auth";
-import { getUserSession, clearUserSession } from "@/lib/auth-client";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { purgeLegacySession, clientLogout } from "@/lib/auth-client";
+import { getSession, resetSession, type SessionInfo } from "@/lib/session-client";
 
 interface AuthContextType {
-	user: LoginResponse | null;
+	/** Who is signed in (no token: it stays in the httpOnly cookies), or null. */
+	user: SessionInfo | null;
 	isLoading: boolean;
 	isAuthenticated: boolean;
 	logout: () => void;
@@ -15,39 +16,28 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-	const [user, setUser] = useState<LoginResponse | null>(null);
+	const [user, setUser] = useState<SessionInfo | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
-	// Initialize user from session on mount
-	useEffect(() => {
-		const initializeUser = async () => {
-			try {
-				const session = getUserSession();
-				setUser(session);
-			} catch (error) {
-				console.error("Failed to load user session:", error);
-				setUser(null);
-			} finally {
-				setIsLoading(false);
-			}
-		};
-
-		initializeUser();
+	const load = useCallback(async () => {
+		const session = await getSession();
+		setUser(session.signedIn ? session : null);
+		setIsLoading(false);
 	}, []);
 
+	useEffect(() => {
+		purgeLegacySession();
+		void load();
+	}, [load]);
+
 	const logout = () => {
-		clearUserSession();
 		setUser(null);
+		clientLogout();
 	};
 
 	const refetchUser = async () => {
-		try {
-			const session = getUserSession();
-			setUser(session);
-		} catch (error) {
-			console.error("Failed to refetch user session:", error);
-			setUser(null);
-		}
+		resetSession();
+		await load();
 	};
 
 	const value: AuthContextType = {

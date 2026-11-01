@@ -1,7 +1,7 @@
 import { ApiError } from "@/lib/api-error";
 import { baseUrl } from "@/config/config";
 import { DocumentType, FileUploadResponse } from "@/types/file";
-import { getAuthHeader } from "@/lib/auth-client";
+import { bffHeaders, bffUrl } from "@/lib/bff-shared";
 
 /**
  * Upload a file for a specific document type and entity.
@@ -21,17 +21,16 @@ export const uploadFile = async (
 	const formData = new FormData();
 	formData.append("file", file);
 
-	const headers: Record<string, string> = {};
+	// In the browser the call goes through the same-origin proxy, which adds the token from the httpOnly cookie
+	const viaProxy = !token && typeof window !== "undefined";
+	const headers: Record<string, string> = viaProxy ? bffHeaders() : {};
 
 	if (token) {
 		headers["Authorization"] = `Bearer ${token}`;
-	} else if (typeof window !== "undefined") {
-		const authHeaders = getAuthHeader();
-		Object.assign(headers, authHeaders);
 	}
 
 	const response = await fetch(
-		`${baseUrl}/files/${documentType}/id/${entityId}`,
+		viaProxy ? bffUrl(`/files/${documentType}/id/${entityId}`) : `${baseUrl}/files/${documentType}/id/${entityId}`,
 		{
 			method: "POST",
 			headers,
@@ -98,13 +97,12 @@ export const uploadFileWithProgress = async (
 	const formData = new FormData();
 	formData.append("file", file);
 
-	const headers: Record<string, string> = {};
+	// In the browser the call goes through the same-origin proxy, which adds the token from the httpOnly cookie
+	const viaProxy = !token && typeof window !== "undefined";
+	const headers: Record<string, string> = viaProxy ? bffHeaders() : {};
 
 	if (token) {
 		headers["Authorization"] = `Bearer ${token}`;
-	} else if (typeof window !== "undefined") {
-		const authHeaders = getAuthHeader();
-		Object.assign(headers, authHeaders);
 	}
 
 	return new Promise((resolve, reject) => {
@@ -148,7 +146,7 @@ export const uploadFileWithProgress = async (
 			reject(new Error("Upload cancelled"));
 		});
 
-		xhr.open("POST", `${baseUrl}/files/${documentType}/id/${entityId}`);
+		xhr.open("POST", viaProxy ? bffUrl(`/files/${documentType}/id/${entityId}`) : `${baseUrl}/files/${documentType}/id/${entityId}`);
 
 		Object.entries(headers).forEach(([key, value]) => {
 			xhr.setRequestHeader(key, value);
@@ -172,18 +170,17 @@ export const getFileAccessUrl = async (
 	objectName: string,
 	token?: string
 ): Promise<string> => {
-	const headers: Record<string, string> = {};
+	// In the browser the call goes through the same-origin proxy, which adds the token from the httpOnly cookie
+	const viaProxy = !token && typeof window !== "undefined";
+	const headers: Record<string, string> = viaProxy ? bffHeaders() : {};
 
 	if (token) {
 		headers["Authorization"] = `Bearer ${token}`;
-	} else if (typeof window !== "undefined") {
-		const authHeaders = getAuthHeader();
-		Object.assign(headers, authHeaders);
 	}
 
 	const params = new URLSearchParams({ objectName });
 	const response = await fetch(
-		`${baseUrl}/files/access/${documentType}?${params}`,
+		viaProxy ? bffUrl(`/files/access/${documentType}?${params}`) : `${baseUrl}/files/access/${documentType}?${params}`,
 		{ headers }
 	);
 

@@ -195,6 +195,7 @@ The backend's local realm seeds one user per user type (see the backend README, 
 - **SEO**: `src/app/sitemap.ts` serves `/sitemap/0.xml` (static pages and blog posts) plus chunked hospital and doctor sitemaps (1,000 records each, cached for a day); the pages that exist in Bangla (home, doctors, hospitals, blog, and every doctor, hospital and blog page) are listed at both the English and the `/bn` address with language alternates, and `src/app/robots.ts` lists them and blocks `/admin`, `/login`, `/signup`, `/logout` and `/auth`. Set `NEXT_PUBLIC_SITE_URL` per environment (default `https://opencarebd.com`).
 - **Menus, guards and landing**: `src/config/navigation-rules.ts` is the one list of who sees which console page (a person sees an entry when they hold any of its permissions). It drives the sidebar, the page guard in the admin layout, `src/middleware.ts` and the redirect after login. Staff (anyone with a console permission) land in `/admin`; everyone else lands in `/account` (home, profile, consents, health). The menu is grouped into People, Facilities, Reference data, Clinical, Platform and Account. Permissions come from `GET /api/me/capabilities` (Keycloak, so role changes apply without a new login) with the token as fallback. The Roles & Permissions screen has three tabs: Mapping (edit permissions), Menus (what each role will see, including changes not saved yet, with differences outlined) and History. `npm run docs:access` regenerates `opencare/docs/reference/ACCESS_MATRIX.md`. `npm run test:nav` (20 tests) checks the menu of all 15 roles against a snapshot of the live role mapping (`src/config/role-permissions.fixture.json`; refresh it after changing roles).
 - **Page guards**: `RequirePermission` (`src/components/admin/require-permission.tsx`) wraps pages that need a permission (Profiles, Admin Dashboard, Role permissions). Permissions come only from the token; the old hardcoded role map was removed because it drifted from Keycloak. The API enforces the same permissions on every route
+- **Sign-in tokens**: the browser holds none. They are httpOnly cookies; a signed-in call from the browser goes to the same-origin proxy `/api/bff/...` (`src/app/api/bff/[...path]/route.ts`), which adds the token, renews it when it has expired and forwards the caller's address; the screens learn who is signed in from `GET /api/session` (name, email, permissions, never the token). Use `apiGet`/`apiPost` from `src/lib/api-client.ts`; do not make an Authorization header in client code. Failures show `error.tsx` and missing pages `not-found.tsx` (English and Bangla for the public site).
 - **Account menu**: one `UserMenu` in the admin top bar; the sidebar has no profile block.
 - **Permissions**: UI hides actions with `usePermissions().hasPermission(...)`, which is only a convenience. The backend enforces access.
 
@@ -217,6 +218,7 @@ npm run lint
 npm run test:nav       # menu and guards for all 15 roles (20 tests)
 npm run test:i18n      # names, API error messages, en.json/bn.json parity (13 tests)
 npm run test:pricing   # pricing page view (8 tests)
+npm run test:bff       # the same-origin proxy rules (5 tests)
 
 # Regenerate opencare/docs/reference/ACCESS_MATRIX.md from the menu rules and src/config/role-permissions.fixture.json
 npm run docs:access
@@ -277,7 +279,7 @@ Read-only viewer. Hospital, institution and association forms label the field "U
 
 ### Testing
 
-Only small pure-logic tests exist (`test:nav`, `test:i18n`, `test:pricing`, on Node's built-in runner); there is no component, browser or `type-check` script yet, and CI runs the build only. See `docs/testing-frontend.md`. Type errors surface through `npm run build`.
+Only small pure-logic tests exist (`test:nav`, `test:i18n`, `test:pricing`, `test:bff`, on Node's built-in runner); there is no component, browser or `type-check` script yet, and CI runs these tests and the build. See `docs/testing-frontend.md`. Type errors surface through `npm run build`.
 
 ## 📖 Documentation
 

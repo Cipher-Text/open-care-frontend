@@ -40,7 +40,7 @@ Depends on: docs/ai-context.md (constitution). If conflict, ai-context.md wins.
 
 - Auth is via Keycloak (OIDC/JWT): the backend issues the tokens, the web app keeps them in cookies (`src/lib/auth.ts`) and `src/middleware.ts` guards `/admin` and `/account`. Logging out also ends the Keycloak session (`src/app/(app)/logout/actions.ts`).
 - Keep token handling secure:
-  - do not store tokens in localStorage
+  - do not store tokens in localStorage (the browser holds no token at all: tokens are httpOnly cookies, signed-in calls go through `/api/bff/...` (`src/app/api/bff/[...path]/route.ts`, which adds the token and renews it), and who is signed in comes from `GET /api/session`; use `apiGet`/`apiPost` from `src/lib/api-client.ts`, never a hand-made Authorization header in client code)
   - menus and guards come from `src/config/navigation-rules.ts`; the API still enforces every permission
 - UI permission checks are for UX only (hide/show), not for security.
 

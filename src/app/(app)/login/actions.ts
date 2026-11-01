@@ -1,13 +1,11 @@
 "use server";
 
 import { login } from "@/api/auth";
-import { LoginResponse } from "@/types/auth";
 import { saveAuthTokens } from "@/lib/auth";
 
 export interface LoginState {
 	success: boolean;
 	error?: string;
-	data?: LoginResponse;
 	shouldRedirect?: boolean;
 	redirectTo?: string;
 }
@@ -40,7 +38,6 @@ export async function submitLogin(
 		// Return success state with redirect info
 		return {
 			success: true,
-			data: response,
 			shouldRedirect: true,
 			redirectTo: "/admin",
 		};
@@ -118,7 +115,6 @@ export async function devLogin(
 		await saveAuthTokens(response);
 		return {
 			success: true,
-			data: response,
 			shouldRedirect: true,
 			redirectTo: "/admin",
 		};

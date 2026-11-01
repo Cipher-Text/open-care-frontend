@@ -21,7 +21,6 @@ interface ProfilePictureUploadModalProps {
 	onClose: () => void;
 	onSuccess: (photoUrl?: string, accessUrl?: string) => void;
 	entityId: number;
-	token?: string;
 }
 
 const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1 MB in bytes
@@ -29,7 +28,7 @@ const ASPECT_RATIO = 1; // 1:1 ratio
 
 export const ProfilePictureUploadModal: React.FC<
 	ProfilePictureUploadModalProps
-> = ({ isOpen, onClose, onSuccess, entityId, token }) => {
+> = ({ isOpen, onClose, onSuccess, entityId }) => {
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 	const [preview, setPreview] = useState<string | null>(null);
 	const [uploading, setUploading] = useState(false);
@@ -126,8 +125,7 @@ export const ProfilePictureUploadModal: React.FC<
 				DocumentType.PROFILE_PICTURE,
 				entityId,
 				selectedFile,
-				(progressPercent) => setProgress(progressPercent),
-				token
+				(progressPercent) => setProgress(progressPercent)
 			);
 
 			// accessUrl is permanent for public files (profile pictures)

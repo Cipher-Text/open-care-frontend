@@ -10,7 +10,6 @@ import { AdminHeader } from "@/components/admin/admin-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getUserSession } from "@/lib/auth-client";
 import { usePermissions } from "@/hooks/use-permissions";
 import { RequirePermission } from "@/components/admin/require-permission";
 import { columns } from "./columns";
@@ -29,11 +28,7 @@ function ProfilesContent() {
     error,
   } = useQuery<ProfilesResponse>({
     queryKey: ["profiles", currentPage],
-    queryFn: () => {
-      const session = getUserSession();
-      const token = session?.access_token;
-      return getProfiles(currentPage, 10, "id", "ASC", token);
-    },
+    queryFn: () => getProfiles(currentPage, 10, "id", "ASC"),
     placeholderData: (previousData) => previousData,
   });
 

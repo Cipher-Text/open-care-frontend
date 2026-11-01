@@ -15,22 +15,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { clientLogout, getUserSession } from "@/lib/auth-client";
-
-/** Name and email from the access token, shown until (or if) the profile cannot be loaded. */
-function identityFromToken(token?: string | null): { name?: string; email?: string } {
-  if (!token) return {};
-  try {
-    const payload = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
-    const claims = JSON.parse(atob(payload.padEnd(Math.ceil(payload.length / 4) * 4, "=")));
-    return {
-      name: claims.name ?? claims.preferred_username,
-      email: claims.email,
-    };
-  } catch {
-    return {};
-  }
-}
+import { clientLogout } from "@/lib/auth-client";
+import { getSession } from "@/lib/session-client";
 
 function initials(name: string): string {
   const parts = name.replace(/^dr\.?\s+/i, "").trim().split(/\s+/).filter(Boolean);
@@ -48,11 +34,10 @@ export function UserMenu() {
     staleTime: 5 * 60 * 1000,
     retry: false,
   });
-  // Read the token after mount: the server has no localStorage, so reading it during the first
-  // render would not match the server HTML (hydration mismatch)
+  // Read after mount (the server render knows nothing of the session, so reading it earlier would not match the HTML)
   const [fromToken, setFromToken] = useState<{ name?: string; email?: string }>({});
   useEffect(() => {
-    setFromToken(identityFromToken(getUserSession()?.access_token));
+    getSession().then((session) => setFromToken({ name: session.name, email: session.email }));
   }, []);
 
   const name = profile?.name || fromToken.name || "Account";

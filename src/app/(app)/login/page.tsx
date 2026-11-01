@@ -1,6 +1,7 @@
 "use client";
 
 import { CONTACT_EMAIL } from "@/components/common/InfoPage";
+import { resetSession } from "@/lib/session-client";
 import { useActionState, useState, useEffect, startTransition } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -13,7 +14,6 @@ import { Eye, EyeOff, User, Lock, Zap } from "lucide-react";
 import { loginSchema, LoginFormData } from "@/validations/login-schema";
 import { devLogin, getDevLoginAccounts, submitLogin } from "./actions";
 import { redirectAfterLogin } from "./redirect-actions";
-import { saveUserSession } from "@/lib/auth-client";
 import { Checkbox } from "@/components/ui/checkbox";
 import { GoogleSignInButton, OrDivider } from "@/components/auth/GoogleSignInButton";
 // import { useAuth } from "@/contexts/auth-context";
@@ -59,19 +59,16 @@ export default function LoginPage() {
 
 	// Handle redirect on successful login
 	useEffect(() => {
-		if (state.success && state.data) {
-			// Save session to localStorage for client-side access
-			saveUserSession(state.data);
-
-			// Refetch user in auth context
-			// refetchUser();
+		if (state.success) {
+			// The tokens stay in the httpOnly cookies the server set; the page keeps no copy of them
+			resetSession();
 
 			if (state.shouldRedirect) {
 				// Use server action for redirect to ensure proper server-side redirect
 				redirectAfterLogin();
 			}
 		}
-	}, [state.success, state.shouldRedirect, state.data]);
+	}, [state.success, state.shouldRedirect]);
 
 	const {
 		register,

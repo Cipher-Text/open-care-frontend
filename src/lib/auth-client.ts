@@ -1,62 +1,26 @@
 import { logout } from "@/app/(app)/logout/actions";
-
-import { LoginResponse } from "@/types/auth";
+import { resetSession } from "@/lib/session-client";
 
 /**
- * Client-side function to get user session from localStorage
+ * Sign-in tokens live only in httpOnly cookies, set by the server. Earlier versions also kept a copy in localStorage
+ * (readable by any script on the page); this removes that copy from browsers that still have it.
  */
-export function getUserSession(): LoginResponse | null {
-  if (typeof window === "undefined") return null;
-
+export function purgeLegacySession(): void {
+  if (typeof window === "undefined") return;
   try {
-    const sessionData = localStorage.getItem("user_session");
-    return sessionData ? JSON.parse(sessionData) : null;
+    localStorage.removeItem("user_session");
   } catch {
-    return null;
+    // storage may be blocked; nothing to remove then
   }
 }
 
 /**
- * Client-side function to save user session to localStorage
- */
-export function saveUserSession(response: LoginResponse): void {
-  if (typeof window === "undefined") return;
-
-  localStorage.setItem("user_session", JSON.stringify(response));
-}
-
-/**
- * Client-side function to clear user session from localStorage
- */
-export function clearUserSession(): void {
-  if (typeof window === "undefined") return;
-
-  localStorage.removeItem("user_session");
-}
-
-/**
- * Client-side function to get authorization header
- */
-export function getAuthHeader(): { Authorization?: string } {
-  const session = getUserSession();
-
-  if (session?.access_token && session?.token_type) {
-    return {
-      Authorization: `${session.token_type} ${session.access_token}`,
-    };
-  }
-
-  return {};
-}
-
-/**
- * Client-side logout. Clears the localStorage session, then calls the server action that
- * deletes the httpOnly auth cookies (client code cannot) and redirects to /login. Clearing
- * only localStorage left the cookie behind, and the middleware sent /login straight back
- * to /admin.
+ * Client-side logout: calls the server action that ends the session in Keycloak, deletes the httpOnly auth cookies
+ * (client code cannot) and redirects to /login.
  */
 export function clientLogout(): void {
-  clearUserSession();
+  purgeLegacySession();
+  resetSession();
 
   if (typeof window !== "undefined") {
     logout().catch(() => {

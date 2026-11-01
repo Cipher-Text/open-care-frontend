@@ -48,3 +48,11 @@ export function tokenExpired(token?: string | null): boolean {
 	const payload = token ? (decode(token) as { exp?: number } | null) : null;
 	return !payload || typeof payload.exp !== "number" || payload.exp * 1000 <= Date.now();
 }
+
+/** Name, email and username from the access token, for showing who is signed in (never for deciding access). */
+export function identityFromToken(token?: string | null): { name?: string; email?: string; username?: string } {
+	const payload = token ? (decode(token) as { name?: unknown; email?: unknown; preferred_username?: unknown } | null) : null;
+	if (!payload) return {};
+	const text = (value: unknown) => (typeof value === "string" && value ? value : undefined);
+	return { name: text(payload.name) ?? text(payload.preferred_username), email: text(payload.email), username: text(payload.preferred_username) };
+}

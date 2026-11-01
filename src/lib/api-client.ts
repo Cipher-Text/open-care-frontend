@@ -2,7 +2,8 @@
 
 import { baseUrl } from "@/config/config";
 import { ApiError } from "@/lib/api-error";
-import { getAuthHeader, clientLogout } from "@/lib/auth-client";
+import { clientLogout } from "@/lib/auth-client";
+import { bffHeaders, bffUrl } from "@/lib/bff-shared";
 
 interface ApiRequestOptions extends Omit<RequestInit, "headers"> {
 	headers?: Record<string, string>;
@@ -19,8 +20,9 @@ interface ApiResponse<T = unknown> {
 }
 
 /**
- * Common fetch wrapper for all API requests with bearer token support
- * Works on the client side with localStorage tokens
+ * Common fetch wrapper for all API requests. In the browser a signed-in call goes to the same-origin proxy
+ * (`/api/bff`), which adds the token from the httpOnly cookie: the browser never holds a token. A call with
+ * `includeAuth: false`, or one made on the server, goes straight to the backend without a token.
  */
 export async function apiRequest<T = unknown>(
 	endpoint: string,
@@ -33,7 +35,10 @@ export async function apiRequest<T = unknown>(
 		...fetchOptions
 	} = options;
 
-	const url = endpoint.startsWith("http")
+	const viaProxy = includeAuth && typeof window !== "undefined" && !endpoint.startsWith("http");
+	const url = viaProxy
+		? bffUrl(endpoint)
+		: endpoint.startsWith("http")
 		? endpoint
 		: `${baseUrl}${endpoint.startsWith("/") ? endpoint : "/" + endpoint}`;
 
@@ -43,19 +48,15 @@ export async function apiRequest<T = unknown>(
 		...(fetchOptions.body && !(fetchOptions.body instanceof FormData)
 			? { "Content-Type": "application/json" }
 			: {}),
+		...(viaProxy ? bffHeaders() : {}),
 		...customHeaders,
 	};
-
-	// Add authorization header if needed
-	if (includeAuth) {
-		const authHeaders = getAuthHeader();
-		Object.assign(headers, authHeaders);
-	}
 
 	try {
 		const response = await fetch(url, {
 			...fetchOptions,
 			headers,
+			...(viaProxy ? { credentials: "same-origin" as const } : {}),
 		});
 
 		const data = await response.json().catch(() => null);

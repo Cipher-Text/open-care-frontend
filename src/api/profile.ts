@@ -70,8 +70,7 @@ export const getProfiles = async (
 	page: number = 0,
 	size: number = 10,
 	sortBy: string = "id",
-	sortDir: string = "ASC",
-	token?: string
+	sortDir: string = "ASC"
 ): Promise<ProfilesResponse> => {
 	const url = buildUrl("/profiles", {
 		page,
@@ -79,9 +78,7 @@ export const getProfiles = async (
 		sortBy,
 		sortDir,
 	});
-	const response = await apiGet<ProfilesResponse>(url, {
-		includeAuth: !!token,
-	});
+	const response = await apiGet<ProfilesResponse>(url);
 
 	if (!response.ok) {
 		throw new Error(response.error || "Failed to fetch profiles");
@@ -137,16 +134,13 @@ export interface ProfileDetailsResponse extends UserProfile {
 export const getProfileById = async (
 	id: number,
 	bloodDonations: boolean = true,
-	userActivity: boolean = true,
-	token?: string
+	userActivity: boolean = true
 ): Promise<ProfileDetailsResponse> => {
 	const url = buildUrl(`/profiles/${id}`, {
 		bloodDonations,
 		userActivity,
 	});
-	const response = await apiGet<ProfileDetailsResponse>(url, {
-		includeAuth: !!token,
-	});
+	const response = await apiGet<ProfileDetailsResponse>(url);
 
 	if (!response.ok) {
 		throw new Error(response.error || "Failed to fetch profile");
