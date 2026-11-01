@@ -35,3 +35,19 @@ export const fetchDataAccess = async (filters: { kind?: DataAccessKind | ""; act
 			"Could not load the access log"
 		)
 	);
+
+/** One viewer's reads of the signed-in donor's listing on one day. A member is shown by a shortened name, staff only as "Open Care staff". */
+export interface DonorView {
+	id: number;
+	date: string;
+	viewerType: "MEMBER" | "STAFF";
+	viewerLabel: string | null;
+	times: number;
+	/** What the listing showed of the donor then: only what the donor chose to share. */
+	contactShown: "NAME_ONLY" | "PHONE" | "ADDRESS" | "PHONE_ADDRESS";
+	lastViewedAt: string;
+}
+
+/** Who looked at the signed-in person's blood donor listing. */
+export const fetchMyDonorViews = async (page: number, size: number): Promise<PageResult<DonorView>> =>
+	normalizePage(unwrap<WirePage<DonorView>>(await apiGet(buildUrl("/me/donor-views", { page: toWirePage(page), size })), "Could not load who looked at your listing"));
