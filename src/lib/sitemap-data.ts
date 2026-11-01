@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http";
 import { baseUrl } from "@/config/config";
 
 /**
@@ -18,7 +19,7 @@ interface Page {
 
 async function getPage(kind: DirectoryKind, page: number, size: number): Promise<Page> {
 	try {
-		const response = await fetch(`${baseUrl}/${kind}?page=${page}&size=${size}`, {
+		const response = await fetchWithTimeout(`${baseUrl}/${kind}?page=${page}&size=${size}`, {
 			headers: { Accept: "application/json" },
 			next: { revalidate: REVALIDATE_SECONDS },
 		});

@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http";
 import "server-only";
 import { createHash, randomBytes } from "node:crypto";
 import { baseUrl } from "@/config/config";
@@ -60,7 +61,7 @@ export function authorizeUrl(config: KeycloakConfig, params: { redirectUri: stri
 }
 
 async function tokenRequest(config: KeycloakConfig, form: Record<string, string>): Promise<LoginResponse | null> {
-	const response = await fetch(`${config.url}/realms/${config.realm}/protocol/openid-connect/token`, {
+	const response = await fetchWithTimeout(`${config.url}/realms/${config.realm}/protocol/openid-connect/token`, {
 		method: "POST",
 		headers: { "Content-Type": "application/x-www-form-urlencoded" },
 		body: new URLSearchParams({ client_id: config.clientId, ...form }),
@@ -82,7 +83,7 @@ export interface EnsureResult {
 
 /** First sign-in: the backend creates the profile and puts the user in the standard group. */
 export async function ensureProfile(accessToken: string): Promise<EnsureResult> {
-	const response = await fetch(`${baseUrl}/profiles/self/ensure`, {
+	const response = await fetchWithTimeout(`${baseUrl}/profiles/self/ensure`, {
 		method: "POST",
 		headers: { Authorization: `Bearer ${accessToken}`, Accept: "application/json" },
 		cache: "no-store",

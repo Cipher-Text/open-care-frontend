@@ -292,7 +292,10 @@
     "BLOG_TOPIC_UNKNOWN": "বিষয়গুলোর একটি নেই।",
     "BLOG_SPECIALITY_UNKNOWN": "বিশেষত্বটি নেই।",
     "PARAMETER_INVALID": "অনুরোধের একটি মান সঠিক নয়।",
-    "PARAMETER_MISSING": "অনুরোধে প্রয়োজনীয় কিছু বাদ পড়েছে।"
+    "PARAMETER_MISSING": "অনুরোধে প্রয়োজনীয় কিছু বাদ পড়েছে।",
+    "STORAGE_UNAVAILABLE": "ফাইল সংরক্ষণ সেবা এখন পাওয়া যাচ্ছে না। একটু পরে আবার চেষ্টা করুন।",
+    "UPSTREAM_UNAVAILABLE": "আমাদের একটি সেবা সাড়া দেয়নি। আবার চেষ্টা করুন।",
+    "UPSTREAM_TIMEOUT": "সেবাটি উত্তর দিতে বেশি সময় নিয়েছে। আবার চেষ্টা করুন।"
   },
   "doctors": {
     "metaListTitle": "বাংলাদেশের ডাক্তার খুঁজুন | Open Care",

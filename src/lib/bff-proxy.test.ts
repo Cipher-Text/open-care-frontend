@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { clientHeaderOk, downstreamHeaders, refreshOnce, upstreamHeaders, upstreamUrl } from "./bff-proxy.ts";
+import { clientHeaderOk, downstreamHeaders, proxyTimeoutMs, refreshOnce, upstreamHeaders, upstreamUrl } from "./bff-proxy.ts";
 
 const headers = (entries: Record<string, string>) => ({ get: (name: string) => entries[name.toLowerCase()] ?? null });
 
@@ -51,4 +51,11 @@ test("requests that find the token expired together share one refresh", async ()
 	assert.equal(calls, 1);
 	await refreshOnce("k", refresh); // a later refresh runs again
 	assert.equal(calls, 2);
+});
+
+test("a call may not hang for ever; an upload gets longer than an ordinary call", () => {
+	assert.equal(proxyTimeoutMs("GET", ["hospitals"]), 30_000);
+	assert.equal(proxyTimeoutMs("POST", ["appointments"]), 30_000);
+	assert.equal(proxyTimeoutMs("POST", ["files", "PROFILE_PICTURE", "id", "3"]), 120_000);
+	assert.equal(proxyTimeoutMs("GET", ["files", "access", "PRIVATE"]), 30_000);
 });

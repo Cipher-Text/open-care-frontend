@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http";
 import { baseUrl } from "@/config/config";
 import type { ApiPlan } from "@/config/pricing-plans";
 
@@ -9,7 +10,7 @@ const REVALIDATE_SECONDS = 60 * 60;
  */
 export async function getPlans(): Promise<ApiPlan[] | null> {
 	try {
-		const response = await fetch(`${baseUrl}/plans`, { next: { revalidate: REVALIDATE_SECONDS } });
+		const response = await fetchWithTimeout(`${baseUrl}/plans`, { next: { revalidate: REVALIDATE_SECONDS } });
 		if (!response.ok) return null;
 		return (await response.json()) as ApiPlan[];
 	} catch {

@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http";
 import { baseUrl } from "@/config/config";
 import type { DoctorDetailsResponse } from "@/types/doctors";
 import type { HospitalDetailsResponse } from "@/types/hospitals";
@@ -15,7 +16,7 @@ function parseId(id: string): number | null {
 }
 
 async function getJson<T>(path: string): Promise<T | null> {
-	const response = await fetch(`${baseUrl}${path}`, {
+	const response = await fetchWithTimeout(`${baseUrl}${path}`, {
 		headers: { Accept: "application/json" },
 		next: { revalidate: REVALIDATE_SECONDS },
 	});

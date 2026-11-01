@@ -1,11 +1,12 @@
 import { baseUrl } from "@/config/config";
+import { fetchWithTimeout } from "@/lib/http";
 import { LoginFormData } from "@/validations/login-schema";
 import { LoginResponse } from "@/types/auth";
 
 export const login = async (
 	loginData: LoginFormData
 ): Promise<LoginResponse> => {
-	const response = await fetch(`${baseUrl}/auth/login`, {
+	const response = await fetchWithTimeout(`${baseUrl}/auth/login`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
@@ -28,7 +29,7 @@ export const login = async (
 export const refreshToken = async (
 	refreshToken: string
 ): Promise<LoginResponse> => {
-	const response = await fetch(`${baseUrl}/auth/refresh`, {
+	const response = await fetchWithTimeout(`${baseUrl}/auth/refresh`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",

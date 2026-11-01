@@ -292,7 +292,10 @@
     "BLOG_TOPIC_UNKNOWN": "One of the topics does not exist.",
     "BLOG_SPECIALITY_UNKNOWN": "The speciality does not exist.",
     "PARAMETER_INVALID": "One of the values in the address is not valid.",
-    "PARAMETER_MISSING": "Something required is missing from the request."
+    "PARAMETER_MISSING": "Something required is missing from the request.",
+    "STORAGE_UNAVAILABLE": "File storage is not available right now. Please try again in a moment.",
+    "UPSTREAM_UNAVAILABLE": "A service we depend on did not answer. Please try again.",
+    "UPSTREAM_TIMEOUT": "The service took too long to answer. Please try again."
   },
   "doctors": {
     "metaListTitle": "Find doctors in Bangladesh | Open Care",

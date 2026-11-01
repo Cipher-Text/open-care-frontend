@@ -47,6 +47,11 @@ export function downstreamHeaders(upstream: HeaderReader): Record<string, string
 	return headers;
 }
 
+/** How long the backend may take: a file upload gets longer than an ordinary call, and no call may hang for ever. */
+export function proxyTimeoutMs(method: string, segments: string[]): number {
+	return method.toUpperCase() === "POST" && segments[0] === "files" ? 120_000 : 30_000;
+}
+
 const inFlight = new Map<string, Promise<unknown>>();
 
 /**

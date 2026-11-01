@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http";
 import { baseUrl } from "@/config/config";
 import { formatNumber } from "@/lib/format";
 import { displayName } from "@/lib/text";
@@ -48,7 +49,7 @@ const FEATURED_TYPES: { apiName: string; label: string }[] = [
 
 async function getJson<T>(path: string): Promise<T | null> {
 	try {
-		const res = await fetch(`${baseUrl}${path}`, { next: { revalidate: REVALIDATE_SECONDS } });
+		const res = await fetchWithTimeout(`${baseUrl}${path}`, { next: { revalidate: REVALIDATE_SECONDS } });
 		return res.ok ? ((await res.json()) as T) : null;
 	} catch {
 		return null;

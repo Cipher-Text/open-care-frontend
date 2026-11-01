@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { baseUrl } from "@/config/config";
-import { clientHeaderOk, downstreamHeaders, upstreamHeaders, upstreamUrl } from "@/lib/bff-proxy";
+import { clientHeaderOk, downstreamHeaders, proxyTimeoutMs, upstreamHeaders, upstreamUrl } from "@/lib/bff-proxy";
+import { fetchWithTimeout } from "@/lib/http";
 import { currentAccessToken } from "@/lib/session-server";
 
 export const dynamic = "force-dynamic";
@@ -25,7 +26,7 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
 	const body = hasBody ? await request.arrayBuffer() : undefined;
 
 	const send = (token?: string) =>
-		fetch(target, { method: request.method, headers: upstreamHeaders(request.headers, token), body, cache: "no-store", redirect: "manual" });
+		fetchWithTimeout(target, { method: request.method, headers: upstreamHeaders(request.headers, token), body, cache: "no-store", redirect: "manual" }, proxyTimeoutMs(request.method, path));
 
 	try {
 		let token = await currentAccessToken();
@@ -37,7 +38,10 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
 		}
 		const noBody = response.status === 204 || response.status === 304 || request.method === "HEAD";
 		return new NextResponse(noBody ? null : response.body, { status: response.status, headers: downstreamHeaders(response.headers) });
-	} catch {
+	} catch (error) {
+		if (error instanceof DOMException && (error.name === "TimeoutError" || error.name === "AbortError")) {
+			return NextResponse.json({ statusCode: 504, error: "Gateway Timeout", message: "The service took too long to answer", code: "UPSTREAM_TIMEOUT" }, { status: 504 });
+		}
 		return NextResponse.json({ statusCode: 502, error: "Bad Gateway", message: "The service could not be reached", code: "UPSTREAM_UNAVAILABLE" }, { status: 502 });
 	}
 }

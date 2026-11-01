@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http";
 import { baseUrl } from "@/config/config";
 import type { BlogPage, BlogPost, BlogTopic } from "@/types/blog";
 
@@ -9,7 +10,7 @@ const REVALIDATE_SECONDS = 10 * 60;
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 async function getJson<T>(path: string): Promise<T | null> {
-	const response = await fetch(`${baseUrl}${path}`, {
+	const response = await fetchWithTimeout(`${baseUrl}${path}`, {
 		headers: { Accept: "application/json" },
 		next: { revalidate: REVALIDATE_SECONDS },
 	});
