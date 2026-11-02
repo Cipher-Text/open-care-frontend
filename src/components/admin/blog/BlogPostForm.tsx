@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { uploadFile } from "@/api/files";
 import { createBlogPost, deleteBlogPost, fetchBlogTopics, publishBlogPost, unpublishBlogPost, updateBlogPost, type BlogPostInput } from "@/api/blog-admin";
 import { fetchAllMedicalSpecialities } from "@/api/medical-specialities";
 import { RichTextEditor } from "@/components/admin/blog/RichTextEditor";
@@ -14,6 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
+import { coverFileProblem } from "@/lib/cover-upload";
+import { DocumentType } from "@/types/file";
 import type { BlogPost } from "@/types/blog";
 
 const MAX_TOPICS = 5;
@@ -31,6 +34,9 @@ export function BlogPostForm({ post }: { post?: BlogPost }) {
 	const [specialityId, setSpecialityId] = useState<string>(post?.speciality ? String(post.speciality.id) : "");
 	const [bodyHtml, setBodyHtml] = useState(post?.bodyHtml ?? "");
 	const [status, setStatus] = useState(post?.status);
+	// The address of the picture just uploaded, for the preview (the stored name alone cannot be shown without the CDN address)
+	const [coverPreview, setCoverPreview] = useState<string | null>(null);
+	const [uploadingCover, setUploadingCover] = useState(false);
 
 	const topicList = useQuery({ queryKey: ["blog-topics"], queryFn: fetchBlogTopics, staleTime: 10 * 60 * 1000 });
 	const specialities = useQuery({ queryKey: ["all-specialities"], queryFn: fetchAllMedicalSpecialities, staleTime: 60 * 60 * 1000 });
@@ -45,6 +51,25 @@ export function BlogPostForm({ post }: { post?: BlogPost }) {
 		topics,
 		specialityId: specialityId ? Number(specialityId) : null,
 	});
+
+	const uploadCover = async (file: File | undefined) => {
+		if (!file || !post) return;
+		const problem = coverFileProblem(file);
+		if (problem) return toast.error(problem);
+		setUploadingCover(true);
+		try {
+			// The server saves the file name on the post at once; the field and the preview follow
+			const result = await uploadFile(DocumentType.BLOG_COVER, post.id, file);
+			setCoverImageUrl(result.photoUrl);
+			setCoverPreview(result.accessUrl);
+			toast.success("Cover image uploaded");
+			void queryClient.invalidateQueries({ queryKey: ["admin-blog"] });
+		} catch (error) {
+			failed(error);
+		} finally {
+			setUploadingCover(false);
+		}
+	};
 
 	const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin-blog"] });
 	const failed = (error: unknown) => toast.error(error instanceof Error ? error.message : "Something went wrong");
@@ -126,7 +151,20 @@ export function BlogPostForm({ post }: { post?: BlogPost }) {
 					<div className="space-y-1">
 						<Label htmlFor="cover">Cover image</Label>
 						<Input id="cover" value={coverImageUrl} onChange={(e) => setCoverImageUrl(e.target.value)} placeholder="blog/file-name.png or a full https link" maxLength={500} />
-						<p className="text-xs text-muted-foreground">A file name under blog/ in the public bucket, or a full https link. Uploading from this page comes later.</p>
+						{post ? (
+							<div className="flex flex-wrap items-center gap-3 pt-1">
+								<Input type="file" accept="image/jpeg,image/png,image/webp" disabled={uploadingCover} aria-label="Upload a cover image" className="max-w-xs"
+									onChange={(e) => { void uploadCover(e.target.files?.[0]); e.target.value = ""; }} />
+								{uploadingCover && <span className="text-xs text-muted-foreground">Uploading...</span>}
+							</div>
+						) : (
+							<p className="text-xs text-muted-foreground">Save the draft first, then you can upload a cover image here.</p>
+						)}
+						{(coverPreview || /^https?:\/\//.test(coverImageUrl)) && (
+							// eslint-disable-next-line @next/next/no-img-element
+							<img src={coverPreview ?? coverImageUrl} alt="Cover preview" className="mt-2 max-h-40 rounded-md border object-cover" />
+						)}
+						<p className="text-xs text-muted-foreground">Upload a JPEG, PNG or WebP picture up to 5 MB (it is saved on the post at once), or type a file name under blog/ or a full https link.</p>
 					</div>
 					<div className="space-y-1">
 						<Label htmlFor="speciality">Related speciality (adds a Find a doctor button)</Label>
