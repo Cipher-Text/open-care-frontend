@@ -105,6 +105,7 @@ function PrescriptionsList() {
 											{p.prescriptionNo}
 										</Link>
 										{p.supersededById && <span className="ml-2 rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">Replaced</span>}
+										{p.voided && <span className="ml-2 rounded bg-destructive/10 px-1.5 py-0.5 text-xs text-destructive">Void</span>}
 										{p.replacesId && <span className="ml-2 rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">Corrected copy</span>}
 									</TableCell>
 									<TableCell>

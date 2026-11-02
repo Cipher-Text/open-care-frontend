@@ -25,6 +25,8 @@ export interface PrescriptionSummary {
 	/** The prescription this one replaced, and the one that replaced this one (null while it stands). */
 	replacesId?: number | null;
 	supersededById?: number | null;
+	/** The doctor marked it as written by mistake. */
+	voided?: boolean;
 }
 
 export interface Prescription {
@@ -41,6 +43,9 @@ export interface Prescription {
 	supersededById?: number | null;
 	supersededByNo?: string | null;
 	supersededAt?: string | null;
+	/** Set when the doctor marked it as written by mistake, with the reason; null while it stands. */
+	voidedAt?: string | null;
+	voidReason?: string | null;
 	doctor: {
 		id: number;
 		name: string | null;

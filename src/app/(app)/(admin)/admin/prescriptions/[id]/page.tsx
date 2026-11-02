@@ -1,13 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, FilePlus2, Pencil, Printer } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { ArrowLeft, Ban, FilePlus2, Pencil, Printer } from "lucide-react";
 import { fetchPrescription } from "@/api/prescriptions";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { PrescriptionDocument } from "@/components/admin/prescriptions/prescription-document";
 import { PrescriptionHistory } from "@/components/admin/prescriptions/prescription-history";
+import { VoidPrescriptionDialog } from "@/components/admin/prescriptions/void-dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -17,6 +19,8 @@ export default function PrescriptionPage() {
 	const { id } = useParams<{ id: string }>();
 	const router = useRouter();
 	const { hasPermission } = usePermissions();
+	const queryClient = useQueryClient();
+	const [voiding, setVoiding] = useState(false);
 	const { data, isLoading, isError, error } = useQuery({
 		queryKey: ["prescription", id],
 		queryFn: () => fetchPrescription(id),
@@ -31,7 +35,7 @@ export default function PrescriptionPage() {
 						<ArrowLeft className="mr-1.5 size-4" aria-hidden="true" />
 						All prescriptions
 					</Button>
-					{data && hasPermission("update-prescription") && data.editable !== false && !data.supersededById && (
+					{data && hasPermission("update-prescription") && data.editable !== false && !data.supersededById && !data.voidedAt && (
 						<Button variant="outline" asChild>
 							<Link href={`/admin/prescriptions/${data.id}/edit`}>
 								<Pencil className="mr-1.5 size-4" aria-hidden="true" />
@@ -39,12 +43,18 @@ export default function PrescriptionPage() {
 							</Link>
 						</Button>
 					)}
-					{data && hasPermission("create-prescription") && data.editable === false && !data.supersededById && (
+					{data && hasPermission("create-prescription") && data.editable === false && !data.supersededById && !data.voidedAt && (
 						<Button variant="outline" asChild>
 							<Link href={`/admin/prescriptions/${data.id}/replace`}>
 								<FilePlus2 className="mr-1.5 size-4" aria-hidden="true" />
 								Write a corrected copy
 							</Link>
+						</Button>
+					)}
+					{data && hasPermission("update-prescription") && !data.supersededById && !data.voidedAt && (
+						<Button variant="outline" onClick={() => setVoiding(true)}>
+							<Ban className="mr-1.5 size-4" aria-hidden="true" />
+							Written by mistake
 						</Button>
 					)}
 					{data && (
@@ -62,7 +72,14 @@ export default function PrescriptionPage() {
 						<AlertDescription>{error instanceof Error ? error.message : "Failed to load the prescription"}</AlertDescription>
 					</Alert>
 				)}
-				{data && data.editable === false && !data.supersededById && (
+				{data?.voidedAt && (
+					<Alert variant="destructive" className="mx-auto mb-4 max-w-3xl print:hidden">
+						<AlertDescription>
+							Marked as written by mistake on {new Date(data.voidedAt).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })}: {data.voidReason}. It is kept as written, the patient was told, and it can no longer be edited or replaced.
+						</AlertDescription>
+					</Alert>
+				)}
+				{data && data.editable === false && !data.supersededById && !data.voidedAt && (
 					<Alert className="mx-auto mb-4 max-w-3xl print:hidden">
 						<AlertDescription>
 							Editing closed{data.editableUntil ? ` on ${new Date(data.editableUntil).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })}` : ""}.
@@ -81,6 +98,7 @@ export default function PrescriptionPage() {
 						</AlertDescription>
 					</Alert>
 				)}
+				{data && <VoidPrescriptionDialog id={data.id} number={data.prescriptionNo} open={voiding} onClose={() => setVoiding(false)} onVoided={() => void queryClient.invalidateQueries({ queryKey: ["prescription", id] })} />}
 				{data && <PrescriptionDocument prescription={data} />}
 				{data && <PrescriptionHistory prescription={data} />}
 			</div>

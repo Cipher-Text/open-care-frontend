@@ -56,6 +56,10 @@ export const fetchRevisions = async (id: number | string) =>
 export const replacePrescription = async (id: number | string, input: PrescriptionInput) =>
 	unwrap<Prescription>(await apiPost(`/prescriptions/${id}/replace`, input), "Failed to save the corrected prescription");
 
+/** Marks one of the doctor's prescriptions as written by mistake (a reason is required). The patient is told. */
+export const voidPrescription = async (id: number | string, reason: string) =>
+	unwrap<Prescription>(await apiPost(`/prescriptions/${id}/void`, { reason }), "Could not mark the prescription as written by mistake");
+
 export const searchMedicines = async (q: string) =>
 	unwrap<MedicineSuggestion[]>(await apiGet(buildUrl("/prescriptions/medicines", { q })), "Failed to search medicines");
 
@@ -73,6 +77,8 @@ export interface MyPrescriptionSummary {
 	hospitalName: string | null;
 	/** The doctor replaced it with a corrected copy; the old one is kept as written. */
 	replaced: boolean;
+	/** The doctor marked it as written by mistake: it must not be used. */
+	voided: boolean;
 }
 
 export const fetchMyPrescriptions = async (page: number, size: number): Promise<PageResult<MyPrescriptionSummary>> =>

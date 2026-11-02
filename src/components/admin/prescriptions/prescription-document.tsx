@@ -23,6 +23,12 @@ export function PrescriptionDocument({ prescription: p }: { prescription: Prescr
 
 	return (
 		<article className="mx-auto max-w-3xl rounded-lg border bg-white p-6 text-black shadow-sm print:max-w-none print:rounded-none print:border-0 print:p-0 print:shadow-none sm:p-10">
+			{p.voidedAt && (
+				<div className="mb-3 border-2 border-black px-3 py-2 text-center">
+					<p className="text-sm font-bold uppercase tracking-wide">Void: written by mistake. Do not use</p>
+					{p.voidReason && <p className="mt-1 text-xs">Doctor&apos;s note: {p.voidReason}</p>}
+				</div>
+			)}
 			{p.supersededByNo && (
 				<p className="mb-3 border border-black px-3 py-1 text-center text-sm font-bold uppercase tracking-wide">
 					Replaced by {p.supersededByNo}: do not use

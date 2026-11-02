@@ -47,6 +47,7 @@ export default function MyPrescriptionsPage() {
 										<p className="font-medium">
 											{p.doctorName ?? "Doctor"} <span className="font-normal text-muted-foreground">· {date(p.prescriptionDate)}</span>
 											{p.replaced && <Badge variant="secondary" className="ml-2">Replaced by a corrected copy</Badge>}
+											{p.voided && <Badge variant="destructive" className="ml-2">Written by mistake: do not use</Badge>}
 										</p>
 										<p>{p.diagnosis}</p>
 										<p className="text-xs text-muted-foreground">
