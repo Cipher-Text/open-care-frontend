@@ -22,7 +22,7 @@ test("each plan lists only what it adds, and says what it includes", () => {
 	assert.equal(view.plans[1].includes, "Everything in Free");
 	assert.deepEqual(view.plans[1].features.map((f) => f.text), [
 		"WhatsApp pre-filled booking link",
-		"SMS and email notifications (follow-up reminders and enquiry alerts)",
+		"SMS and email notifications (booking and enquiry alerts)",
 	]);
 	assert.deepEqual(view.plans[2].features.map((f) => f.text), ["Priority placement in public search, clearly labelled as featured"]);
 });
@@ -40,7 +40,9 @@ test("features not built yet are marked roadmap, the others are not", () => {
 
 test("the comparison table says Yes, Roadmap or a dash", () => {
 	const row = (label: string) => buildAudienceView(audience("doctors"), doctorPlans)!.comparison.find((r) => r.label.startsWith(label))!.values;
-	assert.deepEqual(row("WhatsApp"), ["—", "Yes", "Yes"]);
+	// the WhatsApp link has no code behind it yet, so the table says Roadmap, not Yes
+	assert.deepEqual(row("WhatsApp"), ["—", "Roadmap", "Roadmap"]);
+	assert.deepEqual(row("Write prescriptions"), ["Yes", "Yes", "Yes"]);
 	assert.deepEqual(row("Priority placement"), ["—", "—", "Roadmap"]);
 });
 

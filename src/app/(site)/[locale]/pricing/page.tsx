@@ -8,7 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AUDIENCES, audienceById } from "@/config/pricing-plans";
-import { buildAudienceView, type PlanView } from "@/lib/pricing-view";
+import { buildAudienceView, priceLabel, type PlanView } from "@/lib/pricing-view";
 import { cn } from "@/lib/utils";
 
 export const revalidate = 3600;
@@ -18,7 +18,10 @@ export const metadata: Metadata = {
 	description: "Free, Plus and Pro plans for patients, doctors and hospitals on Open Care. Finding care stays free.",
 };
 
-const formatPrice = (price: number): string => (price === 0 ? "BDT 0" : `BDT ${price.toLocaleString("en-US")}`);
+// The prices are a proposal until the owner decides them: they are shown only when the server setting SHOW_PRICES is "true"
+// (read when the server starts, so no new build is needed to switch it on)
+const SHOW_PRICES = process.env.SHOW_PRICES === "true";
+const formatPrice = (price: number): string => priceLabel(price, SHOW_PRICES);
 
 const waitlistLink = (audience: string, plan: PlanView) =>
 	`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`Open Care ${plan.name} plan for ${audience}`)}`;
@@ -91,7 +94,7 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
 										) : (
 											<p className="pt-2 text-3xl font-bold">
 												{formatPrice(plan.price)}
-												{plan.period && <span className="ml-1 text-sm font-normal text-muted-foreground">{plan.period}</span>}
+												{SHOW_PRICES && plan.period && <span className="ml-1 text-sm font-normal text-muted-foreground">{plan.period}</span>}
 											</p>
 										)}
 										<p className="text-sm text-muted-foreground">
@@ -175,7 +178,7 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
 				)}
 
 				<p className="mx-auto max-w-3xl text-center text-xs text-muted-foreground">
-					Prices are in BDT. Features marked Roadmap are planned and not available yet. Plan names describe what is
+					{SHOW_PRICES ? "Prices are in BDT. " : "Prices have not been decided yet. "}Features marked Roadmap are planned and not available yet. A few built features are already limited by plan (the blood donor list, a facility&apos;s test price list and enquiry figures); the rest are open to everyone for now. Plan names describe what is
 					included; they do not rank doctors or hospitals, and a paid plan never changes who is verified. Questions?{" "}
 					<a className="text-primary underline-offset-2 hover:underline" href={`mailto:${CONTACT_EMAIL}`}>
 						{CONTACT_EMAIL}

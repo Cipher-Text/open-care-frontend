@@ -6,7 +6,7 @@
 > |---|---|---|
 > | `npm run test:nav` | `src/config/navigation-rules.test.ts`: menu, landing page and path guards for all 15 roles against `src/config/role-permissions.fixture.json`, plus grouping and Dashboard rules | 20 tests, all pass |
 > | `npm run test:i18n` | `src/lib/names.test.ts` (Bangla/English name helper), `src/lib/api-error.test.ts` (error messages by code), `src/messages/messages.test.ts` (`en.json` and `bn.json` have the same keys, no empty message, same placeholders) | 13 tests, all pass |
-> | `npm run test:pricing` | `src/lib/pricing-view.test.ts`: how the plans from the API become the pricing page | 8 tests, all pass |
+> | `npm run test:pricing` | `src/lib/pricing-view.test.ts` and `src/lib/roadmap-copy.test.ts`: how the plans from the API become the pricing page, which features are marked Roadmap, and the hidden prices | 11 tests, all pass |
 > | `npm run test:bff` | `src/lib/bff-proxy.test.ts`: the same-origin proxy's rules (client header on changes, path guard, headers sent and returned, one token refresh at a time) | 11 tests, all pass (now also the caller address rule, which refreshes end the session, and the refresh grace time) |
 > | `npm run test:vitals` | `src/lib/reading-form.test.ts`: which cleared fields a change cannot remove, and when a reading is already replaced or deleted | 3 tests, all pass |
 > | `npm run test:url` | `src/lib/safe-url.test.ts`: which link schemes are rendered (http, https, mailto, tel) and which are dropped | 4 tests, all pass |

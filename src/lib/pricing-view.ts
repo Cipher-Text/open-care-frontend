@@ -29,6 +29,15 @@ const TIERS: Tier[] = ["FREE", "PLUS", "PRO"];
 const NAMES: Record<Tier, string> = { FREE: "Free", PLUS: "Plus", PRO: "Pro" };
 const FEATURE_ORDER = Object.keys(FEATURE_COPY);
 
+/**
+ * What a plan's price line says. Prices are only shown when the owner has decided them (`SHOW_PRICES=true`): the
+ * numbers in the plan table are a proposal, so until then a paid plan says "To be announced" and Free says "Free".
+ */
+export function priceLabel(price: number, showPrices: boolean): string {
+	if (price === 0) return showPrices ? "BDT 0" : "Free";
+	return showPrices ? `BDT ${price.toLocaleString("en-US")}` : "To be announced";
+}
+
 /** Null when the API has no plans for this audience (so the page can say prices are unavailable instead of inventing any). */
 export function buildAudienceView(audience: AudienceCopy, plans: ApiPlan[]): AudienceView | null {
 	const primary = audience.apiAudiences[0];

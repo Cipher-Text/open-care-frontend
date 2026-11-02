@@ -217,7 +217,7 @@ npm run lint
 # Tests (Node's built-in runner; not run in CI yet)
 npm run test:nav       # menu and guards for all 15 roles (20 tests)
 npm run test:i18n      # names, API error messages, en.json/bn.json parity (13 tests)
-npm run test:pricing   # pricing page view (8 tests)
+npm run test:pricing   # pricing page view, roadmap marks and hidden prices (11 tests)
 npm run test:bff       # the same-origin proxy rules (11 tests)
 npm run test:vitals    # the health readings screen rules (3 tests)
 npm run test:url       # the link scheme rule (4 tests)

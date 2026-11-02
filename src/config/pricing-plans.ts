@@ -5,6 +5,8 @@
  *
  * Every audience has the same three plans (Free, Plus, Pro). Plan names describe what is included; they never rank
  * a provider. Nothing is sold yet: paid plans are a waitlist, and a feature marked roadmap is planned, not built.
+ * The roadmap marks were checked against the code on November 2, 2026 (`roadmap-copy.test.ts` keeps the ones known to be
+ * unbuilt marked): a feature that has no code behind it must say so, whatever plan lists it.
  * The reference for the numbers is `opencare/docs/proposals/PRICING_MODEL.md`.
  */
 export type Tier = "FREE" | "PLUS" | "PRO";
@@ -32,7 +34,7 @@ export const FEATURE_COPY: Record<string, FeatureCopy> = {
 	DIRECTORY_LISTING: { text: "Listing in the Open Care directory" },
 	PROFILE_SELF_EDIT: { text: "Edit your own profile or listing in the Open Care console" },
 	EMERGENCY_INFO: { text: "Emergency, ambulance and blood bank information" },
-	CONTACT_VERIFICATION: { text: "Claimed and verified contact details", roadmap: true },
+	CONTACT_VERIFICATION: { text: "Claimed and verified contact details" },
 	// patients
 	DIRECTORY_SEARCH: { text: "Search doctors, hospitals, ambulances and blood services" },
 	CONSENT_MANAGEMENT: { text: "Approve or decline a doctor's request to write your prescription, and take your consent back any time" },
@@ -46,11 +48,12 @@ export const FEATURE_COPY: Record<string, FeatureCopy> = {
 	PRESCRIPTIONS: { text: "Write prescriptions for patients who consent" },
 	PRACTICE_DASHBOARD: { text: "Your own practice dashboard: prescriptions, patients and follow-ups" },
 	PROFILE_LANDING_PAGE: { text: "Doctor profile landing page" },
-	WHATSAPP_BOOKING_LINK: { text: "WhatsApp pre-filled booking link" },
+	WHATSAPP_BOOKING_LINK: { text: "WhatsApp pre-filled booking link", roadmap: true },
 	TRUST_BADGES: { text: "Trust chips and verification badges" },
-	QR_VCARD: { text: "QR code and vCard download" },
+	QR_VCARD: { text: "QR code and vCard download", roadmap: true },
 	MULTIPLE_LOCATIONS: { text: "Multiple practice locations and schedules" },
-	REVIEWS_FAQ: { text: "Reviews and FAQ sections" },
+	// Reviews are never for sale (they are on every doctor's page); only a profile FAQ section is planned
+	REVIEWS_FAQ: { text: "FAQ section on your profile page", roadmap: true },
 	LANGUAGE_TOGGLE: { text: "Language toggle (EN/BN)" },
 	FACEBOOK_HIGHLIGHT: { text: "Highlighted on the Open Care Facebook page, marked as a featured doctor", roadmap: true },
 	// hospitals, clinics and diagnostic centres
@@ -58,13 +61,14 @@ export const FEATURE_COPY: Record<string, FeatureCopy> = {
 	SERVICES_LISTING: { text: "Departments, services and facilities" },
 	TEST_PRICE_LIST: { text: "Test list with prices and report turnaround" },
 	MAP_DIRECTIONS: { text: "Map and directions button" },
-	FEATURED_DOCTORS: { text: "Featured doctors section" },
-	ACCREDITATION_BADGES: { text: "Insurance and accreditation badges" },
-	STATS_HIGHLIGHTS: { text: "Hospital stats and performance highlights" },
-	ENQUIRY_ANALYTICS: { text: "Enquiry analytics: views, calls and directions", roadmap: true },
+	FEATURED_DOCTORS: { text: "Featured doctors section", roadmap: true },
+	ACCREDITATION_BADGES: { text: "Insurance and accreditation badges", roadmap: true },
+	STATS_HIGHLIGHTS: { text: "Hospital stats and performance highlights", roadmap: true },
+	ENQUIRY_ANALYTICS: { text: "Enquiry analytics: views, calls and directions" },
 	// shared paid features
 	BLOOD_DONOR_LIST: { text: "Blood donor list (blood banks and blood requests stay free)" },
-	SMS_EMAIL_NOTIFICATIONS: { text: "SMS and email notifications (follow-up reminders and enquiry alerts)", roadmap: true },
+	// Built and checked against the plan, but text messages have never been sent for real: it stays roadmap until they are
+	SMS_EMAIL_NOTIFICATIONS: { text: "SMS and email notifications (booking and enquiry alerts)", roadmap: true },
 	SEARCH_PRIORITY: { text: "Priority placement in public search, clearly labelled as featured", roadmap: true },
 };
 
