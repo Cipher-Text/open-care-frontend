@@ -190,6 +190,15 @@ export const columns: ColumnDef<Hospital>[] = [
     },
   },
   {
+    accessorKey: "isActive",
+    header: "Status",
+    cell: ({ row }) => (
+      <Badge variant={row.original.isActive === false ? "secondary" : "default"}>
+        {row.original.isActive === false ? "Inactive" : "Active"}
+      </Badge>
+    ),
+  },
+  {
     accessorKey: "websiteUrl",
     header: "Website",
     cell: ({ row }) => {

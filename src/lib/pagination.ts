@@ -1,4 +1,5 @@
 import { PageResult } from "@/types/common";
+import { checked, pageShape } from "@/lib/api-shapes";
 
 /**
  * The backend's PageResponse<T>: `{ content, currentPage, totalItems, totalPages }`,
@@ -21,6 +22,8 @@ export function toWirePage(page: number | string | undefined | null): number {
 
 /** Backend page -> UI page result (1-based `currentPage`, never undefined). */
 export function normalizePage<T>(raw: WirePage<T> | null | undefined): PageResult<T> {
+	// an answer that is not a page (a wrong type anywhere) stops here instead of showing as an empty list
+	if (raw != null) checked(pageShape, raw, "list");
 	return {
 		content: raw?.content ?? [],
 		currentPage: (raw?.currentPage ?? 0) + 1,

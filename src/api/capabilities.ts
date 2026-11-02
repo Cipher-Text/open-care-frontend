@@ -1,4 +1,5 @@
 import { apiGet } from "@/lib/api-client";
+import { capabilitiesShape, checked } from "@/lib/api-shapes";
 
 export interface Capabilities {
 	userType: string | null;
@@ -10,5 +11,5 @@ export interface Capabilities {
 export const fetchCapabilities = async (): Promise<Capabilities> => {
 	const response = await apiGet<Capabilities>("/me/capabilities");
 	if (!response.ok || !response.data) throw new Error(response.error || "Failed to load capabilities");
-	return response.data;
+	return checked(capabilitiesShape, response.data, "capabilities");
 };

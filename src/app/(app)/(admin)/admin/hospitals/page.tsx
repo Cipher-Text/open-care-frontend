@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePermissions } from "@/hooks/use-permissions";
+import { ALL } from "@/hooks/use-url-params";
+import { FilterSelect } from "@/components/common/DirectoryControls";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
@@ -22,6 +24,8 @@ export default function HospitalsPage() {
 		upazilaId: "",
 		unionId: "",
 	});
+	// "" shows every hospital, "active" and "inactive" narrow the list (the API's isActive filter)
+	const [status, setStatus] = useState("");
 	const router = useRouter();
 	const { hasPermission } = usePermissions();
 	const canCreateHospital = hasPermission("create-hospital");
@@ -33,7 +37,7 @@ export default function HospitalsPage() {
 		isError,
 		error,
 	} = useQuery<HospitalListResponse>({
-		queryKey: ["hospitals", currentPage, filters],
+		queryKey: ["hospitals", currentPage, filters, status],
 		queryFn: () =>
 			fetchHospitals({
 				page: currentPage,
@@ -41,6 +45,7 @@ export default function HospitalsPage() {
 				name: filters.search || undefined,
 				upazilaId: filters.upazilaId || undefined,
 				unionId: filters.unionId || undefined,
+				isActive: status ? status === "active" : undefined,
 			}),
 		placeholderData: (previousData) => previousData,
 	});
@@ -104,6 +109,21 @@ export default function HospitalsPage() {
 			<div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
 				<Card>
 					<CardContent className="pt-6">
+						<div className="mb-4 w-full sm:w-56" role="group" aria-label="Status filter">
+							<FilterSelect
+								label="Status"
+								allLabel="Active and inactive"
+								value={status}
+								onChange={(v) => {
+									setStatus(v === ALL ? "" : v);
+									setCurrentPage(1);
+								}}
+								options={[
+									{ value: "active", label: "Active only" },
+									{ value: "inactive", label: "Inactive only" },
+								]}
+							/>
+						</div>
 						{isLoading ? (
 							<div className="space-y-4">
 								<Skeleton className="h-8 w-full" />

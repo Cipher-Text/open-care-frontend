@@ -28,6 +28,8 @@ export function ConsentFlow() {
 	const queryClient = useQueryClient();
 	const [identifier, setIdentifier] = useState("");
 	const [patient, setPatient] = useState<PatientLookup | null>(null);
+	// What the patient was looked up with: the server asks for it again, so a profile id alone cannot start a request
+	const [foundWith, setFoundWith] = useState("");
 	const [request, setRequest] = useState<ConsentRequest | null>(null);
 	const [code, setCode] = useState("");
 
@@ -37,13 +39,14 @@ export function ConsentFlow() {
 		mutationFn: () => lookupPatient(identifier.trim()),
 		onSuccess: (found) => {
 			setPatient(found);
+			setFoundWith(identifier.trim());
 			setRequest(null);
 			setCode("");
 		},
 	});
 
 	const ask = useMutation({
-		mutationFn: () => requestConsent(patient!.profileId),
+		mutationFn: () => requestConsent(patient!.profileId, foundWith),
 		onSuccess: (created) => {
 			setRequest(created);
 			setCode("");

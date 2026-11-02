@@ -18,6 +18,8 @@
 		"test:trend": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/trend.test.ts",
 		"test:profile": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/profile-form.test.ts",
 		"test:cover": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/cover-upload.test.ts",
+		"test:shapes": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/api-shapes.test.ts",
+		"test:csp": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/csp.test.ts",
 		"test:consent": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/consent-text.test.ts",
 		"docs:access": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-access-matrix.ts"
 	},

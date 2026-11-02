@@ -20,8 +20,8 @@ export const lookupPatient = async (identifier: string) =>
 		"No registered patient matches that phone, email or username"
 	);
 
-export const requestConsent = async (patientProfileId: number) =>
-	unwrap<ConsentRequest>(await apiPost("/consents/requests", { patientProfileId }), "Could not send the request");
+export const requestConsent = async (patientProfileId: number, identifier: string) =>
+	unwrap<ConsentRequest>(await apiPost("/consents/requests", { patientProfileId, identifier }), "Could not send the request");
 
 export const fetchConsentRequest = async (id: number) =>
 	unwrap<ConsentRequest>(await apiGet(`/consents/requests/${id}`), "Could not check the request");
