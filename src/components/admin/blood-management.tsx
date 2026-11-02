@@ -20,6 +20,13 @@ import { baseUrl } from "@/config/config";
 import { apiGet } from "@/lib/api-client";
 import "./blood-management.css";
 import { AdminHeader } from "@/components/admin/admin-header";
+import {
+  ConfirmDeleteDialog,
+  DonationDialog,
+  RequisitionDialog,
+  type StoredDonation,
+  type StoredRequisition,
+} from "@/components/admin/blood-forms";
 
 // Common interfaces
 interface BloodGroup {
@@ -196,6 +203,10 @@ const ITEMS_PER_PAGE = 10;
 
 const BloodManagement: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>(TAB_CONFIGS[0].name);
+  // undefined: closed; null: a new record; an object: a change
+  const [requisitionDialog, setRequisitionDialog] = useState<StoredRequisition | null | undefined>(undefined);
+  const [donationDialog, setDonationDialog] = useState<StoredDonation | null | undefined>(undefined);
+  const [deleteTarget, setDeleteTarget] = useState<{ kind: "requisition" | "donation"; id: number } | null>(null);
   const [donorData, setDonorData] = useState<DonorResponse | null>(null);
   const [donationData, setDonationData] = useState<DonationResponse | null>(
     null
@@ -591,6 +602,9 @@ const BloodManagement: React.FC = () => {
             <th className="border border-input px-4 py-3 text-left font-medium">
               Quantity
             </th>
+            <th className="border border-input px-4 py-3 text-left font-medium">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -641,6 +655,16 @@ const BloodManagement: React.FC = () => {
               <td className="border border-input px-4 py-3 text-center">
                 <div className="font-bold">{donation.quantityMl} ml</div>
               </td>
+              <td className="border border-input px-4 py-3">
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" onClick={() => setDonationDialog(donation as unknown as StoredDonation)}>
+                    Edit
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => setDeleteTarget({ kind: "donation", id: donation.id })}>
+                    Delete
+                  </Button>
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -676,6 +700,9 @@ const BloodManagement: React.FC = () => {
             </th>
             <th className="border border-input px-4 py-3 text-left font-medium">
               Contact
+            </th>
+            <th className="border border-input px-4 py-3 text-left font-medium">
+              Actions
             </th>
           </tr>
         </thead>
@@ -763,6 +790,16 @@ const BloodManagement: React.FC = () => {
                   </div>
                 </div>
               </td>
+              <td className="border border-input px-4 py-3">
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" onClick={() => setRequisitionDialog(requisition as unknown as StoredRequisition)}>
+                    Edit
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => setDeleteTarget({ kind: "requisition", id: requisition.id })}>
+                    Delete
+                  </Button>
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -790,6 +827,13 @@ const BloodManagement: React.FC = () => {
               className="pl-10 w-64"
             />
           </div>
+
+          {activeTab === "requisitions" && (
+            <Button onClick={() => setRequisitionDialog(null)}>Add requisition</Button>
+          )}
+          {activeTab === "donations" && (
+            <Button onClick={() => setDonationDialog(null)}>Record donation</Button>
+          )}
 
           <Button
             onClick={refreshData}
@@ -888,6 +932,10 @@ const BloodManagement: React.FC = () => {
           )}
         </Card>
       </div>
+
+      <RequisitionDialog record={requisitionDialog} onClose={() => setRequisitionDialog(undefined)} onSaved={refreshData} />
+      <DonationDialog record={donationDialog} onClose={() => setDonationDialog(undefined)} onSaved={refreshData} />
+      <ConfirmDeleteDialog target={deleteTarget} onClose={() => setDeleteTarget(null)} onDeleted={refreshData} />
     </div>
   );
 };
