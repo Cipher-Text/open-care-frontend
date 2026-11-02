@@ -12,6 +12,7 @@
 		"test:pricing": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/pricing-view.test.ts",
 		"test:bff": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/bff-proxy.test.ts",
 		"test:vitals": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/reading-form.test.ts",
+		"test:url": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/safe-url.test.ts",
 		"docs:access": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-access-matrix.ts"
 	},
 	"dependencies": {

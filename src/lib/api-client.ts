@@ -61,9 +61,9 @@ export async function apiRequest<T = unknown>(
 
 		const data = await response.json().catch(() => null);
 
-		// Handle 401 Unauthorized - clear session and redirect to login
+		// Handle 401 Unauthorized - clear session and redirect to login, but only when the call was sent with a session
 		if (response.status === 401) {
-			clientLogout();
+			if (includeAuth) clientLogout();
 			if (throwOnError) {
 				throw new ApiError("Unauthorized. Please login again.", 401, data?.code ?? "UNAUTHENTICATED");
 			}

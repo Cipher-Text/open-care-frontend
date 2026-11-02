@@ -16,6 +16,7 @@ import {
   SocialOrganizationType,
   OriginCountry,
 } from "@/types/social-organizations";
+import { SafeLink } from "@/components/common/SafeLink";
 
 const getOrganizationTypeBadgeVariant = (type: string) => {
   switch (type) {
@@ -77,14 +78,12 @@ export const columns: ColumnDef<SocialOrganization>[] = [
           <div className="flex items-center space-x-2">
             <span className="font-medium">{name}</span>
             {websiteUrl && (
-              <a
+              <SafeLink
                 href={websiteUrl}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="text-primary hover:text-primary"
               >
                 <ExternalLink className="h-3 w-3" />
-              </a>
+              </SafeLink>
             )}
           </div>
           <div className="text-sm text-muted-foreground text-right">
@@ -175,15 +174,13 @@ export const columns: ColumnDef<SocialOrganization>[] = [
       return socialLinks.length > 0 ? (
         <div className="flex space-x-1">
           {socialLinks.slice(0, 3).map((url, index) => (
-            <a
+            <SafeLink
               key={index}
               href={url || "#"}
-              target="_blank"
-              rel="noopener noreferrer"
               className="text-primary hover:text-primary"
             >
               <Globe className="h-3 w-3" />
-            </a>
+            </SafeLink>
           ))}
           {socialLinks.length > 3 && (
             <span className="text-xs text-muted-foreground">

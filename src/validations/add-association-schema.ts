@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isHttpUrl } from "./url";
 
 export const addAssociationSchema = z.object({
   // Basic Info
@@ -16,32 +17,42 @@ export const addAssociationSchema = z.object({
   foundedDate: z.string().optional().or(z.literal("")),
 
   // Media
-  logoUrl: z.string().url("Invalid logo URL").optional().or(z.literal("")),
+  logoUrl: z
+    .string()
+    .url("Invalid logo URL")
+    .refine(isHttpUrl, "Invalid logo URL")
+    .optional()
+    .or(z.literal("")),
 
   // Social Media
   websiteUrl: z
     .string()
     .url("Invalid website URL")
+    .refine(isHttpUrl, "Invalid website URL")
     .optional()
     .or(z.literal("")),
   facebookUrl: z
     .string()
     .url("Invalid Facebook URL")
+    .refine(isHttpUrl, "Invalid Facebook URL")
     .optional()
     .or(z.literal("")),
   twitterUrl: z
     .string()
     .url("Invalid Twitter URL")
+    .refine(isHttpUrl, "Invalid Twitter URL")
     .optional()
     .or(z.literal("")),
   linkedinUrl: z
     .string()
     .url("Invalid LinkedIn URL")
+    .refine(isHttpUrl, "Invalid LinkedIn URL")
     .optional()
     .or(z.literal("")),
   youtubeUrl: z
     .string()
     .url("Invalid YouTube URL")
+    .refine(isHttpUrl, "Invalid YouTube URL")
     .optional()
     .or(z.literal("")),
 

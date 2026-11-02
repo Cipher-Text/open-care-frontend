@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import AdSlot from "@/components/ads/AdSlot";
+import { JsonLd } from "@/components/common/JsonLd";
 import BrowseByPlace from "@/components/home/BrowseByPlace";
 import EmergencyStrip from "@/components/home/EmergencyStrip";
 import FacilityTypes from "@/components/home/FacilityTypes";
@@ -68,11 +69,7 @@ export default async function Home({ params }: Props) {
 			<TrustSection />
 			<ForProfessionals />
 			<FaqSection />
-			<script
-				type="application/ld+json"
-				// Server-built JSON from the message files (no user input)
-				dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-			/>
+			<JsonLd data={jsonLd} />
 		</div>
 	);
 }

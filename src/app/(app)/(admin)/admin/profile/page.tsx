@@ -28,6 +28,7 @@ import {
 	Camera,
 } from "lucide-react";
 import { format } from "date-fns";
+import { SafeLink } from "@/components/common/SafeLink";
 
 export default function ProfilePage() {
 	const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -395,15 +396,13 @@ export default function ProfilePage() {
 											Facebook
 										</label>
 										<p className="mt-1">
-											<a
+											<SafeLink
 												href={profile.facebookProfileUrl}
-												target="_blank"
-												rel="noopener noreferrer"
 												className="text-primary hover:underline flex items-center gap-1"
 											>
 												View Profile
 												<ExternalLink className="h-3 w-3" />
-											</a>
+											</SafeLink>
 										</p>
 									</div>
 								)}
@@ -413,15 +412,13 @@ export default function ProfilePage() {
 											LinkedIn
 										</label>
 										<p className="mt-1">
-											<a
+											<SafeLink
 												href={profile.linkedinProfileUrl}
-												target="_blank"
-												rel="noopener noreferrer"
 												className="text-primary hover:underline flex items-center gap-1"
 											>
 												View Profile
 												<ExternalLink className="h-3 w-3" />
-											</a>
+											</SafeLink>
 										</p>
 									</div>
 								)}
@@ -431,15 +428,13 @@ export default function ProfilePage() {
 											ResearchGate
 										</label>
 										<p className="mt-1">
-											<a
+											<SafeLink
 												href={profile.researchGateProfileUrl}
-												target="_blank"
-												rel="noopener noreferrer"
 												className="text-primary hover:underline flex items-center gap-1"
 											>
 												View Profile
 												<ExternalLink className="h-3 w-3" />
-											</a>
+											</SafeLink>
 										</p>
 									</div>
 								)}
@@ -449,15 +444,13 @@ export default function ProfilePage() {
 											X (Twitter)
 										</label>
 										<p className="mt-1">
-											<a
+											<SafeLink
 												href={profile.xprofileUrl}
-												target="_blank"
-												rel="noopener noreferrer"
 												className="text-primary hover:underline flex items-center gap-1"
 											>
 												View Profile
 												<ExternalLink className="h-3 w-3" />
-											</a>
+											</SafeLink>
 										</p>
 									</div>
 								)}

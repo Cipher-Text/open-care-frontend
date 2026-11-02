@@ -20,6 +20,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { SafeLink } from "@/components/common/SafeLink";
 
 export default function SocialOrganizationViewPage() {
   const params = useParams();
@@ -248,14 +249,12 @@ export default function SocialOrganizationViewPage() {
                 {organization.websiteUrl && (
                   <div className="flex items-center gap-2 col-span-2">
                     <Globe className="h-4 w-4 text-muted-foreground" />
-                    <a
+                    <SafeLink
                       href={organization.websiteUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
                       className="text-sm text-primary hover:underline"
                     >
                       {organization.websiteUrl}
-                    </a>
+                    </SafeLink>
                   </div>
                 )}
                 {organization.address && (
@@ -279,46 +278,38 @@ export default function SocialOrganizationViewPage() {
                 <div className="flex flex-wrap gap-2">
                   {organization.facebookUrl && (
                     <Button variant="outline" size="sm" asChild>
-                      <a
+                      <SafeLink
                         href={organization.facebookUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                       >
                         Facebook
-                      </a>
+                      </SafeLink>
                     </Button>
                   )}
                   {organization.twitterUrl && (
                     <Button variant="outline" size="sm" asChild>
-                      <a
+                      <SafeLink
                         href={organization.twitterUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                       >
                         Twitter
-                      </a>
+                      </SafeLink>
                     </Button>
                   )}
                   {organization.linkedinUrl && (
                     <Button variant="outline" size="sm" asChild>
-                      <a
+                      <SafeLink
                         href={organization.linkedinUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                       >
                         LinkedIn
-                      </a>
+                      </SafeLink>
                     </Button>
                   )}
                   {organization.youtubeUrl && (
                     <Button variant="outline" size="sm" asChild>
-                      <a
+                      <SafeLink
                         href={organization.youtubeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                       >
                         YouTube
-                      </a>
+                      </SafeLink>
                     </Button>
                   )}
                 </div>

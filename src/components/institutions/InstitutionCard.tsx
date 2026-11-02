@@ -3,16 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PublicInstitution } from "@/api/directory";
-
-function safeUrl(url?: string | null) {
-	if (!url) return null;
-	const withProtocol = /^https?:\/\//i.test(url) ? url : `https://${url}`;
-	try {
-		return new URL(withProtocol).toString();
-	} catch {
-		return null;
-	}
-}
+import { safeUrl } from "@/lib/safe-url";
 
 export default function InstitutionCard({ institution }: { institution: PublicInstitution }) {
 	const website = safeUrl(institution.websiteUrl);

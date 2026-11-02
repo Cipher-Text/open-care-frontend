@@ -13,21 +13,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { safeUrl } from "@/lib/safe-url";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { enumName, localizedNames, placeName } from "@/lib/names";
 import { Hospital } from "@/types/hospitals";
 import { hospitalPath } from "@/lib/paths";
-
-function safeUrl(url?: string | null) {
-	if (!url) return null;
-	const withProtocol = /^https?:\/\//i.test(url) ? url : `https://${url}`;
-	try {
-		return new URL(withProtocol).toString();
-	} catch {
-		return null;
-	}
-}
 
 export default function HospitalCard({ hospital }: { hospital: Hospital }) {
 	const t = useTranslations("hospitals");

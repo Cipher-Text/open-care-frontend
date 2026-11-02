@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Hospital } from "@/types/hospitals";
 import { usePermissions } from "@/hooks/use-permissions";
+import { SafeLink } from "@/components/common/SafeLink";
 
 // Actions component to use hooks
 function ActionsCell({ hospital }: { hospital: Hospital }) {
@@ -194,14 +195,12 @@ export const columns: ColumnDef<Hospital>[] = [
     cell: ({ row }) => {
       const url = row.getValue("websiteUrl") as string;
       return url ? (
-        <a
+        <SafeLink
           href={url}
-          target="_blank"
-          rel="noopener noreferrer"
           className="text-primary hover:underline text-sm"
         >
           Visit Website
-        </a>
+        </SafeLink>
       ) : (
         <span className="text-muted-foreground text-sm">No website</span>
       );

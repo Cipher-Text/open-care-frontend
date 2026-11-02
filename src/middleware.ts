@@ -35,7 +35,7 @@ export function middleware(request: NextRequest) {
 
 	const isConsole = pathname === "/admin" || pathname.startsWith("/admin/");
 	const isAccount = pathname === "/account" || pathname.startsWith("/account/");
-	const isAuthRoute = ["/login", "/signup"].some((route) => pathname.startsWith(route));
+	const isAuthRoute = ["/login", "/signup"].some((route) => pathname === route || pathname.startsWith(`${route}/`));
 
 	if ((isConsole || isAccount) && !accessToken) {
 		return NextResponse.redirect(new URL("/login", request.url));
@@ -64,12 +64,13 @@ export const config = {
 	matcher: [
 		/*
 		 * Match all request paths except for the ones starting with:
-		 * - api (API routes)
+		 * - api/ (API routes)
 		 * - _next/static (static files)
 		 * - _next/image (image optimization files)
-		 * - favicon.ico (favicon file)
-		 * - public folder
+		 * - favicon.ico (favicon file, exact)
+		 * - public/ folder
+		 * The trailing slash and the "$" keep pages like /apiary or /publications inside the middleware.
 		 */
-		"/((?!api|_next/static|_next/image|favicon.ico|public).*)",
+		"/((?!api/|_next/static|_next/image|favicon\\.ico$|public/).*)",
 	],
 };

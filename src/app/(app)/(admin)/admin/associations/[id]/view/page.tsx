@@ -21,6 +21,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { SafeLink } from "@/components/common/SafeLink";
 
 export default function AssociationViewPage() {
   const params = useParams();
@@ -236,14 +237,12 @@ export default function AssociationViewPage() {
                 {association.websiteUrl && (
                   <div className="flex items-center gap-2">
                     <Globe className="h-4 w-4 text-muted-foreground" />
-                    <a
+                    <SafeLink
                       href={association.websiteUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
                       className="text-sm text-primary hover:underline"
                     >
                       {association.websiteUrl}
-                    </a>
+                    </SafeLink>
                   </div>
                 )}
               </div>
@@ -297,46 +296,38 @@ export default function AssociationViewPage() {
                 <div className="flex flex-wrap gap-2">
                   {association.facebookUrl && (
                     <Button variant="outline" size="sm" asChild>
-                      <a
+                      <SafeLink
                         href={association.facebookUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                       >
                         Facebook
-                      </a>
+                      </SafeLink>
                     </Button>
                   )}
                   {association.twitterUrl && (
                     <Button variant="outline" size="sm" asChild>
-                      <a
+                      <SafeLink
                         href={association.twitterUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                       >
                         Twitter
-                      </a>
+                      </SafeLink>
                     </Button>
                   )}
                   {association.linkedinUrl && (
                     <Button variant="outline" size="sm" asChild>
-                      <a
+                      <SafeLink
                         href={association.linkedinUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                       >
                         LinkedIn
-                      </a>
+                      </SafeLink>
                     </Button>
                   )}
                   {association.youtubeUrl && (
                     <Button variant="outline" size="sm" asChild>
-                      <a
+                      <SafeLink
                         href={association.youtubeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                       >
                         YouTube
-                      </a>
+                      </SafeLink>
                     </Button>
                   )}
                 </div>

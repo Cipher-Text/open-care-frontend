@@ -15,6 +15,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { baseUrl } from "@/config/config";
 import "./geolocation-management.css";
 import { AdminHeader } from "@/components/admin/admin-header";
+import { SafeLink } from "@/components/common/SafeLink";
 
 interface Division {
   id: number;
@@ -206,14 +207,12 @@ const GeolocationManagement: React.FC = () => {
                 {item.bnName}
               </td>
               <td className="border border-input px-4 py-2">
-                <a
-                  href={`https://${item.url}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <SafeLink
+                  href={item.url}
                   className="text-primary hover:underline text-sm"
                 >
                   {item.url}
-                </a>
+                </SafeLink>
               </td>
             </tr>
           ))}
@@ -270,14 +269,12 @@ const GeolocationManagement: React.FC = () => {
                 </div>
               </td>
               <td className="border border-input px-4 py-2">
-                <a
-                  href={`https://${item.url}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <SafeLink
+                  href={item.url}
                   className="text-primary hover:underline text-sm"
                 >
                   {item.url}
-                </a>
+                </SafeLink>
               </td>
             </tr>
           ))}
@@ -338,14 +335,12 @@ const GeolocationManagement: React.FC = () => {
                 </div>
               </td>
               <td className="border border-input px-4 py-2">
-                <a
-                  href={`https://${item.url}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <SafeLink
+                  href={item.url}
                   className="text-primary hover:underline text-sm"
                 >
                   {item.url}
-                </a>
+                </SafeLink>
               </td>
             </tr>
           ))}

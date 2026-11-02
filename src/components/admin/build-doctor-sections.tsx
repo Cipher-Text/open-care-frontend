@@ -21,6 +21,7 @@ import {
 	SectionConfig,
 	PropertyConfig,
 } from "./build-detail-sections";
+import { SafeLink } from "@/components/common/SafeLink";
 
 export function buildDoctorDetailSections(
 	doctor: DoctorDetailsResponse
@@ -265,15 +266,13 @@ export function buildDoctorDetailSections(
 								</div>
 							)}
 							{assocInfo.association.websiteUrl && (
-								<a
+								<SafeLink
 									href={assocInfo.association.websiteUrl}
-									target="_blank"
-									rel="noopener noreferrer"
 									className="text-sm text-primary hover:underline flex items-center gap-2"
 								>
 									<Building2 className="h-3 w-3" />
 									{assocInfo.association.websiteUrl}
-								</a>
+								</SafeLink>
 							)}
 						</div>
 					)}

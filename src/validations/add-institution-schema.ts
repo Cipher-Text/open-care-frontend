@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isHttpUrl } from "./url";
 
 export const addInstitutionSchema = z.object({
   // Basic Info
@@ -19,14 +20,14 @@ export const addInstitutionSchema = z.object({
     .string()
     .optional()
     .refine(
-      (val) => !val || z.string().url().safeParse(val).success,
+      (val) => !val || isHttpUrl(val),
       "Invalid website URL"
     ),
   imageUrl: z
     .string()
     .optional()
     .refine(
-      (val) => !val || z.string().url().safeParse(val).success,
+      (val) => !val || isHttpUrl(val),
       "Invalid image URL"
     ),
 

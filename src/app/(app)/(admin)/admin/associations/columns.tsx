@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Association } from "@/types/associations";
 import { usePermissions } from "@/hooks/use-permissions";
+import { SafeLink } from "@/components/common/SafeLink";
 
 // Actions component to use hooks
 function ActionsCell({ association }: { association: Association }) {
@@ -148,14 +149,12 @@ export const columns: ColumnDef<Association>[] = [
       return websiteUrl ? (
         <div className="flex items-center space-x-1">
           <Globe className="h-4 w-4 text-success" />
-          <a
+          <SafeLink
             href={websiteUrl}
-            target="_blank"
-            rel="noopener noreferrer"
             className="text-sm text-primary hover:underline"
           >
             Visit
-          </a>
+          </SafeLink>
         </div>
       ) : (
         <span className="text-sm text-muted-foreground">No website</span>

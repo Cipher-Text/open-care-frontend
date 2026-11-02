@@ -1,5 +1,5 @@
 /** Renders schema.org structured data. "<" is escaped so record text can never close the script tag. */
-export function JsonLd({ data }: { data: Record<string, unknown> }) {
+export function JsonLd({ data }: { data: Record<string, unknown> | unknown[] }) {
 	return (
 		<script
 			type="application/ld+json"

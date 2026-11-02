@@ -32,6 +32,7 @@ import { usePermissions } from "@/hooks/use-permissions";
 import { AdvertisementType, Advertisement } from "@/types/advertisements";
 import "./advertisement-management.css";
 import { AdminHeader } from "@/components/admin/admin-header";
+import { SafeLink } from "@/components/common/SafeLink";
 
 type TabType = "types" | "advertisements";
 
@@ -313,14 +314,12 @@ const AdvertisementManagement: React.FC = () => {
               </td>
               <td>
                 {ad.targetUrl ? (
-                  <a
+                  <SafeLink
                     href={ad.targetUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="advertisement-link"
                   >
                     {ad.targetType} {ad.targetId != null ? `#${ad.targetId}` : ""}
-                  </a>
+                  </SafeLink>
                 ) : (
                   <span>
                     {ad.targetType} {ad.targetId != null ? `#${ad.targetId}` : ""}

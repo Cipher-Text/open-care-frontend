@@ -3,6 +3,7 @@ import { baseUrl } from "@/config/config";
 import type { DoctorDetailsResponse } from "@/types/doctors";
 import type { HospitalDetailsResponse } from "@/types/hospitals";
 import { displayName } from "@/lib/text";
+export { safeUrl } from "@/lib/safe-url";
 
 /**
  * Server-side reads for the public detail pages. Both endpoints are public, so no token is
@@ -62,19 +63,6 @@ export async function getDoctor(segment: string): Promise<DoctorDetailsResponse 
 		doctor.profile.bnName = displayName(doctor.profile.bnName);
 	}
 	return doctor;
-}
-
-/** Only http(s) links are rendered; anything else (javascript:, data:) is dropped. */
-export function safeUrl(url?: string | null): string | null {
-	const value = url?.trim();
-	if (!value) return null;
-	const withProtocol = /^https?:\/\//i.test(value) ? value : `https://${value}`;
-	try {
-		const parsed = new URL(withProtocol);
-		return parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.toString() : null;
-	} catch {
-		return null;
-	}
 }
 
 export function validEmail(email?: string | null): string | null {

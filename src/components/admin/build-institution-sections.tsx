@@ -16,6 +16,7 @@ import {
 import { Institution } from "@/types/institutions";
 import { buildDetailSections, SectionConfig, PropertyConfig } from "./build-detail-sections";
 import { DetailSection } from "./detail-view";
+import { SafeLink } from "@/components/common/SafeLink";
 
 export function buildInstitutionDetailSections(
 	institution: Institution
@@ -88,14 +89,12 @@ export function buildInstitutionDetailSections(
 		{
 			label: "Website",
 			value: institution.websiteUrl ? (
-				<a
+				<SafeLink
 					href={institution.websiteUrl}
-					target="_blank"
-					rel="noopener noreferrer"
 					className="text-primary hover:underline"
 				>
 					{institution.websiteUrl}
-				</a>
+				</SafeLink>
 			) : "N/A",
 			icon: <Globe className="h-4 w-4" />,
 		},
@@ -149,14 +148,12 @@ export function buildInstitutionDetailSections(
 				{
 					label: "Website",
 					value: institution.affiliatedHospital.websiteUrl ? (
-						<a
+						<SafeLink
 							href={institution.affiliatedHospital.websiteUrl}
-							target="_blank"
-							rel="noopener noreferrer"
 							className="text-primary hover:underline"
 						>
 							{institution.affiliatedHospital.websiteUrl}
-						</a>
+						</SafeLink>
 					) : "N/A",
 					icon: <Globe className="h-4 w-4" />,
 				},

@@ -36,6 +36,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { getProfileById, ProfileDetailsResponse } from "@/api/profile";
+import { SafeLink } from "@/components/common/SafeLink";
 
 export default function ProfileDetailsPage() {
   const router = useRouter();
@@ -653,121 +654,103 @@ export default function ProfileDetailsPage() {
                 <CardContent>
                   <div className="flex flex-wrap gap-3">
                     {profile.facebookProfileUrl && (
-                      <a
+                      <SafeLink
                         href={profile.facebookProfileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                         className="flex items-center gap-2 px-4 py-2 rounded-lg border border-primary/30 bg-primary/10 hover:bg-primary/15 transition-colors"
                       >
                         <Facebook className="h-5 w-5 text-primary" />
                         <span className="text-sm font-medium text-primary">
                           Facebook Profile
                         </span>
-                      </a>
+                      </SafeLink>
                     )}
                     {profile.facebookPageUrl && (
-                      <a
+                      <SafeLink
                         href={profile.facebookPageUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                         className="flex items-center gap-2 px-4 py-2 rounded-lg border border-primary/30 bg-primary/10 hover:bg-primary/15 transition-colors"
                       >
                         <Facebook className="h-5 w-5 text-primary" />
                         <span className="text-sm font-medium text-primary">
                           Facebook Page
                         </span>
-                      </a>
+                      </SafeLink>
                     )}
                     {profile.linkedinProfileUrl && (
-                      <a
+                      <SafeLink
                         href={profile.linkedinProfileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                         className="flex items-center gap-2 px-4 py-2 rounded-lg border border-primary/30 bg-primary/10 hover:bg-primary/15 transition-colors"
                       >
                         <Linkedin className="h-5 w-5 text-primary" />
                         <span className="text-sm font-medium text-primary">
                           LinkedIn
                         </span>
-                      </a>
+                      </SafeLink>
                     )}
                     {profile.xprofileUrl && (
-                      <a
+                      <SafeLink
                         href={profile.xprofileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                         className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-muted hover:bg-muted transition-colors"
                       >
                         <Twitter className="h-5 w-5 text-muted-foreground" />
                         <span className="text-sm font-medium text-foreground">
                           X (Twitter)
                         </span>
-                      </a>
+                      </SafeLink>
                     )}
                     {profile.instagramProfileUrl && (
-                      <a
+                      <SafeLink
                         href={profile.instagramProfileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                         className="flex items-center gap-2 px-4 py-2 rounded-lg border border-chart-5/30 bg-chart-5/10 hover:bg-chart-5/15 transition-colors"
                       >
                         <Instagram className="h-5 w-5 text-chart-5" />
                         <span className="text-sm font-medium text-chart-5">
                           Instagram
                         </span>
-                      </a>
+                      </SafeLink>
                     )}
                     {profile.youtubeChannelUrl && (
-                      <a
+                      <SafeLink
                         href={profile.youtubeChannelUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                         className="flex items-center gap-2 px-4 py-2 rounded-lg border border-destructive/30 bg-destructive/10 hover:bg-destructive/15 transition-colors"
                       >
                         <Youtube className="h-5 w-5 text-destructive" />
                         <span className="text-sm font-medium text-destructive">
                           YouTube
                         </span>
-                      </a>
+                      </SafeLink>
                     )}
                     {profile.researchGateProfileUrl && (
-                      <a
+                      <SafeLink
                         href={profile.researchGateProfileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                         className="flex items-center gap-2 px-4 py-2 rounded-lg border border-primary bg-accent hover:bg-accent transition-colors"
                       >
                         <Globe className="h-5 w-5 text-primary" />
                         <span className="text-sm font-medium text-primary">
                           ResearchGate
                         </span>
-                      </a>
+                      </SafeLink>
                     )}
                     {profile.websiteUrl && (
-                      <a
+                      <SafeLink
                         href={profile.websiteUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                         className="flex items-center gap-2 px-4 py-2 rounded-lg border border-chart-4/30 bg-chart-4/10 hover:bg-chart-4/15 transition-colors"
                       >
                         <Monitor className="h-5 w-5 text-chart-4" />
                         <span className="text-sm font-medium text-chart-4">
                           Website
                         </span>
-                      </a>
+                      </SafeLink>
                     )}
                     {profile.blogUrl && (
-                      <a
+                      <SafeLink
                         href={profile.blogUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
                         className="flex items-center gap-2 px-4 py-2 rounded-lg border border-warning/30 bg-warning/10 hover:bg-warning/15 transition-colors"
                       >
                         <FileText className="h-5 w-5 text-warning" />
                         <span className="text-sm font-medium text-warning">
                           Blog
                         </span>
-                      </a>
+                      </SafeLink>
                     )}
                   </div>
                 </CardContent>

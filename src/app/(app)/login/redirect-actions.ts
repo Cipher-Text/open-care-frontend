@@ -11,7 +11,3 @@ export async function redirectAfterLogin() {
 	const permissions = permissionsFromToken(token);
 	redirect(landingPath((permission) => permissions.has(permission)));
 }
-
-export async function redirectTo(path: string) {
-	redirect(path);
-}

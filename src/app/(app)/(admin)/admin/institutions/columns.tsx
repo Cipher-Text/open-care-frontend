@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { InstitutionResponse } from "@/types/institutions";
 import { usePermissions } from "@/hooks/use-permissions";
+import { SafeLink } from "@/components/common/SafeLink";
 
 // Actions component to use hooks
 function ActionsCell({ institution }: { institution: InstitutionResponse }) {
@@ -181,15 +182,13 @@ export const columns: ColumnDef<InstitutionResponse>[] = [
     cell: ({ row }) => {
       const websiteUrl = row.getValue("websiteUrl") as string;
       return websiteUrl ? (
-        <a
+        <SafeLink
           href={websiteUrl}
-          target="_blank"
-          rel="noopener noreferrer"
           className="flex items-center text-primary hover:text-primary text-sm"
         >
           <Globe className="h-3 w-3 mr-1" />
           Visit
-        </a>
+        </SafeLink>
       ) : (
         <span className="text-sm text-muted-foreground">No website</span>
       );
