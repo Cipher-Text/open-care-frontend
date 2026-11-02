@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { HealthTrends } from "@/components/health/health-trends";
 import { clearedFields, readingGone, type ReadingFormValues } from "@/lib/reading-form";
 
 const PAGE_SIZE = 10;
@@ -224,6 +225,8 @@ export function HealthReadings({ onChanged }: { onChanged: () => void }) {
 					</CardContent>
 				</Card>
 			)}
+
+			<HealthTrends />
 
 			<Card>
 				<CardHeader>
