@@ -81,6 +81,11 @@ export default function VerificationCasePage() {
 						</CardDescription>
 					</CardHeader>
 					<CardContent className="space-y-4 text-sm">
+						{data.renewal && (
+							<Alert>
+								<AlertDescription>This is a renewal. Your verified badge stays on your page while staff check your documents again.</AlertDescription>
+							</Alert>
+						)}
 						{data.status === "DRAFT" && (
 							<>
 								<p>

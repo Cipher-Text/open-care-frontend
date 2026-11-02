@@ -25,6 +25,8 @@ export interface VerificationCase {
 	subjectSlug: string | null;
 	status: VerificationStatus;
 	claimedRegistrationNo: string | null;
+	/** A verified doctor asking again when the review is nearly due: the badge stays until staff decide. */
+	renewal?: boolean;
 	note: string | null;
 	createdAt: string | null;
 	submittedAt: string | null;

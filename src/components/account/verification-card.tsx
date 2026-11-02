@@ -16,7 +16,7 @@ export function VerificationCard({ verified }: { verified: boolean }) {
 				</CardTitle>
 				<CardDescription>
 					{verified
-						? "Your profile is verified. The verified badge is shown on your public page."
+						? "Your profile is verified. The verified badge is shown on your public page. When a review is due (about every two years) we remind you; you can renew from the Verification page, and your badge stays while we check."
 						: "Send your registration certificate and Open Care staff will check it. Until then your page shows as not yet verified."}
 				</CardDescription>
 			</CardHeader>

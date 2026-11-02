@@ -39,11 +39,11 @@ export default function VerificationPage() {
 				<Card>
 					<CardHeader>
 						<CardTitle className="text-base">I am a doctor</CardTitle>
-						<CardDescription>Verify your own doctor record. It needs your BMDC registration number on your record and a copy of your registration certificate.</CardDescription>
+						<CardDescription>Verify your own doctor record, or renew it when a review is nearly due (your badge stays while we check). It needs your BMDC registration number on your record and a copy of your registration certificate.</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<Button onClick={() => start.mutate()} disabled={start.isPending}>
-							{start.isPending ? "Starting..." : "Verify my doctor profile"}
+							{start.isPending ? "Starting..." : "Verify or renew my doctor profile"}
 						</Button>
 					</CardContent>
 				</Card>
@@ -79,7 +79,7 @@ export default function VerificationPage() {
 								<Link href={`/account/verification/${c.id}`} className="font-medium text-primary hover:underline">
 									{c.subjectType === "DOCTOR" ? "Doctor profile" : "Facility"}: {c.subjectName ?? `#${c.subjectId}`}
 								</Link>
-								<p className="text-xs text-muted-foreground">Started {dateTime(c.createdAt)}</p>
+								<p className="text-xs text-muted-foreground">{c.renewal ? "Renewal. " : ""}Started {dateTime(c.createdAt)}</p>
 							</div>
 							<VerificationStatusBadge status={c.status} />
 						</li>
