@@ -5,7 +5,7 @@ import { siteUrl } from "@/lib/site";
 
 export const revalidate = 86400;
 
-const STATIC_PATHS = ["", "/hospitals", "/doctors", "/blog", "/medical-review-policy", "/ambulances", "/institutions", "/about", "/pricing", "/contact", "/privacy", "/terms"];
+const STATIC_PATHS = ["", "/hospitals", "/doctors", "/blog", "/medical-review-policy", "/reviews-policy", "/ambulances", "/institutions", "/about", "/pricing", "/contact", "/privacy", "/terms"];
 
 /** Pages that exist in Bangla as well; only these list the /bn address and the language alternates. */
 const BILINGUAL_PATHS = new Set(["", "/blog", "/hospitals", "/doctors"]);

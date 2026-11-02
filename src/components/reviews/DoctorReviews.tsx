@@ -4,6 +4,7 @@ import type { PublicReview, ReviewSummary } from "@/types/review";
 import { ReportReview } from "@/components/reviews/ReportReview";
 import { formatDate } from "@/lib/format";
 import { Stars } from "@/components/reviews/Stars";
+import { Link } from "@/i18n/navigation";
 
 async function get<T>(path: string): Promise<T | null> {
 	try {
@@ -106,7 +107,12 @@ export async function DoctorReviews({ doctorId }: { doctorId: number }) {
 					))}
 				</ul>
 			)}
-			<p className="text-xs text-muted-foreground">{t("footer")}</p>
+			<p className="text-xs text-muted-foreground">
+				{t("footer")}{" "}
+				<Link href="/reviews-policy" className="underline">
+					{t("policyLink")}
+				</Link>
+			</p>
 		</section>
 	);
 }

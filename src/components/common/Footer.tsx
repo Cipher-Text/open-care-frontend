@@ -33,6 +33,7 @@ export default async function Footer() {
 							<li><Link href="/contact" className="hover:underline">{t("contact")}</Link></li>
 							<li><NextLink href="/signup" className="hover:underline">{t("professionals")}</NextLink></li>
 							<li><Link href="/medical-review-policy" className="hover:underline">{t("reviewPolicy")}</Link></li>
+							<li><Link href="/reviews-policy" className="hover:underline">{t("reviewsPolicy")}</Link></li>
 							<li><Link href="/privacy" className="hover:underline">{t("privacy")}</Link></li>
 							<li><Link href="/terms" className="hover:underline">{t("terms")}</Link></li>
 							<li>
