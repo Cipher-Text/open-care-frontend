@@ -16,6 +16,7 @@
 		"test:blood": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/blood-form.test.ts",
 		"test:void": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/prescription-void.test.ts",
 		"test:trend": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/trend.test.ts",
+		"test:profile": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/profile-form.test.ts",
 		"docs:access": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-access-matrix.ts"
 	},
 	"dependencies": {

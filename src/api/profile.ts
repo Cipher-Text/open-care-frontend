@@ -1,7 +1,7 @@
 "use client";
 
 import { UserProfile } from "@/types/profile";
-import { apiGet, apiPost, apiPut, buildUrl } from "@/lib/api-client";
+import { apiGet, apiPut, buildUrl } from "@/lib/api-client";
 
 /**
  * Get current user's profile
@@ -29,31 +29,6 @@ export const updateSelfProfile = async (
 	}
 
 	return response.data as UserProfile;
-};
-
-/**
- * Upload profile photo
- */
-export const uploadProfilePhoto = async (
-	file: File
-): Promise<{ photoUrl: string }> => {
-	const formData = new FormData();
-	formData.append("photo", file);
-
-	const response = await apiPost<{ photoUrl: string }>(
-		"/profiles/self/photo",
-		formData,
-		{
-			headers: {},
-			includeAuth: true,
-		}
-	);
-
-	if (!response.ok) {
-		throw new Error(response.error || "Failed to upload photo");
-	}
-
-	return response.data as { photoUrl: string };
 };
 
 /**
@@ -236,4 +211,14 @@ export const rememberLanguageIfUnset = async (language: MessageLanguage): Promis
 	} catch {
 		// the language switch itself must never fail because of this
 	}
+};
+
+/**
+ * Changes the person's own details (name, phone, date of birth, gender, address and place). A field sent as null is cleared,
+ * except the name. The email and username are not part of it: they are the login. A refusal is thrown as an ApiError with
+ * the server's message (a phone number already in use, a place that does not fit together).
+ */
+export const updateOwnDetails = async (payload: import("@/lib/profile-form").DetailsPayload): Promise<UserProfile> => {
+	const response = await apiPut<UserProfile>("/profiles/self/details", payload);
+	return response.data as UserProfile;
 };

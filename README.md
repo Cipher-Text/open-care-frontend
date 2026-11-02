@@ -224,6 +224,7 @@ npm run test:url       # the link scheme rule (4 tests)
 npm run test:blood     # the blood form rules (4 tests)
 npm run test:void      # the prescription void reason rule (1 test)
 npm run test:trend     # the health trend chart rules (4 tests)
+npm run test:profile   # the profile details form rules (4 tests)
 
 # Regenerate opencare/docs/reference/ACCESS_MATRIX.md from the menu rules and src/config/role-permissions.fixture.json
 npm run docs:access
@@ -284,7 +285,7 @@ Read-only viewer. Hospital, institution and association forms label the field "U
 
 ### Testing
 
-Only small pure-logic tests exist (`test:nav`, `test:i18n`, `test:pricing`, `test:bff`, `test:vitals`, `test:url`, `test:blood`, `test:void`, `test:trend`, on Node's built-in runner); there is no component, browser or `type-check` script yet, and CI runs these tests and the build. See `docs/testing-frontend.md`. Type errors surface through `npm run build`.
+Only small pure-logic tests exist (`test:nav`, `test:i18n`, `test:pricing`, `test:bff`, `test:vitals`, `test:url`, `test:blood`, `test:void`, `test:trend`, `test:profile`, on Node's built-in runner); there is no component, browser or `type-check` script yet, and CI runs these tests and the build. See `docs/testing-frontend.md`. Type errors surface through `npm run build`.
 
 ## 📖 Documentation
 

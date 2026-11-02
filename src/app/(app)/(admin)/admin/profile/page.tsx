@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { ProfilePictureUploadModal } from "@/components/admin/profile-picture-upload-modal";
 import { BloodDonorChoice } from "@/components/account/blood-donor-choice";
+import { ProfileDetailsForm } from "@/components/account/profile-details-form";
 import { HealthDataConsent } from "@/components/account/health-data-consent";
 import { MessageLanguageChoice } from "@/components/account/message-language-choice";
 import { PublicPhoneChoice } from "@/components/account/public-phone-choice";
@@ -295,6 +296,9 @@ export default function ProfilePage() {
 						</CardContent>
 					</Card>
 				)}
+
+				{/* The person's own details: name, phone, date of birth, gender, address and place */}
+				<ProfileDetailsForm profile={profile} onSaved={(next) => setProfile(next)} />
 
 				{/* Blood donor choice (the person's own) */}
 				<BloodDonorChoice profile={profile} onSaved={(next) => setProfile({ ...profile, ...next })} />
