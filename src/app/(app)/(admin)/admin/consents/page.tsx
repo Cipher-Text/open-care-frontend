@@ -1,5 +1,7 @@
 "use client";
 
+import { Bilingual } from "@/components/common/Bilingual";
+import { CONSENT, prescriptionRequest } from "@/lib/consent-text";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { approveConsent, denyConsent, fetchMyGrants, fetchPendingConsents, revokeGrant } from "@/api/consents";
@@ -55,19 +57,23 @@ export default function MyConsentsPage() {
 						<ul className="divide-y">
 							{pending.data?.map((r) => (
 								<li key={r.id} className="space-y-2 py-3">
-									<p className="font-medium">{r.doctorName ?? "A doctor"} wants to write a prescription for you</p>
+									<p className="font-medium">
+										<Bilingual text={prescriptionRequest(r.doctorName)} />
+									</p>
 									<p className="text-sm text-muted-foreground">
 										{[r.doctorBmdcNo ? `BMDC ${r.doctorBmdcNo}` : null, r.doctorSpecializations, `asked ${when(r.requestedAt)}`, `expires ${when(r.expiresAt)}`]
 											.filter(Boolean)
 											.join(" · ")}
 									</p>
-									<p className="text-xs text-muted-foreground">Only agree if you are with this doctor right now.</p>
+									<p className="text-xs text-muted-foreground">
+										<Bilingual text={CONSENT.rxOnlyIf} />
+									</p>
 									<div className="flex gap-2">
 										<Button size="sm" onClick={() => decide.mutate({ id: r.id, approve: true })} disabled={decide.isPending}>
-											Agree
+											{CONSENT.agree.en} / <span lang="bn">{CONSENT.agree.bn}</span>
 										</Button>
 										<Button size="sm" variant="outline" onClick={() => decide.mutate({ id: r.id, approve: false })} disabled={decide.isPending}>
-											Decline
+											{CONSENT.decline.en} / <span lang="bn">{CONSENT.decline.bn}</span>
 										</Button>
 									</div>
 								</li>

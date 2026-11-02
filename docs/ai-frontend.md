@@ -82,7 +82,7 @@ Depends on: docs/ai-context.md (constitution). If conflict, ai-context.md wins.
   - critical rendering paths
   - basic navigation smoke tests (if e2e exists)
 - Do not introduce a new test framework unless asked.
-- Signed-in and console screens are English only. Public Bangla pages today: home, doctors list, doctor page (with reviews), blog, hospitals list and hospital page; the other public pages are not translated yet and are marked `noindex` under `/bn`. Bangla text was written by the team and needs a native review.
+- Signed-in and console screens are English only, except the texts of the three agreement screens (health data consent, blood donor choice, prescription consent request), which `src/lib/consent-text.ts` holds in English and Bangla and `components/common/Bilingual.tsx` shows side by side. Public Bangla pages today: home, doctors list, doctor page (with reviews), blog, hospitals list and hospital page; the other public pages are not translated yet and are marked `noindex` under `/bn`. Bangla text was written by the team and needs a native review.
 
 ## 10) UI & API Contract Discipline
 

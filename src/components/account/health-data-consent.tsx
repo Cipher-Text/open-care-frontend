@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Bilingual } from "@/components/common/Bilingual";
+import { CONSENT } from "@/lib/consent-text";
 import type { UserProfile } from "@/types/profile";
 
 /**
@@ -42,18 +44,19 @@ export function HealthDataConsent({ profile, onSaved }: { profile: UserProfile; 
 					<Activity className="h-5 w-5 text-primary" />
 					Health data
 				</CardTitle>
-				<CardDescription>Your choice. You can change it any time.</CardDescription>
+				<CardDescription>
+					<Bilingual text={CONSENT.choice} />
+				</CardDescription>
 			</CardHeader>
 			<CardContent className="space-y-4">
 				<div className="flex items-start gap-3">
 					<Checkbox id="health-data-consent" checked={consent} onCheckedChange={(value) => setConsent(value === true)} />
 					<Label htmlFor="health-data-consent" className="block leading-snug">
-						I agree that Open Care may store my health vitals (such as blood pressure, glucose and weight). Without this, new vitals
-						cannot be saved.
+						<Bilingual text={CONSENT.healthAgree} />
 					</Label>
 				</div>
 				<p className="text-sm text-muted-foreground">
-					If you withdraw, nothing is deleted: vitals already saved stay visible to you, and you can delete them yourself.
+					<Bilingual text={CONSENT.healthWithdraw} />
 				</p>
 				{consentedAt && <p className="text-sm text-muted-foreground">Agreed on {format(new Date(consentedAt), "MMM dd, yyyy")}.</p>}
 				<Button onClick={save} disabled={consent === agreed || saving}>
