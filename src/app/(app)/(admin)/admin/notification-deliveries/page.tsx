@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { fetchDeliveries, fetchDeliverySummary, fetchSmsBalance, retryDelivery, type DeliveryChannel, type DeliveryStatus } from "@/api/notification-deliveries";
+import { fetchDeliveries, fetchDeliverySummary, fetchSmsBalance, fetchSuppressions, removeSuppression, retryDelivery, type DeliveryChannel, type DeliveryStatus } from "@/api/notification-deliveries";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { dateTime } from "@/components/verification/status-badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -40,6 +40,16 @@ export default function NotificationDeliveriesPage() {
 			void queryClient.invalidateQueries({ queryKey: ["delivery-summary"] });
 		},
 		onError: (error) => toast.error(error instanceof Error ? error.message : "Could not retry"),
+	});
+
+	const suppressed = useQuery({ queryKey: ["email-suppressions"], queryFn: () => fetchSuppressions(1, 20), retry: false });
+	const unsuppress = useMutation({
+		mutationFn: (id: number) => removeSuppression(id),
+		onSuccess: () => {
+			toast.success("That address will be mailed again");
+			void queryClient.invalidateQueries({ queryKey: ["email-suppressions"] });
+		},
+		onError: (error) => toast.error(error instanceof Error ? error.message : "Could not remove the address"),
 	});
 
 	const rows = list.data?.content ?? [];
@@ -150,6 +160,48 @@ export default function NotificationDeliveriesPage() {
 								<span className="text-muted-foreground">Page {page} of {totalPages}</span>
 								<Button size="sm" variant="outline" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>Older</Button>
 							</div>
+						)}
+					</CardContent>
+				</Card>
+				<Card>
+					<CardContent className="space-y-3 pt-6">
+						<div>
+							<p className="font-medium">Addresses not mailed</p>
+							<p className="text-sm text-muted-foreground">
+								The email provider reported a permanent bounce or a spam complaint, so nothing is sent to these addresses. Remove one only when the person has fixed their mailbox: a new bounce puts it back. Showing the newest 20.
+							</p>
+						</div>
+						{suppressed.isError ? (
+							<Alert variant="destructive">
+								<AlertDescription>{suppressed.error instanceof Error ? suppressed.error.message : "Could not load the list"}</AlertDescription>
+							</Alert>
+						) : suppressed.isLoading ? (
+							<Skeleton className="h-16 w-full" />
+						) : (suppressed.data?.content.length ?? 0) === 0 ? (
+							<p className="text-sm text-muted-foreground">None.</p>
+						) : (
+							<Table>
+								<TableHeader>
+									<TableRow>
+										<TableHead>Address</TableHead>
+										<TableHead>Why</TableHead>
+										<TableHead>Since</TableHead>
+										<TableHead />
+									</TableRow>
+								</TableHeader>
+								<TableBody>
+									{suppressed.data?.content.map((s) => (
+										<TableRow key={s.id}>
+											<TableCell>{s.maskedEmail}</TableCell>
+											<TableCell title={s.detail ?? ""}>{s.reason === "BOUNCED" ? "Bounced" : "Marked as spam"}</TableCell>
+											<TableCell className="whitespace-nowrap">{dateTime(s.createdAt)}</TableCell>
+											<TableCell className="text-right">
+												<Button size="sm" variant="outline" disabled={unsuppress.isPending} onClick={() => unsuppress.mutate(s.id)}>Mail again</Button>
+											</TableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
 						)}
 					</CardContent>
 				</Card>

@@ -228,7 +228,7 @@ npm run test:profile   # the profile details form rules (4 tests)
 npm run test:cover     # the blog cover file rules (2 tests)
 npm run test:consent   # the bilingual agreement texts (3 tests)
 npm run test:csp       # the Content-Security-Policy (3 tests)
-npm run test:shapes    # the page envelope and capabilities answer checks (3 tests)
+npm run test:shapes    # the answer checks: pages, capabilities, open times, consent (5 tests)
 
 # Regenerate opencare/docs/reference/ACCESS_MATRIX.md from the menu rules and src/config/role-permissions.fixture.json
 npm run docs:access

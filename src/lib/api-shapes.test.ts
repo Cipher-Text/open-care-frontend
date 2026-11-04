@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { capabilitiesShape, checked, pageShape, UnexpectedAnswerError } from "./api-shapes.ts";
+import { capabilitiesShape, checked, consentRequestShape, pageShape, patientLookupShape, slotListShape, UnexpectedAnswerError } from "./api-shapes.ts";
 
 describe("api answer shapes", () => {
 	it("accepts a normal page and an empty one", () => {
@@ -21,5 +21,23 @@ describe("api answer shapes", () => {
 		for (const bad of [{}, { userType: "X", permissions: "a", features: {} }, { userType: "X", permissions: [1], features: {} }, { userType: "X", permissions: [], features: { a: "yes" } }, []]) {
 			assert.throws(() => checked(capabilitiesShape, bad, "capabilities"), UnexpectedAnswerError);
 		}
+	});
+
+	it("checks the open times and refuses a list that could be read as 'bookable' by mistake", () => {
+		const ok = { bookable: true, message: null, slots: [{ date: "2026-11-10", startTime: "18:00:00", endTime: "18:20:00", durationMinutes: 20, fee: 500 }] };
+		assert.equal(checked(slotListShape, ok, "open times").slots.length, 1);
+		assert.doesNotThrow(() => checked(slotListShape, { bookable: false, message: "Not yet", slots: [] }, "open times"));
+		for (const bad of [{ slots: [] }, { bookable: "yes", slots: [] }, { bookable: true, slots: [{ date: "2026-11-10" }] }, { bookable: true, slots: "none" }]) {
+			assert.throws(() => checked(slotListShape, bad, "open times"), UnexpectedAnswerError);
+		}
+	});
+
+	it("checks the consent request and the patient lookup that start a prescription", () => {
+		assert.equal(checked(consentRequestShape, { id: 5, status: "APPROVED", extra: 1 }, "consent request").status, "APPROVED");
+		for (const bad of [{ id: 5 }, { id: "5", status: "APPROVED" }, { id: 5, status: "GRANTED" }, null]) {
+			assert.throws(() => checked(consentRequestShape, bad, "consent request"), UnexpectedAnswerError);
+		}
+		assert.equal(checked(patientLookupShape, { profileId: 30, name: "R" }, "patient").profileId, 30);
+		assert.throws(() => checked(patientLookupShape, { profileId: 0 }, "patient"), UnexpectedAnswerError);
 	});
 });

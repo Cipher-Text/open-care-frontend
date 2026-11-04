@@ -1,4 +1,5 @@
 import { apiGet, apiPost, buildUrl } from "@/lib/api-client";
+import { consentRequestShape, patientLookupShape, verified } from "@/lib/api-shapes";
 import type {
 	ConsentRequest,
 	DoctorGrant,
@@ -15,19 +16,20 @@ const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback
 // ---- Doctor: ask a registered patient for consent before prescribing ----
 
 export const lookupPatient = async (identifier: string) =>
-	unwrap<PatientLookup>(
-		await apiGet(buildUrl("/consents/patients/lookup", { identifier })),
-		"No registered patient matches that phone, email or username"
+	verified(
+		patientLookupShape,
+		unwrap<PatientLookup>(await apiGet(buildUrl("/consents/patients/lookup", { identifier })), "No registered patient matches that phone, email or username"),
+		"patient"
 	);
 
 export const requestConsent = async (patientProfileId: number, identifier: string) =>
-	unwrap<ConsentRequest>(await apiPost("/consents/requests", { patientProfileId, identifier }), "Could not send the request");
+	verified(consentRequestShape, unwrap<ConsentRequest>(await apiPost("/consents/requests", { patientProfileId, identifier }), "Could not send the request"), "consent request");
 
 export const fetchConsentRequest = async (id: number) =>
-	unwrap<ConsentRequest>(await apiGet(`/consents/requests/${id}`), "Could not check the request");
+	verified(consentRequestShape, unwrap<ConsentRequest>(await apiGet(`/consents/requests/${id}`), "Could not check the request"), "consent request");
 
 export const verifyConsentCode = async (id: number, code: string) =>
-	unwrap<ConsentRequest>(await apiPost(`/consents/requests/${id}/verify`, { code }), "That code did not work");
+	verified(consentRequestShape, unwrap<ConsentRequest>(await apiPost(`/consents/requests/${id}/verify`, { code }), "That code did not work"), "consent request");
 
 export const fetchDoctorGrants = async () =>
 	unwrap<DoctorGrant[]>(await apiGet("/consents/grants"), "Could not load your patients");

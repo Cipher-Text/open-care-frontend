@@ -1,4 +1,5 @@
 import { apiGet, apiPatch, apiPost, buildUrl } from "@/lib/api-client";
+import { slotListShape, verified } from "@/lib/api-shapes";
 import { normalizePage, toWirePage, type WirePage } from "@/lib/pagination";
 import type { PageResult } from "@/types/common";
 
@@ -47,7 +48,7 @@ const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback
 /** The free slots of a verified doctor; public. */
 export const fetchSlots = async (doctorId: number | string, days = 14): Promise<SlotList> => {
 	const response = await apiGet<SlotList>(buildUrl(`/doctors/${doctorId}/slots`, { days }), { includeAuth: false });
-	return unwrap(response, "Could not load the open times");
+	return verified(slotListShape, unwrap(response, "Could not load the open times"), "open times");
 };
 
 export const requestAppointment = async (body: { doctorId: number; date: string; startTime: string; reason?: string }) =>
