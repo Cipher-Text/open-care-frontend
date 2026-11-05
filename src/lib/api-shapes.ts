@@ -26,6 +26,9 @@ export const capabilitiesShape = z.object({
 	userType: z.string().nullable(),
 	permissions: z.array(z.string()),
 	features: z.record(z.string(), z.boolean()),
+	organisations: z
+		.array(z.object({ kind: z.enum(["HOSPITAL", "INSTITUTION", "SOCIAL_ORGANIZATION", "ASSOCIATION"]), organisationId: z.number(), name: z.string(), role: z.enum(["ADMIN", "USER"]), position: z.string().nullable() }).passthrough())
+		.default([]),
 });
 
 /** The open times of a doctor: whether booking is open and which times can be chosen. */

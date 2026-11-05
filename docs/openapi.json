@@ -16944,6 +16944,42 @@
           }
         }
       }
+    },
+    "/api/user/{profileId}/organisation-roles": {
+      "get": {
+        "tags": [
+          "User Management"
+        ],
+        "summary": "The organisations a person belongs to",
+        "description": "Each active link with the organisation, the person's role there (ADMIN or USER) and their position. Staff use it on the profile screen.",
+        "operationId": "organisationRoles",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrganisationMembership"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -25190,6 +25226,12 @@
             "additionalProperties": {
               "type": "boolean"
             }
+          },
+          "organisations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganisationMembership"
+            }
           }
         }
       },
@@ -26818,6 +26860,31 @@
             "items": {
               "$ref": "#/components/schemas/KindInfo"
             }
+          }
+        }
+      },
+      "OrganisationMembership": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "organisationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "ADMIN",
+              "USER"
+            ]
+          },
+          "position": {
+            "type": "string"
           }
         }
       }

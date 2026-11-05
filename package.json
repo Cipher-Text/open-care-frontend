@@ -22,6 +22,7 @@
 		"test:shapes": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/api-shapes.test.ts",
 		"test:dupes": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/duplicate-view.test.ts",
 		"test:bulk": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/bulk-view.test.ts",
+		"test:workspaces": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/workspaces.test.ts",
 		"test:csp": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/csp.test.ts",
 		"test:consent": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/consent-text.test.ts",
 		"docs:access": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-access-matrix.ts",

@@ -6284,6 +6284,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/user/{profileId}/organisation-roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The organisations a person belongs to
+         * @description Each active link with the organisation, the person's role there (ADMIN or USER) and their position. Staff use it on the profile screen.
+         */
+        get: operations["organisationRoles"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -9135,6 +9155,7 @@ export interface components {
             features?: {
                 [key: string]: boolean;
             };
+            organisations?: components["schemas"]["OrganisationMembership"][];
         };
         PageResponseAppointmentResponse: {
             content?: components["schemas"]["AppointmentResponse"][];
@@ -9773,6 +9794,15 @@ export interface components {
             /** Format: int32 */
             maxRows?: number;
             kinds?: components["schemas"]["KindInfo"][];
+        };
+        OrganisationMembership: {
+            kind?: string;
+            /** Format: int32 */
+            organisationId?: number;
+            name?: string;
+            /** @enum {string} */
+            role?: "ADMIN" | "USER";
+            position?: string;
         };
     };
     responses: never;
@@ -19795,6 +19825,28 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["DuplicateCandidate"];
+                };
+            };
+        };
+    };
+    organisationRoles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                profileId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["OrganisationMembership"][];
                 };
             };
         };

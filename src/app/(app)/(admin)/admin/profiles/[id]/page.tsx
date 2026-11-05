@@ -39,6 +39,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { getProfileById, ProfileDetailsResponse } from "@/api/profile";
 import { SafeLink } from "@/components/common/SafeLink";
+import { OrganisationRolesCard } from "@/components/admin/organisation-roles-card";
 
 export default function ProfileDetailsPage() {
   const router = useRouter();
@@ -842,6 +843,9 @@ export default function ProfileDetailsPage() {
                   </CardContent>
                 </Card>
               )}
+
+            {/* One type per person, any number of organisation roles */}
+            <OrganisationRolesCard profileId={profileId} />
           </>
         ) : null}
       </div>

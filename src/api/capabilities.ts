@@ -1,10 +1,13 @@
 import { apiGet } from "@/lib/api-client";
+import type { OrganisationMembership } from "@/api/organisation-roles";
 import { capabilitiesShape, checked } from "@/lib/api-shapes";
 
 export interface Capabilities {
 	userType: string | null;
 	permissions: string[];
 	features: Record<string, boolean>;
+	/** The organisations the person belongs to, each with their role there. */
+	organisations: OrganisationMembership[];
 }
 
 /** The signed-in person's permissions and feature flags, read from Keycloak by the API on every call. */

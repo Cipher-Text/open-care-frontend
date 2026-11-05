@@ -27,6 +27,8 @@ function capabilities(): Promise<Capabilities> {
 export const usePermissions = () => {
   const [permissions, setPermissions] = useState<string[]>([]);
   const [features, setFeatures] = useState<Record<string, boolean>>({});
+  const [userType, setUserType] = useState<string | null>(null);
+  const [organisations, setOrganisations] = useState<Capabilities["organisations"]>([]);
   // The session is read after mount, so until then "no permission" only means "not known yet"
   const [ready, setReady] = useState(false);
 
@@ -46,6 +48,8 @@ export const usePermissions = () => {
           if (!active) return;
           setPermissions(latest.permissions);
           setFeatures(latest.features ?? {});
+          setUserType(latest.userType);
+          setOrganisations(latest.organisations ?? []);
         })
         .catch(() => {
           // Keep what the sign-in cookie said
@@ -65,5 +69,5 @@ export const usePermissions = () => {
   );
   const hasFeature = useCallback((name: string) => features[name] === true, [features]);
 
-  return { permissions, hasPermission, hasFeature, ready };
+  return { permissions, hasPermission, hasFeature, ready, userType, organisations };
 };
