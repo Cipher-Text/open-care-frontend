@@ -60,13 +60,27 @@ export async function clearAuthTokens(): Promise<void> {
   cookieStore.delete("refresh_token");
   cookieStore.delete("token_type");
   cookieStore.delete("token_scope");
+  cookieStore.delete("remember_me");
 }
 
+const SESSION_DAYS = 7;
+const REMEMBERED_DAYS = 30;
+
 /**
- * Save auth tokens to cookies
+ * Save auth tokens to cookies. The sign-in is kept for 7 days, or 30 when the person ticked "Remember me": that choice is made
+ * at sign-in (`remember`) and kept in a cookie, so a later token refresh (which passes nothing) keeps the same length.
  */
-export async function saveAuthTokens(response: LoginResponse): Promise<void> {
+export async function saveAuthTokens(response: LoginResponse, options: { remember?: boolean } = {}): Promise<void> {
   const cookieStore = await cookies();
+  const remember = options.remember ?? cookieStore.get("remember_me")?.value === "1";
+  const refreshSeconds = 60 * 60 * 24 * (remember ? REMEMBERED_DAYS : SESSION_DAYS);
+  if (options.remember !== undefined) {
+    if (remember) {
+      cookieStore.set("remember_me", "1", { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: refreshSeconds });
+    } else {
+      cookieStore.delete("remember_me");
+    }
+  }
 
   // Set access token
   cookieStore.set("access_token", response.access_token, {
@@ -81,7 +95,7 @@ export async function saveAuthTokens(response: LoginResponse): Promise<void> {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+    maxAge: refreshSeconds,
   });
 
   // Set token type

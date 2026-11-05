@@ -16,6 +16,7 @@
 > | `npm run test:profile` | `src/lib/profile-form.test.ts`: the "Your details" form rules (fill, payload, checks, changed) | 4 tests, all pass |
 > | `npm run test:cover` | `src/lib/cover-upload.test.ts`: which pictures can be uploaded as a blog cover | 2 tests, all pass |
 > | `npm run test:consent` | `src/lib/consent-text.test.ts`: every agreement text has English and Bangla, no placeholders, the same number of sentences | 3 tests, all pass |
+> | `npm run test:login` | `src/lib/login-errors.test.ts`: what a person is told when sign-in fails (wrong password, a server setting that is wrong, no answer, too many attempts, disabled account) and that the server's own text is never shown | 5 tests, all pass |
 > | `npm run test:csp` | `src/lib/csp.test.ts`: the Content-Security-Policy (no framing or plugins, scripts only from the site and Google Analytics, eval and websockets only in development) | 3 tests, all pass |
 > | `npm run test:shapes` | `src/lib/api-shapes.test.ts`: the page envelope, the capabilities, the open times, the consent request and the patient lookup are checked; a wrong shape is refused | 5 tests, all pass |
 > | `npm run test:workspaces` | `src/lib/workspaces.test.ts`: which workspaces a person has (personal, doctor or platform, one per organisation) and which one a page belongs to | 7 tests, all pass |

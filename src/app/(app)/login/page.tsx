@@ -3,10 +3,11 @@
 import { CONTACT_EMAIL } from "@/components/common/InfoPage";
 import { resetSession } from "@/lib/session-client";
 import { useActionState, useState, useEffect, startTransition } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,6 +29,7 @@ const GOOGLE_ERRORS: Record<string, string> = {
 
 export default function LoginPage() {
 	const [showPassword, setShowPassword] = useState(false);
+	const [remember, setRemember] = useState(false);
 	const [formState, action, isFormLoading] = useActionState(submitLogin, {
 		success: false,
 	});
@@ -72,9 +74,19 @@ export default function LoginPage() {
 
 	const {
 		register,
+		handleSubmit,
 		formState: { errors },
 	} = useForm<LoginFormData>({
 		resolver: zodResolver(loginSchema),
+	});
+
+	// Check the two fields first (so an empty form says what is missing next to the field), then send them to the server action
+	const onSubmit = handleSubmit((values) => {
+		const data = new FormData();
+		data.set("username", values.username);
+		data.set("password", values.password);
+		if (remember) data.set("remember-me", "on");
+		startTransition(() => action(data));
 	});
 
 	return (
@@ -82,21 +94,18 @@ export default function LoginPage() {
 			<div className="max-w-md w-full space-y-8">
 				{/* Header */}
 				<div className="text-center">
-					<h1 className="text-3xl font-bold text-foreground mb-2">
-						Welcome Back
-					</h1>
-					<p className="text-muted-foreground">Sign in to your OpenCare account</p>
+					<Link href="/" className="mb-6 inline-flex items-center gap-2 rounded-md font-semibold text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary">
+						<Image src="/logo.png" alt="" width={36} height={36} className="size-9" priority />
+						<span className="text-xl">Open Care</span>
+					</Link>
+					<h1 className="text-3xl font-bold text-foreground mb-2">Sign in</h1>
+					<p className="text-muted-foreground">Welcome back. Use your Open Care account.</p>
 				</div>
 
 				{/* Login Form */}
 				<Card className="border border-border shadow-lg">
-					<CardHeader className="space-y-1 pb-6">
-						<CardTitle className="text-2xl font-bold text-center text-primary">
-							Sign In
-						</CardTitle>
-					</CardHeader>
 					<CardContent>
-						<form action={action} className="space-y-6">
+						<form onSubmit={onSubmit} noValidate className="space-y-6">
 							{justRegistered && (
 								<div role="status" className="bg-success/10 border border-success/30 rounded-md p-3">
 									<p className="text-sm text-success">
@@ -113,7 +122,7 @@ export default function LoginPage() {
 
 							{/* Server Error Display */}
 							{state.error && (
-								<div className="bg-destructive/10 border border-destructive/30 rounded-md p-3">
+								<div role="alert" className="bg-destructive/10 border border-destructive/30 rounded-md p-3">
 									<p className="text-sm text-destructive">{state.error}</p>
 								</div>
 							)}
@@ -131,14 +140,20 @@ export default function LoginPage() {
 									htmlFor="username"
 									className="text-sm font-medium text-muted-foreground"
 								>
-									Username
+									Username or email
 								</Label>
 								<div className="relative">
 									<User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
 									<Input
 										id="username"
 										type="text"
-										placeholder="Enter your username"
+										autoComplete="username"
+										autoCapitalize="none"
+										spellCheck={false}
+										autoFocus
+										aria-invalid={errors.username ? true : undefined}
+										aria-describedby={errors.username ? "username-error" : undefined}
+										placeholder="Username or email"
 										className={`pl-10 h-12 border-input focus:border-primary focus:ring-primary ${
 											errors.username
 												? "border-destructive focus:border-destructive"
@@ -148,7 +163,7 @@ export default function LoginPage() {
 									/>
 								</div>
 								{errors.username && (
-									<p className="text-sm text-destructive">
+									<p id="username-error" role="alert" className="text-sm text-destructive">
 										{errors.username.message}
 									</p>
 								)}
@@ -167,6 +182,9 @@ export default function LoginPage() {
 									<Input
 										id="password"
 										type={showPassword ? "text" : "password"}
+										autoComplete="current-password"
+										aria-invalid={errors.password ? true : undefined}
+										aria-describedby={errors.password ? "password-error" : undefined}
 										placeholder="Enter your password"
 										className={`pl-10 pr-12 h-12 border-input focus:border-primary focus:ring-primary ${
 											errors.password
@@ -191,7 +209,7 @@ export default function LoginPage() {
 									</Button>
 								</div>
 								{errors.password && (
-									<p className="text-sm text-destructive">
+									<p id="password-error" role="alert" className="text-sm text-destructive">
 										{errors.password.message}
 									</p>
 								)}
@@ -200,18 +218,18 @@ export default function LoginPage() {
 							{/* Remember Me & Forgot Password */}
 							<div className="flex items-center justify-between">
 								<div className="flex items-center">
-									<Checkbox id="remember-me" name="remember-me" />
+									<Checkbox id="remember-me" checked={remember} onCheckedChange={(value) => setRemember(value === true)} />
 									<label
 										htmlFor="remember-me"
-										className="ml-2 block text-sm text-muted-foreground"
+										className="ml-2 block py-2 text-sm text-muted-foreground"
 									>
-										Remember me
+										Keep me signed in for 30 days
 									</label>
 								</div>
 								{/* There is no self-service reset page yet: the person emails support */}
 								<a
 									href={`mailto:${CONTACT_EMAIL}?subject=Password%20reset`}
-									className="text-sm text-primary hover:text-primary"
+									className="inline-block py-2 text-sm text-primary hover:underline"
 								>
 									Forgot password?
 								</a>
@@ -266,15 +284,18 @@ export default function LoginPage() {
 							)}
 
 							{/* Sign Up Link */}
-							<div className="text-center">
+							<div className="space-y-1 text-center">
 								<p className="text-sm text-muted-foreground">
-									Don&apos;t have an account?{" "}
+									New to Open Care?{" "}
 									<Link
 										href="/signup"
-										className="text-primary hover:text-primary font-medium"
+										className="inline-block py-2 font-medium text-primary hover:underline"
 									>
-										Sign up here
+										Create an account
 									</Link>
+								</p>
+								<p className="text-xs text-muted-foreground">
+									A doctor, nurse or nutritionist already listed? Create an account, then claim your profile.
 								</p>
 							</div>
 						</form>

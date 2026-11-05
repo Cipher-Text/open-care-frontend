@@ -3,21 +3,32 @@ import { fetchWithTimeout } from "@/lib/http";
 import { LoginFormData } from "@/validations/login-schema";
 import { LoginResponse } from "@/types/auth";
 
+/** A sign-in the backend refused or could not answer. `status` is null when there was no answer; `detail` is the server's own text, for reading only. */
+export class LoginRequestError extends Error {
+	constructor(readonly status: number | null, readonly detail?: string) {
+		super(status === null ? "Failed to login: no answer" : `Failed to login: ${status}`);
+	}
+}
+
 export const login = async (
 	loginData: LoginFormData
 ): Promise<LoginResponse> => {
-	const response = await fetchWithTimeout(`${baseUrl}/auth/login`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-		},
-		body: JSON.stringify(loginData),
-	});
+	let response: Response;
+	try {
+		response = await fetchWithTimeout(`${baseUrl}/auth/login`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(loginData),
+		});
+	} catch {
+		throw new LoginRequestError(null);
+	}
 
 	if (!response.ok) {
-		throw new Error(
-			`Failed to login: ${response.status} ${response.statusText}`
-		);
+		const body = (await response.json().catch(() => null)) as { message?: string } | null;
+		throw new LoginRequestError(response.status, body?.message);
 	}
 
 	return response.json();

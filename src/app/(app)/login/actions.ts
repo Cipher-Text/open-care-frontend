@@ -1,6 +1,7 @@
 "use server";
 
-import { login } from "@/api/auth";
+import { login, LoginRequestError } from "@/api/auth";
+import { loginErrorMessage } from "@/lib/login-errors";
 import { saveAuthTokens } from "@/lib/auth";
 
 export interface LoginState {
@@ -8,6 +9,16 @@ export interface LoginState {
 	error?: string;
 	shouldRedirect?: boolean;
 	redirectTo?: string;
+}
+
+/** The message for a person; what the server said stays in the server log. */
+function describeFailure(error: unknown): string {
+	if (error instanceof LoginRequestError) {
+		console.error(`[login] refused: status ${error.status ?? "none"} ${error.detail ?? ""}`.trim());
+		return loginErrorMessage(error.status, error.detail);
+	}
+	console.error("[login] unexpected failure", error instanceof Error ? error.message : error);
+	return loginErrorMessage(null);
 }
 
 export async function submitLogin(
@@ -25,7 +36,7 @@ export async function submitLogin(
 	) {
 		return {
 			success: false,
-			error: "Invalid form data. Please provide both username and password.",
+			error: "Enter your username and password.",
 		};
 	}
 
@@ -33,7 +44,7 @@ export async function submitLogin(
 		const response = await login({ username, password });
 
 		// Save tokens to cookies using utility function
-		await saveAuthTokens(response);
+		await saveAuthTokens(response, { remember: formData.get("remember-me") === "on" });
 
 		// Return success state with redirect info
 		return {
@@ -42,13 +53,7 @@ export async function submitLogin(
 			redirectTo: "/admin",
 		};
 	} catch (error) {
-		return {
-			success: false,
-			error:
-				error instanceof Error
-					? error.message
-					: "Login failed. Please try again.",
-		};
+		return { success: false, error: describeFailure(error) };
 	}
 }
 
@@ -119,9 +124,6 @@ export async function devLogin(
 			redirectTo: "/admin",
 		};
 	} catch (error) {
-		return {
-			success: false,
-			error: error instanceof Error ? error.message : "Dev login failed.",
-		};
+		return { success: false, error: describeFailure(error) };
 	}
 }
