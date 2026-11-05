@@ -31,6 +31,8 @@ export default function DoctorsPage() {
 	const router = useRouter();
 	const { hasPermission } = usePermissions();
 	const canCreateDoctor = hasPermission("create-doctor");
+	// platform staff hold delete or verify and see every doctor; a hospital admin sees the doctors at their own facilities (the server narrows the list)
+	const scoped = !hasPermission("delete-doctor") && !hasPermission("verify-doctor");
 
 	const {
 		data: doctorsData,
@@ -70,7 +72,7 @@ export default function DoctorsPage() {
 		<div className="flex flex-col">
 			<AdminHeader
 				title="Doctors Management"
-				description="Manage and monitor doctor registrations and verifications"
+				description={scoped ? "The doctors who work at the facilities you administer" : "Manage and monitor doctor registrations and verifications"}
 			>
 				{canCreateDoctor && (
 					<div className="flex gap-2">

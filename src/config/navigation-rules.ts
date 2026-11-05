@@ -41,10 +41,11 @@ export const CONSOLE_RULES: NavRule[] = [
 	{ id: "reviews", group: "People", title: "Reviews", url: "/admin/reviews", anyOf: [DOCTOR_PANEL] },
 	{ id: "my-schedule", group: "People", title: "My schedule", url: "/admin/my-schedule", anyOf: [DOCTOR_PANEL] },
 	{ id: "doctors", group: "People", title: "Doctors", url: "/admin/doctors", anyOf: crud("doctor") },
-	// not update-nurse: a nurse holds it for their own record (/account/nurse) and must not see everyone else's private details
-	{ id: "nurses", group: "People", title: "Nurses", url: "/admin/nurses", anyOf: ["create-nurse", "delete-nurse"] },
-	// not update-nutritionist: a nutritionist holds it for their own record (/account/nutritionist) and must not see everyone else's details
-	{ id: "nutritionists", group: "People", title: "Nutritionists", url: "/admin/nutritionists", anyOf: ["create-nutritionist", "delete-nutritionist"] },
+	// only platform staff (delete): a nurse holds update-nurse for their own record (/account/nurse) and a hospital admin holds create-nurse to list
+	// people, and neither may see everyone else's private details
+	{ id: "nurses", group: "People", title: "Nurses", url: "/admin/nurses", anyOf: ["delete-nurse"] },
+	// only platform staff (delete), for the same reason as the nurse list
+	{ id: "nutritionists", group: "People", title: "Nutritionists", url: "/admin/nutritionists", anyOf: ["delete-nutritionist"] },
 	{ id: "profiles", group: "People", title: "Profiles", url: "/admin/profiles", anyOf: ["view-profile"] },
 	{ id: "verification", group: "People", title: "Verification", url: "/admin/verification", anyOf: ["verify-doctor", "verify-facility"] },
 	{ id: "contributions", group: "People", title: "Contributions", url: "/admin/contributions", anyOf: ["verify-doctor", "verify-facility"] },

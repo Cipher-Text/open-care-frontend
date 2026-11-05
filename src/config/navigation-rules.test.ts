@@ -44,7 +44,8 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 	},
 	"hospital-admin": {
 		staff: true,
-		menu: ["dashboard", "my-figures", "doctors", "nurses", "nutritionists", "hospitals", "ambulances", "duplicates", "blood", "my-consents"],
+		// the doctor list is scoped by the server to the doctors at their facilities; the nurse and nutritionist lists are for platform staff
+		menu: ["dashboard", "my-figures", "doctors", "hospitals", "ambulances", "duplicates", "blood", "my-consents"],
 	},
 	"institution-admin": { staff: true, menu: ["dashboard", "institutions", "my-consents"] },
 	"social-organization-admin": { staff: true, menu: ["dashboard", "social-organizations", "ambulances", "duplicates", "my-consents"] },
