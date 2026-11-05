@@ -2,7 +2,7 @@ import { apiDelete, apiGet, buildUrl, unwrap } from "@/lib/api-client";
 import { normalizePage, toWirePage, type WirePage } from "@/lib/pagination";
 import type { PageResult } from "@/types/common";
 
-export type DuplicateKind = "HOSPITAL" | "DOCTOR" | "NURSE" | "AMBULANCE";
+export type DuplicateKind = "HOSPITAL" | "DOCTOR" | "NURSE" | "NUTRITIONIST" | "AMBULANCE";
 export type DuplicateReason = "SAME_KEY" | "SAME_NAME_SAME_PLACE" | "SAME_NAME" | "SAME_DIGITS" | "SIMILAR_NAME";
 
 export interface DuplicateCandidate {

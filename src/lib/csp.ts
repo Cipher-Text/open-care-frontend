@@ -11,8 +11,20 @@
 const GOOGLE_ANALYTICS_SCRIPT = "https://www.googletagmanager.com";
 const GOOGLE_ANALYTICS_CONNECT = ["https://www.google-analytics.com", "https://*.google-analytics.com", "https://www.googletagmanager.com"];
 
-export function contentSecurityPolicy(options: { development?: boolean } = {}): string {
+/** The site address of the backend (from NEXT_PUBLIC_API_BASE_URL), or null when it is missing or not a web address. */
+export function apiOrigin(baseUrl: string | undefined): string | null {
+	try {
+		const url = new URL(baseUrl ?? "");
+		return url.protocol === "http:" || url.protocol === "https:" ? url.origin : null;
+	} catch {
+		return null;
+	}
+}
+
+export function contentSecurityPolicy(options: { development?: boolean; apiBaseUrl?: string } = {}): string {
 	const dev = options.development === true;
+	// public lists and pages are read straight from the backend in the browser, so its address must be allowed
+	const api = apiOrigin(options.apiBaseUrl);
 	const directives: Record<string, string[]> = {
 		"default-src": ["'self'"],
 		// 'unsafe-eval' and websockets are only for the development server (hot reload)
@@ -21,7 +33,7 @@ export function contentSecurityPolicy(options: { development?: boolean } = {}): 
 		// uploaded pictures come from the storage bucket or its CDN, over https (http for a local MinIO in development)
 		"img-src": ["'self'", "data:", "blob:", "https:", ...(dev ? ["http:"] : [])],
 		"font-src": ["'self'", "data:"],
-		"connect-src": ["'self'", ...GOOGLE_ANALYTICS_CONNECT, ...(dev ? ["ws:", "wss:"] : [])],
+		"connect-src": ["'self'", ...(api ? [api] : []), ...GOOGLE_ANALYTICS_CONNECT, ...(dev ? ["ws:", "wss:"] : [])],
 		"frame-src": ["'none'"],
 		"frame-ancestors": ["'none'"],
 		"object-src": ["'none'"],

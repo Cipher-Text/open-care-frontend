@@ -2,6 +2,7 @@
 export interface DashboardOverview {
   totalDoctors: number;
   totalNurses: number;
+  totalNutritionists: number;
   totalPatients: number;
   totalAdmins: number;
   totalHospitals: number;

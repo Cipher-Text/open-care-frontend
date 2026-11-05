@@ -31,5 +31,6 @@ describe("duplicate view rules", () => {
 		assert.equal(recordHref("DOCTOR", 7), "/admin/doctors/7/view");
 		assert.equal(recordHref("AMBULANCE", 7), "/admin/ambulances/7/view");
 		assert.equal(recordHref("NURSE", 7), "/admin/nurses");
+		assert.equal(recordHref("NUTRITIONIST", 7), "/admin/nutritionists");
 	});
 });

@@ -11,6 +11,7 @@ import {
   Truck,
   Heart,
   HandHelping,
+  Salad,
 } from "lucide-react";
 import { DashboardOverview } from "@/types/dashboard";
 
@@ -31,6 +32,12 @@ export function DashboardStats({ data }: DashboardStatsProps) {
       value: data.totalNurses,
       icon: HeartPulse,
       color: "text-chart-5",
+    },
+    {
+      title: "Total Nutritionists",
+      value: data.totalNutritionists,
+      icon: Salad,
+      color: "text-chart-3",
     },
     {
       title: "Total Patients",

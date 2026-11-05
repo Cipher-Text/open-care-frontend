@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { contentSecurityPolicy } from "./csp.ts";
+import { apiOrigin, contentSecurityPolicy } from "./csp.ts";
 
 const directive = (policy: string, name: string) => policy.split("; ").find((d) => d.startsWith(`${name} `) || d === name);
 
@@ -27,5 +27,14 @@ describe("content security policy", () => {
 		assert.ok(directive(dev, "connect-src")!.includes("ws:"));
 		assert.ok(directive(dev, "img-src")!.includes("http:"));
 		assert.ok(!dev.includes("upgrade-insecure-requests"));
+	});
+
+	it("allows the backend address for fetches, and only its origin", () => {
+		const policy = contentSecurityPolicy({ apiBaseUrl: "https://api.opencarebd.com/api" });
+		assert.ok(directive(policy, "connect-src")!.includes("https://api.opencarebd.com"));
+		assert.ok(!directive(policy, "connect-src")!.includes("opencarebd.com/api"));
+		assert.equal(apiOrigin("not a url"), null);
+		assert.equal(apiOrigin(undefined), null);
+		assert.ok(!directive(contentSecurityPolicy(), "connect-src")!.includes("http://localhost"));
 	});
 });

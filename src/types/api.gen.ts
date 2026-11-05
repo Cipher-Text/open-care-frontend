@@ -1070,8 +1070,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Remove user domain admin roles
-         * @description Removes the specified domain admin roles from the user identified by profileId
+         * Remove a person from an organisation
+         * @description Ends the person's link to the organisation. The Keycloak group of a role is removed when their last link of that role ends. The person's own type is not changed.
          */
         post: operations["removeUserFromDomainAdmin"];
         delete?: never;
@@ -1090,8 +1090,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Assign user to domain admin roles
-         * @description Assigns the specified domains/roles to the user identified by profileId
+         * Add a person to an organisation as its admin or a member
+         * @description userType is HOSPITAL_ADMIN, HOSPITAL_USER, INSTITUTION_ADMIN, INSTITUTION_USER, SOCIAL_ORGANIZATION_ADMIN, SOCIAL_ORGANIZATION_USER, ASSOCIATION_ADMIN or ASSOCIATION_USER and domainId the organisation. One person can hold many (one link per organisation); the person's own type (doctor, nurse, patient) is not changed. The Keycloak group of the role is added with the first link of that role.
          */
         post: operations["assignUserToDomainAdmin"];
         delete?: never;
@@ -8646,6 +8646,8 @@ export interface components {
             totalDoctors?: number;
             /** Format: int64 */
             totalNurses?: number;
+            /** Format: int64 */
+            totalNutritionists?: number;
             /** Format: int64 */
             totalPatients?: number;
             /** Format: int64 */
@@ -19505,7 +19507,7 @@ export interface operations {
     groups: {
         parameters: {
             query: {
-                type: "HOSPITAL" | "DOCTOR" | "NURSE" | "AMBULANCE";
+                type: "HOSPITAL" | "DOCTOR" | "NURSE" | "NUTRITIONIST" | "AMBULANCE";
                 by?: "NAME" | "NUMBER";
                 districtId?: number;
                 page?: number;
@@ -19531,7 +19533,7 @@ export interface operations {
     check_1: {
         parameters: {
             query: {
-                type: "HOSPITAL" | "DOCTOR" | "NURSE" | "AMBULANCE";
+                type: "HOSPITAL" | "DOCTOR" | "NURSE" | "NUTRITIONIST" | "AMBULANCE";
                 name?: string;
                 districtId?: number;
                 number?: string;
@@ -19779,7 +19781,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                type: "HOSPITAL" | "DOCTOR" | "NURSE" | "AMBULANCE";
+                type: "HOSPITAL" | "DOCTOR" | "NURSE" | "NUTRITIONIST" | "AMBULANCE";
                 id: number;
             };
             cookie?: never;

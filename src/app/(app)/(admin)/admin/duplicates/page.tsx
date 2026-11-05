@@ -19,16 +19,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { canCheck, recordHref, REASON_LABEL, sortCandidates } from "@/lib/duplicate-view";
 import { usePermissions } from "@/hooks/use-permissions";
 
-const KIND_LABEL: Record<DuplicateKind, string> = { HOSPITAL: "Hospitals", DOCTOR: "Doctors", NURSE: "Nurses", AMBULANCE: "Ambulances" };
+const KIND_LABEL: Record<DuplicateKind, string> = { HOSPITAL: "Hospitals", DOCTOR: "Doctors", NURSE: "Nurses", NUTRITIONIST: "Nutritionists", AMBULANCE: "Ambulances" };
 const KIND_PERMISSIONS: Record<DuplicateKind, string[]> = {
 	HOSPITAL: ["create-hospital", "delete-hospital"],
 	DOCTOR: ["create-doctor", "delete-doctor", "verify-doctor"],
 	NURSE: ["create-nurse", "delete-nurse"],
+	NUTRITIONIST: ["create-nutritionist", "delete-nutritionist"],
 	AMBULANCE: ["create-ambulance", "delete-ambulance"],
 };
-const NUMBER_LABEL: Record<DuplicateKind, string> = { HOSPITAL: "Registration code", DOCTOR: "BMDC number", NURSE: "BNMC number", AMBULANCE: "Vehicle number" };
+const NUMBER_LABEL: Record<DuplicateKind, string> = { HOSPITAL: "Registration code", DOCTOR: "BMDC number", NURSE: "BNMC number", NUTRITIONIST: "Registration number", AMBULANCE: "Vehicle number" };
 
-const DELETE_PERMISSION: Record<DuplicateKind, string> = { HOSPITAL: "delete-hospital", DOCTOR: "delete-doctor", NURSE: "delete-nurse", AMBULANCE: "delete-ambulance" };
+const DELETE_PERMISSION: Record<DuplicateKind, string> = { HOSPITAL: "delete-hospital", DOCTOR: "delete-doctor", NURSE: "delete-nurse", NUTRITIONIST: "delete-nutritionist", AMBULANCE: "delete-ambulance" };
 
 /**
  * The records that may be the same one. Staff who hold the delete permission can delete one after looking at both: the server only
@@ -135,7 +136,7 @@ export default function DuplicatesPage() {
 				<AdminHeader title="Duplicate check" description="Find records that may be entered twice" />
 				<div className="p-4 md:p-8">
 					<Alert>
-						<AlertDescription>Your role does not include creating or deleting hospitals, doctors, nurses or ambulances.</AlertDescription>
+						<AlertDescription>Your role does not include creating or deleting hospitals, doctors, nurses, nutritionists or ambulances.</AlertDescription>
 					</Alert>
 				</div>
 			</div>
@@ -212,7 +213,7 @@ export default function DuplicatesPage() {
 					<Card>
 						<CardContent className="space-y-4 pt-6">
 							<div className="flex flex-wrap items-center gap-2">
-								{(type === "DOCTOR" || type === "NURSE") && (
+								{(type === "DOCTOR" || type === "NURSE" || type === "NUTRITIONIST") && (
 									<div className="w-full sm:w-52">
 										<NativeSelect aria-label="Group by" value={by} onChange={(e) => { setBy(e.target.value as "NAME" | "NUMBER"); setPage(1); }}>
 											<option value="NAME">Same name</option>

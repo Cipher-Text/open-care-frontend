@@ -18,6 +18,8 @@ export function recordHref(type: DuplicateKind, id: number): string {
 			return `/admin/doctors/${id}/view`;
 		case "AMBULANCE":
 			return `/admin/ambulances/${id}/view`;
+		case "NUTRITIONIST":
+			return "/admin/nutritionists";
 		default:
 			return "/admin/nurses";
 	}

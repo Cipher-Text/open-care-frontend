@@ -21,6 +21,7 @@ import {
   Droplets,
   Megaphone,
   HeartPulse,
+  Salad,
   UserCircle,
 } from "lucide-react";
 import {
@@ -41,6 +42,7 @@ const ICONS: Record<string, LucideIcon> = {
   dashboard: Home,
   doctors: Stethoscope,
   nurses: HeartPulse,
+  nutritionists: Salad,
   profiles: UserCircle,
   institutions: Building2,
   hospitals: Building2,
