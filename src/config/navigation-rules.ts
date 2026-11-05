@@ -61,6 +61,8 @@ export const CONSOLE_RULES: NavRule[] = [
 	{ id: "constants", group: "Reference data", title: "Constants", url: "/admin/constants", anyOf: MASTER },
 	{ id: "geolocation", group: "Reference data", title: "Geolocation", url: "/admin/geolocation", anyOf: MASTER },
 	{ id: "degrees", group: "Reference data", title: "Degrees", url: "/admin/degrees", anyOf: MASTER },
+	{ id: "bulk-upload", group: "Facilities", title: "Bulk upload", url: "/admin/bulk-upload", anyOf: ["create-hospital", "delete-hospital"] },
+	{ id: "duplicates", group: "Facilities", title: "Duplicate check", url: "/admin/duplicates", anyOf: ["create-hospital", "delete-hospital", "create-doctor", "delete-doctor", "verify-doctor", "create-nurse", "delete-nurse", "create-ambulance", "delete-ambulance"] },
 	{ id: "location-review", group: "Facilities", title: "Location review", url: "/admin/location-review", anyOf: ["create-hospital", "delete-hospital"] },
 	{ id: "blood", group: "Facilities", title: "Blood Management", url: "/admin/blood", anyOf: ["manage-blood"] },
 	{

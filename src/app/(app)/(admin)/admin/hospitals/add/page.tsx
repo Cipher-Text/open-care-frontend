@@ -9,6 +9,9 @@ import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
 import { AdminHeader } from "@/components/admin/admin-header";
+import { SimilarRecords } from "@/components/admin/duplicates/similar-records";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ApiError } from "@/lib/api-error";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -147,19 +150,32 @@ export default function AddHospitalPage() {
 	// Filter unions based on selected upazila
 	const filteredUnions = unions;
 
-	const onSubmit = async (data: AddHospitalFormData) => {
+	// Set when the server found a hospital with the same name in the same place: the person then looks and confirms
+	const [duplicateMessage, setDuplicateMessage] = useState<string | null>(null);
+	const watchedName = form.watch("name");
+	const watchedDistrict = form.watch("districtId");
+
+	const submit = async (data: AddHospitalFormData, confirmNotDuplicate: boolean) => {
 		try {
 			setIsLoading(true);
-			await addHospital(data);
+			await addHospital(data, { confirmNotDuplicate });
 			toast.success("Hospital added successfully!");
 			router.push("/admin/hospitals");
 		} catch (error) {
 			console.error("Error adding hospital:", error);
-			toast.error("Failed to add hospital. Please try again.");
+			if (error instanceof ApiError && error.code === "DUPLICATE_SUSPECTED") {
+				setDuplicateMessage(error.message);
+				toast.warning("A hospital like this already exists. Look at it before adding another.");
+			} else if (error instanceof ApiError && error.status === 409) {
+				toast.error(error.message);
+			} else {
+				toast.error("Failed to add hospital. Please try again.");
+			}
 		} finally {
 			setIsLoading(false);
 		}
 	};
+	const onSubmit = (data: AddHospitalFormData) => submit(data, false);
 
 	const handleBack = () => {
 		router.push("/admin/hospitals");
@@ -180,6 +196,22 @@ export default function AddHospitalPage() {
 			<div className="flex-1 space-y-6 p-4 md:p-8 pt-6">
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+						{duplicateMessage && (
+							<Alert variant="destructive">
+								<AlertDescription className="flex flex-wrap items-center justify-between gap-3">
+									<span>{duplicateMessage}</span>
+									<Button
+										type="button"
+										variant="outline"
+										size="sm"
+										disabled={isLoading}
+										onClick={() => void form.handleSubmit((data) => submit(data, true))()}
+									>
+										It is a different hospital: add anyway
+									</Button>
+								</AlertDescription>
+							</Alert>
+						)}
 						<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 							{/* Basic Information Card */}
 							<Card>
@@ -197,6 +229,7 @@ export default function AddHospitalPage() {
 													<Input placeholder="Enter hospital name" {...field} />
 												</FormControl>
 												<FormMessage />
+												<SimilarRecords type="HOSPITAL" name={watchedName} districtId={typeof watchedDistrict === "number" || typeof watchedDistrict === "string" ? watchedDistrict : undefined} />
 											</FormItem>
 										)}
 									/>

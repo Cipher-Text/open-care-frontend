@@ -30,7 +30,7 @@ jobs:
         run: npm ci
 
       - name: Test
-        run: npm run test:nav && npm run test:i18n && npm run test:pricing && npm run test:bff && npm run test:vitals && npm run test:url && npm run test:blood && npm run test:void && npm run test:trend && npm run test:profile && npm run test:cover && npm run test:consent && npm run test:csp && npm run test:shapes
+        run: npm run test:nav && npm run test:i18n && npm run test:pricing && npm run test:bff && npm run test:vitals && npm run test:url && npm run test:blood && npm run test:void && npm run test:trend && npm run test:profile && npm run test:cover && npm run test:consent && npm run test:csp && npm run test:dupes && npm run test:bulk && npm run test:shapes
 
       - name: Build
         run: npm run build

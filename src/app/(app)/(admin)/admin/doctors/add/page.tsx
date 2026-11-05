@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AdminHeader } from "@/components/admin/admin-header";
+import { SimilarRecords } from "@/components/admin/duplicates/similar-records";
+import { ApiError } from "@/lib/api-error";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -98,6 +100,9 @@ export default function AddDoctorPage() {
 		setSelectedUpazilaId(formValues.upazilaId ?? null);
 	}, [form]);
 
+	const watchedName = form.watch("name");
+	const watchedBmdc = form.watch("bmdcNo");
+
 	const onSubmit = async (data: AddDoctorFormData) => {
 		try {
 			setIsLoading(true);
@@ -106,7 +111,7 @@ export default function AddDoctorPage() {
 			router.push("/admin/doctors");
 		} catch (error) {
 			console.error("Error adding doctor:", error);
-			toast.error("Failed to add doctor. Please try again.");
+			toast.error(error instanceof ApiError && error.status === 409 ? error.message : "Failed to add doctor. Please try again.");
 		} finally {
 			setIsLoading(false);
 		}
@@ -139,6 +144,7 @@ export default function AddDoctorPage() {
 													<Input placeholder="Enter full name" {...field} />
 												</FormControl>
 												<FormMessage />
+												<SimilarRecords type="DOCTOR" name={watchedName} number={watchedBmdc} />
 											</FormItem>
 										)}
 									/>

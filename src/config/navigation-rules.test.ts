@@ -24,30 +24,30 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 		menu: [
 			"dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals",
 			"medical-specialities", "medical-tests", "associations", "social-organizations", "ambulances",
-			"constants", "geolocation", "degrees", "location-review", "blood", "advertisement", "subscriptions", "notification-deliveries", "data-access", "analytics", "role-permissions", "my-consents",
+			"constants", "geolocation", "degrees", "bulk-upload", "duplicates", "location-review", "blood", "advertisement", "subscriptions", "notification-deliveries", "data-access", "analytics", "role-permissions", "my-consents",
 		],
 	},
 	admin: {
 		staff: true,
 		menu: [
 			"dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals", "medical-specialities",
-			"medical-tests", "associations", "social-organizations", "constants", "geolocation", "degrees", "location-review", "blood", "subscriptions", "my-consents",
+			"medical-tests", "associations", "social-organizations", "constants", "geolocation", "degrees", "bulk-upload", "duplicates", "location-review", "blood", "subscriptions", "my-consents",
 		],
 	},
 	moderator: {
 		staff: true,
-		menu: ["dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals", "social-organizations", "location-review", "blood", "my-consents"],
+		menu: ["dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals", "social-organizations", "bulk-upload", "duplicates", "location-review", "blood", "my-consents"],
 	},
 	operator: {
 		staff: true,
-		menu: ["dashboard", "my-figures", "doctors", "nurses", "profiles", "hospitals", "social-organizations", "location-review", "blood", "my-consents"],
+		menu: ["dashboard", "my-figures", "doctors", "nurses", "profiles", "hospitals", "social-organizations", "bulk-upload", "duplicates", "location-review", "blood", "my-consents"],
 	},
 	"hospital-admin": {
 		staff: true,
-		menu: ["dashboard", "my-figures", "doctors", "nurses", "hospitals", "ambulances", "blood", "my-consents"],
+		menu: ["dashboard", "my-figures", "doctors", "nurses", "hospitals", "ambulances", "duplicates", "blood", "my-consents"],
 	},
 	"institution-admin": { staff: true, menu: ["dashboard", "institutions", "my-consents"] },
-	"social-organization-admin": { staff: true, menu: ["dashboard", "social-organizations", "ambulances", "my-consents"] },
+	"social-organization-admin": { staff: true, menu: ["dashboard", "social-organizations", "ambulances", "duplicates", "my-consents"] },
 	"association-admin": {
 		staff: true,
 		menu: ["dashboard", "medical-specialities", "medical-tests", "associations", "constants", "geolocation", "degrees", "my-consents"],

@@ -39,10 +39,12 @@ export const fetchAllHospitals = async (): Promise<Hospital[]> => {
 	return Array.isArray(data) ? data : data?.data || [];
 };
 
+/** `confirmNotDuplicate`: the person looked at the existing hospitals of the same name and place and still wants to add this one. */
 export const addHospital = async (
-	hospitalData: AddHospitalFormData
+	hospitalData: AddHospitalFormData,
+	options: { confirmNotDuplicate?: boolean } = {}
 ): Promise<{ success: boolean; message?: string; data?: unknown }> => {
-	const response = await apiPost("/hospitals", hospitalData);
+	const response = await apiPost("/hospitals", options.confirmNotDuplicate ? { ...hospitalData, confirmNotDuplicate: true } : hospitalData);
 
 	if (!response.ok) {
 		throw new Error(response.error || "Failed to add hospital");
