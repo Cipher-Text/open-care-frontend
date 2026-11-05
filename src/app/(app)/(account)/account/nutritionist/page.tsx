@@ -4,7 +4,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { fetchMyNutritionist, updateNutritionist } from "@/api/nutritionists";
+import { fetchMyNutritionist, fetchNutritionistDegrees, updateNutritionist } from "@/api/nutritionists";
+import { DegreeListEditor } from "@/components/account/degree-list-editor";
+import { degreeProblem, degreesToRequest, type DegreeRow } from "@/lib/degree-rows";
 import { MyWorkplaces } from "@/components/account/my-workplaces";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -17,7 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { qk } from "@/lib/query-keys";
 import type { NutritionistInput, NutritionistTitle } from "@/types/nutritionists";
 
-type Form = { name: string; bnName: string; gender: string; title: NutritionistTitle; registrationNo: string; degrees: string; startDate: string; description: string; phone: string; email: string; address: string };
+type Form = { name: string; bnName: string; gender: string; title: NutritionistTitle; registrationNo: string; startDate: string; description: string; phone: string; email: string; address: string };
 
 /**
  * A nutritionist's own record. Every field is sent back (the server replaces name, contact and address, so a field left out of the
@@ -27,6 +29,13 @@ export default function MyNutritionistPage() {
 	const queryClient = useQueryClient();
 	const mine = useQuery({ queryKey: [...qk.myNutritionist], queryFn: fetchMyNutritionist, retry: false });
 	const [form, setForm] = useState<Form | null>(null);
+	// the degrees are a list of their own (several, each with institution, year and grade), loaded beside the record
+	const [degrees, setDegrees] = useState<DegreeRow[] | null>(null);
+	const saved = useQuery({ queryKey: ["my-nutritionist-degrees", mine.data?.id], queryFn: () => fetchNutritionistDegrees((mine.data as { id: number }).id), enabled: !!mine.data, retry: false });
+	useEffect(() => {
+		if (!saved.data || degrees) return;
+		setDegrees(saved.data.map((d) => ({ degreeName: d.degreeName, institutionName: d.institutionName ?? "", passingYear: d.passingYear ? String(d.passingYear) : "", grade: d.grade ?? "" })));
+	}, [saved.data, degrees]);
 
 	useEffect(() => {
 		const n = mine.data;
@@ -37,7 +46,6 @@ export default function MyNutritionistPage() {
 			gender: (n.profile?.gender as { value?: string } | null)?.value ?? "",
 			title: n.title,
 			registrationNo: n.registrationNo ?? "",
-			degrees: n.degrees ?? "",
 			startDate: n.startDate ?? "",
 			description: n.description ?? "",
 			phone: n.profile?.phone ?? "",
@@ -51,11 +59,11 @@ export default function MyNutritionistPage() {
 			const f = form as Form;
 			const input: NutritionistInput = {
 				name: f.name.trim(), bnName: f.bnName.trim(), gender: f.gender, title: f.title, registrationNo: f.registrationNo.trim(),
-				degrees: f.degrees.trim(), startDate: f.startDate, description: f.description.trim(), phone: f.phone.trim(), email: f.email.trim(), address: f.address.trim(),
+				degreeList: degreesToRequest(degrees ?? []), startDate: f.startDate, description: f.description.trim(), phone: f.phone.trim(), email: f.email.trim(), address: f.address.trim(),
 			};
 			return updateNutritionist((mine.data as { id: number }).id, input);
 		},
-		onSuccess: () => { toast.success("Saved"); queryClient.invalidateQueries({ queryKey: [...qk.myNutritionist] }); },
+		onSuccess: () => { toast.success("Saved"); setDegrees(null); queryClient.invalidateQueries({ queryKey: [...qk.myNutritionist] }); queryClient.invalidateQueries({ queryKey: ["my-nutritionist-degrees"] }); },
 		onError: (e) => toast.error(e instanceof Error ? e.message : "Could not save"),
 	});
 
@@ -81,12 +89,13 @@ export default function MyNutritionistPage() {
 						</CardDescription>
 					</CardHeader>
 					<CardContent className="space-y-4">
-						{([["name", "Name"], ["bnName", "Name in Bangla"], ["registrationNo", "Registration number (if you have one)"], ["degrees", "Degree or qualification"], ["phone", "Phone"], ["email", "Email"], ["address", "Address"]] as const).map(([key, label]) => (
+						{([["name", "Name"], ["bnName", "Name in Bangla"], ["registrationNo", "Registration number (if you have one)"], ["phone", "Phone"], ["email", "Email"], ["address", "Address"]] as const).map(([key, label]) => (
 							<div key={key} className="space-y-1">
 								<Label htmlFor={`n-${key}`}>{label}</Label>
 								<Input id={`n-${key}`} value={form[key]} onChange={(e) => set(key, e.target.value)} />
 							</div>
 						))}
+						{degrees && <DegreeListEditor rows={degrees} onChange={setDegrees} idPrefix="n-degree" />}
 						<div className="space-y-1">
 							<Label htmlFor="n-title">Title</Label>
 							<NativeSelect id="n-title" value={form.title} onChange={(e) => set("title", e.target.value)}>
@@ -102,7 +111,7 @@ export default function MyNutritionistPage() {
 							<Label htmlFor="n-about">About</Label>
 							<Textarea id="n-about" rows={4} maxLength={1000} value={form.description} onChange={(e) => set("description", e.target.value)} />
 						</div>
-						<Button onClick={() => save.mutate()} disabled={save.isPending || !form.name.trim() || !form.gender}>
+						<Button onClick={() => save.mutate()} disabled={save.isPending || !form.name.trim() || !form.gender || degrees === null || degreeProblem(degrees) !== null}>
 							{save.isPending ? "Saving..." : "Save"}
 						</Button>
 					</CardContent>

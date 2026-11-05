@@ -20,6 +20,15 @@ export interface NutritionistResponse {
 
 export type NutritionistListResponse = PageResult<NutritionistResponse>;
 
+/** One degree of a nutritionist, named as text. */
+export interface NutritionistDegree {
+	id?: number;
+	degreeName: string;
+	institutionName: string | null;
+	passingYear: number | null;
+	grade: string | null;
+}
+
 /** What a nutritionist may change on their own record. */
 export interface NutritionistInput {
 	name: string;
@@ -28,6 +37,8 @@ export interface NutritionistInput {
 	title?: NutritionistTitle;
 	registrationNo?: string;
 	degrees?: string;
+	/** The degrees as a list; when sent it replaces the saved ones (at most 10). */
+	degreeList?: { degreeName: string; institutionName?: string; passingYear?: number; grade?: string }[];
 	startDate?: string;
 	description?: string;
 	phone?: string;

@@ -24,6 +24,7 @@
 		"test:bulk": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/bulk-view.test.ts",
 		"test:workspaces": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/workspaces.test.ts",
 		"test:login": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/login-errors.test.ts",
+		"test:degrees": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/degree-rows.test.ts",
 		"test:csp": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/csp.test.ts",
 		"test:consent": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/consent-text.test.ts",
 		"docs:access": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-access-matrix.ts",

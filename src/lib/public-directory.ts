@@ -3,7 +3,7 @@ import { baseUrl } from "@/config/config";
 import type { DoctorDetailsResponse } from "@/types/doctors";
 import type { HospitalDetailsResponse } from "@/types/hospitals";
 import type { NurseResponse } from "@/types/nurses";
-import type { NutritionistResponse } from "@/types/nutritionists";
+import type { NutritionistDegree, NutritionistResponse } from "@/types/nutritionists";
 import { displayName } from "@/lib/text";
 export { safeUrl } from "@/lib/safe-url";
 
@@ -91,6 +91,11 @@ export async function getNutritionist(segment: string): Promise<NutritionistResp
 		nutritionist.profile.bnName = displayName(nutritionist.profile.bnName);
 	}
 	return nutritionist;
+}
+
+/** The degrees of a nutritionist, newest first. A failure is an empty list: the page then shows the one-line summary. */
+export async function getNutritionistDegrees(id: number): Promise<NutritionistDegree[]> {
+	return (await getJson<NutritionistDegree[]>(`/nutritionists/${id}/degrees`).catch(() => null)) ?? [];
 }
 
 export function validEmail(email?: string | null): string | null {

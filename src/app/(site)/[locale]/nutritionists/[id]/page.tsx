@@ -11,7 +11,7 @@ import type { Locale } from "@/i18n/routing";
 import { bilingual } from "@/i18n/seo";
 import { localizedNames, placeName } from "@/lib/names";
 import { nutritionistPath } from "@/lib/paths";
-import { clean, getNutritionist, safeUrl } from "@/lib/public-directory";
+import { clean, getNutritionist, getNutritionistDegrees, safeUrl } from "@/lib/public-directory";
 
 export const revalidate = 600;
 
@@ -39,6 +39,8 @@ export default async function NutritionistDetailPage({ params }: Props) {
 	const common = await getTranslations("common");
 	const nutritionist = await getNutritionist(id);
 	if (!nutritionist) notFound();
+	// each degree on its own line; a record whose degrees were never itemised still shows its one-line summary
+	const degreeList = await getNutritionistDegrees(nutritionist.id);
 
 	const { profile } = nutritionist;
 	const names = localizedNames(locale, profile.name, profile.bnName);
@@ -84,12 +86,28 @@ export default async function NutritionistDetailPage({ params }: Props) {
 				</CardContent>
 			</Card>
 
-			{nutritionist.degrees && (
+			{(degreeList.length > 0 || nutritionist.degrees) && (
 				<DetailSection title={t("qualifications")}>
-					<p className="flex items-start gap-2 text-muted-foreground">
-						<GraduationCap className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-						{nutritionist.degrees}
-					</p>
+					{degreeList.length > 0 ? (
+						<ul className="space-y-2 text-muted-foreground">
+							{degreeList.map((d, index) => (
+								<li key={d.id ?? index} className="flex items-start gap-2">
+									<GraduationCap className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+									<span>
+										<span className="font-medium text-foreground">{d.degreeName}</span>
+										{[d.institutionName, d.passingYear, d.grade].filter(Boolean).length > 0 && (
+											<span className="block text-sm">{[d.institutionName, d.passingYear, d.grade].filter(Boolean).join(", ")}</span>
+										)}
+									</span>
+								</li>
+							))}
+						</ul>
+					) : (
+						<p className="flex items-start gap-2 text-muted-foreground">
+							<GraduationCap className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+							{nutritionist.degrees}
+						</p>
+					)}
 				</DetailSection>
 			)}
 

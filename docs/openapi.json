@@ -17130,6 +17130,89 @@
           }
         }
       }
+    },
+    "/api/nutritionists/{id}/degrees": {
+      "get": {
+        "tags": [
+          "Nutritionists"
+        ],
+        "summary": "The degrees of a nutritionist",
+        "description": "Public, newest first. Each names its degree, institution, year and grade.",
+        "operationId": "degrees_nutritionist",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NutritionistDegreeResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Nutritionists"
+        ],
+        "summary": "Replace the degrees of a nutritionist",
+        "description": "Your own, or any record for staff who manage nutritionists. At most 10; an empty list removes them all.",
+        "operationId": "replaceDegrees_nutritionist",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NutritionistDegreeRequest"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NutritionistDegreeResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -19312,6 +19395,13 @@
           },
           "isActive": {
             "type": "boolean"
+          },
+          "degreeList": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "$ref": "#/components/schemas/NutritionistDegreeRequest"
+            }
           }
         },
         "required": [
@@ -27108,6 +27198,54 @@
           "endDate": {
             "type": "string",
             "format": "date"
+          }
+        }
+      },
+      "NutritionistDegreeRequest": {
+        "type": "object",
+        "required": [
+          "degreeName"
+        ],
+        "properties": {
+          "degreeName": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "institutionName": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "passingYear": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1950,
+            "maximum": 2100
+          },
+          "grade": {
+            "type": "string",
+            "maxLength": 50
+          }
+        }
+      },
+      "NutritionistDegreeResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "degreeName": {
+            "type": "string"
+          },
+          "institutionName": {
+            "type": "string"
+          },
+          "passingYear": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "grade": {
+            "type": "string"
           }
         }
       }

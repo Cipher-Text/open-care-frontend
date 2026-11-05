@@ -1,7 +1,7 @@
 import { apiGet, apiPut, buildUrl, unwrap } from "@/lib/api-client";
 import { normalizePage, toWirePage, type WirePage } from "@/lib/pagination";
 import type { PageResult } from "@/types/common";
-import type { NutritionistInput, NutritionistResponse } from "@/types/nutritionists";
+import type { NutritionistDegree, NutritionistInput, NutritionistResponse } from "@/types/nutritionists";
 
 // ---- staff (the complete profile; for staff who create or delete nutritionists)
 
@@ -21,3 +21,6 @@ export const fetchMyNutritionist = async () => unwrap<NutritionistResponse>(awai
 
 export const updateNutritionist = async (id: number, input: NutritionistInput) =>
 	unwrap<NutritionistResponse>(await apiPut(`/nutritionists/${id}`, input), "Could not save your changes");
+
+/** The degrees of a nutritionist (public, newest first). */
+export const fetchNutritionistDegrees = async (id: number) => unwrap<NutritionistDegree[]>(await apiGet(`/nutritionists/${id}/degrees`), "Could not load the degrees");

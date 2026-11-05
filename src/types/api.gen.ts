@@ -6388,6 +6388,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/nutritionists/{id}/degrees": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The degrees of a nutritionist
+         * @description Public, newest first. Each names its degree, institution, year and grade.
+         */
+        get: operations["degrees_nutritionist"];
+        /**
+         * Replace the degrees of a nutritionist
+         * @description Your own, or any record for staff who manage nutritionists. At most 10; an empty list removes them all.
+         */
+        put: operations["replaceDegrees_nutritionist"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -7160,6 +7184,7 @@ export interface components {
             /** Format: int32 */
             upazilaId?: number;
             isActive?: boolean;
+            degreeList?: components["schemas"]["NutritionistDegreeRequest"][];
         };
         NutritionistResponse: {
             /** Format: int64 */
@@ -9917,6 +9942,22 @@ export interface components {
             startDate?: string;
             /** Format: date */
             endDate?: string;
+        };
+        NutritionistDegreeRequest: {
+            degreeName: string;
+            institutionName?: string;
+            /** Format: int32 */
+            passingYear?: number;
+            grade?: string;
+        };
+        NutritionistDegreeResponse: {
+            /** Format: int64 */
+            id?: number;
+            degreeName?: string;
+            institutionName?: string;
+            /** Format: int32 */
+            passingYear?: number;
+            grade?: string;
         };
     };
     responses: never;
@@ -20069,6 +20110,54 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["StaffWorkplaceResponse"][];
+                };
+            };
+        };
+    };
+    degrees_nutritionist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["NutritionistDegreeResponse"][];
+                };
+            };
+        };
+    };
+    replaceDegrees_nutritionist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NutritionistDegreeRequest"][];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["NutritionistDegreeResponse"][];
                 };
             };
         };
