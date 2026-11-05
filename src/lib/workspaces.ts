@@ -28,16 +28,21 @@ const under = (pathname: string, base: string) => pathname === base || pathname.
 export function workspacesFor(userType: string | null, organisations: OrganisationMembership[]): Workspace[] {
 	const list: Workspace[] = [];
 	const nutritionist = userType === "NUTRITIONIST";
+	const nurse = userType === "NURSE";
 
 	list.push({
 		id: "personal",
 		label: "Personal",
 		detail: "My profile, health and care",
 		href: "/account",
-		owns: (p) => under(p, "/account") && !(nutritionist && under(p, "/account/nutritionist")),
+		owns: (p) => under(p, "/account") && !(nutritionist && under(p, "/account/nutritionist")) && !(nurse && under(p, "/account/nurse")),
 	});
 	if (nutritionist) {
 		list.push({ id: "nutritionist", label: "Nutritionist", detail: "My professional profile", href: "/account/nutritionist", owns: (p) => under(p, "/account/nutritionist") });
+	}
+
+	if (nurse) {
+		list.push({ id: "nurse", label: "Nurse", detail: "My professional profile", href: "/account/nurse", owns: (p) => under(p, "/account/nurse") });
 	}
 
 	const orgOwned = organisations.map((m) => {

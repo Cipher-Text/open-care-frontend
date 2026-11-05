@@ -15,6 +15,8 @@ interface NavLink {
 	icon: LucideIcon;
 	/** Shown only to people who hold this permission. */
 	permission?: string;
+	/** Shown only to people of this type (their own professional record). */
+	userType?: string;
 	/** One of the five places kept in the phone's bottom bar; the rest go under "More". */
 	primary?: boolean;
 }
@@ -49,7 +51,10 @@ const GROUPS: { label: string; links: NavLink[] }[] = [
 	{
 		label: "Professional",
 		// the permission is the one the nutritionist group holds, for their own record
-		links: [{ href: "/account/nutritionist", label: "My nutritionist profile", icon: Salad, permission: "update-nutritionist" }],
+		links: [
+			{ href: "/account/nurse", label: "My nurse profile", icon: HeartPulse, userType: "NURSE" },
+			{ href: "/account/nutritionist", label: "My nutritionist profile", icon: Salad, permission: "update-nutritionist" },
+		],
 	},
 ];
 
@@ -62,8 +67,8 @@ const isActive = (pathname: string, href: string) => (href === "/account" ? path
  */
 export default function AccountLayout({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
-	const { hasPermission } = usePermissions();
-	const groups = GROUPS.map((group) => ({ ...group, links: group.links.filter((link) => !link.permission || hasPermission(link.permission)) })).filter((group) => group.links.length > 0);
+	const { hasPermission, userType } = usePermissions();
+	const groups = GROUPS.map((group) => ({ ...group, links: group.links.filter((link) => (!link.permission || hasPermission(link.permission)) && (!link.userType || link.userType === userType)) })).filter((group) => group.links.length > 0);
 	const all = groups.flatMap((group) => group.links);
 	const primary = all.filter((link) => link.primary);
 	const more = all.filter((link) => !link.primary);

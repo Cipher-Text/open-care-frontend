@@ -6304,6 +6304,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/nurses/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * My nurse record
+         * @description The complete record of the signed-in nurse.
+         */
+        get: operations["mine_nurse"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -19847,6 +19867,26 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["OrganisationMembership"][];
+                };
+            };
+        };
+    };
+    mine_nurse: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["NurseResponse"];
                 };
             };
         };

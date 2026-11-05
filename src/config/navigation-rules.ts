@@ -41,7 +41,8 @@ export const CONSOLE_RULES: NavRule[] = [
 	{ id: "reviews", group: "People", title: "Reviews", url: "/admin/reviews", anyOf: [DOCTOR_PANEL] },
 	{ id: "my-schedule", group: "People", title: "My schedule", url: "/admin/my-schedule", anyOf: [DOCTOR_PANEL] },
 	{ id: "doctors", group: "People", title: "Doctors", url: "/admin/doctors", anyOf: crud("doctor") },
-	{ id: "nurses", group: "People", title: "Nurses", url: "/admin/nurses", anyOf: crud("nurse") },
+	// not update-nurse: a nurse holds it for their own record (/account/nurse) and must not see everyone else's private details
+	{ id: "nurses", group: "People", title: "Nurses", url: "/admin/nurses", anyOf: ["create-nurse", "delete-nurse"] },
 	// not update-nutritionist: a nutritionist holds it for their own record (/account/nutritionist) and must not see everyone else's details
 	{ id: "nutritionists", group: "People", title: "Nutritionists", url: "/admin/nutritionists", anyOf: ["create-nutritionist", "delete-nutritionist"] },
 	{ id: "profiles", group: "People", title: "Profiles", url: "/admin/profiles", anyOf: ["view-profile"] },

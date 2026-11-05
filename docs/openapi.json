@@ -16980,6 +16980,28 @@
           }
         }
       }
+    },
+    "/api/nurses/me": {
+      "get": {
+        "tags": [
+          "Nurse Management"
+        ],
+        "summary": "My nurse record",
+        "description": "The complete record of the signed-in nurse.",
+        "operationId": "mine_nurse",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/NurseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

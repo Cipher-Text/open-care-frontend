@@ -56,7 +56,8 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 		staff: true,
 		menu: ["dashboard", "my-doctor-profile", "my-figures", "appointments", "reviews", "my-schedule", "doctors", "institutions", "medicines", "associations", "prescriptions", "my-consents"],
 	},
-	nurse: { staff: true, menu: ["dashboard", "nurses", "my-consents"] },
+	// holds only update-nurse for their own record: no console menu (the nurse list shows everyone's private details), so they use the account area
+	nurse: { staff: false, menu: EVERYONE },
 	// holds only update-nutritionist for their own record: no console menu, so they use the account area
 	nutritionist: { staff: false, menu: EVERYONE },
 	user: { staff: false, menu: EVERYONE },
@@ -105,7 +106,8 @@ test("unknown console paths are for staff only; own pages are for everyone signe
 
 test("there is one Dashboard, for staff; the old Admin Dashboard address is only for the super admin", () => {
 	assert.equal(routeAllowed("/admin", hasFor("user")), false);
-	assert.equal(routeAllowed("/admin", hasFor("nurse")), true);
+	assert.equal(routeAllowed("/admin", hasFor("nurse")), false);
+	assert.equal(routeAllowed("/admin", hasFor("hospital-admin")), true);
 	for (const role of Object.keys(EXPECTED)) {
 		assert.equal(menu(role).filter((id) => id.includes("dashboard")).length, EXPECTED[role].staff ? 1 : 0, role);
 	}

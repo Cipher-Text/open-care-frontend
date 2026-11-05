@@ -29,7 +29,14 @@ describe("workspaces", () => {
 		assert.equal(currentWorkspace(list, "/account/profile")?.id, "personal");
 	});
 
-	it("an organisation's own pages belong to that workspace, the rest of the console to the person's", () => {
+	it("a nurse has a professional workspace in the account area", () => {
+		const list = workspacesFor("NURSE", []);
+		assert.deepEqual(list.map((w) => w.id), ["personal", "nurse"]);
+		assert.equal(currentWorkspace(list, "/account/nurse")?.id, "nurse");
+		assert.equal(currentWorkspace(list, "/account/health")?.id, "personal");
+	});
+
+	it("an organisation\'s own pages belong to that workspace, the rest of the console to the person's", () => {
 		const list = workspacesFor("DOCTOR", [hospital]);
 		assert.equal(currentWorkspace(list, "/admin/hospitals/3/view")?.id, "HOSPITAL-3");
 		assert.equal(currentWorkspace(list, "/admin/hospitals/3/edit")?.id, "HOSPITAL-3");

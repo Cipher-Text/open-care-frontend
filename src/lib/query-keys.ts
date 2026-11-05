@@ -92,6 +92,7 @@ export const qk = {
 	publicNurses: ["public-nurses"],
 	publicNutritionists: ["public-nutritionists"],
 	myNutritionist: ["my-nutritionist"],
+	myNurse: ["my-nurse"],
 	adminNutritionists: ["admin-nutritionists"],
 	publicHospitals: ["public-hospitals"],
 	publicInstitutions: ["public-institutions"],
