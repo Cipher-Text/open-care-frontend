@@ -65,7 +65,7 @@ for (const resource of resources) {
 out();
 out("Single permissions:");
 out();
-const singles = ["view-profile", "view-user-activity", "manage-health-vitals", "verify-doctor", "manage-blood", "delete-file", "view-prescription", "create-prescription", "update-prescription", "manage-role-permissions", "view-super-admin-panel", "assign-user-role", "remove-user-role", "create-doctor-user", "sync-data"];
+const singles = ["view-profile", "view-user-activity", "manage-health-vitals", "verify-doctor", "manage-blood", "delete-file", "view-prescription", "create-prescription", "update-prescription", "manage-role-permissions", "view-super-admin-panel", "assign-user-role", "remove-user-role", "create-doctor-user"];
 out(`| Permission | ${roles.join(" | ")} |`);
 out(`|---|${roles.map(() => ":-:").join("|")}|`);
 for (const permission of singles) out(`| \`${permission}\` | ${roles.map((role) => (has(role)(permission) ? "✓" : "")).join(" | ")} |`);

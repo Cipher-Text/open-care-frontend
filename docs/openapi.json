@@ -97,10 +97,6 @@
       "description": "Propose a doctor, nurse, facility or ambulance and earn points when it is accepted"
     },
     {
-      "name": "Public Doctor Search",
-      "description": "API for publicly searching doctor information"
-    },
-    {
       "name": "Blog administration",
       "description": "Write and publish health articles"
     },
@@ -123,10 +119,6 @@
     {
       "name": "Social Login",
       "description": "OAuth/social login endpoints for redirect and callback handling"
-    },
-    {
-      "name": "Manual Synchronization",
-      "description": "API for manual data synchronization tasks"
     },
     {
       "name": "Tag Management",
@@ -267,10 +259,6 @@
     {
       "name": "Doctor Dashboard",
       "description": "The signed-in doctor's own practice figures"
-    },
-    {
-      "name": "Public Hospital Search",
-      "description": "API for publicly searching hospital information"
     },
     {
       "name": "Medicine Management",
@@ -10506,50 +10494,6 @@
         }
       }
     },
-    "/api/synchronization/hospital/reindex": {
-      "get": {
-        "tags": [
-          "Manual Synchronization"
-        ],
-        "summary": "Reindex all hospitals",
-        "description": "Reindex all hospital data into Elasticsearch",
-        "operationId": "reindexAllHospitals",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/synchronization/doctor/reindex": {
-      "get": {
-        "tags": [
-          "Manual Synchronization"
-        ],
-        "summary": "Reindex all doctors",
-        "description": "Reindex all doctor data into Elasticsearch",
-        "operationId": "reindexAllDoctors",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/superadmin/dashboard/search-metrics": {
       "get": {
         "tags": [
@@ -11145,226 +11089,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RequisitionStatusResponse"
                   }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/public/hospitals/search": {
-      "get": {
-        "tags": [
-          "Public Hospital Search"
-        ],
-        "summary": "Search hospitals",
-        "description": "Search hospitals by various criteria including text search, location, and filters",
-        "operationId": "searchHospitals",
-        "parameters": [
-          {
-            "name": "searchTerm",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "districtId",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "upazilaId",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "hospitalType",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/PageResponseHospitalDocument"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/public/hospitals/nearby": {
-      "get": {
-        "tags": [
-          "Public Hospital Search"
-        ],
-        "summary": "Find nearby hospitals",
-        "description": "Find hospitals near a specific location within a given distance",
-        "operationId": "findNearbyHospitals",
-        "parameters": [
-          {
-            "name": "latitude",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "number",
-              "format": "double"
-            }
-          },
-          {
-            "name": "longitude",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "number",
-              "format": "double"
-            }
-          },
-          {
-            "name": "distance",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "default": 5
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/PageResponseHospitalDocument"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/public/doctors/search": {
-      "get": {
-        "tags": [
-          "Public Doctor Search"
-        ],
-        "summary": "Search doctors",
-        "description": "Search doctors by text and location-based filters",
-        "operationId": "searchDoctors",
-        "parameters": [
-          {
-            "name": "searchTerm",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "districtId",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "upazilaId",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/PageResponseDoctorDocument"
                 }
               }
             }
@@ -21937,10 +21661,10 @@
             "maxLength": 1000,
             "minLength": 0
           },
-          "update": {
+          "endDateValid": {
             "type": "boolean"
           },
-          "endDateValid": {
+          "update": {
             "type": "boolean"
           }
         },
@@ -22049,10 +21773,10 @@
             "maxLength": 1000,
             "minLength": 0
           },
-          "update": {
+          "endDateValid": {
             "type": "boolean"
           },
-          "endDateValid": {
+          "update": {
             "type": "boolean"
           }
         },
@@ -23742,177 +23466,6 @@
           }
         }
       },
-      "GeoPoint": {
-        "type": "object",
-        "properties": {
-          "lat": {
-            "type": "number",
-            "format": "double"
-          },
-          "lon": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "HospitalDocument": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "bnName": {
-            "type": "string"
-          },
-          "numberOfBed": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "districtId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "districtName": {
-            "type": "string"
-          },
-          "upazilaId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "upazilaName": {
-            "type": "string"
-          },
-          "unionId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "unionName": {
-            "type": "string"
-          },
-          "hospitalType": {
-            "type": "string"
-          },
-          "organizationType": {
-            "type": "string"
-          },
-          "location": {
-            "$ref": "#/components/schemas/GeoPoint"
-          },
-          "websiteUrl": {
-            "type": "string"
-          },
-          "imageUrl": {
-            "type": "string"
-          }
-        }
-      },
-      "PageResponseHospitalDocument": {
-        "type": "object",
-        "properties": {
-          "content": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/HospitalDocument"
-            }
-          },
-          "currentPage": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalItems": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "DoctorDocument": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "name": {
-            "type": "string"
-          },
-          "bnName": {
-            "type": "string"
-          },
-          "bmdcNo": {
-            "type": "string"
-          },
-          "degrees": {
-            "type": "string"
-          },
-          "specializations": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "districtId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "districtName": {
-            "type": "string"
-          },
-          "upazilaId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "upazilaName": {
-            "type": "string"
-          },
-          "unionId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "unionName": {
-            "type": "string"
-          },
-          "isVerified": {
-            "type": "boolean"
-          },
-          "isActive": {
-            "type": "boolean"
-          },
-          "imageUrl": {
-            "type": "string"
-          }
-        }
-      },
-      "PageResponseDoctorDocument": {
-        "type": "object",
-        "properties": {
-          "content": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DoctorDocument"
-            }
-          },
-          "currentPage": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalItems": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "PageResponseProfileResponse": {
         "type": "object",
         "properties": {
@@ -25189,19 +24742,6 @@
       "LatestHealthVitalProjection": {
         "type": "object",
         "properties": {
-          "daysSinceLastRecording": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "isFullMetabolicPanel": {
-            "type": "boolean"
-          },
-          "isRecentContextKnown": {
-            "type": "boolean"
-          },
-          "isObstructiveLungDisease": {
-            "type": "boolean"
-          },
           "bloodPressureStatus": {
             "type": "string"
           },
@@ -25226,24 +24766,7 @@
           "isUnderweight": {
             "type": "boolean"
           },
-          "recentSmoking": {
-            "type": "boolean"
-          },
-          "bloodPressureSystolic": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "bloodPressureDiastolic": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "meanArterialPressure": {
-            "type": "number"
-          },
-          "heartRateVariability": {
-            "type": "number"
-          },
-          "forcedExpiratoryVolume": {
+          "bmi": {
             "type": "number"
           },
           "pulsePressure": {
@@ -25410,6 +24933,44 @@
           "recentAlcohol": {
             "type": "boolean"
           },
+          "recentSmoking": {
+            "type": "boolean"
+          },
+          "menstrualCycleDay": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "followUpRequired": {
+            "type": "boolean"
+          },
+          "followUpPriority": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "profileId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "bloodPressureSystolic": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bloodPressureDiastolic": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "meanArterialPressure": {
+            "type": "number"
+          },
+          "heartRateVariability": {
+            "type": "number"
+          },
+          "forcedExpiratoryVolume": {
+            "type": "number"
+          },
           "restingEnergyExpenditure": {
             "type": "integer",
             "format": "int32"
@@ -25425,40 +24986,6 @@
           },
           "urineSpecificGravity": {
             "type": "number"
-          },
-          "environmentalTemperature": {
-            "type": "number"
-          },
-          "environmentalHumidity": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "cardiovascularRiskScore": {
-            "type": "number"
-          },
-          "metabolicHealthScore": {
-            "type": "number"
-          },
-          "menstrualCycleDay": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "followUpRequired": {
-            "type": "boolean"
-          },
-          "followUpPriority": {
-            "type": "string"
-          },
-          "bmi": {
-            "type": "number"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "profileId": {
-            "type": "integer",
-            "format": "int64"
           },
           "createdBy": {
             "type": "string"
@@ -25503,6 +25030,19 @@
           "notes": {
             "type": "string"
           },
+          "environmentalTemperature": {
+            "type": "number"
+          },
+          "environmentalHumidity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cardiovascularRiskScore": {
+            "type": "number"
+          },
+          "metabolicHealthScore": {
+            "type": "number"
+          },
           "isLowOxygen": {
             "type": "boolean"
           },
@@ -25516,6 +25056,19 @@
             "type": "number"
           },
           "isIsolatedSystolicHypertension": {
+            "type": "boolean"
+          },
+          "daysSinceLastRecording": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isFullMetabolicPanel": {
+            "type": "boolean"
+          },
+          "isRecentContextKnown": {
+            "type": "boolean"
+          },
+          "isObstructiveLungDisease": {
             "type": "boolean"
           },
           "id": {

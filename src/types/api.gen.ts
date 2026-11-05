@@ -3157,46 +3157,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/synchronization/hospital/reindex": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Reindex all hospitals
-         * @description Reindex all hospital data into Elasticsearch
-         */
-        get: operations["reindexAllHospitals"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/synchronization/doctor/reindex": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Reindex all doctors
-         * @description Reindex all doctor data into Elasticsearch
-         */
-        get: operations["reindexAllDoctors"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/superadmin/dashboard/search-metrics": {
         parameters: {
             query?: never;
@@ -3489,66 +3449,6 @@ export interface paths {
          * @description Returns all possible requisition statuses.
          */
         get: operations["getAllRequisitionStatusResponses"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/public/hospitals/search": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Search hospitals
-         * @description Search hospitals by various criteria including text search, location, and filters
-         */
-        get: operations["searchHospitals"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/public/hospitals/nearby": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Find nearby hospitals
-         * @description Find hospitals near a specific location within a given distance
-         */
-        get: operations["findNearbyHospitals"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/public/doctors/search": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Search doctors
-         * @description Search doctors by text and location-based filters
-         */
-        get: operations["searchDoctors"];
         put?: never;
         post?: never;
         delete?: never;
@@ -8010,8 +7910,8 @@ export interface components {
             /** Format: date */
             endDate?: string;
             description?: string;
-            update?: boolean;
             endDateValid?: boolean;
+            update?: boolean;
         };
         ScheduleExceptionRequest: {
             /** Format: date */
@@ -8064,8 +7964,8 @@ export interface components {
             endDate?: string;
             grade?: string;
             description?: string;
-            update?: boolean;
             endDateValid?: boolean;
+            update?: boolean;
         };
         DoctorAssociationBatchRequest: {
             /** Format: int64 */
@@ -8622,74 +8522,6 @@ export interface components {
             /** Format: int32 */
             totalPages?: number;
         };
-        GeoPoint: {
-            /** Format: double */
-            lat?: number;
-            /** Format: double */
-            lon?: number;
-        };
-        HospitalDocument: {
-            /** Format: int32 */
-            id?: number;
-            name?: string;
-            bnName?: string;
-            /** Format: int32 */
-            numberOfBed?: number;
-            /** Format: int32 */
-            districtId?: number;
-            districtName?: string;
-            /** Format: int32 */
-            upazilaId?: number;
-            upazilaName?: string;
-            /** Format: int32 */
-            unionId?: number;
-            unionName?: string;
-            hospitalType?: string;
-            organizationType?: string;
-            location?: components["schemas"]["GeoPoint"];
-            websiteUrl?: string;
-            imageUrl?: string;
-        };
-        PageResponseHospitalDocument: {
-            content?: components["schemas"]["HospitalDocument"][];
-            /** Format: int32 */
-            currentPage?: number;
-            /** Format: int64 */
-            totalItems?: number;
-            /** Format: int32 */
-            totalPages?: number;
-        };
-        DoctorDocument: {
-            /** Format: int64 */
-            id?: number;
-            name?: string;
-            bnName?: string;
-            bmdcNo?: string;
-            degrees?: string;
-            specializations?: string;
-            description?: string;
-            /** Format: int32 */
-            districtId?: number;
-            districtName?: string;
-            /** Format: int32 */
-            upazilaId?: number;
-            upazilaName?: string;
-            /** Format: int32 */
-            unionId?: number;
-            unionName?: string;
-            isVerified?: boolean;
-            isActive?: boolean;
-            imageUrl?: string;
-        };
-        PageResponseDoctorDocument: {
-            content?: components["schemas"]["DoctorDocument"][];
-            /** Format: int32 */
-            currentPage?: number;
-            /** Format: int64 */
-            totalItems?: number;
-            /** Format: int32 */
-            totalPages?: number;
-        };
         PageResponseProfileResponse: {
             content?: components["schemas"]["ProfileResponse"][];
             /** Format: int32 */
@@ -9154,11 +8986,6 @@ export interface components {
             totalPages?: number;
         };
         LatestHealthVitalProjection: {
-            /** Format: int32 */
-            daysSinceLastRecording?: number;
-            isFullMetabolicPanel?: boolean;
-            isRecentContextKnown?: boolean;
-            isObstructiveLungDisease?: boolean;
             bloodPressureStatus?: string;
             isWidePulsePressure?: boolean;
             isTachycardia?: boolean;
@@ -9167,14 +8994,7 @@ export interface components {
             isHyperglycemia?: boolean;
             isHypoglycemia?: boolean;
             isUnderweight?: boolean;
-            recentSmoking?: boolean;
-            /** Format: int32 */
-            bloodPressureSystolic?: number;
-            /** Format: int32 */
-            bloodPressureDiastolic?: number;
-            meanArterialPressure?: number;
-            heartRateVariability?: number;
-            forcedExpiratoryVolume?: number;
+            bmi?: number;
             pulsePressure?: number;
             cardiacOutput?: number;
             /** Format: int32 */
@@ -9241,26 +9061,28 @@ export interface components {
             recentExercise?: boolean;
             recentCaffeine?: boolean;
             recentAlcohol?: boolean;
+            recentSmoking?: boolean;
+            /** Format: int32 */
+            menstrualCycleDay?: number;
+            followUpRequired?: boolean;
+            followUpPriority?: string;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: int64 */
+            profileId?: number;
+            /** Format: int32 */
+            bloodPressureSystolic?: number;
+            /** Format: int32 */
+            bloodPressureDiastolic?: number;
+            meanArterialPressure?: number;
+            heartRateVariability?: number;
+            forcedExpiratoryVolume?: number;
             /** Format: int32 */
             restingEnergyExpenditure?: number;
             glucoseMeasurementType?: string;
             waistCircumferenceCm?: number;
             hydrationLevelPercentage?: number;
             urineSpecificGravity?: number;
-            environmentalTemperature?: number;
-            /** Format: int32 */
-            environmentalHumidity?: number;
-            cardiovascularRiskScore?: number;
-            metabolicHealthScore?: number;
-            /** Format: int32 */
-            menstrualCycleDay?: number;
-            followUpRequired?: boolean;
-            followUpPriority?: string;
-            bmi?: number;
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: int64 */
-            profileId?: number;
             createdBy?: string;
             updatedBy?: string;
             /** Format: date-time */
@@ -9278,11 +9100,21 @@ export interface components {
             steps24h?: number;
             symptoms?: string;
             notes?: string;
+            environmentalTemperature?: number;
+            /** Format: int32 */
+            environmentalHumidity?: number;
+            cardiovascularRiskScore?: number;
+            metabolicHealthScore?: number;
             isLowOxygen?: boolean;
             isFever?: boolean;
             isObesity?: boolean;
             tcHdlRatio?: number;
             isIsolatedSystolicHypertension?: boolean;
+            /** Format: int32 */
+            daysSinceLastRecording?: number;
+            isFullMetabolicPanel?: boolean;
+            isRecentContextKnown?: boolean;
+            isObstructiveLungDisease?: boolean;
             /** Format: int64 */
             id?: number;
         };
@@ -16015,46 +15847,6 @@ export interface operations {
             };
         };
     };
-    reindexAllHospitals: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": string;
-                };
-            };
-        };
-    };
-    reindexAllDoctors: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": string;
-                };
-            };
-        };
-    };
     searchMetrics: {
         parameters: {
             query?: never;
@@ -16393,85 +16185,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["RequisitionStatusResponse"][];
-                };
-            };
-        };
-    };
-    searchHospitals: {
-        parameters: {
-            query?: {
-                searchTerm?: string;
-                districtId?: number;
-                upazilaId?: number;
-                hospitalType?: string;
-                page?: number;
-                size?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["PageResponseHospitalDocument"];
-                };
-            };
-        };
-    };
-    findNearbyHospitals: {
-        parameters: {
-            query: {
-                latitude: number;
-                longitude: number;
-                distance?: number;
-                page?: number;
-                size?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["PageResponseHospitalDocument"];
-                };
-            };
-        };
-    };
-    searchDoctors: {
-        parameters: {
-            query?: {
-                searchTerm?: string;
-                districtId?: number;
-                upazilaId?: number;
-                page?: number;
-                size?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["PageResponseDoctorDocument"];
                 };
             };
         };
