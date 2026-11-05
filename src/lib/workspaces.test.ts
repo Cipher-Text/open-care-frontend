@@ -15,6 +15,8 @@ describe("workspaces", () => {
 		const list = workspacesFor("DOCTOR", [hospital, association]);
 		assert.deepEqual(list.map((w) => w.id), ["personal", "doctor", "HOSPITAL-3", "ASSOCIATION-5"]);
 		assert.equal(list[2].detail, "Hospital, admin");
+		assert.equal(list[2].href, "/account/organisations/hospital/3");
+		assert.equal(list[3].href, "/account/organisations/association/5");
 		assert.equal(list[3].detail, "Association, member");
 	});
 
@@ -38,6 +40,7 @@ describe("workspaces", () => {
 
 	it("an organisation\'s own pages belong to that workspace, the rest of the console to the person's", () => {
 		const list = workspacesFor("DOCTOR", [hospital]);
+		assert.equal(currentWorkspace(list, "/account/organisations/hospital/3")?.id, "HOSPITAL-3");
 		assert.equal(currentWorkspace(list, "/admin/hospitals/3/view")?.id, "HOSPITAL-3");
 		assert.equal(currentWorkspace(list, "/admin/hospitals/3/edit")?.id, "HOSPITAL-3");
 		assert.equal(currentWorkspace(list, "/admin/hospitals/31/view")?.id, "doctor");

@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Award, BadgeCheck, CalendarDays, Eye, FileText, HeartPulse, Home, MoreHorizontal, Salad, ShieldCheck, Star, UserCircle, type LucideIcon } from "lucide-react";
+import { Award, Building2, BadgeCheck, CalendarDays, Eye, FileText, HeartPulse, Home, MoreHorizontal, Salad, ShieldCheck, Star, UserCircle, type LucideIcon } from "lucide-react";
 import { UserMenu } from "@/components/admin/user-menu";
 import { WorkspaceSwitcher } from "@/components/common/workspace-switcher";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { usePermissions } from "@/hooks/use-permissions";
 import { cn } from "@/lib/utils";
+import { organisationHome } from "@/lib/workspaces";
 
 interface NavLink {
 	href: string;
@@ -67,8 +68,12 @@ const isActive = (pathname: string, href: string) => (href === "/account" ? path
  */
 export default function AccountLayout({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
-	const { hasPermission, userType } = usePermissions();
-	const groups = GROUPS.map((group) => ({ ...group, links: group.links.filter((link) => (!link.permission || hasPermission(link.permission)) && (!link.userType || link.userType === userType)) })).filter((group) => group.links.length > 0);
+	const { hasPermission, userType, organisations } = usePermissions();
+	// each organisation the person belongs to is a place of its own, listed so that members without console access can reach it
+	const organisationGroup: { label: string; links: NavLink[] }[] = organisations.length > 0
+		? [{ label: "My organisations", links: organisations.map((m) => ({ href: organisationHome(m.kind, m.organisationId), label: m.name, icon: Building2 })) }]
+		: [];
+	const groups = [...GROUPS, ...organisationGroup].map((group) => ({ ...group, links: group.links.filter((link) => (!link.permission || hasPermission(link.permission)) && (!link.userType || link.userType === userType)) })).filter((group) => group.links.length > 0);
 	const all = groups.flatMap((group) => group.links);
 	const primary = all.filter((link) => link.primary);
 	const more = all.filter((link) => !link.primary);

@@ -9,9 +9,12 @@ import { fetchCounts, type CountKey } from "@/api/dashboard-counts";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { DoctorDashboard } from "@/components/admin/doctor-dashboard";
 import { SuperAdminDashboard } from "@/components/admin/superadmin-dashboard";
+import { WorkWaiting } from "@/components/admin/work-waiting";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { groupedMenu, visibleMenu } from "@/config/navigation-rules";
 import { usePermissions } from "@/hooks/use-permissions";
+
+const PLATFORM_TYPES = new Set(["SUPER_ADMIN", "ADMIN", "MODERATOR", "OPERATOR"]);
 
 const COUNTS: { key: CountKey; label: string; menuId: string; icon: typeof Building2 }[] = [
 	{ key: "hospitals", label: "Hospitals and clinics", menuId: "hospitals", icon: Building2 },
@@ -35,11 +38,14 @@ const ACTIONS: { label: string; href: string; permission: string; icon: typeof B
  * the super admin also gets the full system overview below. (It used to show made-up figures.)
  */
 export default function AdminHomePage() {
-	const { hasPermission, ready } = usePermissions();
-	// A doctor's dashboard is about their own practice; the directory totals below are for staff who run the platform
-	const isDoctor = hasPermission("view-doctor-panel") && !hasPermission("view-admin-panel") && !hasPermission("view-super-admin-panel");
+	const { hasPermission, ready, userType } = usePermissions();
+	// One page, three workspaces: a doctor's own practice, the platform's directory and queues for platform staff, and for everyone else
+	// (an organisation's admin or member) a plain way in to what their role can do. The workspace follows the person's type, not a guess
+	// from their permissions, so a doctor who also administers a hospital sees the practice here and the hospital on its own home page.
+	const isDoctor = userType === "DOCTOR";
+	const isPlatform = userType !== null && PLATFORM_TYPES.has(userType);
 	const menu = ready ? new Set(visibleMenu(hasPermission).map((rule) => rule.id)) : new Set<string>();
-	const countRows = isDoctor ? [] : COUNTS.filter((row) => menu.has(row.menuId));
+	const countRows = isPlatform ? COUNTS.filter((row) => menu.has(row.menuId)) : [];
 	const actions = ACTIONS.filter((action) => hasPermission(action.permission));
 	// Every role gets a way in to its own areas, even when it has no totals or shortcuts above
 	const areas = ready
@@ -59,7 +65,10 @@ export default function AdminHomePage() {
 
 	return (
 		<div className="flex flex-col">
-			<AdminHeader title="Dashboard" description="What you can manage, and how the platform is doing" />
+			<AdminHeader
+				title="Dashboard"
+				description={isDoctor ? "Your practice" : isPlatform ? "How the platform is doing, and what is waiting" : "What you can manage"}
+			/>
 
 			<div className="flex-1 space-y-6 p-4 md:p-8 pt-6">
 				{waiting > 0 && (
@@ -70,6 +79,8 @@ export default function AdminHomePage() {
 				)}
 
 				{isDoctor && <DoctorDashboard />}
+
+				{isPlatform && <WorkWaiting />}
 
 				{countRows.length > 0 && (
 					<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -135,7 +146,7 @@ export default function AdminHomePage() {
 					</Card>
 				)}
 
-				{hasPermission("view-super-admin-panel") && <SuperAdminDashboard />}
+				{isPlatform && hasPermission("view-super-admin-panel") && <SuperAdminDashboard />}
 			</div>
 		</div>
 	);

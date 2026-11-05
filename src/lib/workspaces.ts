@@ -16,12 +16,16 @@ export interface Workspace {
 
 const STAFF_TYPES = new Set(["SUPER_ADMIN", "ADMIN", "MODERATOR", "OPERATOR"]);
 
-const SEGMENT: Record<OrganisationMembership["kind"], { segment: string; label: string }> = {
-	HOSPITAL: { segment: "hospitals", label: "Hospital" },
-	INSTITUTION: { segment: "institutions", label: "Institution" },
-	SOCIAL_ORGANIZATION: { segment: "social-organizations", label: "Social organisation" },
-	ASSOCIATION: { segment: "associations", label: "Association" },
+/** Per kind: the console folder of its pages, the word in the address of its home page, and its name for people. */
+export const ORGANISATION_KINDS: Record<OrganisationMembership["kind"], { segment: string; slug: string; label: string }> = {
+	HOSPITAL: { segment: "hospitals", slug: "hospital", label: "Hospital" },
+	INSTITUTION: { segment: "institutions", slug: "institution", label: "Institution" },
+	SOCIAL_ORGANIZATION: { segment: "social-organizations", slug: "social-organization", label: "Social organisation" },
+	ASSOCIATION: { segment: "associations", slug: "association", label: "Association" },
 };
+
+/** The home page of an organisation, in the account area so that every member can open it (the console is for people who run the platform or an organisation). */
+export const organisationHome = (kind: OrganisationMembership["kind"], organisationId: number) => `/account/organisations/${ORGANISATION_KINDS[kind].slug}/${organisationId}`;
 
 const under = (pathname: string, base: string) => pathname === base || pathname.startsWith(base + "/");
 
@@ -35,7 +39,7 @@ export function workspacesFor(userType: string | null, organisations: Organisati
 		label: "Personal",
 		detail: "My profile, health and care",
 		href: "/account",
-		owns: (p) => under(p, "/account") && !(nutritionist && under(p, "/account/nutritionist")) && !(nurse && under(p, "/account/nurse")),
+		owns: (p) => under(p, "/account") && !under(p, "/account/organisations") && !(nutritionist && under(p, "/account/nutritionist")) && !(nurse && under(p, "/account/nurse")),
 	});
 	if (nutritionist) {
 		list.push({ id: "nutritionist", label: "Nutritionist", detail: "My professional profile", href: "/account/nutritionist", owns: (p) => under(p, "/account/nutritionist") });
@@ -46,14 +50,16 @@ export function workspacesFor(userType: string | null, organisations: Organisati
 	}
 
 	const orgOwned = organisations.map((m) => {
-		const { segment, label } = SEGMENT[m.kind];
-		const base = `/admin/${segment}/${m.organisationId}`;
+		const { segment, label } = ORGANISATION_KINDS[m.kind];
+		const home = organisationHome(m.kind, m.organisationId);
+		const consolePages = `/admin/${segment}/${m.organisationId}`;
 		return {
 			id: `${m.kind}-${m.organisationId}`,
 			label: m.name,
 			detail: `${label}, ${m.role === "ADMIN" ? "admin" : "member"}`,
-			href: `${base}/view`,
-			owns: (p: string) => under(p, base),
+			href: home,
+			// its home page, and its own pages in the console (opened from the home page)
+			owns: (p: string) => under(p, home) || under(p, consolePages),
 		} satisfies Workspace;
 	});
 
