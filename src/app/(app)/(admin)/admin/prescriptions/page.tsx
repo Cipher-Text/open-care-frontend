@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
+import { qk } from "@/lib/query-keys";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
@@ -25,7 +26,7 @@ function PrescriptionsList() {
 	const to = get("to");
 
 	const { data, isLoading, isError, error } = useQuery({
-		queryKey: ["prescriptions", page, patient, from, to],
+		queryKey: [...qk.prescriptions, page, patient, from, to],
 		queryFn: () => fetchPrescriptions({ page, size: PAGE_SIZE, patient, from, to }),
 	});
 

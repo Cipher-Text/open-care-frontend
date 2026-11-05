@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { Bell, Search } from "lucide-react";
 import { fetchUnreadCount } from "@/api/notifications";
@@ -15,7 +16,7 @@ import { UserMenu } from "@/components/admin/user-menu";
  */
 export function AdminTopbar() {
   // a quiet poll; a failure just shows no badge
-  const { data: unread = 0 } = useQuery({ queryKey: ["unread-notifications"], queryFn: fetchUnreadCount, refetchInterval: 60_000, retry: false });
+  const { data: unread = 0 } = useQuery({ queryKey: [...qk.unreadNotifications], queryFn: fetchUnreadCount, refetchInterval: 60_000, retry: false });
   return (
     <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b bg-background/95 px-4 backdrop-blur">
       <SidebarTrigger className="-ml-1" aria-label="Toggle sidebar" />

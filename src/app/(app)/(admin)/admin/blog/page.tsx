@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Plus, Search } from "lucide-react";
@@ -23,7 +24,7 @@ export default function AdminBlogPage() {
 	const [page, setPage] = useState(1);
 
 	const { data, isLoading, isError, error } = useQuery({
-		queryKey: ["admin-blog", "list", search, status, page],
+		queryKey: [...qk.adminBlog, "list", search, status, page],
 		queryFn: () => fetchAdminBlogPosts({ q: search || undefined, status: status || undefined, page, size: PAGE_SIZE }),
 		placeholderData: (previous) => previous,
 	});

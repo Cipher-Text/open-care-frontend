@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { fetchDistricts, fetchUnionsByUpazila, fetchUpazilasByDistrict } from "@/api/locations";
@@ -37,9 +38,9 @@ export function ProfileDetailsForm({ profile, onSaved }: { profile: UserProfile;
 	// A fresh copy of the profile (after a save elsewhere on the page) resets the form
 	useEffect(() => setForm(fromProfile(profile)), [profile]);
 
-	const districts = useQuery({ queryKey: ["districts"], queryFn: fetchDistricts, staleTime: Infinity });
-	const upazilas = useQuery({ queryKey: ["upazilas", form.districtId], queryFn: () => fetchUpazilasByDistrict(Number(form.districtId)), enabled: form.districtId !== "", staleTime: Infinity });
-	const unions = useQuery({ queryKey: ["unions", form.upazilaId], queryFn: () => fetchUnionsByUpazila(form.upazilaId), enabled: form.upazilaId !== "", staleTime: Infinity });
+	const districts = useQuery({ queryKey: [...qk.districts], queryFn: fetchDistricts, staleTime: Infinity });
+	const upazilas = useQuery({ queryKey: [...qk.upazilas, form.districtId], queryFn: () => fetchUpazilasByDistrict(Number(form.districtId)), enabled: form.districtId !== "", staleTime: Infinity });
+	const unions = useQuery({ queryKey: [...qk.unions, form.upazilaId], queryFn: () => fetchUnionsByUpazila(form.upazilaId), enabled: form.upazilaId !== "", staleTime: Infinity });
 
 	const dirty = useMemo(() => changed(form, profile), [form, profile]);
 	const set = <K extends keyof DetailsForm>(key: K, value: DetailsForm[K]) => setForm((f) => ({ ...f, [key]: value }));

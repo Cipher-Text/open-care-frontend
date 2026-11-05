@@ -52,3 +52,20 @@ export function errorMessage(error: unknown, t: ErrorTranslator, fallback?: stri
 export function fieldMessage(error: unknown, field: string): string | undefined {
 	return error instanceof ApiError ? error.details?.find((d) => d.field === field)?.message : undefined;
 }
+
+/**
+ * What to tell staff when a request failed, in English (the console is English only): the server's own message when it gave one
+ * (a duplicate, a refused value, a missing permission), a plain sentence for a session that ended or a server that could not be
+ * reached, and `fallback` otherwise. The public site uses `errorMessage` with its translations instead.
+ */
+export function problemText(error: unknown, fallback: string): string {
+	if (error instanceof ApiError) {
+		if (error.status === 401) return "Your session has ended. Sign in again.";
+		if (error.status === 403) return "You do not have permission to do this.";
+		if (error.status >= 500) return fallback;
+		return error.message || fallback;
+	}
+	if (error instanceof TypeError) return "Could not reach the server. Check the connection and try again.";
+	if (error instanceof Error && error.message) return error.message;
+	return fallback;
+}

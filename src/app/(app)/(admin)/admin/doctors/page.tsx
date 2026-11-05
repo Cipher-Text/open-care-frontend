@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Plus, Upload } from "lucide-react";
@@ -37,7 +38,7 @@ export default function DoctorsPage() {
 		isError,
 		error,
 	} = useQuery<DoctorListResponse>({
-		queryKey: ["doctors", currentPage, status, reviewDue],
+		queryKey: [...qk.doctors, currentPage, status, reviewDue],
 		queryFn: () =>
 			fetchAdminDoctors({
 				page: currentPage,

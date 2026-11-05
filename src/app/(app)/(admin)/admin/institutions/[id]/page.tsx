@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { qk } from "@/lib/query-keys";
 import { useRouter, useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -59,13 +60,13 @@ export default function InstitutionFormPage() {
 
   // Fetch districts
   const { data: districts = [], isLoading: isDistrictsLoading } = useQuery({
-    queryKey: ["districts"],
+    queryKey: [...qk.districts],
     queryFn: fetchDistricts,
   });
 
   // Fetch upazilas
   const { data: upazilas = [], isLoading: isUpazilasLoading } = useQuery({
-    queryKey: ["upazilas"],
+    queryKey: [...qk.upazilas],
     queryFn: fetchUpazilas,
   });
 
@@ -102,7 +103,7 @@ export default function InstitutionFormPage() {
     isLoading: isInstitutionLoading,
     isError: isInstitutionError,
   } = useQuery<Institution>({
-    queryKey: ["institution", institutionId],
+    queryKey: [...qk.institution, institutionId],
     queryFn: () => fetchInstitutionById(institutionId!),
     enabled: isEditing,
   });
@@ -164,7 +165,7 @@ export default function InstitutionFormPage() {
       }
 
       // Invalidate and refetch the institutions list
-      queryClient.invalidateQueries({ queryKey: ["institutions"] });
+      queryClient.invalidateQueries({ queryKey: [...qk.institutions] });
 
       // Navigate back to institutions list
       router.push("/admin/institutions");

@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
@@ -34,7 +35,7 @@ export default function AmbulanceViewPage() {
     isError,
     error,
   } = useQuery<Ambulance>({
-    queryKey: ["ambulance", ambulanceId],
+    queryKey: [...qk.ambulance, ambulanceId],
     queryFn: () => fetchAmbulanceById(ambulanceId),
     enabled: !!ambulanceId,
   });

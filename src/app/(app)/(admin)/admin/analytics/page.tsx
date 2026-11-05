@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { fetchEventSummary, fetchRecordDaily, fetchSearchMetrics, fetchTopRecords, type EventKind, type EventType } from "@/api/analytics";
 import { AdminHeader } from "@/components/admin/admin-header";
@@ -12,7 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 const TYPE_LABEL: Record<EventType, string> = { VIEW: "Page views", CALL: "Calls", DIRECTIONS: "Directions" };
 
 function DailyBars({ kind, slug, type, days }: { kind: EventKind; slug: string; type: EventType; days: number }) {
-	const daily = useQuery({ queryKey: ["analytics-daily", kind, slug, type, days], queryFn: () => fetchRecordDaily(kind, slug, type, days) });
+	const daily = useQuery({ queryKey: [...qk.analyticsDaily, kind, slug, type, days], queryFn: () => fetchRecordDaily(kind, slug, type, days) });
 	if (daily.isError) return <p className="text-sm text-destructive">Could not load the daily counts.</p>;
 	const series = daily.data ?? [];
 	const max = Math.max(1, ...series.map((d) => d.total));
@@ -36,9 +37,9 @@ export default function AnalyticsPage() {
 	const [kind, setKind] = useState<EventKind>("HOSPITAL");
 	const [type, setType] = useState<EventType>("VIEW");
 	const [selected, setSelected] = useState<string | null>(null);
-	const summary = useQuery({ queryKey: ["analytics-summary", days], queryFn: () => fetchEventSummary(days) });
-	const top = useQuery({ queryKey: ["analytics-top", kind, type, days], queryFn: () => fetchTopRecords(kind, type, days, 10) });
-	const search = useQuery({ queryKey: ["analytics-search"], queryFn: fetchSearchMetrics });
+	const summary = useQuery({ queryKey: [...qk.analyticsSummary, days], queryFn: () => fetchEventSummary(days) });
+	const top = useQuery({ queryKey: [...qk.analyticsTop, kind, type, days], queryFn: () => fetchTopRecords(kind, type, days, 10) });
+	const search = useQuery({ queryKey: [...qk.analyticsSearch], queryFn: fetchSearchMetrics });
 	const sum = (k: EventKind, t: EventType) => (summary.data ?? []).find((s) => s.kind === k && s.eventType === t)?.total ?? 0;
 
 	return (

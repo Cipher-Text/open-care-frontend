@@ -1,6 +1,7 @@
 "use client";
 
 import { use } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAdminBlogPost } from "@/api/blog-admin";
 import { AdminHeader } from "@/components/admin/admin-header";
@@ -9,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function EditBlogPostPage({ params }: { params: Promise<{ id: string }> }) {
 	const { id } = use(params);
-	const { data, isLoading, isError, error } = useQuery({ queryKey: ["admin-blog", "post", id], queryFn: () => fetchAdminBlogPost(id) });
+	const { data, isLoading, isError, error } = useQuery({ queryKey: [...qk.adminBlog, "post", id], queryFn: () => fetchAdminBlogPost(id) });
 
 	return (
 		<div className="flex flex-col">

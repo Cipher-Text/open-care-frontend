@@ -366,3 +366,9 @@ OpenCare is a healthcare platform designed to make quality healthcare accessible
 ---
 
 **Made with ❤️ for healthcare accessibility in Bangladesh**
+
+## Conventions (November 5, 2026)
+- The API root is `/api/v1` (`NEXT_PUBLIC_API_BASE_URL`, for example `https://api.example.com/api/v1`); the backend answers the same routes under `/api` too.
+- Browser calls go through `src/lib/api-client.ts` (`apiGet`, `apiPost`, `apiPut`, `apiPatch`, `apiDelete`, `publicGet`, `unwrap`); `src/api/auth.ts` keeps its own `fetch` because it runs on the server.
+- Cache keys: `src/lib/query-keys.ts` (`qk`). Staff error text: `problemText` in `src/lib/api-error.ts`.
+- API types: `npm run api:snapshot` (needs a running backend, `OPENAPI_URL`), `npm run api:types`, `npm run api:check`; the contract is `src/types/api-contract.ts`.

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { fetchMyReadings } from "@/api/health-vitals";
 import { Button } from "@/components/ui/button";
@@ -23,7 +24,7 @@ const when = (iso: string) => new Date(iso).toLocaleString("en-GB", { dateStyle:
 export function HealthTrends() {
 	const [metricKey, setMetricKey] = useState(METRICS[0].key);
 	// Under "my-readings" so that saving or deleting a reading refreshes the chart as well
-	const query = useQuery({ queryKey: ["my-readings", "trend"], queryFn: () => fetchMyReadings(1, NEWEST), retry: false });
+	const query = useQuery({ queryKey: [...qk.myReadings, "trend"], queryFn: () => fetchMyReadings(1, NEWEST), retry: false });
 	const metric = METRICS.find((m) => m.key === metricKey) ?? METRICS[0];
 
 	const chart = useMemo(() => {

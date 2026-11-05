@@ -1,12 +1,7 @@
-import { apiDelete, apiGet, apiPatch, apiPost, apiPut, buildUrl } from "@/lib/api-client";
+import { apiDelete, apiGet, apiPatch, apiPost, apiPut, buildUrl, unwrap } from "@/lib/api-client";
 import { normalizePage, toWirePage, type WirePage } from "@/lib/pagination";
 import type { PageResult } from "@/types/common";
 import type { ModerationReview, MyReview, PublicReview, ReviewEligibility, ReviewInput, ReviewStatus, ReviewSummary } from "@/types/review";
-
-const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
-	if (!response.ok) throw new Error(response.error || fallback);
-	return response.data as T;
-};
 
 export const fetchDoctorReviews = async (doctorId: number | string, page: number, size: number): Promise<PageResult<PublicReview>> =>
 	normalizePage(

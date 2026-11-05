@@ -1,8 +1,7 @@
 import { normalizePage, withWirePage } from "@/lib/pagination";
 import { AssociationsListResponse, Association } from "@/types/associations";
 import { AddAssociationFormData } from "@/validations/add-association-schema";
-import { baseUrl } from "@/config/config";
-import { apiPost, apiPut } from "@/lib/api-client";
+import { apiPost, apiPut, publicGet } from "@/lib/api-client";
 
 interface QueryParams {
   [key: string]: string | number | boolean | undefined | null;
@@ -25,34 +24,15 @@ export const fetchAssociations = async (
   params: QueryParams
 ): Promise<AssociationsListResponse> => {
   const queryString = buildQueryString(withWirePage(params));
-  const response = await fetch(`${baseUrl}/associations?${queryString}`, {
-    method: "GET",
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch associations: ${response.status} ${response.statusText}`
-    );
-  }
-
-  const data = await response.json();
+  const data = await publicGet(`/associations?${queryString}`);
 	return normalizePage(data);
 };
 
 export const fetchAssociationById = async (
   id: number
 ): Promise<Association> => {
-  const response = await fetch(`${baseUrl}/associations/${id}`, {
-    method: "GET",
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch association: ${response.status} ${response.statusText}`
-    );
-  }
-
-  return response.json();
+  const data = await publicGet(`/associations/${id}`);
+	return data;
 };
 
 export const addAssociation = async (
@@ -83,15 +63,6 @@ export const updateAssociation = async (
 export const fetchAssociationTypes = async (): Promise<
   Array<{ value: string; displayName: string; bnName: string }>
 > => {
-  const response = await fetch(`${baseUrl}/association-types`, {
-    method: "GET",
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch association types: ${response.status} ${response.statusText}`
-    );
-  }
-
-  return response.json();
+  const data = await publicGet(`/association-types`);
+	return data;
 };

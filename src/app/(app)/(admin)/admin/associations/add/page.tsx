@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
+import { problemText } from "@/lib/api-error";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -52,26 +54,26 @@ export default function AddAssociationPage() {
 
   // Fetch divisions
   const { data: divisions = [], isLoading: isDivisionsLoading } = useQuery({
-    queryKey: ["divisions"],
+    queryKey: [...qk.divisions],
     queryFn: fetchDivisions,
   });
 
   // Fetch districts
   const { data: districts = [], isLoading: isDistrictsLoading } = useQuery({
-    queryKey: ["districts"],
+    queryKey: [...qk.districts],
     queryFn: fetchDistricts,
   });
 
   // Fetch upazilas
   const { data: upazilas = [], isLoading: isUpazilasLoading } = useQuery({
-    queryKey: ["upazilas"],
+    queryKey: [...qk.upazilas],
     queryFn: fetchUpazilas,
   });
 
   // Fetch association types
   const { data: associationTypes = [], isLoading: isAssociationTypesLoading } =
     useQuery({
-      queryKey: ["association-types"],
+      queryKey: [...qk.associationTypes],
       queryFn: fetchAssociationTypes,
     });
 
@@ -80,7 +82,7 @@ export default function AddAssociationPage() {
     data: medicalSpecialitiesData,
     isLoading: isMedicalSpecialitiesLoading,
   } = useQuery({
-    queryKey: ["medical-specialities-all"],
+    queryKey: [...qk.medicalSpecialitiesAll],
     queryFn: () =>
       fetchMedicalSpecialities({
         page: 1,
@@ -95,7 +97,7 @@ export default function AddAssociationPage() {
 
   // Fetch countries
   const { data: countriesData, isLoading: isCountriesLoading } = useQuery({
-    queryKey: ["countries"],
+    queryKey: [...qk.countries],
     queryFn: async () => {
       const response = await getCountries();
       return response.data || [];
@@ -106,7 +108,7 @@ export default function AddAssociationPage() {
 
   // Fetch domains
   const { data: domainsData, isLoading: isDomainsLoading } = useQuery({
-    queryKey: ["domains"],
+    queryKey: [...qk.domains],
     queryFn: async () => {
       const response = await getDomains();
       return response.data || [];
@@ -163,7 +165,7 @@ export default function AddAssociationPage() {
       router.push("/admin/associations");
     } catch (error) {
       console.error("Error adding association:", error);
-      toast.error("Failed to add association. Please try again.");
+      toast.error(problemText(error, "Failed to add association. Please try again."));
     } finally {
       setIsLoading(false);
     }

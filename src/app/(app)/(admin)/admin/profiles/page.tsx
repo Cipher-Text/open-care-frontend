@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
@@ -27,7 +28,7 @@ function ProfilesContent() {
     isError,
     error,
   } = useQuery<ProfilesResponse>({
-    queryKey: ["profiles", currentPage],
+    queryKey: [...qk.profiles, currentPage],
     queryFn: () => getProfiles(currentPage, 10, "id", "ASC"),
     placeholderData: (previousData) => previousData,
   });

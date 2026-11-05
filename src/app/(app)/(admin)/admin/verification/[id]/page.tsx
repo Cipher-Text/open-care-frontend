@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -31,12 +32,12 @@ export default function VerificationReviewPage() {
 	const { id } = useParams<{ id: string }>();
 	const queryClient = useQueryClient();
 	const [text, setText] = useState("");
-	const { data, isLoading, isError, error } = useQuery({ queryKey: ["verification-detail", id], queryFn: () => fetchVerificationDetail(id), retry: false });
+	const { data, isLoading, isError, error } = useQuery({ queryKey: [...qk.verificationDetail, id], queryFn: () => fetchVerificationDetail(id), retry: false });
 
 	const refresh = () => {
-		queryClient.invalidateQueries({ queryKey: ["verification-detail", id] });
-		queryClient.invalidateQueries({ queryKey: ["verification-queue"] });
-		queryClient.invalidateQueries({ queryKey: ["verification-stats"] });
+		queryClient.invalidateQueries({ queryKey: [...qk.verificationDetail, id] });
+		queryClient.invalidateQueries({ queryKey: [...qk.verificationQueue] });
+		queryClient.invalidateQueries({ queryKey: [...qk.verificationStats] });
 	};
 	const failed = (e: unknown) => toast.error(e instanceof Error ? e.message : "Something went wrong");
 	const done = (message: string) => () => { toast.success(message); setText(""); refresh(); };

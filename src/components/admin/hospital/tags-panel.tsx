@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Tag as TagIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -21,7 +22,7 @@ export function TagsPanel({ hospitalId, tags }: { hospitalId: number; tags: Tag[
 	const [selected, setSelected] = useState<Set<number>>(new Set());
 	const [filter, setFilter] = useState("");
 
-	const catalogue = useQuery({ queryKey: ["tag-catalogue"], queryFn: fetchAllTags, enabled: editing, staleTime: 60 * 60 * 1000 });
+	const catalogue = useQuery({ queryKey: [...qk.tagCatalogue], queryFn: fetchAllTags, enabled: editing, staleTime: 60 * 60 * 1000 });
 
 	useEffect(() => {
 		if (editing) {
@@ -35,7 +36,7 @@ export function TagsPanel({ hospitalId, tags }: { hospitalId: number; tags: Tag[
 		onSuccess: () => {
 			toast.success("Tags saved");
 			setEditing(false);
-			queryClient.invalidateQueries({ queryKey: ["hospital-details", hospitalId] });
+			queryClient.invalidateQueries({ queryKey: [...qk.hospitalDetails, hospitalId] });
 		},
 	});
 

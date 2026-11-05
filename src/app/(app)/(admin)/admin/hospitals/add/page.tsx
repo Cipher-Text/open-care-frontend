@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { qk } from "@/lib/query-keys";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -11,7 +12,7 @@ import { toast } from "sonner";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { SimilarRecords } from "@/components/admin/duplicates/similar-records";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ApiError } from "@/lib/api-error";
+import { ApiError, problemText } from "@/lib/api-error";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -61,19 +62,19 @@ export default function AddHospitalPage() {
 
 	// Fetch districts
 	const { data: districts = [], isLoading: isDistrictsLoading } = useQuery({
-		queryKey: ["districts"],
+		queryKey: [...qk.districts],
 		queryFn: fetchDistricts,
 	});
 
 	// Fetch upazilas
 	const { data: upazilas = [], isLoading: isUpazilasLoading } = useQuery({
-		queryKey: ["upazilas"],
+		queryKey: [...qk.upazilas],
 		queryFn: fetchUpazilas,
 	});
 
 	// Fetch unions when upazila is selected
 	const { data: unions = [], isLoading: isUnionsLoading } = useQuery({
-		queryKey: ["unions", selectedUpazilaId],
+		queryKey: [...qk.unions, selectedUpazilaId],
 		queryFn: () => fetchUnionsByUpazila(selectedUpazilaId!),
 		enabled: !!selectedUpazilaId,
 	});
@@ -81,7 +82,7 @@ export default function AddHospitalPage() {
 	// Fetch hospital types
 	const { data: hospitalTypes = [], isLoading: isHospitalTypesLoading } =
 		useQuery({
-			queryKey: ["hospital-types"],
+			queryKey: [...qk.hospitalTypes],
 			queryFn: fetchHospitalTypes,
 		});
 
@@ -90,7 +91,7 @@ export default function AddHospitalPage() {
 		data: organizationTypes = [],
 		isLoading: isOrganizationTypesLoading,
 	} = useQuery({
-		queryKey: ["organization-types"],
+		queryKey: [...qk.organizationTypes],
 		queryFn: fetchOrganizationTypes,
 	});
 
@@ -166,10 +167,8 @@ export default function AddHospitalPage() {
 			if (error instanceof ApiError && error.code === "DUPLICATE_SUSPECTED") {
 				setDuplicateMessage(error.message);
 				toast.warning("A hospital like this already exists. Look at it before adding another.");
-			} else if (error instanceof ApiError && error.status === 409) {
-				toast.error(error.message);
 			} else {
-				toast.error("Failed to add hospital. Please try again.");
+				toast.error(problemText(error, "Failed to add hospital. Please try again."));
 			}
 		} finally {
 			setIsLoading(false);

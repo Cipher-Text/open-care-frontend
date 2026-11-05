@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPut, buildUrl } from "@/lib/api-client";
+import { apiGet, apiPost, apiPut, buildUrl, unwrap } from "@/lib/api-client";
 import { normalizePage, toWirePage, type WirePage } from "@/lib/pagination";
 import type { PageResult } from "@/types/common";
 import type {
@@ -11,11 +11,6 @@ import type {
 } from "@/types/prescriptions";
 
 /** The signed-in doctor's prescriptions. Every call needs a login and the matching prescription permission. */
-
-const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
-	if (!response.ok) throw new Error(response.error || fallback);
-	return response.data as T;
-};
 
 export const fetchDoctorContext = async () =>
 	unwrap<DoctorContext>(await apiGet("/prescriptions/doctor-context"), "Failed to load your doctor profile");

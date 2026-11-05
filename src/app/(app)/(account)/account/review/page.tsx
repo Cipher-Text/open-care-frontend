@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -45,8 +46,8 @@ function ReviewForm() {
 	const editing = params.get("edit");
 	const valid = !!doctor && /^\d+$/.test(doctor);
 
-	const eligibility = useQuery({ queryKey: ["review-eligibility", doctor], queryFn: () => fetchReviewEligibility(doctor as string), enabled: valid && !editing, retry: false });
-	const mine = useQuery({ queryKey: ["my-reviews", 1], queryFn: () => fetchMyReviews(1, 100), enabled: !!editing, retry: false });
+	const eligibility = useQuery({ queryKey: [...qk.reviewEligibility, doctor], queryFn: () => fetchReviewEligibility(doctor as string), enabled: valid && !editing, retry: false });
+	const mine = useQuery({ queryKey: [...qk.myReviews, 1], queryFn: () => fetchMyReviews(1, 100), enabled: !!editing, retry: false });
 	const existing = editing ? mine.data?.content.find((r) => String(r.id) === editing) : undefined;
 
 	const [overall, setOverall] = useState<number | null>(null);

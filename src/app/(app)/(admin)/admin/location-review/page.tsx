@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { approveConfirmedSuggestions, decideSuggestion, fetchSuggestions, type SuggestionConfidence, type SuggestionStatus } from "@/api/location-suggestions";
@@ -36,15 +37,15 @@ export default function LocationReviewPage() {
 	const [districtId, setDistrictId] = useState("");
 	const [page, setPage] = useState(1);
 
-	const districts = useQuery({ queryKey: ["districts"], queryFn: fetchDistricts, staleTime: 3_600_000 });
+	const districts = useQuery({ queryKey: [...qk.districts], queryFn: fetchDistricts, staleTime: 3_600_000 });
 	const list = useQuery({
-		queryKey: ["location-suggestions", status, confidence, districtId, page],
+		queryKey: [...qk.locationSuggestions, status, confidence, districtId, page],
 		queryFn: () => fetchSuggestions({ status, confidence, districtId, page, size: PAGE_SIZE }),
 		retry: false,
 		placeholderData: (previous) => previous,
 	});
 
-	const refresh = () => void queryClient.invalidateQueries({ queryKey: ["location-suggestions"] });
+	const refresh = () => void queryClient.invalidateQueries({ queryKey: [...qk.locationSuggestions] });
 	const decide = useMutation({
 		mutationFn: ({ id, approve }: { id: number; approve: boolean }) => decideSuggestion(id, approve),
 		onSuccess: (result) => {

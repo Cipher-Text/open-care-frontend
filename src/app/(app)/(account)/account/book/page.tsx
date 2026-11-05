@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { Suspense, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -24,7 +25,7 @@ function BookForm() {
 	const [reason, setReason] = useState("");
 
 	const valid = !!doctor && /^\d+$/.test(doctor);
-	const slots = useQuery({ queryKey: ["slots", doctor], queryFn: () => fetchSlots(doctor as string), enabled: valid, retry: false });
+	const slots = useQuery({ queryKey: [...qk.slots, doctor], queryFn: () => fetchSlots(doctor as string), enabled: valid, retry: false });
 	const days = useMemo(() => {
 		const byDay = new Map<string, Slot[]>();
 		for (const slot of slots.data?.slots ?? []) byDay.set(slot.date, [...(byDay.get(slot.date) ?? []), slot]);
@@ -32,7 +33,7 @@ function BookForm() {
 	}, [slots.data]);
 
 	// When the server requires a verified phone before booking, the person verifies it here first
-	const phone = useQuery({ queryKey: ["phone-verification"], queryFn: getPhoneVerification, retry: false });
+	const phone = useQuery({ queryKey: [...qk.phoneVerification], queryFn: getPhoneVerification, retry: false });
 	const mustVerify = phone.data?.required === true && phone.data.verified === false;
 
 	const send = useMutation({
@@ -97,7 +98,7 @@ function BookForm() {
 			</Card>
 
 			{chosen && mustVerify && (
-				<PhoneVerifyCard maskedPhone={phone.data?.maskedPhone ?? null} onVerified={() => void queryClient.invalidateQueries({ queryKey: ["phone-verification"] })} />
+				<PhoneVerifyCard maskedPhone={phone.data?.maskedPhone ?? null} onVerified={() => void queryClient.invalidateQueries({ queryKey: [...qk.phoneVerification] })} />
 			)}
 
 			{chosen && (

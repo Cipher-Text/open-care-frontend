@@ -1,4 +1,4 @@
-import { apiDelete, apiGet, apiPost, apiPut } from "@/lib/api-client";
+import { apiDelete, apiGet, apiPost, apiPut, unwrap } from "@/lib/api-client";
 
 export type DayOfWeek = "SUNDAY" | "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY";
 export type ScheduleActivity = "PATIENT_VISIT" | "TEACHING" | "OPERATION" | "RESEARCH" | "ADMINISTRATIVE";
@@ -33,11 +33,6 @@ export type ScheduleInput = Partial<Omit<ScheduleBlock, "id" | "doctorId" | "wor
 	activityType: ScheduleActivity;
 	isBookable?: boolean;
 	isActive?: boolean;
-};
-
-const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
-	if (!response.ok) throw new Error(response.error || fallback);
-	return response.data as T;
 };
 
 export const fetchSchedule = async (doctorId: number | string) =>

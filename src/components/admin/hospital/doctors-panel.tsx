@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Stethoscope, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -54,12 +55,12 @@ function AddDoctorDialog({
 	}, [open]);
 
 	const results = useQuery({
-		queryKey: ["doctor-search", term],
+		queryKey: [...qk.doctorSearch, term],
 		queryFn: () => searchDoctorsByName(term),
 		enabled: open && term.length >= 2,
 	});
 	const specialities = useQuery({
-		queryKey: ["medical-specialities-all"],
+		queryKey: [...qk.medicalSpecialitiesAll],
 		queryFn: fetchAllMedicalSpecialities,
 		enabled: open,
 		staleTime: 60 * 60 * 1000,
@@ -164,7 +165,7 @@ export function DoctorsPanel({ hospitalId, doctors }: { hospitalId: number; doct
 	const { hasPermission } = usePermissions();
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [removing, setRemoving] = useState<DoctorResponse | null>(null);
-	const refresh = () => queryClient.invalidateQueries({ queryKey: ["hospital-details", hospitalId] });
+	const refresh = () => queryClient.invalidateQueries({ queryKey: [...qk.hospitalDetails, hospitalId] });
 	const canEdit = hasPermission("update-hospital");
 
 	const remove = useMutation({

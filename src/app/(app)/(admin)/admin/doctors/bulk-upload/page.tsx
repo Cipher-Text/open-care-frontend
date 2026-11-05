@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { qk } from "@/lib/query-keys";
 import Link from "next/link";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, CheckCircle2, Download, FileSpreadsheet, Upload } from "lucide-react";
@@ -107,7 +108,7 @@ export default function DoctorBulkUploadPage() {
 		onSuccess: (data) => {
 			setReport(data);
 			setFilter("ALL");
-			queryClient.invalidateQueries({ queryKey: ["doctors"] });
+			queryClient.invalidateQueries({ queryKey: [...qk.doctors] });
 		},
 	});
 

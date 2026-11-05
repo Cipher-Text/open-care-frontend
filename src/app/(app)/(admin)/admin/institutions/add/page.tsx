@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { qk } from "@/lib/query-keys";
+import { problemText } from "@/lib/api-error";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -45,13 +47,13 @@ export default function AddInstitutionPage() {
 
   // Fetch districts
   const { data: districts = [], isLoading: isDistrictsLoading } = useQuery({
-    queryKey: ["districts"],
+    queryKey: [...qk.districts],
     queryFn: fetchDistricts,
   });
 
   // Fetch upazilas
   const { data: upazilas = [], isLoading: isUpazilasLoading } = useQuery({
-    queryKey: ["upazilas"],
+    queryKey: [...qk.upazilas],
     queryFn: fetchUpazilas,
   });
 
@@ -96,7 +98,7 @@ export default function AddInstitutionPage() {
       router.push("/admin/institutions");
     } catch (error) {
       console.error("Error adding institution:", error);
-      toast.error("Failed to add institution. Please try again.");
+      toast.error(problemText(error, "Failed to add institution. Please try again."));
     } finally {
       setIsLoading(false);
     }

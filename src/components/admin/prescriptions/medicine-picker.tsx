@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { searchMedicines } from "@/api/prescriptions";
 import { Input } from "@/components/ui/input";
@@ -40,7 +41,7 @@ export function MedicinePicker({
 	const term = useDebounced(value.trim(), 250);
 
 	const suggestions = useQuery({
-		queryKey: ["prescription-medicines", term],
+		queryKey: [...qk.prescriptionMedicines, term],
 		queryFn: () => searchMedicines(term),
 		enabled: open && !linked && term.length >= 2,
 		staleTime: 5 * 60 * 1000,

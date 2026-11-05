@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { fetchDeliveries, fetchDeliverySummary, fetchSmsBalance, fetchSuppressions, removeSuppression, retryDelivery, type DeliveryChannel, type DeliveryStatus } from "@/api/notification-deliveries";
@@ -29,25 +30,25 @@ export default function NotificationDeliveriesPage() {
 	const [status, setStatus] = useState<DeliveryStatus | "">("FAILED");
 	const [channel, setChannel] = useState<DeliveryChannel | "">("");
 	const [page, setPage] = useState(1);
-	const list = useQuery({ queryKey: ["deliveries", status, channel, page], queryFn: () => fetchDeliveries({ status, channel, page, size: PAGE_SIZE }), retry: false, placeholderData: (previous) => previous });
-	const summary = useQuery({ queryKey: ["delivery-summary"], queryFn: () => fetchDeliverySummary(7), retry: false });
-	const balance = useQuery({ queryKey: ["sms-balance"], queryFn: fetchSmsBalance, retry: false, staleTime: 60_000 });
+	const list = useQuery({ queryKey: [...qk.deliveries, status, channel, page], queryFn: () => fetchDeliveries({ status, channel, page, size: PAGE_SIZE }), retry: false, placeholderData: (previous) => previous });
+	const summary = useQuery({ queryKey: [...qk.deliverySummary], queryFn: () => fetchDeliverySummary(7), retry: false });
+	const balance = useQuery({ queryKey: [...qk.smsBalance], queryFn: fetchSmsBalance, retry: false, staleTime: 60_000 });
 	const retry = useMutation({
 		mutationFn: (id: number) => retryDelivery(id),
 		onSuccess: () => {
 			toast.success("Back in the queue; the next run sends it");
-			void queryClient.invalidateQueries({ queryKey: ["deliveries"] });
-			void queryClient.invalidateQueries({ queryKey: ["delivery-summary"] });
+			void queryClient.invalidateQueries({ queryKey: [...qk.deliveries] });
+			void queryClient.invalidateQueries({ queryKey: [...qk.deliverySummary] });
 		},
 		onError: (error) => toast.error(error instanceof Error ? error.message : "Could not retry"),
 	});
 
-	const suppressed = useQuery({ queryKey: ["email-suppressions"], queryFn: () => fetchSuppressions(1, 20), retry: false });
+	const suppressed = useQuery({ queryKey: [...qk.emailSuppressions], queryFn: () => fetchSuppressions(1, 20), retry: false });
 	const unsuppress = useMutation({
 		mutationFn: (id: number) => removeSuppression(id),
 		onSuccess: () => {
 			toast.success("That address will be mailed again");
-			void queryClient.invalidateQueries({ queryKey: ["email-suppressions"] });
+			void queryClient.invalidateQueries({ queryKey: [...qk.emailSuppressions] });
 		},
 		onError: (error) => toast.error(error instanceof Error ? error.message : "Could not remove the address"),
 	});

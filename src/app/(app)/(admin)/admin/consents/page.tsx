@@ -1,6 +1,7 @@
 "use client";
 
 import { Bilingual } from "@/components/common/Bilingual";
+import { qk } from "@/lib/query-keys";
 import { CONSENT, prescriptionRequest } from "@/lib/consent-text";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -15,11 +16,11 @@ const when = (iso: string) => new Date(iso).toLocaleString("en-GB", { dateStyle:
 /** The signed-in person's own consent requests and the doctors who currently have their consent. */
 export default function MyConsentsPage() {
 	const queryClient = useQueryClient();
-	const pending = useQuery({ queryKey: ["my-pending-consents"], queryFn: fetchPendingConsents, refetchInterval: 10_000 });
-	const grants = useQuery({ queryKey: ["my-grants"], queryFn: fetchMyGrants });
+	const pending = useQuery({ queryKey: [...qk.myPendingConsents], queryFn: fetchPendingConsents, refetchInterval: 10_000 });
+	const grants = useQuery({ queryKey: [...qk.myGrants], queryFn: fetchMyGrants });
 	const refresh = () => {
-		queryClient.invalidateQueries({ queryKey: ["my-pending-consents"] });
-		queryClient.invalidateQueries({ queryKey: ["my-grants"] });
+		queryClient.invalidateQueries({ queryKey: [...qk.myPendingConsents] });
+		queryClient.invalidateQueries({ queryKey: [...qk.myGrants] });
 	};
 
 	const decide = useMutation({

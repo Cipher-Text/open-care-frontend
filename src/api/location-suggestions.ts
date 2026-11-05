@@ -1,4 +1,4 @@
-import { apiGet, apiPost, buildUrl } from "@/lib/api-client";
+import { apiGet, apiPost, buildUrl, unwrap } from "@/lib/api-client";
 import { normalizePage, toWirePage, type WirePage } from "@/lib/pagination";
 import type { PageResult } from "@/types/common";
 
@@ -26,11 +26,6 @@ export interface BulkResult {
 	superseded: number;
 	stillPending: number;
 }
-
-const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
-	if (!response.ok) throw new Error(response.error || fallback);
-	return response.data as T;
-};
 
 export const fetchSuggestions = async (filters: { status: SuggestionStatus; confidence?: SuggestionConfidence | ""; districtId?: string; page: number; size: number }): Promise<PageResult<LocationSuggestion>> =>
 	normalizePage(

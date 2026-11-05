@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { fetchMyDoctor } from "@/api/doctors";
@@ -18,15 +19,15 @@ export default function DoctorReviewsPage() {
 	const queryClient = useQueryClient();
 	const [page, setPage] = useState(1);
 	const [draft, setDraft] = useState<Record<number, string>>({});
-	const doctor = useQuery({ queryKey: ["my-doctor"], queryFn: fetchMyDoctor, retry: false });
+	const doctor = useQuery({ queryKey: [...qk.myDoctor], queryFn: fetchMyDoctor, retry: false });
 	const doctorId = doctor.data?.id ?? null;
-	const summary = useQuery({ queryKey: ["review-summary", doctorId], queryFn: () => fetchReviewSummary(doctorId as number), enabled: doctorId !== null, retry: false });
-	const list = useQuery({ queryKey: ["doctor-reviews", doctorId, page], queryFn: () => fetchDoctorReviews(doctorId as number, page, 10), enabled: doctorId !== null, retry: false, placeholderData: (previous) => previous });
+	const summary = useQuery({ queryKey: [...qk.reviewSummary, doctorId], queryFn: () => fetchReviewSummary(doctorId as number), enabled: doctorId !== null, retry: false });
+	const list = useQuery({ queryKey: [...qk.doctorReviews, doctorId, page], queryFn: () => fetchDoctorReviews(doctorId as number, page, 10), enabled: doctorId !== null, retry: false, placeholderData: (previous) => previous });
 	const reply = useMutation({
 		mutationFn: ({ id, text }: { id: number; text: string }) => replyToReview(id, text),
 		onSuccess: () => {
 			toast.success("Reply published");
-			void queryClient.invalidateQueries({ queryKey: ["doctor-reviews"] });
+			void queryClient.invalidateQueries({ queryKey: [...qk.doctorReviews] });
 		},
 		onError: (error) => toast.error(error instanceof Error ? error.message : "Could not send your reply"),
 	});

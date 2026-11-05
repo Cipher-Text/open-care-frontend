@@ -1,4 +1,4 @@
-import { baseUrl } from "@/config/config";
+import { apiPost } from "@/lib/api-client";
 import type { SignupFormData } from "@/validations/signup-schema";
 
 /**
@@ -7,10 +7,10 @@ import type { SignupFormData } from "@/validations/signup-schema";
  * the server's message is passed on so the form can show it.
  */
 export const registerUser = async (data: SignupFormData): Promise<void> => {
-	const response = await fetch(`${baseUrl}/auth/register`, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({
+	// no session yet: sent without a token, and the server's message is kept for the form
+	const response = await apiPost(
+		"/auth/register",
+		{
 			email: data.email.trim(),
 			firstName: data.firstName.trim(),
 			lastName: data.lastName.trim(),
@@ -20,16 +20,12 @@ export const registerUser = async (data: SignupFormData): Promise<void> => {
 			bloodGroup: data.bloodGroup,
 			gender: data.gender,
 			districtId: data.districtId,
-		}),
-	});
+		},
+		{ includeAuth: false, throwOnError: false }
+	);
 
 	if (!response.ok) {
-		let message = "";
-		try {
-			message = (await response.json())?.message ?? "";
-		} catch {
-			// Not JSON, use the fallbacks below
-		}
+		let message = response.error ?? "";
 		if (response.status === 429) message = "Too many attempts. Please wait a minute and try again.";
 		throw new Error(message || "We could not create your account. Please try again.");
 	}

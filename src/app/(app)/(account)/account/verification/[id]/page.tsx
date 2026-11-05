@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useParams } from "next/navigation";
 import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -27,11 +28,11 @@ export default function VerificationCasePage() {
 	const fileInput = useRef<HTMLInputElement>(null);
 	const [note, setNote] = useState("");
 	const [uploading, setUploading] = useState(false);
-	const { data, isLoading, isError, error } = useQuery({ queryKey: ["my-verification", id], queryFn: () => fetchMyVerification(id), retry: false });
+	const { data, isLoading, isError, error } = useQuery({ queryKey: [...qk.myVerification, id], queryFn: () => fetchMyVerification(id), retry: false });
 
 	const refresh = () => {
-		queryClient.invalidateQueries({ queryKey: ["my-verification", id] });
-		queryClient.invalidateQueries({ queryKey: ["my-verifications"] });
+		queryClient.invalidateQueries({ queryKey: [...qk.myVerification, id] });
+		queryClient.invalidateQueries({ queryKey: [...qk.myVerifications] });
 	};
 	const failed = (e: unknown) => toast.error(e instanceof Error ? e.message : "Something went wrong");
 	const submit = useMutation({ mutationFn: () => submitVerification(id, note), onSuccess: () => { toast.success("Submitted. Staff will review it."); refresh(); }, onError: failed });

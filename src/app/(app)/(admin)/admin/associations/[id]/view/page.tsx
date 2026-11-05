@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
@@ -34,7 +35,7 @@ export default function AssociationViewPage() {
     isError,
     error,
   } = useQuery<Association>({
-    queryKey: ["association", associationId],
+    queryKey: [...qk.association, associationId],
     queryFn: () => fetchAssociationById(associationId),
     enabled: !!associationId,
   });

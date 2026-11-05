@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { fetchMedicalTests } from "@/api/medical-tests";
 import { MedicalTestsListResponse } from "@/types/medical-tests";
@@ -25,7 +26,7 @@ export default function MedicalTestsPage() {
     isError,
     error,
   } = useQuery<MedicalTestsListResponse>({
-    queryKey: ["medical-tests", currentPage, filters],
+    queryKey: [...qk.medicalTests, currentPage, filters],
     queryFn: () =>
       fetchMedicalTests({
         page: currentPage, // 1-based; fetcher converts for the API

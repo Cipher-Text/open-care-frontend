@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -38,8 +39,8 @@ export function BlogPostForm({ post }: { post?: BlogPost }) {
 	const [coverPreview, setCoverPreview] = useState<string | null>(null);
 	const [uploadingCover, setUploadingCover] = useState(false);
 
-	const topicList = useQuery({ queryKey: ["blog-topics"], queryFn: fetchBlogTopics, staleTime: 10 * 60 * 1000 });
-	const specialities = useQuery({ queryKey: ["all-specialities"], queryFn: fetchAllMedicalSpecialities, staleTime: 60 * 60 * 1000 });
+	const topicList = useQuery({ queryKey: [...qk.blogTopics], queryFn: fetchBlogTopics, staleTime: 10 * 60 * 1000 });
+	const specialities = useQuery({ queryKey: [...qk.allSpecialities], queryFn: fetchAllMedicalSpecialities, staleTime: 60 * 60 * 1000 });
 
 	const input = (): BlogPostInput => ({
 		title: title.trim(),
@@ -63,7 +64,7 @@ export function BlogPostForm({ post }: { post?: BlogPost }) {
 			setCoverImageUrl(result.photoUrl);
 			setCoverPreview(result.accessUrl);
 			toast.success("Cover image uploaded");
-			void queryClient.invalidateQueries({ queryKey: ["admin-blog"] });
+			void queryClient.invalidateQueries({ queryKey: [...qk.adminBlog] });
 		} catch (error) {
 			failed(error);
 		} finally {
@@ -71,7 +72,7 @@ export function BlogPostForm({ post }: { post?: BlogPost }) {
 		}
 	};
 
-	const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin-blog"] });
+	const invalidate = () => queryClient.invalidateQueries({ queryKey: [...qk.adminBlog] });
 	const failed = (error: unknown) => toast.error(error instanceof Error ? error.message : "Something went wrong");
 
 	const save = useMutation({

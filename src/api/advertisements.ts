@@ -1,5 +1,4 @@
-import { baseUrl } from "@/config/config";
-import { apiDelete, apiGet, apiPost, apiPut } from "@/lib/api-client";
+import { apiDelete, apiGet, apiPost, apiPut, publicGet, unwrap } from "@/lib/api-client";
 import {
   Advertisement,
   AdvertisementInput,
@@ -16,13 +15,8 @@ export async function getAdvertisementTypes(
   page: number = 0,
   size: number = 10
 ): Promise<AdvertisementTypesResponse> {
-  const response = await fetch(
-    `${baseUrl}/advertisement-types?page=${page}&size=${size}`
-  );
-  if (!response.ok) {
-    throw new Error("Failed to fetch advertisement types");
-  }
-  return response.json();
+  const data = await publicGet(`/advertisement-types?page=${page}&size=${size}`);
+	return data;
 }
 
 export async function getAdvertisements(
@@ -38,11 +32,6 @@ export async function getAdvertisements(
 }
 
 // ---- Writes (need the create/update/delete-advertisement[-type] permissions) ----
-
-const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
-  if (!response.ok) throw new Error(response.error || fallback);
-  return response.data as T;
-};
 
 export const createAdvertisementType = async (input: AdvertisementTypeInput) =>
   unwrap<AdvertisementType>(

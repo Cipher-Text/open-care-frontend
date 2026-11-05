@@ -1,4 +1,4 @@
-import { apiGet, apiPatch, apiPost, buildUrl } from "@/lib/api-client";
+import { apiGet, apiPatch, apiPost, buildUrl, unwrap } from "@/lib/api-client";
 
 export type PlanAudience = "DOCTOR" | "HOSPITAL" | "CLINIC" | "PATIENT";
 export type PlanTier = "FREE" | "PLUS" | "PRO";
@@ -15,11 +15,6 @@ export interface Subscription {
 	cancelledAt: string | null;
 	assignedBy: string | null;
 }
-
-const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
-	if (!response.ok) throw new Error(response.error || fallback);
-	return response.data as T;
-};
 
 /** A subject's plans, newest first. Needs `manage-subscriptions`. */
 export const fetchSubscriptionHistory = async (audience: PlanAudience, subjectId: number) =>

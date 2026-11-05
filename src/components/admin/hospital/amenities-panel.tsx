@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -168,7 +169,7 @@ export function AmenitiesPanel({ hospitalId, amenities }: { hospitalId: number; 
 	const [editing, setEditing] = useState<HospitalAmenity | null>(null);
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [deleting, setDeleting] = useState<HospitalAmenity | null>(null);
-	const refresh = () => queryClient.invalidateQueries({ queryKey: ["hospital-details", hospitalId] });
+	const refresh = () => queryClient.invalidateQueries({ queryKey: [...qk.hospitalDetails, hospitalId] });
 
 	const remove = useMutation({
 		mutationFn: (a: HospitalAmenity) => deleteAmenity(hospitalId, a.id),

@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import { fetchInstitutionById } from "@/api/institutions";
@@ -24,7 +25,7 @@ export default function InstitutionViewPage() {
 		isError,
 		error,
 	} = useQuery<Institution>({
-		queryKey: ["institution", institutionId],
+		queryKey: [...qk.institution, institutionId],
 		queryFn: () => fetchInstitutionById(institutionId),
 		enabled: !!institutionId,
 	});

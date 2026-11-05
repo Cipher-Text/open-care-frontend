@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { qk } from "@/lib/query-keys";
+import { problemText } from "@/lib/api-error";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
@@ -88,17 +90,17 @@ export function AddDoctorDegreeModal({
 
 	// Fetch dropdowns data
 	const { data: degrees = [] } = useQuery({
-		queryKey: ["degrees"],
+		queryKey: [...qk.degrees],
 		queryFn: fetchDegrees,
 	});
 
 	const { data: institutions = [] } = useQuery({
-		queryKey: ["institutions-all"],
+		queryKey: [...qk.institutionsAll],
 		queryFn: fetchAllInstitutions,
 	});
 
 	const { data: specialities = [] } = useQuery({
-		queryKey: ["specialities-all"],
+		queryKey: [...qk.specialitiesAll],
 		queryFn: fetchAllMedicalSpecialities,
 	});
 
@@ -179,7 +181,7 @@ export function AddDoctorDegreeModal({
 			}
 		} catch (error) {
 			console.error("Error adding degrees:", error);
-			toast.error("Failed to add degrees. Please try again.");
+			toast.error(problemText(error, "Failed to add degrees. Please try again."));
 		} finally {
 			setIsLoading(false);
 		}

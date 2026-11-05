@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchVerificationQueue, fetchVerificationStats } from "@/api/verification";
@@ -21,8 +22,8 @@ export default function VerificationQueuePage() {
 	const [type, setType] = useState<VerificationSubject | "">("");
 	const [status, setStatus] = useState<VerificationStatus | "">("PENDING");
 	const [page, setPage] = useState(1);
-	const queue = useQuery({ queryKey: ["verification-queue", type, status, page], queryFn: () => fetchVerificationQueue({ page, size: PAGE_SIZE, type, status }), placeholderData: (previous) => previous });
-	const stats = useQuery({ queryKey: ["verification-stats"], queryFn: fetchVerificationStats, retry: false });
+	const queue = useQuery({ queryKey: [...qk.verificationQueue, type, status, page], queryFn: () => fetchVerificationQueue({ page, size: PAGE_SIZE, type, status }), placeholderData: (previous) => previous });
+	const stats = useQuery({ queryKey: [...qk.verificationStats], queryFn: fetchVerificationStats, retry: false });
 
 	const waiting = (stats.data?.counts ?? []).filter((c) => c.status === "PENDING" || c.status === "UNDER_REVIEW").reduce((sum, c) => sum + c.total, 0);
 

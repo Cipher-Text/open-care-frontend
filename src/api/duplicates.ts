@@ -1,4 +1,4 @@
-import { apiDelete, apiGet, buildUrl } from "@/lib/api-client";
+import { apiDelete, apiGet, buildUrl, unwrap } from "@/lib/api-client";
 import { normalizePage, toWirePage, type WirePage } from "@/lib/pagination";
 import type { PageResult } from "@/types/common";
 
@@ -26,11 +26,6 @@ export interface DuplicateGroup {
 	size: number;
 	members: DuplicateCandidate[];
 }
-
-const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
-	if (!response.ok) throw new Error(response.error || fallback);
-	return response.data as T;
-};
 
 /** Records that look like the one described (name of 3 letters or more and/or a registration number). */
 export const checkDuplicates = async (q: { type: DuplicateKind; name?: string; districtId?: string | number; number?: string; excludeId?: number }): Promise<DuplicateCandidate[]> =>

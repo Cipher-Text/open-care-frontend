@@ -1,5 +1,5 @@
+import { publicGet } from "@/lib/api-client";
 import { normalizePage, withWirePage } from "@/lib/pagination";
-import { baseUrl } from "@/config/config";
 import {
 	MedicalSpecialitiesListResponse,
 	MedicalSpeciality,
@@ -26,51 +26,19 @@ export const fetchMedicalSpecialities = async (
 	params: QueryParams
 ): Promise<MedicalSpecialitiesListResponse> => {
 	const queryString = buildQueryString(withWirePage(params));
-	const response = await fetch(
-		`${baseUrl}/medical-specialities?${queryString}`,
-		{
-			method: "GET",
-		}
-	);
-
-	if (!response.ok) {
-		throw new Error(
-			`Failed to fetch medical specialities: ${response.status} ${response.statusText}`
-		);
-	}
-
-	const data = await response.json();
+	const data = await publicGet(`/medical-specialities?${queryString}`);
 	return normalizePage(data);
 };
 export const fetchMedicalSpecialityById = async (
 	id: number
 ): Promise<MedicalSpeciality> => {
-	const response = await fetch(`${baseUrl}/medical-specialities/${id}`, {
-		method: "GET",
-	});
-
-	if (!response.ok) {
-		throw new Error(
-			`Failed to fetch medical speciality: ${response.status} ${response.statusText}`
-		);
-	}
-
-	return response.json();
+	const data = await publicGet(`/medical-specialities/${id}`);
+	return data;
 };
 
 export const fetchAllMedicalSpecialities = async (): Promise<
 	MedicalSpeciality[]
 > => {
-	const response = await fetch(`${baseUrl}/medical-specialities/all`, {
-		method: "GET",
-	});
-
-	if (!response.ok) {
-		throw new Error(
-			`Failed to fetch medical specialities: ${response.status} ${response.statusText}`
-		);
-	}
-
-	const data = await response.json();
+	const data = await publicGet(`/medical-specialities/all`);
 	return Array.isArray(data) ? data : [];
 };

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { qk } from "@/lib/query-keys";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { Activity, LogOut, User } from "lucide-react";
@@ -29,7 +30,7 @@ function initials(name: string): string {
  */
 export function UserMenu() {
   const { data: profile } = useQuery({
-    queryKey: ["self-profile"],
+    queryKey: [...qk.selfProfile],
     queryFn: getSelfProfile,
     staleTime: 5 * 60 * 1000,
     retry: false,

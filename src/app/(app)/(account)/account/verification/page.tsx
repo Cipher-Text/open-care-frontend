@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { BadgeCheck } from "lucide-react";
@@ -15,7 +16,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 /** Asking to be verified: a doctor for their own record, or a person claiming a facility. */
 export default function VerificationPage() {
 	const router = useRouter();
-	const mine = useQuery({ queryKey: ["my-verifications"], queryFn: fetchMyVerifications, retry: false });
+	const mine = useQuery({ queryKey: [...qk.myVerifications], queryFn: fetchMyVerifications, retry: false });
 	const start = useMutation({
 		mutationFn: startDoctorVerification,
 		onSuccess: (created) => router.push(`/account/verification/${created.id}`),

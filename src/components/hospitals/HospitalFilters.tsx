@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { qk } from "@/lib/query-keys";
 import { useLocale, useTranslations } from "next-intl";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -25,17 +26,17 @@ export default function HospitalFilters() {
 	const { get, set, clear, hasFilters } = useUrlParams();
 
 	const districts = useQuery({
-		queryKey: ["districts"],
+		queryKey: [...qk.districts],
 		queryFn: fetchDistrictOptions,
 		...STATIC,
 	});
 	const types = useQuery({
-		queryKey: ["hospital-types"],
+		queryKey: [...qk.hospitalTypes],
 		queryFn: fetchHospitalTypeOptions,
 		...STATIC,
 	});
 	const orgs = useQuery({
-		queryKey: ["organization-types"],
+		queryKey: [...qk.organizationTypes],
 		queryFn: fetchOrganizationTypeOptions,
 		...STATIC,
 	});

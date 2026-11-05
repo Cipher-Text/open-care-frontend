@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { fetchMyDataAccess, fetchMyDonorViews, type DataAccessKind, type DonorView } from "@/api/data-access";
 import { getSelfProfile } from "@/api/profile";
@@ -29,8 +30,8 @@ const SHOWN: Record<DonorView["contactShown"], string> = {
 /** For a blood donor: who opened the donor list and saw this person's listing. Shown to donors, and to anyone who has been looked at. */
 function DonorViews() {
 	const [page, setPage] = useState(1);
-	const profile = useQuery({ queryKey: ["self-profile"], queryFn: getSelfProfile, staleTime: 5 * 60 * 1000, retry: false });
-	const views = useQuery({ queryKey: ["my-donor-views", page], queryFn: () => fetchMyDonorViews(page, 20), retry: false, placeholderData: (previous) => previous });
+	const profile = useQuery({ queryKey: [...qk.selfProfile], queryFn: getSelfProfile, staleTime: 5 * 60 * 1000, retry: false });
+	const views = useQuery({ queryKey: [...qk.myDonorViews, page], queryFn: () => fetchMyDonorViews(page, 20), retry: false, placeholderData: (previous) => previous });
 	const rows = views.data?.content ?? [];
 	const totalPages = views.data?.totalPages ?? 0;
 	// Nothing to say to someone who is not a donor and was never looked at
@@ -81,7 +82,7 @@ function DonorViews() {
 /** Who opened this person's sensitive data. Using your own data is never listed. */
 export default function MyDataAccessPage() {
 	const [page, setPage] = useState(1);
-	const list = useQuery({ queryKey: ["my-data-access", page], queryFn: () => fetchMyDataAccess(page, 20), retry: false, placeholderData: (previous) => previous });
+	const list = useQuery({ queryKey: [...qk.myDataAccess, page], queryFn: () => fetchMyDataAccess(page, 20), retry: false, placeholderData: (previous) => previous });
 	const rows = list.data?.content ?? [];
 	const totalPages = list.data?.totalPages ?? 0;
 

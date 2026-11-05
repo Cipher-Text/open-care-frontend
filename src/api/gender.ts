@@ -1,16 +1,7 @@
-import { baseUrl } from "@/config/config";
+import { publicGet } from "@/lib/api-client";
 import { GenderResponse } from "@/types/gender";
 
 export const fetchGenders = async (): Promise<GenderResponse> => {
-  const response = await fetch(`${baseUrl}/gender`, {
-    method: "GET",
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch genders: ${response.status} ${response.statusText}`
-    );
-  }
-
-  return response.json();
+  const data = await publicGet(`/gender`);
+	return data;
 };

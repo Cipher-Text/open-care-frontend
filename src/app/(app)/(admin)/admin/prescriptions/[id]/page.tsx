@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -22,7 +23,7 @@ export default function PrescriptionPage() {
 	const queryClient = useQueryClient();
 	const [voiding, setVoiding] = useState(false);
 	const { data, isLoading, isError, error } = useQuery({
-		queryKey: ["prescription", id],
+		queryKey: [...qk.prescription, id],
 		queryFn: () => fetchPrescription(id),
 		retry: false,
 	});
@@ -98,7 +99,7 @@ export default function PrescriptionPage() {
 						</AlertDescription>
 					</Alert>
 				)}
-				{data && <VoidPrescriptionDialog id={data.id} number={data.prescriptionNo} open={voiding} onClose={() => setVoiding(false)} onVoided={() => void queryClient.invalidateQueries({ queryKey: ["prescription", id] })} />}
+				{data && <VoidPrescriptionDialog id={data.id} number={data.prescriptionNo} open={voiding} onClose={() => setVoiding(false)} onVoided={() => void queryClient.invalidateQueries({ queryKey: [...qk.prescription, id] })} />}
 				{data && <PrescriptionDocument prescription={data} />}
 				{data && <PrescriptionHistory prescription={data} />}
 			</div>

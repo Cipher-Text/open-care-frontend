@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchOwnerStats, type OwnerSubject } from "@/api/owner-stats";
@@ -93,7 +94,7 @@ function SubjectCard({ subject, days }: { subject: OwnerSubject; days: number })
 /** How the public used the signed-in person's own pages: views, calls and directions. */
 export default function MyFiguresPage() {
 	const [days, setDays] = useState(30);
-	const stats = useQuery({ queryKey: ["owner-stats", days], queryFn: () => fetchOwnerStats(days), retry: false });
+	const stats = useQuery({ queryKey: [...qk.ownerStats, days], queryFn: () => fetchOwnerStats(days), retry: false });
 
 	return (
 		<div className="flex flex-col">

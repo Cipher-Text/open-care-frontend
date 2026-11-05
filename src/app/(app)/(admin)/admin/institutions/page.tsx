@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
@@ -26,7 +27,7 @@ export default function InstitutionsPage() {
     isError,
     error,
   } = useQuery<InstitutionListResponse>({
-    queryKey: ["institutions", currentPage],
+    queryKey: [...qk.institutions, currentPage],
     queryFn: () =>
       fetchInstitutions({
         page: currentPage,

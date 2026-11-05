@@ -1,4 +1,4 @@
-import { apiGet, apiPatch, apiPost, buildUrl } from "@/lib/api-client";
+import { apiGet, apiPatch, apiPost, buildUrl, unwrap } from "@/lib/api-client";
 import { slotListShape, verified } from "@/lib/api-shapes";
 import { normalizePage, toWirePage, type WirePage } from "@/lib/pagination";
 import type { PageResult } from "@/types/common";
@@ -39,11 +39,6 @@ export interface Appointment {
 	heldUntil: string | null;
 	createdAt: string;
 }
-
-const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
-	if (!response.ok) throw new Error(response.error || fallback);
-	return response.data as T;
-};
 
 /** The free slots of a verified doctor; public. */
 export const fetchSlots = async (doctorId: number | string, days = 14): Promise<SlotList> => {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import { fetchHospitalDetailsById } from "@/api/hospitals";
@@ -28,7 +29,7 @@ export default function HospitalViewPage() {
 		isError,
 		error,
 	} = useQuery<HospitalDetailsResponse>({
-		queryKey: ["hospital-details", hospitalId],
+		queryKey: [...qk.hospitalDetails, hospitalId],
 		queryFn: () => fetchHospitalDetailsById(hospitalId),
 		enabled: !!hospitalId,
 	});

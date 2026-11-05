@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { FileText, HeartPulse, ShieldCheck, UserCircle } from "lucide-react";
 import { fetchPendingConsents } from "@/api/consents";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function AccountHomePage() {
-	const pending = useQuery({ queryKey: ["my-pending-consents"], queryFn: fetchPendingConsents, refetchInterval: 15_000 });
+	const pending = useQuery({ queryKey: [...qk.myPendingConsents], queryFn: fetchPendingConsents, refetchInterval: 15_000 });
 	const waiting = pending.data?.length ?? 0;
 
 	return (

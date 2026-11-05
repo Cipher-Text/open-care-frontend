@@ -1,12 +1,7 @@
-import { apiGet, apiPost, buildUrl } from "@/lib/api-client";
+import { apiGet, apiPost, buildUrl, unwrap } from "@/lib/api-client";
 import { normalizePage, toWirePage, type WirePage } from "@/lib/pagination";
 import type { PageResult } from "@/types/common";
 import type { RegisterCheckResult, VerificationCase, VerificationStats, VerificationStatus, VerificationSubject } from "@/types/verification";
-
-const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
-	if (!response.ok) throw new Error(response.error || fallback);
-	return response.data as T;
-};
 
 // ---- the person asking
 

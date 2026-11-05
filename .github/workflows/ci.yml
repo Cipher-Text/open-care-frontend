@@ -29,6 +29,10 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      # The generated API types must match the OpenAPI snapshot; the contract in src/types/api-contract.ts is checked by the build
+      - name: API types match the snapshot
+        run: npm run api:check
+
       - name: Test
         run: npm run test:nav && npm run test:i18n && npm run test:pricing && npm run test:bff && npm run test:vitals && npm run test:url && npm run test:blood && npm run test:void && npm run test:trend && npm run test:profile && npm run test:cover && npm run test:consent && npm run test:csp && npm run test:dupes && npm run test:bulk && npm run test:shapes
 

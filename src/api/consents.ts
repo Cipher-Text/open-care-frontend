@@ -1,4 +1,4 @@
-import { apiGet, apiPost, buildUrl } from "@/lib/api-client";
+import { apiGet, apiPost, buildUrl, unwrap } from "@/lib/api-client";
 import { consentRequestShape, patientLookupShape, verified } from "@/lib/api-shapes";
 import type {
 	ConsentRequest,
@@ -7,11 +7,6 @@ import type {
 	PatientGrantView,
 	PatientLookup,
 } from "@/types/consents";
-
-const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
-	if (!response.ok) throw new Error(response.error || fallback);
-	return response.data as T;
-};
 
 // ---- Doctor: ask a registered patient for consent before prescribing ----
 

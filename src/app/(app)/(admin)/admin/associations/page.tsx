@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
@@ -32,7 +33,7 @@ export default function AssociationsPage() {
     isError,
     error,
   } = useQuery<AssociationsListResponse>({
-    queryKey: ["associations", currentPage, filters],
+    queryKey: [...qk.associations, currentPage, filters],
     queryFn: () =>
       fetchAssociations({
         page: currentPage, // 1-based; fetcher converts for the API

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
@@ -37,7 +38,7 @@ export default function HospitalsPage() {
 		isError,
 		error,
 	} = useQuery<HospitalListResponse>({
-		queryKey: ["hospitals", currentPage, filters, status],
+		queryKey: [...qk.hospitals, currentPage, filters, status],
 		queryFn: () =>
 			fetchHospitals({
 				page: currentPage,
@@ -52,7 +53,7 @@ export default function HospitalsPage() {
 
 	// Fetch upazilas for filter dropdown (reference data, cached for an hour)
 	const { data: upazilas = [], isLoading: isUpazilasLoading } = useQuery({
-		queryKey: ["upazilas"],
+		queryKey: [...qk.upazilas],
 		queryFn: fetchUpazilas,
 		staleTime: 60 * 60 * 1000,
 	});
@@ -60,7 +61,7 @@ export default function HospitalsPage() {
 	// Unions are only needed for the upazila picked in the filter: one request when chosen,
 	// not one per upazila (that was ~500 requests per page visit and tripped the rate limit)
 	const { data: unions = [], isLoading: isUnionsLoading } = useQuery({
-		queryKey: ["unions", filters.upazilaId],
+		queryKey: [...qk.unions, filters.upazilaId],
 		queryFn: () => fetchUnionsByUpazila(Number(filters.upazilaId)),
 		enabled: !!filters.upazilaId && filters.upazilaId !== "all",
 		staleTime: 60 * 60 * 1000,

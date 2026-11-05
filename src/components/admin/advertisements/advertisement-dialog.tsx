@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { qk } from "@/lib/query-keys";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -83,11 +84,11 @@ export function AdvertisementDialog({
 }) {
 	const editing = !!advertisement;
 
-	const types = useQuery({ queryKey: ["advertisement-types-all"], queryFn: getAllAdvertisementTypes, enabled: open });
-	const ageGroups = useQuery({ queryKey: ["age-groups"], queryFn: getAgeGroups, enabled: open });
-	const genders = useQuery({ queryKey: ["gender-options"], queryFn: getGenderOptions, enabled: open });
-	const districts = useQuery({ queryKey: ["districts"], queryFn: fetchDistricts, enabled: open });
-	const specialities = useQuery({ queryKey: ["specialities-all"], queryFn: fetchAllMedicalSpecialities, enabled: open });
+	const types = useQuery({ queryKey: [...qk.advertisementTypesAll], queryFn: getAllAdvertisementTypes, enabled: open });
+	const ageGroups = useQuery({ queryKey: [...qk.ageGroups], queryFn: getAgeGroups, enabled: open });
+	const genders = useQuery({ queryKey: [...qk.genderOptions], queryFn: getGenderOptions, enabled: open });
+	const districts = useQuery({ queryKey: [...qk.districts], queryFn: fetchDistricts, enabled: open });
+	const specialities = useQuery({ queryKey: [...qk.specialitiesAll], queryFn: fetchAllMedicalSpecialities, enabled: open });
 
 	const form = useForm<AdvertisementFormData>({
 		resolver: zodResolver(advertisementSchema),
@@ -98,7 +99,7 @@ export function AdvertisementDialog({
 
 	const districtId = watch("districtId");
 	const upazilas = useQuery({
-		queryKey: ["upazilas-by-district", districtId],
+		queryKey: [...qk.upazilasByDistrict, districtId],
 		queryFn: () => fetchUpazilasByDistrict(Number(districtId)),
 		enabled: open && districtId !== "",
 	});

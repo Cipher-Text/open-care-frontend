@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { qk } from "@/lib/query-keys";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useParams } from "next/navigation";
@@ -112,19 +113,19 @@ export default function HospitalFormPage() {
 
   // Fetch districts
   const { data: districts = [], isLoading: isDistrictsLoading } = useQuery({
-    queryKey: ["districts"],
+    queryKey: [...qk.districts],
     queryFn: fetchDistricts,
   });
 
   // Fetch upazilas
   const { data: upazilas = [], isLoading: isUpazilasLoading } = useQuery({
-    queryKey: ["upazilas"],
+    queryKey: [...qk.upazilas],
     queryFn: fetchUpazilas,
   });
 
   // Fetch unions when upazila is selected
   const { data: unions = [], isLoading: isUnionsLoading } = useQuery({
-    queryKey: ["unions", selectedUpazilaId],
+    queryKey: [...qk.unions, selectedUpazilaId],
     queryFn: () => fetchUnionsByUpazila(selectedUpazilaId!),
     enabled: !!selectedUpazilaId,
   });
@@ -132,7 +133,7 @@ export default function HospitalFormPage() {
   // Fetch hospital types
   const { data: hospitalTypes = [], isLoading: isHospitalTypesLoading } =
     useQuery({
-      queryKey: ["hospital-types"],
+      queryKey: [...qk.hospitalTypes],
       queryFn: fetchHospitalTypes,
     });
 
@@ -141,7 +142,7 @@ export default function HospitalFormPage() {
     data: organizationTypes = [],
     isLoading: isOrganizationTypesLoading,
   } = useQuery({
-    queryKey: ["organization-types"],
+    queryKey: [...qk.organizationTypes],
     queryFn: fetchOrganizationTypes,
   });
 
@@ -181,7 +182,7 @@ export default function HospitalFormPage() {
     isLoading: isHospitalLoading,
     isError: isHospitalError,
   } = useQuery<Hospital>({
-    queryKey: ["hospital", hospitalId],
+    queryKey: [...qk.hospital, hospitalId],
     queryFn: () => fetchHospitalById(hospitalId!),
     enabled: isEditing,
   });
@@ -308,7 +309,7 @@ export default function HospitalFormPage() {
       }
 
       // Invalidate and refetch the hospitals list
-      queryClient.invalidateQueries({ queryKey: ["hospitals"] });
+      queryClient.invalidateQueries({ queryKey: [...qk.hospitals] });
 
       // Navigate back to hospitals list
       router.push("/admin/hospitals");

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -24,12 +25,12 @@ const STATUS: Record<ReviewStatus, string> = {
 export default function MyReviewsPage() {
 	const queryClient = useQueryClient();
 	const [page, setPage] = useState(1);
-	const list = useQuery({ queryKey: ["my-reviews", page], queryFn: () => fetchMyReviews(page, 20), retry: false, placeholderData: (previous) => previous });
+	const list = useQuery({ queryKey: [...qk.myReviews, page], queryFn: () => fetchMyReviews(page, 20), retry: false, placeholderData: (previous) => previous });
 	const remove = useMutation({
 		mutationFn: (id: number) => removeReview(id),
 		onSuccess: () => {
 			toast.success("Review removed");
-			void queryClient.invalidateQueries({ queryKey: ["my-reviews"] });
+			void queryClient.invalidateQueries({ queryKey: [...qk.myReviews] });
 		},
 		onError: (error) => toast.error(error instanceof Error ? error.message : "Could not remove"),
 	});

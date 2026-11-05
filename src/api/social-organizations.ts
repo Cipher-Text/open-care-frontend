@@ -1,9 +1,9 @@
+import { publicGet } from "@/lib/api-client";
 import { normalizePage, toWirePage } from "@/lib/pagination";
 import {
   SocialOrganizationsListResponse,
   SocialOrganization,
 } from "@/types/social-organizations";
-import { baseUrl } from "@/config/config";
 
 interface FetchSocialOrganizationsParams {
   page: number;
@@ -31,27 +31,13 @@ export async function fetchSocialOrganizations({
     params.append("name", name);
   }
 
-  const response = await fetch(`${baseUrl}/social-organization?${params}`);
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch social organizations");
-  }
-
-  return normalizePage(await response.json());
+  const data = await publicGet(`/social-organization?${params}`);
+	return normalizePage(data);
 }
 
 export async function fetchSocialOrganizationById(
   id: string
 ): Promise<SocialOrganization> {
-  const response = await fetch(`${baseUrl}/social-organization/${id}`, {
-    method: "GET",
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch social organization: ${response.status} ${response.statusText}`
-    );
-  }
-
-  return response.json();
+  const data = await publicGet(`/social-organization/${id}`);
+	return data;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -40,8 +41,8 @@ function CandidateTable({ rows }: { rows: DuplicateCandidate[] }) {
 		mutationFn: (c: DuplicateCandidate) => deleteDuplicate(c.type, c.id),
 		onSuccess: (kept, c) => {
 			toast.success(`Deleted ${c.name || `record ${c.id}`}. The other one (${kept.name || `record ${kept.id}`}) stays.`);
-			void queryClient.invalidateQueries({ queryKey: ["duplicates-check"] });
-			void queryClient.invalidateQueries({ queryKey: ["duplicate-groups"] });
+			void queryClient.invalidateQueries({ queryKey: [...qk.duplicatesCheck] });
+			void queryClient.invalidateQueries({ queryKey: [...qk.duplicateGroups] });
 		},
 		onError: (error) => toast.error(error instanceof Error ? error.message : "Could not delete the record"),
 	});
@@ -102,7 +103,7 @@ export default function DuplicatesPage() {
 	const [kind, setKind] = useState<DuplicateKind | "">("");
 	const type = (kind || kinds[0]) as DuplicateKind | undefined;
 
-	const districts = useQuery({ queryKey: ["districts"], queryFn: fetchDistricts, staleTime: 3_600_000 });
+	const districts = useQuery({ queryKey: [...qk.districts], queryFn: fetchDistricts, staleTime: 3_600_000 });
 
 	// look for a record
 	const [name, setName] = useState("");
@@ -110,7 +111,7 @@ export default function DuplicatesPage() {
 	const [districtId, setDistrictId] = useState("");
 	const [submitted, setSubmitted] = useState<{ type: DuplicateKind; name: string; number: string; districtId: string } | null>(null);
 	const result = useQuery({
-		queryKey: ["duplicates-check", submitted],
+		queryKey: [...qk.duplicatesCheck, submitted],
 		queryFn: () => checkDuplicates({ type: submitted!.type, name: submitted!.name, number: submitted!.number, districtId: submitted!.districtId }),
 		enabled: submitted !== null,
 		retry: false,
@@ -121,7 +122,7 @@ export default function DuplicatesPage() {
 	const [groupDistrict, setGroupDistrict] = useState("");
 	const [page, setPage] = useState(1);
 	const groups = useQuery({
-		queryKey: ["duplicate-groups", type, by, groupDistrict, page],
+		queryKey: [...qk.duplicateGroups, type, by, groupDistrict, page],
 		queryFn: () => fetchDuplicateGroups({ type: type!, by: type === "AMBULANCE" ? "NUMBER" : by, districtId: groupDistrict, page, size: 10 }),
 		enabled: tab === "groups" && !!type,
 		retry: false,

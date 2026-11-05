@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -19,10 +20,10 @@ const PAGE_SIZE = 20;
 export default function EnquiriesPage() {
 	const queryClient = useQueryClient();
 	const [page, setPage] = useState(1);
-	const list = useQuery({ queryKey: ["enquiries", page], queryFn: () => fetchEnquiries(page, PAGE_SIZE), retry: false, placeholderData: (previous) => previous });
+	const list = useQuery({ queryKey: [...qk.enquiries, page], queryFn: () => fetchEnquiries(page, PAGE_SIZE), retry: false, placeholderData: (previous) => previous });
 	const handled = useMutation({
 		mutationFn: (id: number) => markEnquiryHandled(id),
-		onSuccess: () => void queryClient.invalidateQueries({ queryKey: ["enquiries"] }),
+		onSuccess: () => void queryClient.invalidateQueries({ queryKey: [...qk.enquiries] }),
 		onError: (error) => toast.error(error instanceof Error ? error.message : "Could not mark it handled"),
 	});
 

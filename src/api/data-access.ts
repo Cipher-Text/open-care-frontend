@@ -1,4 +1,4 @@
-import { apiGet, buildUrl } from "@/lib/api-client";
+import { apiGet, buildUrl, unwrap } from "@/lib/api-client";
 import { normalizePage, toWirePage, type WirePage } from "@/lib/pagination";
 import type { PageResult } from "@/types/common";
 
@@ -17,11 +17,6 @@ export interface DataAccess {
 	subjectName: string | null;
 	date: string;
 }
-
-const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
-	if (!response.ok) throw new Error(response.error || fallback);
-	return response.data as T;
-};
 
 /** Other people's accesses to the signed-in person's own data. */
 export const fetchMyDataAccess = async (page: number, size: number): Promise<PageResult<DataAccess>> =>

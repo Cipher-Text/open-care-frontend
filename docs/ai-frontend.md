@@ -35,6 +35,14 @@ Depends on: docs/ai-context.md (constitution). If conflict, ai-context.md wins.
 - Use typed DTOs/interfaces matching backend contracts.
 - Handle loading/error/empty states for every list page.
 - Never guess endpoints: search repo or require explicit API contract.
+- In this repo (November 5, 2026):
+  - Every browser call goes through `lib/api-client.ts` (`apiGet`, `apiPost`, …;
+    `publicGet` for a public read; `unwrap` for the data). No bare `fetch` in
+    `src/api/` except `auth.ts`, which runs on the server.
+  - Cache keys come from `lib/query-keys.ts` (`[...qk.hospitals, page]`); add a
+    name there before using it.
+  - Show staff the server's reason with `problemText(error, fallback)`
+    (`lib/api-error.ts`), never a bare "Please try again".
 
 ## 5) Auth & Session Handling
 
@@ -87,6 +95,9 @@ Depends on: docs/ai-context.md (constitution). If conflict, ai-context.md wins.
 ## 10) UI & API Contract Discipline
 
 - Do not rename fields coming from backend; map them at the boundary if needed.
+- A new response type a screen reads gets a line in `src/types/api-contract.ts`;
+  the build fails when it names a field the backend does not send. Refresh the
+  snapshot with `npm run api:snapshot` (running backend) and `npm run api:types`.
 - Keep date/time formatting consistent.
 - Keep pagination/filter query params consistent across pages.
 

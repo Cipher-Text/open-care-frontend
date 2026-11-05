@@ -1,4 +1,4 @@
-import { apiDelete, apiGet, apiPatch, apiPost, buildUrl } from "@/lib/api-client";
+import { apiDelete, apiGet, apiPatch, apiPost, buildUrl, unwrap } from "@/lib/api-client";
 import { normalizePage, toWirePage, type WirePage } from "@/lib/pagination";
 import type { PageResult } from "@/types/common";
 import { HealthVitals } from "@/types/health-vitals";
@@ -37,11 +37,6 @@ export interface Reading extends ReadingInput {
   id: number;
   recordedAt: string;
 }
-
-const unwrap = <T,>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
-  if (!response.ok) throw new Error(response.error || fallback);
-  return response.data as T;
-};
 
 export const fetchMyReadings = async (page: number, size: number): Promise<PageResult<Reading>> =>
   normalizePage(unwrap<WirePage<Reading>>(await apiGet(buildUrl("/health-vitals/self", { page: toWirePage(page), size })), "Could not load your readings"));

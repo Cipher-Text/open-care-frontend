@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { addReading, changeReading, deleteReading, fetchMyReadings, type Reading, type ReadingInput } from "@/api/health-vitals";
@@ -85,12 +86,12 @@ export function HealthReadings({ onChanged }: { onChanged: () => void }) {
 	const [editing, setEditing] = useState<number | "new" | null>(null);
 	const [form, setForm] = useState<FormState>(empty());
 
-	const profile = useQuery({ queryKey: ["self-profile"], queryFn: getSelfProfile, retry: false });
+	const profile = useQuery({ queryKey: [...qk.selfProfile], queryFn: getSelfProfile, retry: false });
 	const consented = profile.data?.healthDataConsent === true;
-	const list = useQuery({ queryKey: ["my-readings", page], queryFn: () => fetchMyReadings(page, PAGE_SIZE), retry: false, placeholderData: (previous) => previous });
+	const list = useQuery({ queryKey: [...qk.myReadings, page], queryFn: () => fetchMyReadings(page, PAGE_SIZE), retry: false, placeholderData: (previous) => previous });
 
 	const refresh = () => {
-		void queryClient.invalidateQueries({ queryKey: ["my-readings"] });
+		void queryClient.invalidateQueries({ queryKey: [...qk.myReadings] });
 		onChanged();
 	};
 
@@ -98,7 +99,7 @@ export function HealthReadings({ onChanged }: { onChanged: () => void }) {
 		mutationFn: () => updateHealthDataConsent(true),
 		onSuccess: () => {
 			toast.success("Thank you. You can now save readings.");
-			void queryClient.invalidateQueries({ queryKey: ["self-profile"] });
+			void queryClient.invalidateQueries({ queryKey: [...qk.selfProfile] });
 		},
 		onError: (error) => toast.error(error instanceof Error ? error.message : "Could not save your choice"),
 	});

@@ -1,6 +1,7 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { qk } from "@/lib/query-keys";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -20,11 +21,11 @@ export default function AmbulancesDirectory() {
 	const { get, set, clear, hasFilters } = useUrlParams();
 	const page = parsePage(get("page"));
 
-	const districts = useQuery({ queryKey: ["districts"], queryFn: fetchDistrictOptions });
-	const types = useQuery({ queryKey: ["ambulance-types"], queryFn: fetchAmbulanceTypeOptions });
+	const districts = useQuery({ queryKey: [...qk.districts], queryFn: fetchDistrictOptions });
+	const types = useQuery({ queryKey: [...qk.ambulanceTypes], queryFn: fetchAmbulanceTypeOptions });
 
 	const query = useQuery({
-		queryKey: ["public-ambulances", get("district"), get("type"), get("available"), page],
+		queryKey: [...qk.publicAmbulances, get("district"), get("type"), get("available"), page],
 		queryFn: () =>
 			fetchPublicAmbulances({
 				districtId: get("district") || undefined,

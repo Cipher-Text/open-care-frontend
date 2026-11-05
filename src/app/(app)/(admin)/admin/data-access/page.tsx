@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { fetchDataAccess, type DataAccessKind } from "@/api/data-access";
 import { AdminHeader } from "@/components/admin/admin-header";
@@ -21,7 +22,7 @@ export default function DataAccessPage() {
 	const [actor, setActor] = useState("");
 	const [subject, setSubject] = useState("");
 	const [page, setPage] = useState(1);
-	const list = useQuery({ queryKey: ["data-access", kind, actor, subject, page], queryFn: () => fetchDataAccess({ kind, actor, subject, page, size: PAGE_SIZE }), retry: false, placeholderData: (previous) => previous });
+	const list = useQuery({ queryKey: [...qk.dataAccess, kind, actor, subject, page], queryFn: () => fetchDataAccess({ kind, actor, subject, page, size: PAGE_SIZE }), retry: false, placeholderData: (previous) => previous });
 	const rows = list.data?.content ?? [];
 	const totalPages = list.data?.totalPages ?? 0;
 	const number = (v: string) => v.replace(/\D/g, "");

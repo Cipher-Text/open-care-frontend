@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { decideReview, dismissReports, fetchModerationQueue } from "@/api/reviews";
@@ -19,10 +20,10 @@ export default function ReviewModerationPage() {
 	const queryClient = useQueryClient();
 	const [reported, setReported] = useState(false);
 	const [page, setPage] = useState(1);
-	const list = useQuery({ queryKey: ["review-moderation", reported, page], queryFn: () => fetchModerationQueue(reported, page, 20), retry: false, placeholderData: (previous) => previous });
+	const list = useQuery({ queryKey: [...qk.reviewModeration, reported, page], queryFn: () => fetchModerationQueue(reported, page, 20), retry: false, placeholderData: (previous) => previous });
 	const done = (message: string) => () => {
 		toast.success(message);
-		void queryClient.invalidateQueries({ queryKey: ["review-moderation"] });
+		void queryClient.invalidateQueries({ queryKey: [...qk.reviewModeration] });
 	};
 	const failed = (error: unknown) => toast.error(error instanceof Error ? error.message : "That did not work");
 	const publish = useMutation({ mutationFn: (id: number) => decideReview(id, "PUBLISHED"), onSuccess: done("Published"), onError: failed });

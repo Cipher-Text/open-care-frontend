@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchMyPrescriptions } from "@/api/prescriptions";
@@ -16,7 +17,7 @@ const date = (value: string) => new Date(value).toLocaleDateString("en-GB", { da
 /** The prescriptions doctors wrote for the signed-in person. */
 export default function MyPrescriptionsPage() {
 	const [page, setPage] = useState(1);
-	const list = useQuery({ queryKey: ["my-prescriptions", page], queryFn: () => fetchMyPrescriptions(page, PAGE_SIZE), retry: false, placeholderData: (previous) => previous });
+	const list = useQuery({ queryKey: [...qk.myPrescriptions, page], queryFn: () => fetchMyPrescriptions(page, PAGE_SIZE), retry: false, placeholderData: (previous) => previous });
 	const rows = list.data?.content ?? [];
 	const totalPages = list.data?.totalPages ?? 0;
 

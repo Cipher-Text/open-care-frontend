@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { History } from "lucide-react";
 import { fetchRevisions } from "@/api/prescriptions";
@@ -15,7 +16,7 @@ const dateTime = (value: string) => new Date(value).toLocaleString("en-GB", { da
  */
 export function PrescriptionHistory({ prescription }: { prescription: Prescription }) {
 	const revisions = useQuery({
-		queryKey: ["prescription-revisions", prescription.id],
+		queryKey: [...qk.prescriptionRevisions, prescription.id],
 		queryFn: () => fetchRevisions(prescription.id),
 		retry: false,
 	});

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -55,7 +56,7 @@ function TestDialog({
 	const { errors } = formState;
 
 	const catalogue = useQuery({
-		queryKey: ["medical-test-catalogue", search],
+		queryKey: [...qk.medicalTestCatalogue, search],
 		queryFn: () => fetchMedicalTests({ page: 1, size: 30, name: search || undefined }),
 		enabled: open && !test,
 		staleTime: 60_000,
@@ -185,7 +186,7 @@ export function MedicalTestsPanel({ hospitalId, tests }: { hospitalId: number; t
 	const [editing, setEditing] = useState<HospitalTest | null>(null);
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [deleting, setDeleting] = useState<HospitalTest | null>(null);
-	const refresh = () => queryClient.invalidateQueries({ queryKey: ["hospital-details", hospitalId] });
+	const refresh = () => queryClient.invalidateQueries({ queryKey: [...qk.hospitalDetails, hospitalId] });
 
 	const remove = useMutation({
 		mutationFn: (t: HospitalTest) => deleteHospitalTest(hospitalId, t.id),

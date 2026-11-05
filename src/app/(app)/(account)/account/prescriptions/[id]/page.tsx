@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Printer } from "lucide-react";
@@ -13,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 /** One of the signed-in person's own prescriptions, as it is printed. */
 export default function MyPrescriptionPage() {
 	const { id } = useParams<{ id: string }>();
-	const { data, isLoading, isError, error } = useQuery({ queryKey: ["my-prescription", id], queryFn: () => fetchMyPrescription(id), retry: false });
+	const { data, isLoading, isError, error } = useQuery({ queryKey: [...qk.myPrescription, id], queryFn: () => fetchMyPrescription(id), retry: false });
 
 	return (
 		<div className="space-y-4">

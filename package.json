@@ -23,7 +23,10 @@
 		"test:bulk": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/bulk-view.test.ts",
 		"test:csp": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/csp.test.ts",
 		"test:consent": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/lib/consent-text.test.ts",
-		"docs:access": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-access-matrix.ts"
+		"docs:access": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-access-matrix.ts",
+		"api:snapshot": "node scripts/api-snapshot.mjs",
+		"api:types": "openapi-typescript docs/openapi.json -o src/types/api.gen.ts",
+		"api:check": "openapi-typescript docs/openapi.json -o /tmp/api.gen.check.ts && diff -q src/types/api.gen.ts /tmp/api.gen.check.ts"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^5.2.1",
@@ -72,6 +75,7 @@
 		"@types/react-dom": "^19",
 		"eslint": "^9",
 		"eslint-config-next": "^15.5.28",
+		"openapi-typescript": "^7.4.4",
 		"tailwindcss": "^4",
 		"tw-animate-css": "^1.3.6",
 		"typescript": "^5"

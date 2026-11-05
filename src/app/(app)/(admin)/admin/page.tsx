@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Building2, FileText, HeartPulse, Stethoscope, Truck, Upload } from "lucide-react";
 import { fetchPendingConsents } from "@/api/consents";
@@ -47,12 +48,12 @@ export default function AdminHomePage() {
 		: [];
 
 	const counts = useQuery({
-		queryKey: ["dashboard-counts", countRows.map((r) => r.key).join(",")],
+		queryKey: [...qk.dashboardCounts, countRows.map((r) => r.key).join(",")],
 		queryFn: () => fetchCounts(countRows.map((r) => r.key)),
 		enabled: ready && countRows.length > 0,
 		staleTime: 60_000,
 	});
-	const pending = useQuery({ queryKey: ["my-pending-consents"], queryFn: fetchPendingConsents, enabled: ready, refetchInterval: 15_000 });
+	const pending = useQuery({ queryKey: [...qk.myPendingConsents], queryFn: fetchPendingConsents, enabled: ready, refetchInterval: 15_000 });
 	const waiting = pending.data?.length ?? 0;
 
 	return (

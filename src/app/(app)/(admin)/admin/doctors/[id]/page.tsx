@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { qk } from "@/lib/query-keys";
 import { useRouter, useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -76,13 +77,13 @@ function DoctorFormPageContent() {
 
 	// Fetch districts
 	const { data: districts = [], isLoading: isDistrictsLoading } = useQuery({
-		queryKey: ["districts"],
+		queryKey: [...qk.districts],
 		queryFn: fetchDistricts,
 	});
 
 	// Fetch upazilas
 	const { data: upazilas = [], isLoading: isUpazilasLoading } = useQuery({
-		queryKey: ["upazilas"],
+		queryKey: [...qk.upazilas],
 		queryFn: fetchUpazilas,
 	});
 
@@ -90,13 +91,13 @@ function DoctorFormPageContent() {
 	const { data: bloodGroups = [], isLoading: isBloodGroupsLoading } = useQuery<
 		BloodGroup[]
 	>({
-		queryKey: ["bloodGroups"],
+		queryKey: [...qk.bloodGroups],
 		queryFn: fetchBloodGroups,
 	});
 
 	// Fetch unions when upazila is selected
 	const { data: unions = [], isLoading: isUnionsLoading } = useQuery({
-		queryKey: ["unions", selectedUpazilaId],
+		queryKey: [...qk.unions, selectedUpazilaId],
 		queryFn: () => fetchUnionsByUpazila(selectedUpazilaId!),
 		enabled: !!selectedUpazilaId,
 	});
@@ -134,7 +135,7 @@ function DoctorFormPageContent() {
 		isLoading: isDoctorLoading,
 		isError: isDoctorError,
 	} = useQuery<Doctor>({
-		queryKey: ["doctor", doctorId],
+		queryKey: [...qk.doctor, doctorId],
 		queryFn: () => fetchDoctorById(doctorId!),
 		enabled: isEditing,
 	});
@@ -142,7 +143,7 @@ function DoctorFormPageContent() {
 	// Fetch doctor details (degrees) if editing
 	const { data: doctorDetails, isLoading: isDoctorDetailsLoading } =
 		useQuery<DoctorDetailsResponse>({
-			queryKey: ["doctor-details", doctorId],
+			queryKey: [...qk.doctorDetails, doctorId],
 			queryFn: () => fetchDoctorDetailsById(Number(doctorId)),
 			enabled: isEditing && Boolean(doctorId),
 		});
@@ -267,7 +268,7 @@ function DoctorFormPageContent() {
 			}
 
 			// Invalidate and refetch the doctors list
-			queryClient.invalidateQueries({ queryKey: ["doctors"] });
+			queryClient.invalidateQueries({ queryKey: [...qk.doctors] });
 
 			// Navigate back to doctors list
 			router.push("/admin/doctors");
@@ -951,10 +952,10 @@ function DoctorFormPageContent() {
 						onSuccess={() => {
 							// Optionally refetch doctor data
 							queryClient.invalidateQueries({
-								queryKey: ["doctor", doctorId],
+								queryKey: [...qk.doctor, doctorId],
 							});
 							queryClient.invalidateQueries({
-								queryKey: ["doctor-details", doctorId],
+								queryKey: [...qk.doctorDetails, doctorId],
 							});
 						}}
 					/>
@@ -967,7 +968,7 @@ function DoctorFormPageContent() {
 						initialWorkplaces={workplaceFormDefaults}
 						onSuccess={() => {
 							queryClient.invalidateQueries({
-								queryKey: ["doctor-details", doctorId],
+								queryKey: [...qk.doctorDetails, doctorId],
 							});
 						}}
 					/>

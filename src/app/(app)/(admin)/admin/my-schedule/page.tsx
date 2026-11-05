@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { fetchMyDoctor } from "@/api/doctors";
@@ -130,10 +131,10 @@ function TimeOffCard({ doctorId }: { doctorId: number }) {
 	const [from, setFrom] = useState("09:00");
 	const [to, setTo] = useState("13:00");
 	const [reason, setReason] = useState("");
-	const list = useQuery({ queryKey: ["time-off", doctorId], queryFn: () => fetchTimeOff(doctorId), retry: false });
+	const list = useQuery({ queryKey: [...qk.timeOff, doctorId], queryFn: () => fetchTimeOff(doctorId), retry: false });
 	const refresh = () => {
-		void queryClient.invalidateQueries({ queryKey: ["time-off", doctorId] });
-		void queryClient.invalidateQueries({ queryKey: ["doctor-appointments"] });
+		void queryClient.invalidateQueries({ queryKey: [...qk.timeOff, doctorId] });
+		void queryClient.invalidateQueries({ queryKey: [...qk.doctorAppointments] });
 	};
 
 	const add = useMutation({
@@ -215,12 +216,12 @@ export default function MySchedulePage() {
 	const [editing, setEditing] = useState<number | "new" | null>(null);
 	const [form, setForm] = useState<FormState>(emptyForm());
 
-	const doctor = useQuery({ queryKey: ["my-doctor"], queryFn: fetchMyDoctor, retry: false });
+	const doctor = useQuery({ queryKey: [...qk.myDoctor], queryFn: fetchMyDoctor, retry: false });
 	const doctorId = doctor.data?.id ?? null;
-	const schedule = useQuery({ queryKey: ["schedule", doctorId], queryFn: () => fetchSchedule(doctorId as number), enabled: doctorId !== null, retry: false });
-	const workplaces = useQuery({ queryKey: ["schedule-workplaces", doctorId], queryFn: () => fetchDoctorWorkplaces(doctorId as number), enabled: doctorId !== null, retry: false });
+	const schedule = useQuery({ queryKey: [...qk.schedule, doctorId], queryFn: () => fetchSchedule(doctorId as number), enabled: doctorId !== null, retry: false });
+	const workplaces = useQuery({ queryKey: [...qk.scheduleWorkplaces, doctorId], queryFn: () => fetchDoctorWorkplaces(doctorId as number), enabled: doctorId !== null, retry: false });
 
-	const refresh = () => queryClient.invalidateQueries({ queryKey: ["schedule", doctorId] });
+	const refresh = () => queryClient.invalidateQueries({ queryKey: [...qk.schedule, doctorId] });
 	const close = () => setEditing(null);
 
 	const save = useMutation({

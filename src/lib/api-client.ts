@@ -124,6 +124,20 @@ export async function apiGet<T = unknown>(
 /**
  * POST request helper
  */
+/** The data of a successful answer; otherwise the server's message (or `fallback`). One copy for every API module. */
+export const unwrap = <T,>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
+	if (!response.ok) throw new Error(response.error || fallback);
+	return response.data as T;
+};
+
+/**
+ * A public read: no session is sent, a failure throws an ApiError with the server's message. The answer is returned untyped (like a
+ * bare fetch's json()), so the calling function's declared return type is what types it.
+ */
+export async function publicGet<T = never>(endpoint: string): Promise<T> {
+	return (await apiGet<T>(endpoint, { includeAuth: false })).data as T;
+}
+
 export async function apiPost<T = unknown>(
 	endpoint: string,
 	data?: unknown,

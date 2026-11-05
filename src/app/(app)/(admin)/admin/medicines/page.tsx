@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { fetchManufacturers, fetchMedicines } from "@/api/medicines";
@@ -20,11 +21,11 @@ export default function MedicinesPage() {
 	const [manufacturer, setManufacturer] = useState("");
 	const [page, setPage] = useState(1);
 
-	const manufacturers = useQuery({ queryKey: ["medicine-manufacturers"], queryFn: fetchManufacturers, staleTime: 60 * 60 * 1000 });
+	const manufacturers = useQuery({ queryKey: [...qk.medicineManufacturers], queryFn: fetchManufacturers, staleTime: 60 * 60 * 1000 });
 	const companyOptions = [{ value: "", label: "All companies" }, ...(manufacturers.data ?? []).map((name) => ({ value: name, label: name }))];
 
 	const { data, isLoading, isError, error } = useQuery({
-		queryKey: ["medicines", search, manufacturer, page],
+		queryKey: [...qk.medicines, search, manufacturer, page],
 		queryFn: () => fetchMedicines({ term: search, manufacturer, page, size: PAGE_SIZE }),
 		placeholderData: (previous) => previous,
 	});

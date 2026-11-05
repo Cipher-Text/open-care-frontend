@@ -1,9 +1,4 @@
-import { apiGet, buildUrl } from "@/lib/api-client";
-
-const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
-	if (!response.ok) throw new Error(response.error || fallback);
-	return response.data as T;
-};
+import { apiGet, buildUrl, unwrap } from "@/lib/api-client";
 
 export type EventKind = "DOCTOR" | "HOSPITAL";
 export type EventType = "VIEW" | "CALL" | "DIRECTIONS";

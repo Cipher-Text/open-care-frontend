@@ -1,6 +1,6 @@
+import { publicGet } from "@/lib/api-client";
 import { normalizePage, toWirePage } from "@/lib/pagination";
 import { MedicalTestsListResponse } from "@/types/medical-tests";
-import { baseUrl } from "@/config/config";
 
 interface FetchMedicalTestsParams {
   page: number;
@@ -28,11 +28,6 @@ export async function fetchMedicalTests({
     params.append("name", name);
   }
 
-  const response = await fetch(`${baseUrl}/medical-tests?${params}`);
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch medical tests");
-  }
-
-  return normalizePage(await response.json());
+  const data = await publicGet(`/medical-tests?${params}`);
+	return normalizePage(data);
 }

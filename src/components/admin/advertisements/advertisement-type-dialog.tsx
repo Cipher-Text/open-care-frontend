@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { qk } from "@/lib/query-keys";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -50,7 +51,7 @@ export function AdvertisementTypeDialog({
 }) {
 	const editing = !!type;
 	const positions = useQuery({
-		queryKey: ["advertisement-positions"],
+		queryKey: [...qk.advertisementPositions],
 		queryFn: getAdvertisementPositions,
 		enabled: open,
 	});

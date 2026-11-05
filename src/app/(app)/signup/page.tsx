@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -69,7 +70,7 @@ export default function SignupPage() {
     isLoading: isLoadingBloodGroups,
     isError: isBloodGroupsError,
   } = useQuery<BloodGroup[]>({
-    queryKey: ["bloodGroups"],
+    queryKey: [...qk.bloodGroups],
     queryFn: fetchBloodGroups,
   });
 
@@ -79,7 +80,7 @@ export default function SignupPage() {
     isLoading: isLoadingGenders,
     isError: isGendersError,
   } = useQuery<Gender[]>({
-    queryKey: ["genders"],
+    queryKey: [...qk.genders],
     queryFn: fetchGenders,
   });
 
@@ -89,7 +90,7 @@ export default function SignupPage() {
     isLoading: isLoadingDistricts,
     isError: isDistrictsError,
   } = useQuery<District[]>({
-    queryKey: ["districts"],
+    queryKey: [...qk.districts],
     queryFn: fetchDistricts,
   });
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { qk } from "@/lib/query-keys";
 import { useLocale, useTranslations } from "next-intl";
 import { fetchDistrictOptions, fetchSpecialityOptions } from "@/api/directory";
 import {
@@ -35,12 +36,12 @@ export default function DoctorFilters() {
 	const { get, set, clear, hasFilters } = useUrlParams();
 
 	const districts = useQuery({
-		queryKey: ["districts"],
+		queryKey: [...qk.districts],
 		queryFn: fetchDistrictOptions,
 		...STATIC,
 	});
 	const specialities = useQuery({
-		queryKey: ["specialities"],
+		queryKey: [...qk.specialities],
 		queryFn: fetchSpecialityOptions,
 		...STATIC,
 	});

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
+import { qk } from "@/lib/query-keys";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -158,7 +159,7 @@ export function PrescriptionForm({ prescription, patient, replacing = false }: {
 	const subject: PatientSummary | undefined = prescription
 		? { profileId: prescription.patientProfileId ?? 0, name: prescription.patientName, age: prescription.patientAge, gender: prescription.patientGender }
 		: patient;
-	const context = useQuery({ queryKey: ["prescription-doctor-context"], queryFn: fetchDoctorContext, staleTime: 10 * 60 * 1000 });
+	const context = useQuery({ queryKey: [...qk.prescriptionDoctorContext], queryFn: fetchDoctorContext, staleTime: 10 * 60 * 1000 });
 
 	const form = useForm<FormValues>({
 		resolver: zodResolver(schema),

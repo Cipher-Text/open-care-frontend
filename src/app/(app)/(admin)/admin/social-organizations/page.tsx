@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { fetchSocialOrganizations } from "@/api/social-organizations";
 import { SocialOrganizationsListResponse } from "@/types/social-organizations";
@@ -25,7 +26,7 @@ export default function SocialOrganizationsPage() {
     isError,
     error,
   } = useQuery<SocialOrganizationsListResponse>({
-    queryKey: ["social-organizations", currentPage, filters],
+    queryKey: [...qk.socialOrganizations, currentPage, filters],
     queryFn: () =>
       fetchSocialOrganizations({
         page: currentPage, // 1-based; fetcher converts for the API

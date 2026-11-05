@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { checkDuplicates, type DuplicateKind } from "@/api/duplicates";
@@ -23,7 +24,7 @@ export function SimilarRecords({ type, name, districtId, number }: { type: Dupli
 
 	const enabled = canCheck(typed.name, typed.number);
 	const result = useQuery({
-		queryKey: ["duplicate-check", type, typed.name?.trim(), typed.districtId, typed.number?.trim()],
+		queryKey: [...qk.duplicateCheck, type, typed.name?.trim(), typed.districtId, typed.number?.trim()],
 		queryFn: () => checkDuplicates({ type, name: typed.name?.trim(), districtId: typed.districtId, number: typed.number?.trim() }),
 		enabled,
 		retry: false,

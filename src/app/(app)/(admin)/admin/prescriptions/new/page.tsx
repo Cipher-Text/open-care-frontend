@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
+import { qk } from "@/lib/query-keys";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -15,7 +16,7 @@ import { usePermissions } from "@/hooks/use-permissions";
 function NewPrescription() {
 	const { hasPermission } = usePermissions();
 	const patientId = Number(useSearchParams().get("patient"));
-	const grants = useQuery({ queryKey: ["doctor-grants"], queryFn: fetchDoctorGrants, enabled: patientId > 0 });
+	const grants = useQuery({ queryKey: [...qk.doctorGrants], queryFn: fetchDoctorGrants, enabled: patientId > 0 });
 	const grant = grants.data?.find((g) => g.patientProfileId === patientId);
 
 	if (!hasPermission("create-prescription")) {

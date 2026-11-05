@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import { fetchDoctorDetailsById } from "@/api/doctors";
@@ -24,7 +25,7 @@ export default function DoctorViewPage() {
 		isError,
 		error,
 	} = useQuery<DoctorDetailsResponse>({
-		queryKey: ["doctor-details", doctorId],
+		queryKey: [...qk.doctorDetails, doctorId],
 		queryFn: () => fetchDoctorDetailsById(doctorId),
 		enabled: !!doctorId,
 	});

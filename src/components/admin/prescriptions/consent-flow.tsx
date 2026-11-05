@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Search, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -33,7 +34,7 @@ export function ConsentFlow() {
 	const [request, setRequest] = useState<ConsentRequest | null>(null);
 	const [code, setCode] = useState("");
 
-	const grants = useQuery({ queryKey: ["doctor-grants"], queryFn: fetchDoctorGrants, staleTime: 30_000 });
+	const grants = useQuery({ queryKey: [...qk.doctorGrants], queryFn: fetchDoctorGrants, staleTime: 30_000 });
 
 	const find = useMutation({
 		mutationFn: () => lookupPatient(identifier.trim()),
@@ -54,7 +55,7 @@ export function ConsentFlow() {
 	});
 
 	const approved = (r: ConsentRequest) => {
-		queryClient.invalidateQueries({ queryKey: ["doctor-grants"] });
+		queryClient.invalidateQueries({ queryKey: [...qk.doctorGrants] });
 		router.push(`/admin/prescriptions/new?patient=${patient!.profileId}`);
 		return r;
 	};
@@ -62,7 +63,7 @@ export function ConsentFlow() {
 	// While waiting, check every few seconds in case the patient approved in their own account
 	const waiting = request?.status === "PENDING";
 	useQuery({
-		queryKey: ["consent-request", request?.id],
+		queryKey: [...qk.consentRequest, request?.id],
 		queryFn: async () => {
 			const latest = await fetchConsentRequest(request!.id);
 			if (latest.status !== "PENDING") setRequest(latest);

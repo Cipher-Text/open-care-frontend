@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useMemo, useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Info, Lock, Search } from "lucide-react";
 import { toast } from "sonner";
@@ -103,7 +104,7 @@ export default function RolePermissionsPage() {
 
 function MenusTab({ overrides, onEdit }: { overrides: Overrides; onEdit: () => void }) {
 	const { data, isLoading, isError, error, refetch } = useQuery({
-		queryKey: ["role-permissions"],
+		queryKey: [...qk.rolePermissions],
 		queryFn: fetchRolePermissionMatrix,
 		staleTime: 0,
 	});
@@ -155,7 +156,7 @@ function MappingTab({
 }) {
 	const queryClient = useQueryClient();
 	const { data, isLoading, isError, error, refetch } = useQuery({
-		queryKey: ["role-permissions"],
+		queryKey: [...qk.rolePermissions],
 		queryFn: fetchRolePermissionMatrix,
 		staleTime: 0,
 	});
@@ -228,8 +229,8 @@ function MappingTab({
 				return copy;
 			});
 			setConfirmOpen(false);
-			await queryClient.invalidateQueries({ queryKey: ["role-permissions"] });
-			await queryClient.invalidateQueries({ queryKey: ["role-permissions-audit"] });
+			await queryClient.invalidateQueries({ queryKey: [...qk.rolePermissions] });
+			await queryClient.invalidateQueries({ queryKey: [...qk.rolePermissionsAudit] });
 			if (failed.length === 0) {
 				toast.success(`Saved changes to ${results.length} role${results.length === 1 ? "" : "s"}`);
 			} else {
@@ -458,7 +459,7 @@ function ConfirmDialog({
 function HistoryTab() {
 	const [page, setPage] = useState(1);
 	const { data, isLoading, isError, error } = useQuery({
-		queryKey: ["role-permissions-audit", page],
+		queryKey: [...qk.rolePermissionsAudit, page],
 		queryFn: () => fetchRolePermissionAudit(page),
 		placeholderData: keepPreviousData,
 	});

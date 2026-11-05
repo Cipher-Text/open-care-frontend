@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -27,12 +28,12 @@ export default function NotificationsPage() {
 	const [page, setPage] = useState(1);
 	const [unreadOnly, setUnreadOnly] = useState(false);
 
-	const list = useQuery({ queryKey: ["notifications", page, unreadOnly], queryFn: () => fetchNotifications(page, PAGE_SIZE, unreadOnly), placeholderData: (previous) => previous });
-	const preferences = useQuery({ queryKey: ["notification-preferences"], queryFn: fetchNotificationPreferences, retry: false });
+	const list = useQuery({ queryKey: [...qk.notifications, page, unreadOnly], queryFn: () => fetchNotifications(page, PAGE_SIZE, unreadOnly), placeholderData: (previous) => previous });
+	const preferences = useQuery({ queryKey: [...qk.notificationPreferences], queryFn: fetchNotificationPreferences, retry: false });
 
 	const refresh = () => {
-		void queryClient.invalidateQueries({ queryKey: ["notifications"] });
-		void queryClient.invalidateQueries({ queryKey: ["unread-notifications"] });
+		void queryClient.invalidateQueries({ queryKey: [...qk.notifications] });
+		void queryClient.invalidateQueries({ queryKey: [...qk.unreadNotifications] });
 	};
 
 	const readOne = useMutation({ mutationFn: (id: number) => markNotificationRead(id), onSuccess: refresh });

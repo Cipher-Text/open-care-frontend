@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -17,12 +18,12 @@ const PAGE_SIZE = 20;
 export default function MyAppointmentsPage() {
 	const queryClient = useQueryClient();
 	const [page, setPage] = useState(1);
-	const list = useQuery({ queryKey: ["my-appointments", page], queryFn: () => fetchMyAppointments(page, PAGE_SIZE), retry: false, placeholderData: (previous) => previous });
+	const list = useQuery({ queryKey: [...qk.myAppointments, page], queryFn: () => fetchMyAppointments(page, PAGE_SIZE), retry: false, placeholderData: (previous) => previous });
 	const cancel = useMutation({
 		mutationFn: (id: number) => cancelMyAppointment(id),
 		onSuccess: () => {
 			toast.success("Appointment cancelled");
-			void queryClient.invalidateQueries({ queryKey: ["my-appointments"] });
+			void queryClient.invalidateQueries({ queryKey: [...qk.myAppointments] });
 		},
 		onError: (error) => toast.error(error instanceof Error ? error.message : "Could not cancel"),
 	});

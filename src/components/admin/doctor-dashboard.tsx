@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, ArrowDownRight, ArrowRight, ArrowUpRight, BadgeCheck, CalendarClock, Minus, ShieldCheck, UserCheck } from "lucide-react";
 import { fetchDoctorDashboard, type DoctorDashboard as Data, type Kpi, type LabelCount } from "@/api/doctor-dashboard";
@@ -70,7 +71,7 @@ function RankedList({ title, description, rows, empty }: { title: string; descri
 
 export function DoctorDashboard() {
 	const { data, isLoading, isError, error } = useQuery<Data>({
-		queryKey: ["doctor-dashboard"],
+		queryKey: [...qk.doctorDashboard],
 		queryFn: fetchDoctorDashboard,
 		staleTime: 60_000,
 		refetchInterval: 60_000,

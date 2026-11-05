@@ -1,16 +1,7 @@
-import { baseUrl } from "@/config/config";
+import { publicGet } from "@/lib/api-client";
 import { BloodGroupResponse } from "@/types/blood-groups";
 
 export const fetchBloodGroups = async (): Promise<BloodGroupResponse> => {
-  const response = await fetch(`${baseUrl}/blood-groups`, {
-    method: "GET",
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch blood groups: ${response.status} ${response.statusText}`
-    );
-  }
-
-  return response.json();
+  const data = await publicGet(`/blood-groups`);
+	return data;
 };

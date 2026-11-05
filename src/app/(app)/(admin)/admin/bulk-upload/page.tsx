@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { checkBulkRows, commitBulkRows, fetchBulkConfig, parseBulkCsv, type BulkKind, type BulkResponse, type BulkRowResult } from "@/api/bulk-upload";
@@ -30,7 +31,7 @@ const ACTION_LABEL = { CREATE: "Add", UPDATE: "Change", NONE: "No change" } as c
  */
 export default function BulkUploadPage() {
 	const queryClient = useQueryClient();
-	const config = useQuery({ queryKey: ["bulk-config"], queryFn: fetchBulkConfig, staleTime: 300_000, retry: false });
+	const config = useQuery({ queryKey: [...qk.bulkConfig], queryFn: fetchBulkConfig, staleTime: 300_000, retry: false });
 	const [kind, setKind] = useState<BulkKind>("HOSPITAL");
 	const [pasted, setPasted] = useState("");
 	const [rows, setRows] = useState<PreviewRow[] | null>(null);
@@ -78,7 +79,7 @@ export default function BulkUploadPage() {
 				setRows(null);
 				setChecked(null);
 				toast.success(summaryLine(response));
-				void queryClient.invalidateQueries({ queryKey: ["hospitals"] });
+				void queryClient.invalidateQueries({ queryKey: [...qk.hospitals] });
 			} else {
 				// something changed since the check, or a row failed: show the rows again with their problems
 				setChecked(response);

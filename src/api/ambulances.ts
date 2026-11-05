@@ -1,6 +1,6 @@
+import { publicGet } from "@/lib/api-client";
 import { normalizePage, withWirePage } from "@/lib/pagination";
 import { AmbulancesListResponse, Ambulance } from "@/types/ambulances";
-import { baseUrl } from "@/config/config";
 
 interface QueryParams {
   [key: string]: string | number | boolean | undefined | null;
@@ -23,30 +23,11 @@ export const fetchAmbulances = async (
   params: QueryParams
 ): Promise<AmbulancesListResponse> => {
   const queryString = buildQueryString(withWirePage(params));
-  const response = await fetch(`${baseUrl}/ambulances?${queryString}`, {
-    method: "GET",
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch ambulances: ${response.status} ${response.statusText}`
-    );
-  }
-
-  const data = await response.json();
+  const data = await publicGet(`/ambulances?${queryString}`);
 	return normalizePage(data);
 };
 
 export const fetchAmbulanceById = async (id: number): Promise<Ambulance> => {
-  const response = await fetch(`${baseUrl}/ambulances/${id}`, {
-    method: "GET",
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch ambulance: ${response.status} ${response.statusText}`
-    );
-  }
-
-  return response.json();
+  const data = await publicGet(`/ambulances/${id}`);
+	return data;
 };

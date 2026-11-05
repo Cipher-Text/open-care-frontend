@@ -1,6 +1,7 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { qk } from "@/lib/query-keys";
 import { Button } from "@/components/ui/button";
 import {
 	fetchDistrictOptions,
@@ -22,11 +23,11 @@ export default function InstitutionsDirectory() {
 	const { get, set, clear, hasFilters } = useUrlParams();
 	const page = parsePage(get("page"));
 
-	const districts = useQuery({ queryKey: ["districts"], queryFn: fetchDistrictOptions });
-	const orgs = useQuery({ queryKey: ["organization-types"], queryFn: fetchOrganizationTypeOptions });
+	const districts = useQuery({ queryKey: [...qk.districts], queryFn: fetchDistrictOptions });
+	const orgs = useQuery({ queryKey: [...qk.organizationTypes], queryFn: fetchOrganizationTypeOptions });
 
 	const query = useQuery({
-		queryKey: ["public-institutions", get("q"), get("district"), get("org"), page],
+		queryKey: [...qk.publicInstitutions, get("q"), get("district"), get("org"), page],
 		queryFn: () =>
 			fetchPublicInstitutions({
 				name: get("q") || undefined,

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { assignPlan, cancelSubscription, fetchSubscriptionHistory, type PlanAudience, type PlanTier } from "@/api/subscriptions";
@@ -63,7 +64,7 @@ export default function SubscriptionsPage() {
 
 	const subjectId = subject?.id ?? null;
 	const history = useQuery({
-		queryKey: ["subscriptions", audience, subjectId],
+		queryKey: [...qk.subscriptions, audience, subjectId],
 		queryFn: () => fetchSubscriptionHistory(audience, subjectId as number),
 		enabled: subjectId !== null,
 		retry: false,
@@ -96,7 +97,7 @@ export default function SubscriptionsPage() {
 		if (Number.isInteger(id) && id > 0) setSubject({ id, name: `Profile #${id}` });
 	};
 
-	const refresh = () => queryClient.invalidateQueries({ queryKey: ["subscriptions", audience, subjectId] });
+	const refresh = () => queryClient.invalidateQueries({ queryKey: [...qk.subscriptions, audience, subjectId] });
 
 	const assign = useMutation({
 		mutationFn: () => assignPlan({ audience, subjectId: subjectId as number, tier, endsAt: tier === "FREE" || noEnd ? undefined : endOfDay(endDate) }),

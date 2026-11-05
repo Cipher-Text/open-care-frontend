@@ -1,4 +1,4 @@
-import { baseUrl } from "@/config/config";
+import { publicGet } from "@/lib/api-client";
 import {
 	DivisionResponse,
 	DistrictResponse,
@@ -7,73 +7,30 @@ import {
 } from "@/types/locations";
 
 export const fetchDivisions = async (): Promise<DivisionResponse> => {
-	const response = await fetch(`${baseUrl}/divisions`, {
-		method: "GET",
-	});
-
-	if (!response.ok) {
-		throw new Error(
-			`Failed to fetch divisions: ${response.status} ${response.statusText}`
-		);
-	}
-
-	return response.json();
+	const data = await publicGet(`/divisions`);
+	return data;
 };
 
 export const fetchDistricts = async (): Promise<DistrictResponse> => {
-	const response = await fetch(`${baseUrl}/districts`, {
-		method: "GET",
-	});
-
-	if (!response.ok) {
-		throw new Error(
-			`Failed to fetch districts: ${response.status} ${response.statusText}`
-		);
-	}
-
-	return response.json();
+	const data = await publicGet(`/districts`);
+	return data;
 };
 
 export const fetchUpazilas = async (): Promise<UpazilaResponse> => {
-	const response = await fetch(`${baseUrl}/upazilas`, {
-		method: "GET",
-	});
-
-	if (!response.ok) {
-		throw new Error(
-			`Failed to fetch upazilas: ${response.status} ${response.statusText}`
-		);
-	}
-
-	return response.json();
+	const data = await publicGet(`/upazilas`);
+	return data;
 };
 
 export const fetchUnionsByUpazila = async (
 	upazilaId: string | number
 ): Promise<UnionResponse> => {
-	const response = await fetch(`${baseUrl}/upazilas/${upazilaId}/unions`, {
-		method: "GET",
-	});
-
-	if (!response.ok) {
-		throw new Error(
-			`Failed to fetch unions: ${response.status} ${response.statusText}`
-		);
-	}
-
-	return response.json();
+	const data = await publicGet(`/upazilas/${upazilaId}/unions`);
+	return data;
 };
 
 export const fetchUpazilasByDistrict = async (
 	districtId: number
 ): Promise<UpazilaResponse> => {
-	const response = await fetch(`${baseUrl}/districts/${districtId}/upazilas`);
-
-	if (!response.ok) {
-		throw new Error(
-			`Failed to fetch upazilas: ${response.status} ${response.statusText}`
-		);
-	}
-
-	return response.json();
+	const data = await publicGet(`/districts/${districtId}/upazilas`);
+	return data;
 };

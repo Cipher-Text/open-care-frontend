@@ -1,14 +1,9 @@
-import { apiDelete, apiGet, apiPost, apiPut } from "@/lib/api-client";
+import { apiDelete, apiGet, apiPost, apiPut, unwrap } from "@/lib/api-client";
 import { fetchDoctors } from "@/api/doctors";
 import { fetchDoctorWorkplaces } from "@/api/workplaces";
 import { HospitalAmenity, HospitalTest, Tag } from "@/types/hospitals";
 
 /** Writes for a hospital's amenities, medical tests, doctors (workplaces) and tags. */
-
-const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
-	if (!response.ok) throw new Error(response.error || fallback);
-	return response.data as T;
-};
 
 // ---- Amenities (create/update/delete-hospital-amenity) ----
 

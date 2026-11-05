@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { qk } from "@/lib/query-keys";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPrescription } from "@/api/prescriptions";
@@ -16,7 +17,7 @@ export default function ReplacePrescriptionPage() {
 	const { id } = useParams<{ id: string }>();
 	const { hasPermission } = usePermissions();
 	const { data, isLoading, isError, error } = useQuery({
-		queryKey: ["prescription", id],
+		queryKey: [...qk.prescription, id],
 		queryFn: () => fetchPrescription(id),
 		retry: false,
 	});

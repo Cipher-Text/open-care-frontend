@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { fetchNurses } from "@/api/nurses";
 import { NurseListResponse } from "@/types/nurses";
@@ -19,7 +20,7 @@ export default function NursesPage() {
     isError,
     error,
   } = useQuery<NurseListResponse>({
-    queryKey: ["nurses", currentPage],
+    queryKey: [...qk.nurses, currentPage],
     queryFn: () =>
       fetchNurses({
         page: currentPage,

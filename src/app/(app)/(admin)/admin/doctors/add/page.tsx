@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { qk } from "@/lib/query-keys";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -8,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AdminHeader } from "@/components/admin/admin-header";
 import { SimilarRecords } from "@/components/admin/duplicates/similar-records";
-import { ApiError } from "@/lib/api-error";
+import { problemText } from "@/lib/api-error";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -53,19 +54,19 @@ export default function AddDoctorPage() {
 
 	// Fetch districts
 	const { data: districts = [], isLoading: isDistrictsLoading } = useQuery({
-		queryKey: ["districts"],
+		queryKey: [...qk.districts],
 		queryFn: fetchDistricts,
 	});
 
 	// Fetch upazilas when district is selected
 	const { data: upazilas = [], isLoading: isUpazilasLoading } = useQuery({
-		queryKey: ["upazilas"],
+		queryKey: [...qk.upazilas],
 		queryFn: fetchUpazilas,
 	});
 
 	// Fetch unions when upazila is selected
 	const { data: unions = [], isLoading: isUnionsLoading } = useQuery({
-		queryKey: ["unions", selectedUpazilaId],
+		queryKey: [...qk.unions, selectedUpazilaId],
 		queryFn: () => fetchUnionsByUpazila(selectedUpazilaId!),
 		enabled: !!selectedUpazilaId,
 	});
@@ -111,7 +112,7 @@ export default function AddDoctorPage() {
 			router.push("/admin/doctors");
 		} catch (error) {
 			console.error("Error adding doctor:", error);
-			toast.error(error instanceof ApiError && error.status === 409 ? error.message : "Failed to add doctor. Please try again.");
+			toast.error(problemText(error, "Failed to add doctor. Please try again."));
 		} finally {
 			setIsLoading(false);
 		}

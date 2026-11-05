@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAmbulances } from "@/api/ambulances";
 import { AmbulancesListResponse } from "@/types/ambulances";
@@ -26,7 +27,7 @@ export default function AmbulancesPage() {
     isError,
     error,
   } = useQuery<AmbulancesListResponse>({
-    queryKey: ["ambulances", currentPage, filters],
+    queryKey: [...qk.ambulances, currentPage, filters],
     queryFn: () =>
       fetchAmbulances({
         page: currentPage, // 1-based; fetcher converts for the API

@@ -1,6 +1,7 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { qk } from "@/lib/query-keys";
 import { useLocale, useTranslations } from "next-intl";
 import { fetchPublicHospitals } from "@/api/directory";
 import {
@@ -34,7 +35,7 @@ export default function HospitalsList() {
 
 	const query = useQuery({
 		queryKey: [
-			"public-hospitals",
+			...qk.publicHospitals,
 			get("q"),
 			get("district"),
 			get("type"),

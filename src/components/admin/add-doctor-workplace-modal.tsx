@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { qk } from "@/lib/query-keys";
+import { problemText } from "@/lib/api-error";
 import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -133,22 +135,22 @@ export function AddDoctorWorkplaceModal({
 	const [isLoading, setIsLoading] = useState(false);
 
 	const { data: specialities = [] } = useQuery<MedicalSpeciality[]>({
-		queryKey: ["specialities-all"],
+		queryKey: [...qk.specialitiesAll],
 		queryFn: fetchAllMedicalSpecialities,
 	});
 
 	const { data: institutions = [] } = useQuery<Institution[]>({
-		queryKey: ["institutions-all"],
+		queryKey: [...qk.institutionsAll],
 		queryFn: fetchAllInstitutions,
 	});
 
 	const { data: hospitals = [] } = useQuery<Hospital[]>({
-		queryKey: ["hospitals-all"],
+		queryKey: [...qk.hospitalsAll],
 		queryFn: fetchAllHospitals,
 	});
 
 	const { data: teacherPositions = [] } = useQuery<TeacherPosition[]>({
-		queryKey: ["teacher-positions"],
+		queryKey: [...qk.teacherPositions],
 		queryFn: fetchTeacherPositions,
 	});
 
@@ -236,7 +238,7 @@ export function AddDoctorWorkplaceModal({
 			}
 		} catch (error) {
 			console.error("Error saving workplaces:", error);
-			toast.error("Failed to save workplaces. Please try again.");
+			toast.error(problemText(error, "Failed to save workplaces. Please try again."));
 		} finally {
 			setIsLoading(false);
 		}

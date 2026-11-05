@@ -1,6 +1,7 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { qk } from "@/lib/query-keys";
 import { useTranslations } from "next-intl";
 import { fetchPublicDoctors } from "@/api/directory";
 import { DirectoryPagination } from "@/components/common/DirectoryControls";
@@ -21,7 +22,7 @@ export default function DoctorsList() {
 
 	const query = useQuery({
 		queryKey: [
-			"public-doctors",
+			...qk.publicDoctors,
 			get("q"),
 			get("speciality"),
 			get("district"),

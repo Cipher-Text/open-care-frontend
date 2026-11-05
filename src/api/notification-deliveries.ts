@@ -1,4 +1,4 @@
-import { apiDelete, apiGet, apiPost, buildUrl } from "@/lib/api-client";
+import { apiDelete, apiGet, apiPost, buildUrl, unwrap } from "@/lib/api-client";
 import { normalizePage, toWirePage, type WirePage } from "@/lib/pagination";
 import type { PageResult } from "@/types/common";
 
@@ -29,11 +29,6 @@ export interface SmsBalance {
 	balance: string | null;
 	message: string | null;
 }
-
-const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
-	if (!response.ok) throw new Error(response.error || fallback);
-	return response.data as T;
-};
 
 export const fetchDeliveries = async (filters: { status?: DeliveryStatus | ""; channel?: DeliveryChannel | ""; page: number; size: number }): Promise<PageResult<Delivery>> =>
 	normalizePage(

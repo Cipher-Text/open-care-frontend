@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
@@ -33,7 +34,7 @@ export default function SocialOrganizationViewPage() {
     isError,
     error,
   } = useQuery<SocialOrganization>({
-    queryKey: ["social-organization", organizationId],
+    queryKey: [...qk.socialOrganization, organizationId],
     queryFn: () => fetchSocialOrganizationById(organizationId),
     enabled: !!organizationId,
   });

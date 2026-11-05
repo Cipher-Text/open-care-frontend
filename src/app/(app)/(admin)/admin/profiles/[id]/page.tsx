@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
@@ -49,7 +50,7 @@ export default function ProfileDetailsPage() {
     isError,
     error,
   } = useQuery<ProfileDetailsResponse>({
-    queryKey: ["profile", profileId],
+    queryKey: [...qk.profile, profileId],
     queryFn: () => getProfileById(profileId, true, true),
     enabled: !!profileId,
   });

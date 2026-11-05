@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "@/lib/api-client";
+import { apiGet, apiPost, unwrap } from "@/lib/api-client";
 
 export type BulkKind = "HOSPITAL" | "AMBULANCE" | "HOSPITAL_TEST";
 
@@ -61,11 +61,6 @@ export interface BulkResponse {
 	withProblems: number;
 	rows: BulkRowResult[];
 }
-
-const unwrap = <T>(response: { ok: boolean; data?: T; error?: string }, fallback: string): T => {
-	if (!response.ok) throw new Error(response.error || fallback);
-	return response.data as T;
-};
 
 export const fetchBulkConfig = async () => unwrap<BulkConfig>(await apiGet("/admin/bulk/config"), "Could not load the bulk upload settings");
 

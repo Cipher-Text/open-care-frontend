@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { qk } from "@/lib/query-keys";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
@@ -31,11 +32,11 @@ export default function DoctorAppointmentsPage() {
 	const queryClient = useQueryClient();
 	const [status, setStatus] = useState("REQUESTED");
 	const [page, setPage] = useState(1);
-	const list = useQuery({ queryKey: ["doctor-appointments", status, page], queryFn: () => fetchDoctorAppointments(page, PAGE_SIZE, status || undefined), retry: false, placeholderData: (previous) => previous });
+	const list = useQuery({ queryKey: [...qk.doctorAppointments, status, page], queryFn: () => fetchDoctorAppointments(page, PAGE_SIZE, status || undefined), retry: false, placeholderData: (previous) => previous });
 
 	const done = (message: string) => () => {
 		toast.success(message);
-		void queryClient.invalidateQueries({ queryKey: ["doctor-appointments"] });
+		void queryClient.invalidateQueries({ queryKey: [...qk.doctorAppointments] });
 	};
 	const failed = (error: unknown) => toast.error(error instanceof Error ? error.message : "That did not work");
 
