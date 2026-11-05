@@ -7,7 +7,7 @@ Scope: Applies to ALL Open Care repos (frontend, backend, infra, tools).
 
 Open Care is a healthcare information + service platform for Bangladesh that connects:
 
-- Patients, Doctors, Nurses, Hospitals, Institutions, Organizations
+- Patients, Doctors, Nurses, Nutritionists, Hospitals, Institutions, Organizations
   Core goals:
 - Trustworthy directory + search
 - Role-based dashboards
@@ -59,7 +59,7 @@ Open Care is a healthcare information + service platform for Bangladesh that con
 Key entities (examples, adapt to repo reality):
 
 - Profile (base user identity)
-- Doctor / Nurse (professional extensions)
+- Doctor / Nurse / Nutritionist (professional extensions)
 - Hospital / Institution / Organization
 - Appointment (scheduled interaction)
 - Advertisement (campaign + targeting + logs)
