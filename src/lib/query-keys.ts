@@ -89,6 +89,7 @@ export const qk = {
 	profiles: ["profiles"],
 	publicAmbulances: ["public-ambulances"],
 	publicDoctors: ["public-doctors"],
+	publicNurses: ["public-nurses"],
 	publicHospitals: ["public-hospitals"],
 	publicInstitutions: ["public-institutions"],
 	reviewEligibility: ["review-eligibility"],

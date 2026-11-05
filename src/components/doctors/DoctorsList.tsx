@@ -2,6 +2,7 @@
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { qk } from "@/lib/query-keys";
+import NextLink from "next/link";
 import { useTranslations } from "next-intl";
 import { fetchPublicDoctors } from "@/api/directory";
 import { DirectoryPagination } from "@/components/common/DirectoryControls";
@@ -73,6 +74,13 @@ export default function DoctorsList() {
 					}}
 				/>
 			)}
+
+			<p className="text-sm text-muted-foreground">
+				{t("notListed")}{" "}
+				<NextLink href="/account/contribute" className="font-medium text-primary hover:underline">
+					{t("notListedLink")}
+				</NextLink>
+			</p>
 		</div>
 	);
 }

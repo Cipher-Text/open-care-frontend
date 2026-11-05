@@ -2,6 +2,7 @@ import { fetchWithTimeout } from "@/lib/http";
 import { baseUrl } from "@/config/config";
 import type { DoctorDetailsResponse } from "@/types/doctors";
 import type { HospitalDetailsResponse } from "@/types/hospitals";
+import type { NurseResponse } from "@/types/nurses";
 import { displayName } from "@/lib/text";
 export { safeUrl } from "@/lib/safe-url";
 
@@ -63,6 +64,19 @@ export async function getDoctor(segment: string): Promise<DoctorDetailsResponse 
 		doctor.profile.bnName = displayName(doctor.profile.bnName);
 	}
 	return doctor;
+}
+
+/** One nurse by id (nurses have no slug). A missing or inactive nurse is null, so the page shows a 404. */
+export async function getNurse(segment: string): Promise<NurseResponse | null> {
+	const id = parseId(decodeURIComponent(segment));
+	if (id == null) return null;
+	const nurse = await getJson<NurseResponse>(`/nurses/${id}`);
+	if (!nurse || nurse.isActive === false) return null;
+	if (nurse.profile) {
+		nurse.profile.name = displayName(nurse.profile.name);
+		nurse.profile.bnName = displayName(nurse.profile.bnName);
+	}
+	return nurse;
 }
 
 export function validEmail(email?: string | null): string | null {

@@ -30,6 +30,7 @@ import { cn } from "@/lib/utils";
 const NAV_LINKS: { href: string; label: string; match?: string }[] = [
 	{ href: "/hospitals", label: "hospitals", match: "/hospitals" },
 	{ href: "/doctors", label: "doctors", match: "/doctors" },
+	{ href: "/nurses", label: "nurses", match: "/nurses" },
 	{ href: "/blog", label: "articles", match: "/blog" },
 	{ href: "/ambulances", label: "ambulance", match: "/ambulances" },
 	{ href: "/hospitals?type=BLOOD_BANK", label: "bloodBanks" },

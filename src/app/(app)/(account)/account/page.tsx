@@ -5,6 +5,7 @@ import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { FileText, HeartPulse, ShieldCheck, UserCircle } from "lucide-react";
 import { fetchPendingConsents } from "@/api/consents";
+import { LevelsCard } from "@/components/account/levels-card";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function AccountHomePage() {
@@ -26,6 +27,8 @@ export default function AccountHomePage() {
 					<p className="text-sm text-muted-foreground">Only agree if you are with the doctor right now.</p>
 				</Link>
 			)}
+
+			<LevelsCard />
 
 			<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 				{[

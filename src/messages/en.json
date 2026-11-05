@@ -26,7 +26,8 @@
       "articles": "Articles",
       "ambulance": "Ambulance",
       "bloodBanks": "Blood banks",
-      "institutions": "Institutions"
+      "institutions": "Institutions",
+      "nurses": "Nurses"
     },
     "moreLinks": {
       "pricing": "Pricing",
@@ -351,7 +352,9 @@
     "periodUnknown": "?",
     "periodPresent": "present",
     "claim": "Is this your profile? Claim it",
-    "claimHint": "Claiming lets you ask Open Care to link this profile to your account after checking your BMDC registration. You need a verified mobile number."
+    "claimHint": "Claiming lets you ask Open Care to link this profile to your account after checking your BMDC registration. You need a verified mobile number.",
+    "notListed": "Not on the list?",
+    "notListedLink": "Add yourself or another doctor"
   },
   "reviews": {
     "heading": "Patient reviews",
@@ -407,5 +410,29 @@
     "bloodDonor": "Blood Donor level {level}",
     "healthPartner": "Health Partner level {level}",
     "none": "No level yet"
+  },
+  "nurses": {
+    "metaListTitle": "Find nurses in Bangladesh | Open Care",
+    "metaListDescription": "Search nurses across Bangladesh by name and district.",
+    "notFound": "Nurse not found | Open Care",
+    "metaDetailFallback": "{name} on Open Care.",
+    "heroTitle": "Find a nurse",
+    "heroSubtitle": "Search nurses by name and district",
+    "filterForm": "Filter nurses",
+    "searchByName": "Search nurses by name",
+    "district": "District",
+    "allDistricts": "All districts",
+    "clear": "Clear",
+    "found": "{count, plural, one {# nurse found} other {# nurses found}}",
+    "searching": "Searching",
+    "unnamed": "Unnamed nurse",
+    "bnmc": "BNMC {number}",
+    "experience": "{count, plural, one {# year experience} other {# years experience}}",
+    "back": "All nurses",
+    "about": "About",
+    "claim": "Is this your profile? Claim it",
+    "claimHint": "Claiming lets you ask Open Care to link this profile to your account after checking your BNMC registration. You need a verified mobile number.",
+    "notListed": "Not on the list?",
+    "notListedLink": "Add yourself or another nurse"
   }
 }
