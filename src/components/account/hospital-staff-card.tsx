@@ -55,7 +55,7 @@ export function HospitalStaffCard({ hospitalId }: { hospitalId: number }) {
 					<Stethoscope className="size-5 text-primary" aria-hidden="true" />
 					Nurses and nutritionists here
 				</CardTitle>
-				<CardDescription>The people who work at this hospital. Only its administrators see this list and its contact details.</CardDescription>
+				<CardDescription>The people who work at this hospital. Only its administrators see this list and its contact details. A person decides whether their link is shown on the public pages.</CardDescription>
 			</CardHeader>
 			<CardContent className="space-y-4">
 				{staff.isLoading ? (
@@ -70,6 +70,7 @@ export function HospitalStaffCard({ hospitalId }: { hospitalId: number }) {
 									<p className="font-medium">
 										{w.name ?? "Unnamed"} <Badge variant="secondary">{KIND_LABEL[w.kind]}</Badge>
 										{w.verified ? <Badge className="ml-1">Verified</Badge> : null}
+										<Badge variant="outline" className="ml-1">{w.showPublicly ? "Shown publicly" : "Not shown publicly"}</Badge>
 									</p>
 									<p className="text-xs text-muted-foreground">
 										{[w.position, w.registrationNo, w.phone, w.email].filter(Boolean).join(", ") || "No details"}

@@ -10,8 +10,9 @@ import { DetailSection, DetailShell } from "@/components/common/DetailShell";
 import type { Locale } from "@/i18n/routing";
 import { bilingual } from "@/i18n/seo";
 import { localizedNames, placeName } from "@/lib/names";
-import { nursePath } from "@/lib/paths";
-import { clean, getNurse, safeUrl } from "@/lib/public-directory";
+import { hospitalPath, nursePath } from "@/lib/paths";
+import { Link } from "@/i18n/navigation";
+import { clean, getNurse, getNurseWorkplaces, safeUrl } from "@/lib/public-directory";
 
 export const revalidate = 600;
 
@@ -43,6 +44,8 @@ export default async function NurseDetailPage({ params }: Props) {
 	const common = await getTranslations("common");
 	const nurse = await getNurse(id);
 	if (!nurse) notFound();
+	// where they work: only links the nurse chose to show
+	const workplaces = await getNurseWorkplaces(nurse.id);
 
 	const { profile } = nurse;
 	const names = localizedNames(locale, profile.name, profile.bnName);
@@ -86,6 +89,21 @@ export default async function NurseDetailPage({ params }: Props) {
 					</div>
 				</CardContent>
 			</Card>
+
+			{workplaces.length > 0 && (
+				<DetailSection title={t("worksAt")}>
+					<ul className="divide-y">
+						{workplaces.map((w) => (
+							<li key={`${w.hospitalId}-${w.personId}`} className="py-2">
+								<Link href={hospitalPath({ id: w.hospitalId, slug: w.hospitalSlug })} className="font-medium text-primary hover:underline">
+									{localizedNames(locale, w.hospitalName, w.hospitalBnName).primary}
+								</Link>
+								{w.position && <span className="ml-2 text-sm text-muted-foreground">{w.position}</span>}
+							</li>
+						))}
+					</ul>
+				</DetailSection>
+			)}
 
 			{nurse.description && (
 				<DetailSection title={t("about")}>

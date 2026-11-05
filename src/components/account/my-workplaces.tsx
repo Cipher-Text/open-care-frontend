@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Building2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { endStaffWorkplace, fetchMyWorkplaces } from "@/api/staff-workplaces";
+import { endStaffWorkplace, fetchMyWorkplaces, setWorkplaceVisibility } from "@/api/staff-workplaces";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -21,6 +22,12 @@ export function MyWorkplaces() {
 		onError: (error) => toast.error(error instanceof Error ? error.message : "Could not end the link"),
 	});
 
+	const visibility = useMutation({
+		mutationFn: (v: { id: number; show: boolean }) => setWorkplaceVisibility(v.id, v.show),
+		onSuccess: () => queryClient.invalidateQueries({ queryKey: ["my-workplaces"] }),
+		onError: (error) => toast.error(error instanceof Error ? error.message : "Could not change what is shown"),
+	});
+
 	return (
 		<Card className="max-w-2xl">
 			<CardHeader>
@@ -28,7 +35,7 @@ export function MyWorkplaces() {
 					<Building2 className="size-5 text-primary" aria-hidden="true" />
 					Where I work
 				</CardTitle>
-				<CardDescription>A hospital&apos;s administrator adds you here. If a link is wrong or out of date, end it.</CardDescription>
+				<CardDescription>A hospital&apos;s administrator adds you here. Nothing is shown publicly until you choose to. If a link is wrong or out of date, end it.</CardDescription>
 			</CardHeader>
 			<CardContent>
 				{mine.isLoading ? (
@@ -45,6 +52,15 @@ export function MyWorkplaces() {
 									<span className="block truncate font-medium">{w.hospitalName ?? "Hospital"}</span>
 									<span className="block text-xs text-muted-foreground">
 										{w.position ? `${w.position}, ` : ""}since {w.startDate}
+									</span>
+									<span className="mt-1 flex items-center gap-2 text-xs">
+										<Checkbox
+											id={`show-${w.id}`}
+											checked={w.showPublicly}
+											disabled={visibility.isPending}
+											onCheckedChange={(value) => visibility.mutate({ id: w.id, show: value === true })}
+										/>
+										<label htmlFor={`show-${w.id}`} className="cursor-pointer py-1">Show this on my public page and the hospital&apos;s page</label>
 									</span>
 								</span>
 								<Button

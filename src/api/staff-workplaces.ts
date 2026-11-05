@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiDelete, buildUrl, unwrap } from "@/lib/api-client";
+import { apiGet, apiPatch, apiPost, apiDelete, buildUrl, unwrap } from "@/lib/api-client";
 
 /** A nurse or a nutritionist linked to a hospital. A hospital's own list carries the person's contact details; a person's own list does not. */
 export interface StaffWorkplace {
@@ -16,6 +16,8 @@ export interface StaffWorkplace {
 	position: string | null;
 	startDate: string;
 	endDate: string | null;
+	/** Whether the link is shown on the public pages: only the person can switch it on. */
+	showPublicly: boolean;
 }
 
 export const KIND_LABEL: Record<StaffWorkplace["kind"], string> = { NURSE: "Nurse", NUTRITIONIST: "Nutritionist" };
@@ -54,3 +56,7 @@ export async function searchPeople(kind: StaffWorkplace["kind"], text: string): 
 	);
 	return (page.content ?? []).map((n) => ({ id: n.id, name: n.profile?.name ?? `${KIND_LABEL[kind]} ${n.id}`, detail: (kind === "NURSE" ? n.bnmcNo : n.registrationNo) ?? null }));
 }
+
+/** Shows or hides a link on the public pages: the nurse or nutritionist chooses; a hospital's administrators can only hide it. */
+export const setWorkplaceVisibility = async (id: number, showPublicly: boolean) =>
+	unwrap<StaffWorkplace>(await apiPatch(`/staff-workplaces/${id}/visibility`, { showPublicly }), "Could not change what is shown");

@@ -98,6 +98,33 @@ export async function getNutritionistDegrees(id: number): Promise<NutritionistDe
 	return (await getJson<NutritionistDegree[]>(`/nutritionists/${id}/degrees`).catch(() => null)) ?? [];
 }
 
+/** A link between a nurse or nutritionist and a hospital that the person chose to show. Names only. */
+export interface PublicStaff {
+	kind: "NURSE" | "NUTRITIONIST";
+	personId: number;
+	name: string | null;
+	bnName: string | null;
+	hospitalId: number;
+	hospitalName: string | null;
+	hospitalBnName: string | null;
+	hospitalSlug: string | null;
+	position: string | null;
+}
+
+/** Where a nurse works (only what they chose to show). A failure is an empty list: the page simply has no such section. */
+export async function getNurseWorkplaces(id: number): Promise<PublicStaff[]> {
+	return (await getJson<PublicStaff[]>(`/nurses/${id}/workplaces`).catch(() => null)) ?? [];
+}
+
+export async function getNutritionistWorkplaces(id: number): Promise<PublicStaff[]> {
+	return (await getJson<PublicStaff[]>(`/nutritionists/${id}/workplaces`).catch(() => null)) ?? [];
+}
+
+/** The nurses and nutritionists a hospital lists (only those who chose to show it). */
+export async function getHospitalPublicStaff(id: number): Promise<PublicStaff[]> {
+	return (await getJson<PublicStaff[]>(`/hospitals/${id}/public-staff`).catch(() => null)) ?? [];
+}
+
 export function validEmail(email?: string | null): string | null {
 	const value = email?.trim();
 	return value && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? value : null;

@@ -10,8 +10,9 @@ import { DetailSection, DetailShell } from "@/components/common/DetailShell";
 import type { Locale } from "@/i18n/routing";
 import { bilingual } from "@/i18n/seo";
 import { localizedNames, placeName } from "@/lib/names";
-import { nutritionistPath } from "@/lib/paths";
-import { clean, getNutritionist, getNutritionistDegrees, safeUrl } from "@/lib/public-directory";
+import { hospitalPath, nutritionistPath } from "@/lib/paths";
+import { Link } from "@/i18n/navigation";
+import { clean, getNutritionist, getNutritionistDegrees, getNutritionistWorkplaces, safeUrl } from "@/lib/public-directory";
 
 export const revalidate = 600;
 
@@ -41,6 +42,8 @@ export default async function NutritionistDetailPage({ params }: Props) {
 	if (!nutritionist) notFound();
 	// each degree on its own line; a record whose degrees were never itemised still shows its one-line summary
 	const degreeList = await getNutritionistDegrees(nutritionist.id);
+	// where they work: only links the nutritionist chose to show
+	const workplaces = await getNutritionistWorkplaces(nutritionist.id);
 
 	const { profile } = nutritionist;
 	const names = localizedNames(locale, profile.name, profile.bnName);
@@ -108,6 +111,21 @@ export default async function NutritionistDetailPage({ params }: Props) {
 							{nutritionist.degrees}
 						</p>
 					)}
+				</DetailSection>
+			)}
+
+			{workplaces.length > 0 && (
+				<DetailSection title={t("worksAt")}>
+					<ul className="divide-y">
+						{workplaces.map((w) => (
+							<li key={`${w.hospitalId}-${w.personId}`} className="py-2">
+								<Link href={hospitalPath({ id: w.hospitalId, slug: w.hospitalSlug })} className="font-medium text-primary hover:underline">
+									{localizedNames(locale, w.hospitalName, w.hospitalBnName).primary}
+								</Link>
+								{w.position && <span className="ml-2 text-sm text-muted-foreground">{w.position}</span>}
+							</li>
+						))}
+					</ul>
 				</DetailSection>
 			)}
 

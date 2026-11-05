@@ -265,7 +265,10 @@
     "claim": "Is this your facility? Claim it",
     "claimHint": "Claiming lets you ask Open Care to verify the facility with its registration documents.",
     "ask": "Ask this facility a question",
-    "askHint": "Your question and the phone number you give are sent to the facility. You need to be signed in."
+    "askHint": "Your question and the phone number you give are sent to the facility. You need to be signed in.",
+    "staff": "Nurses and nutritionists ({count, number})",
+    "staffNurse": "Nurse",
+    "staffNutritionist": "Nutritionist"
   },
   "errors": {
     "BAD_REQUEST": "The request could not be understood. Please check what you entered.",
@@ -434,7 +437,8 @@
     "claim": "Is this your profile? Claim it",
     "claimHint": "Claiming lets you ask Open Care to link this profile to your account after checking your BNMC registration. You need a verified mobile number.",
     "notListed": "Not on the list?",
-    "notListedLink": "Add yourself or another nurse"
+    "notListedLink": "Add yourself or another nurse",
+    "worksAt": "Works at"
   },
   "nutritionists": {
     "metaListTitle": "Find nutritionists and dietitians in Bangladesh | Open Care",
@@ -464,6 +468,7 @@
     "title": {
       "NUTRITIONIST": "Nutritionist",
       "DIETITIAN": "Dietitian"
-    }
+    },
+    "worksAt": "Works at"
   }
 }

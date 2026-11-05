@@ -6412,6 +6412,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/staff-workplaces/{id}/visibility": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Show or hide a link on the public pages
+         * @description The nurse or nutritionist chooses; the hospital's administrators and platform staff can only hide it.
+         */
+        patch: operations["visibility_staff"];
+        trace?: never;
+    };
+    "/api/nurses/{id}/workplaces": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Public: where a nurse works
+         * @description Only the links the nurse chose to show.
+         */
+        get: operations["nurseWorkplaces"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/nutritionists/{id}/workplaces": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Public: where a nutritionist works
+         * @description Only the links the nutritionist chose to show.
+         */
+        get: operations["nutritionistWorkplaces"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/hospitals/{hospitalId}/public-staff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Public: the nurses and nutritionists a hospital lists
+         * @description Only those who chose to show it; names, never contact details.
+         */
+        get: operations["publicStaff"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -9944,6 +10024,7 @@ export interface components {
             startDate?: string;
             /** Format: date */
             endDate?: string;
+            showPublicly?: boolean;
         };
         NutritionistDegreeRequest: {
             degreeName?: string;
@@ -9968,6 +10049,22 @@ export interface components {
             degreeId?: number;
             /** Format: int32 */
             institutionId?: number;
+        };
+        StaffVisibilityRequest: {
+            showPublicly: boolean;
+        };
+        PublicStaffResponse: {
+            kind?: string;
+            /** Format: int64 */
+            personId?: number;
+            name?: string;
+            bnName?: string;
+            /** Format: int32 */
+            hospitalId?: number;
+            hospitalName?: string;
+            hospitalBnName?: string;
+            hospitalSlug?: string;
+            position?: string;
         };
     };
     responses: never;
@@ -20171,6 +20268,98 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["NutritionistDegreeResponse"][];
+                };
+            };
+        };
+    };
+    visibility_staff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StaffVisibilityRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StaffWorkplaceResponse"];
+                };
+            };
+        };
+    };
+    nurseWorkplaces: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PublicStaffResponse"][];
+                };
+            };
+        };
+    };
+    nutritionistWorkplaces: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PublicStaffResponse"][];
+                };
+            };
+        };
+    };
+    publicStaff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                hospitalId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PublicStaffResponse"][];
                 };
             };
         };

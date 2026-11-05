@@ -26,9 +26,9 @@ import type { Locale } from "@/i18n/routing";
 import { bilingual } from "@/i18n/seo";
 import { formatNumber } from "@/lib/format";
 import { enumName, localizedNames, placeName } from "@/lib/names";
-import { clean, getHospital, safeUrl, validEmail } from "@/lib/public-directory";
+import { clean, getHospital, getHospitalPublicStaff, safeUrl, validEmail } from "@/lib/public-directory";
 import { siteUrl } from "@/lib/site";
-import { doctorPath, hospitalPath } from "@/lib/paths";
+import { doctorPath, hospitalPath, nursePath, nutritionistPath } from "@/lib/paths";
 
 export const revalidate = 600;
 
@@ -83,6 +83,8 @@ export default async function HospitalDetailPage({ params }: Props) {
 			? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${hospital.name} ${location}`)}`
 			: null;
 	const doctors = (hospital.doctors ?? []).filter((d) => d?.profile?.name);
+	// nurses and nutritionists who chose to show that they work here
+	const staff = (await getHospitalPublicStaff(hospital.id)).filter((s) => s.name);
 	const tests = (hospital.tests ?? []).filter((t) => t.isActive !== false);
 	const amenities = (hospital.amenities ?? []).filter((a) => a.isActive !== false);
 
@@ -250,6 +252,23 @@ export default async function HospitalDetailPage({ params }: Props) {
 								{doctor.specializations && (
 									<span className="ml-2 text-sm text-muted-foreground">{doctor.specializations}</span>
 								)}
+							</li>
+						))}
+					</ul>
+				</DetailSection>
+			)}
+
+			{staff.length > 0 && (
+				<DetailSection title={t("staff", { count: staff.length })}>
+					<ul className="divide-y">
+						{staff.map((person) => (
+							<li key={`${person.kind}-${person.personId}`} className="py-2">
+								<Link href={person.kind === "NURSE" ? nursePath({ id: person.personId }) : nutritionistPath({ id: person.personId })} className="font-medium text-primary hover:underline">
+									{localizedNames(locale, person.name, person.bnName).primary}
+								</Link>
+								<span className="ml-2 text-sm text-muted-foreground">
+									{[person.kind === "NURSE" ? t("staffNurse") : t("staffNutritionist"), person.position].filter(Boolean).join(", ")}
+								</span>
 							</li>
 						))}
 					</ul>

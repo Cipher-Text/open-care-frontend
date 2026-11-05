@@ -17225,6 +17225,157 @@
           }
         }
       }
+    },
+    "/api/staff-workplaces/{id}/visibility": {
+      "patch": {
+        "tags": [
+          "Hospital staff"
+        ],
+        "summary": "Show or hide a link on the public pages",
+        "description": "The nurse or nutritionist chooses; the hospital's administrators and platform staff can only hide it.",
+        "operationId": "visibility_staff",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StaffVisibilityRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffWorkplaceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/nurses/{id}/workplaces": {
+      "get": {
+        "tags": [
+          "Hospital staff"
+        ],
+        "summary": "Public: where a nurse works",
+        "description": "Only the links the nurse chose to show.",
+        "operationId": "nurseWorkplaces",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PublicStaffResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/nutritionists/{id}/workplaces": {
+      "get": {
+        "tags": [
+          "Hospital staff"
+        ],
+        "summary": "Public: where a nutritionist works",
+        "description": "Only the links the nutritionist chose to show.",
+        "operationId": "nutritionistWorkplaces",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PublicStaffResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/hospitals/{hospitalId}/public-staff": {
+      "get": {
+        "tags": [
+          "Hospital staff"
+        ],
+        "summary": "Public: the nurses and nutritionists a hospital lists",
+        "description": "Only those who chose to show it; names, never contact details.",
+        "operationId": "publicStaff",
+        "parameters": [
+          {
+            "name": "hospitalId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PublicStaffResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -27219,6 +27370,9 @@
           "endDate": {
             "type": "string",
             "format": "date"
+          },
+          "showPublicly": {
+            "type": "boolean"
           }
         }
       },
@@ -27281,6 +27435,51 @@
           "institutionId": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "StaffVisibilityRequest": {
+        "type": "object",
+        "required": [
+          "showPublicly"
+        ],
+        "properties": {
+          "showPublicly": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PublicStaffResponse": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "personId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "bnName": {
+            "type": "string"
+          },
+          "hospitalId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hospitalName": {
+            "type": "string"
+          },
+          "hospitalBnName": {
+            "type": "string"
+          },
+          "hospitalSlug": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string"
           }
         }
       }
