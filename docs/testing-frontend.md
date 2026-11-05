@@ -289,4 +289,4 @@ A feature is **DONE** only if:
 
 **This document is mandatory for all Open Care frontend development.**
 
-> **API contract (November 5, 2026):** `npm run api:check` (in CI) regenerates `src/types/api.gen.ts` from the snapshot `docs/openapi.json` and fails when they differ; `src/types/api-contract.ts` makes `tsc` (so the build) fail when a screen's response type names a field the backend lacks or types it differently, with three self-tests that must be refused. The snapshot was 177 paths behind (290 now) when this was set up.
+> **API contract (November 5, 2026; `docs/openapi.json` refreshed from a running backend the same day: 302 paths, 271 schemas, including the contribution and claim routes):** `npm run api:check` (in CI) regenerates `src/types/api.gen.ts` from the snapshot `docs/openapi.json` and fails when they differ; `src/types/api-contract.ts` makes `tsc` (so the build) fail when a screen's response type names a field the backend lacks or types it differently, with three self-tests that must be refused. The snapshot was 177 paths behind (290 now) when this was set up.

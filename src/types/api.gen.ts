@@ -895,6 +895,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/verification/nurse": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start verification of my nurse record
+         * @description Returns the open request if there is one.
+         */
+        post: operations["startNurse"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/verification/nurse/{nurseId}/claim": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Claim a listed nurse profile
+         * @description The same as claiming a doctor profile, with a BNMC number.
+         */
+        post: operations["claimNurse"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/verification/facility/{hospitalId}": {
         parameters: {
             query?: never;
@@ -929,6 +969,26 @@ export interface paths {
          * @description Returns the open request if there is one.
          */
         post: operations["startDoctor"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/verification/doctor/{doctorId}/claim": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Claim a listed doctor profile
+         * @description For a verified mobile number and a login that is not yet a doctor or nurse. Staff check the registration number and documents; approval links the profile to the caller.
+         */
+        post: operations["claimDoctor"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1867,6 +1927,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/contributions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Propose a listing
+         * @description At most 5 can wait for a decision at a time. Returns the saved proposal.
+         */
+        post: operations["submit_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/contributions/{id}/withdraw": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Withdraw a proposal that is still waiting */
+        post: operations["withdraw_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/consents/requests": {
         parameters: {
             query?: never;
@@ -2383,6 +2480,40 @@ export interface paths {
          * @description Up to 500 at a time; call again for more.
          */
         post: operations["approveConfirmed"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/contributions/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject with a reason the person will see */
+        post: operations["reject_2"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/contributions/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve: create the record and award the points */
+        post: operations["approve_3"];
         delete?: never;
         options?: never;
         head?: never;
@@ -5060,6 +5191,63 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/contributions/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My score and badge */
+        get: operations["summary_2"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/contributions/summary/doctor": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * My doctor contribution score and level
+         * @description eligible is false unless the caller is a verified doctor.
+         */
+        get: operations["doctorSummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/contributions/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * My proposals
+         * @description Newest first.
+         */
+        get: operations["mine_8"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/contribution-badges": {
         parameters: {
             query?: never;
@@ -5773,7 +5961,7 @@ export interface paths {
             cookie?: never;
         };
         /** Counts per channel and outcome over the last days (1 to 90) */
-        get: operations["summary_2"];
+        get: operations["summary_3"];
         put?: never;
         post?: never;
         delete?: never;
@@ -5914,6 +6102,43 @@ export interface paths {
          * @description Staff with view-user-activity. Filter by kind, by who looked (actor profile id) or whose data (subject profile id).
          */
         get: operations["search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/contributions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Proposals waiting for a decision
+         * @description Pending by default; filter by kind or status.
+         */
+        get: operations["queue_2"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/contributions/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One proposal with its details and who sent it */
+        get: operations["detail"];
         put?: never;
         post?: never;
         delete?: never;
@@ -6259,8 +6484,11 @@ export interface components {
         BloodDonationBadgeResponse: {
             /** Format: int32 */
             bloodDonationCount?: number;
+            /** Format: int32 */
+            level?: number;
+            /** Format: int32 */
+            maxLevel?: number;
             badgeLevel?: string;
-            badgeName?: string;
             badgeColor?: string;
             /** Format: int32 */
             donationsToNextLevel?: number;
@@ -7601,6 +7829,8 @@ export interface components {
             subjectSlug?: string;
             status?: string;
             claimedRegistrationNo?: string;
+            recordRegistrationNo?: string;
+            claim?: boolean;
             renewal?: boolean;
             note?: string;
             /** Format: date-time */
@@ -7623,6 +7853,10 @@ export interface components {
             registerNote?: string;
         };
         VerificationNoteRequest: {
+            note?: string;
+        };
+        VerificationClaimRequest: {
+            registrationNo: string;
             note?: string;
         };
         DomainUserRequest: {
@@ -7776,8 +8010,8 @@ export interface components {
             /** Format: date */
             endDate?: string;
             description?: string;
-            endDateValid?: boolean;
             update?: boolean;
+            endDateValid?: boolean;
         };
         ScheduleExceptionRequest: {
             /** Format: date */
@@ -7830,8 +8064,8 @@ export interface components {
             endDate?: string;
             grade?: string;
             description?: string;
-            endDateValid?: boolean;
             update?: boolean;
+            endDateValid?: boolean;
         };
         DoctorAssociationBatchRequest: {
             /** Format: int64 */
@@ -7872,6 +8106,138 @@ export interface components {
             bmdcNo?: string;
             messages?: string[];
         };
+        ContributionAmbulanceData: {
+            vehicleNumber: string;
+            type: string;
+            driverName?: string;
+            driverPhone: string;
+            /** Format: int32 */
+            districtId: number;
+            /** Format: int32 */
+            upazilaId?: number;
+            /** Format: int32 */
+            hospitalId?: number;
+        };
+        ContributionBlogData: {
+            title: string;
+            summary?: string;
+            bodyHtml: string;
+            language?: string;
+            /** Format: int32 */
+            specialityId?: number;
+            topics?: string[];
+        };
+        ContributionDoctorData: {
+            name: string;
+            bnName?: string;
+            gender: string;
+            bmdcNo: string;
+            specializations: string;
+            degrees?: string;
+            phone?: string;
+            address?: string;
+            /** Format: int32 */
+            districtId: number;
+            /** Format: int32 */
+            upazilaId?: number;
+        };
+        ContributionFreeConsultationData: {
+            /** Format: date */
+            consultationDate: string;
+            place: string;
+            /** Format: int32 */
+            districtId?: number;
+            /** Format: int32 */
+            patientsServed: number;
+            description?: string;
+        };
+        ContributionHospitalData: {
+            name: string;
+            bnName?: string;
+            hospitalType: string;
+            organizationType: string;
+            /** Format: int32 */
+            numberOfBed: number;
+            /** Format: int32 */
+            districtId: number;
+            /** Format: int32 */
+            upazilaId?: number;
+            address: string;
+            phone?: string;
+            email?: string;
+            websiteUrl?: string;
+            lat?: number;
+            lon?: number;
+            registrationCode?: string;
+        };
+        ContributionHospitalTestReviewData: {
+            /** Format: int64 */
+            hospitalMedicalTestId: number;
+            accepts: boolean;
+            comment: string;
+        };
+        ContributionMedicalCampData: {
+            title: string;
+            /** Format: date */
+            campDate: string;
+            place: string;
+            /** Format: int32 */
+            districtId: number;
+            /** Format: int32 */
+            upazilaId?: number;
+            /** Format: int32 */
+            patientsServed: number;
+            description?: string;
+        };
+        ContributionNurseData: {
+            name: string;
+            bnName?: string;
+            gender: string;
+            bnmcNo: string;
+            description?: string;
+            phone?: string;
+            address?: string;
+            /** Format: int32 */
+            districtId: number;
+            /** Format: int32 */
+            upazilaId?: number;
+        };
+        ContributionSubmitRequest: {
+            /** @enum {string} */
+            kind: "DOCTOR" | "NURSE" | "HOSPITAL" | "AMBULANCE" | "BLOG" | "HOSPITAL_TEST_REVIEW" | "MEDICAL_CAMP" | "FREE_CONSULTATION";
+            doctor?: components["schemas"]["ContributionDoctorData"];
+            nurse?: components["schemas"]["ContributionNurseData"];
+            hospital?: components["schemas"]["ContributionHospitalData"];
+            ambulance?: components["schemas"]["ContributionAmbulanceData"];
+            blog?: components["schemas"]["ContributionBlogData"];
+            hospitalTestReview?: components["schemas"]["ContributionHospitalTestReviewData"];
+            medicalCamp?: components["schemas"]["ContributionMedicalCampData"];
+            freeConsultation?: components["schemas"]["ContributionFreeConsultationData"];
+            note?: string;
+        };
+        ContributionResponse: {
+            /** Format: int64 */
+            id?: number;
+            kind?: string;
+            status?: string;
+            subjectName?: string;
+            note?: string;
+            /** Format: int64 */
+            createdSubjectId?: number;
+            decisionReason?: string;
+            /** Format: int32 */
+            pointsAwarded?: number;
+            /** Format: date-time */
+            submittedAt?: string;
+            /** Format: date-time */
+            reviewedAt?: string;
+            reviewer?: string;
+            /** Format: int64 */
+            contributorProfileId?: number;
+            contributorName?: string;
+            data?: components["schemas"]["JsonNode"];
+        };
+        JsonNode: Record<string, never>;
         ConsentRequestCreateRequest: {
             /** Format: int64 */
             patientProfileId: number;
@@ -7997,7 +8363,7 @@ export interface components {
             /** Format: date-time */
             nextAttemptAt?: string;
             /** @enum {string} */
-            type?: "VERIFICATION_APPROVED" | "VERIFICATION_REJECTED" | "VERIFICATION_REVOKED" | "ENQUIRY_RECEIVED" | "APPOINTMENT_REQUESTED" | "APPOINTMENT_CONFIRMED" | "APPOINTMENT_DECLINED" | "APPOINTMENT_CANCELLED" | "APPOINTMENT_EXPIRED" | "APPOINTMENT_REMINDER" | "APPOINTMENT_AWAITING_ANSWER" | "PRESCRIPTION_WRITTEN" | "PRESCRIPTION_CORRECTED" | "PRESCRIPTION_VOIDED" | "REVIEW_REQUESTED" | "VERIFICATION_REVIEW_DUE" | "REVIEW_RECEIVED" | "REVIEW_PUBLISHED" | "REVIEW_REJECTED";
+            type?: "VERIFICATION_APPROVED" | "VERIFICATION_REJECTED" | "VERIFICATION_REVOKED" | "ENQUIRY_RECEIVED" | "APPOINTMENT_REQUESTED" | "APPOINTMENT_CONFIRMED" | "APPOINTMENT_DECLINED" | "APPOINTMENT_CANCELLED" | "APPOINTMENT_EXPIRED" | "APPOINTMENT_REMINDER" | "APPOINTMENT_AWAITING_ANSWER" | "PRESCRIPTION_WRITTEN" | "PRESCRIPTION_CORRECTED" | "PRESCRIPTION_VOIDED" | "REVIEW_REQUESTED" | "VERIFICATION_REVIEW_DUE" | "REVIEW_RECEIVED" | "REVIEW_PUBLISHED" | "REVIEW_REJECTED" | "CONTRIBUTION_APPROVED" | "CONTRIBUTION_REJECTED";
             /** Format: int64 */
             recipientProfileId?: number;
             recipientName?: string;
@@ -8029,6 +8395,12 @@ export interface components {
             superseded?: number;
             /** Format: int64 */
             stillPending?: number;
+        };
+        RejectContributionRequest: {
+            reason?: string;
+        };
+        ApproveContributionRequest: {
+            confirmNotDuplicate?: boolean;
         };
         CsvBody: {
             csv?: string;
@@ -8119,7 +8491,7 @@ export interface components {
             /** Format: int64 */
             id?: number;
             /** @enum {string} */
-            type?: "VERIFICATION_APPROVED" | "VERIFICATION_REJECTED" | "VERIFICATION_REVOKED" | "ENQUIRY_RECEIVED" | "APPOINTMENT_REQUESTED" | "APPOINTMENT_CONFIRMED" | "APPOINTMENT_DECLINED" | "APPOINTMENT_CANCELLED" | "APPOINTMENT_EXPIRED" | "APPOINTMENT_REMINDER" | "APPOINTMENT_AWAITING_ANSWER" | "PRESCRIPTION_WRITTEN" | "PRESCRIPTION_CORRECTED" | "PRESCRIPTION_VOIDED" | "REVIEW_REQUESTED" | "VERIFICATION_REVIEW_DUE" | "REVIEW_RECEIVED" | "REVIEW_PUBLISHED" | "REVIEW_REJECTED";
+            type?: "VERIFICATION_APPROVED" | "VERIFICATION_REJECTED" | "VERIFICATION_REVOKED" | "ENQUIRY_RECEIVED" | "APPOINTMENT_REQUESTED" | "APPOINTMENT_CONFIRMED" | "APPOINTMENT_DECLINED" | "APPOINTMENT_CANCELLED" | "APPOINTMENT_EXPIRED" | "APPOINTMENT_REMINDER" | "APPOINTMENT_AWAITING_ANSWER" | "PRESCRIPTION_WRITTEN" | "PRESCRIPTION_CORRECTED" | "PRESCRIPTION_VOIDED" | "REVIEW_REQUESTED" | "VERIFICATION_REVIEW_DUE" | "REVIEW_RECEIVED" | "REVIEW_PUBLISHED" | "REVIEW_REJECTED" | "CONTRIBUTION_APPROVED" | "CONTRIBUTION_REJECTED";
             title?: string;
             body?: string;
             link?: string;
@@ -8782,32 +9154,20 @@ export interface components {
             totalPages?: number;
         };
         LatestHealthVitalProjection: {
-            isLowOxygen?: boolean;
-            isFever?: boolean;
-            isObesity?: boolean;
-            tcHdlRatio?: number;
-            /** Format: int64 */
-            profileId?: number;
-            createdBy?: string;
-            /** Format: date-time */
-            createdAt?: string;
-            updatedBy?: string;
-            /** Format: date-time */
-            updatedAt?: string;
-            /** Format: date-time */
-            recordedAt?: string;
             /** Format: int32 */
-            heartRate?: number;
-            ketones?: number;
-            heightCm?: number;
-            weightKg?: number;
-            boneDensity?: number;
-            painType?: string;
-            /** Format: int32 */
-            steps24h?: number;
-            symptoms?: string;
-            notes?: string;
-            bmi?: number;
+            daysSinceLastRecording?: number;
+            isFullMetabolicPanel?: boolean;
+            isRecentContextKnown?: boolean;
+            isObstructiveLungDisease?: boolean;
+            bloodPressureStatus?: string;
+            isWidePulsePressure?: boolean;
+            isTachycardia?: boolean;
+            isBradycardia?: boolean;
+            isHypothermia?: boolean;
+            isHyperglycemia?: boolean;
+            isHypoglycemia?: boolean;
+            isUnderweight?: boolean;
+            recentSmoking?: boolean;
             /** Format: int32 */
             bloodPressureSystolic?: number;
             /** Format: int32 */
@@ -8815,17 +9175,6 @@ export interface components {
             meanArterialPressure?: number;
             heartRateVariability?: number;
             forcedExpiratoryVolume?: number;
-            /** Format: int32 */
-            restingEnergyExpenditure?: number;
-            glucoseMeasurementType?: string;
-            waistCircumferenceCm?: number;
-            hydrationLevelPercentage?: number;
-            urineSpecificGravity?: number;
-            environmentalTemperature?: number;
-            /** Format: int32 */
-            environmentalHumidity?: number;
-            cardiovascularRiskScore?: number;
-            metabolicHealthScore?: number;
             pulsePressure?: number;
             cardiacOutput?: number;
             /** Format: int32 */
@@ -8892,25 +9241,48 @@ export interface components {
             recentExercise?: boolean;
             recentCaffeine?: boolean;
             recentAlcohol?: boolean;
-            recentSmoking?: boolean;
+            /** Format: int32 */
+            restingEnergyExpenditure?: number;
+            glucoseMeasurementType?: string;
+            waistCircumferenceCm?: number;
+            hydrationLevelPercentage?: number;
+            urineSpecificGravity?: number;
+            environmentalTemperature?: number;
+            /** Format: int32 */
+            environmentalHumidity?: number;
+            cardiovascularRiskScore?: number;
+            metabolicHealthScore?: number;
             /** Format: int32 */
             menstrualCycleDay?: number;
             followUpRequired?: boolean;
             followUpPriority?: string;
-            isIsolatedSystolicHypertension?: boolean;
+            bmi?: number;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: int64 */
+            profileId?: number;
+            createdBy?: string;
+            updatedBy?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+            /** Format: date-time */
+            recordedAt?: string;
             /** Format: int32 */
-            daysSinceLastRecording?: number;
-            isFullMetabolicPanel?: boolean;
-            isRecentContextKnown?: boolean;
-            isObstructiveLungDisease?: boolean;
-            bloodPressureStatus?: string;
-            isWidePulsePressure?: boolean;
-            isTachycardia?: boolean;
-            isBradycardia?: boolean;
-            isHypothermia?: boolean;
-            isHyperglycemia?: boolean;
-            isHypoglycemia?: boolean;
-            isUnderweight?: boolean;
+            heartRate?: number;
+            ketones?: number;
+            heightCm?: number;
+            weightKg?: number;
+            boneDensity?: number;
+            painType?: string;
+            /** Format: int32 */
+            steps24h?: number;
+            symptoms?: string;
+            notes?: string;
+            isLowOxygen?: boolean;
+            isFever?: boolean;
+            isObesity?: boolean;
+            tcHdlRatio?: number;
+            isIsolatedSystolicHypertension?: boolean;
             /** Format: int64 */
             id?: number;
         };
@@ -8978,15 +9350,15 @@ export interface components {
             minimumForAverage?: number;
         };
         Page: {
-            /** Format: int32 */
-            totalPages?: number;
             /** Format: int64 */
             totalElements?: number;
-            pageable?: components["schemas"]["PageableObject"];
-            first?: boolean;
-            last?: boolean;
+            /** Format: int32 */
+            totalPages?: number;
             /** Format: int32 */
             numberOfElements?: number;
+            first?: boolean;
+            last?: boolean;
+            pageable?: components["schemas"]["PageableObject"];
             /** Format: int32 */
             size?: number;
             content?: Record<string, never>[];
@@ -8996,31 +9368,31 @@ export interface components {
             empty?: boolean;
         };
         PageableObject: {
-            unpaged?: boolean;
             paged?: boolean;
             /** Format: int32 */
             pageNumber?: number;
             /** Format: int32 */
             pageSize?: number;
+            unpaged?: boolean;
             /** Format: int64 */
             offset?: number;
             sort?: components["schemas"]["SortObject"];
         };
         SortObject: {
-            unsorted?: boolean;
             sorted?: boolean;
+            unsorted?: boolean;
             empty?: boolean;
         };
         PageDoctorDegreeResponse: {
-            /** Format: int32 */
-            totalPages?: number;
             /** Format: int64 */
             totalElements?: number;
-            pageable?: components["schemas"]["PageableObject"];
-            first?: boolean;
-            last?: boolean;
+            /** Format: int32 */
+            totalPages?: number;
             /** Format: int32 */
             numberOfElements?: number;
+            first?: boolean;
+            last?: boolean;
+            pageable?: components["schemas"]["PageableObject"];
             /** Format: int32 */
             size?: number;
             content?: components["schemas"]["DoctorDegreeResponse"][];
@@ -9043,6 +9415,39 @@ export interface components {
             value?: string;
             banglaName?: string;
             abbreviatedName?: string;
+        };
+        ContributionSummaryResponse: {
+            /** Format: int64 */
+            points?: number;
+            /** Format: int32 */
+            level?: number;
+            /** Format: int32 */
+            maxLevel?: number;
+            /** Format: int64 */
+            pointsToNextLevel?: number;
+            /** Format: int64 */
+            approved?: number;
+            /** Format: int64 */
+            pending?: number;
+            /** Format: int64 */
+            rejected?: number;
+        };
+        DoctorContributionSummaryResponse: {
+            eligible?: boolean;
+            /** Format: int64 */
+            points?: number;
+            /** Format: int32 */
+            level?: number;
+            /** Format: int32 */
+            maxLevel?: number;
+            /** Format: int64 */
+            pointsToNextLevel?: number;
+            /** Format: int64 */
+            approved?: number;
+            /** Format: int64 */
+            pending?: number;
+            /** Format: int64 */
+            rejected?: number;
         };
         ContributionBadgeResponse: {
             value?: string;
@@ -9295,6 +9700,15 @@ export interface components {
         };
         PageResponseDuplicateGroup: {
             content?: components["schemas"]["DuplicateGroup"][];
+            /** Format: int32 */
+            currentPage?: number;
+            /** Format: int64 */
+            totalItems?: number;
+            /** Format: int32 */
+            totalPages?: number;
+        };
+        PageResponseContributionResponse: {
+            content?: components["schemas"]["ContributionResponse"][];
             /** Format: int32 */
             currentPage?: number;
             /** Format: int64 */
@@ -11727,6 +12141,52 @@ export interface operations {
             };
         };
     };
+    startNurse: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VerificationCaseResponse"];
+                };
+            };
+        };
+    };
+    claimNurse: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                nurseId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerificationClaimRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VerificationCaseResponse"];
+                };
+            };
+        };
+    };
     startFacility: {
         parameters: {
             query?: never;
@@ -11761,6 +12221,32 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VerificationCaseResponse"];
+                };
+            };
+        };
+    };
+    claimDoctor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                doctorId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerificationClaimRequest"];
+            };
+        };
         responses: {
             /** @description OK */
             200: {
@@ -13725,6 +14211,52 @@ export interface operations {
             };
         };
     };
+    submit_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContributionSubmitRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ContributionResponse"];
+                };
+            };
+        };
+    };
+    withdraw_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ContributionResponse"];
+                };
+            };
+        };
+    };
     request: {
         parameters: {
             query?: never;
@@ -14585,6 +15117,58 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["LocationSuggestionBulkResponse"];
+                };
+            };
+        };
+    };
+    reject_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RejectContributionRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ContributionResponse"];
+                };
+            };
+        };
+    };
+    approve_3: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ApproveContributionRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ContributionResponse"];
                 };
             };
         };
@@ -17819,6 +18403,66 @@ export interface operations {
             };
         };
     };
+    summary_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ContributionSummaryResponse"];
+                };
+            };
+        };
+    };
+    doctorSummary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DoctorContributionSummaryResponse"];
+                };
+            };
+        };
+    };
+    mine_8: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ContributionResponse"][];
+                };
+            };
+        };
+    };
     getAllContributionBadges: {
         parameters: {
             query?: never;
@@ -18458,7 +19102,7 @@ export interface operations {
             query?: {
                 page?: number;
                 size?: number;
-                type?: "DOCTOR" | "HOSPITAL";
+                type?: "DOCTOR" | "NURSE" | "HOSPITAL";
                 status?: "NONE" | "DRAFT" | "PENDING" | "UNDER_REVIEW" | "VERIFIED" | "REJECTED" | "REVOKED" | "WITHDRAWN";
             };
             header?: never;
@@ -18640,7 +19284,7 @@ export interface operations {
             };
         };
     };
-    summary_2: {
+    summary_3: {
         parameters: {
             query?: {
                 days?: number;
@@ -18838,6 +19482,53 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["PageResponseDataAccessResponse"];
+                };
+            };
+        };
+    };
+    queue_2: {
+        parameters: {
+            query?: {
+                kind?: "DOCTOR" | "NURSE" | "HOSPITAL" | "AMBULANCE" | "BLOG" | "HOSPITAL_TEST_REVIEW" | "MEDICAL_CAMP" | "FREE_CONSULTATION";
+                status?: "PENDING" | "APPROVED" | "REJECTED" | "WITHDRAWN";
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponseContributionResponse"];
+                };
+            };
+        };
+    };
+    detail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ContributionResponse"];
                 };
             };
         };

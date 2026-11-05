@@ -93,6 +93,10 @@
       "description": "API for managing hospital information including creation, retrieval, updating and deletion of hospital records"
     },
     {
+      "name": "Contributions",
+      "description": "Propose a doctor, nurse, facility or ambulance and earn points when it is accepted"
+    },
+    {
       "name": "Public Doctor Search",
       "description": "API for publicly searching doctor information"
     },
@@ -195,6 +199,10 @@
     {
       "name": "Health Vital Management",
       "description": "API for managing health vitals and tracking health metrics"
+    },
+    {
+      "name": "Contribution review (staff)",
+      "description": "Approve a proposal (the record is created) or reject it with a reason"
     },
     {
       "name": "Blog",
@@ -3663,6 +3671,71 @@
         }
       }
     },
+    "/api/verification/nurse": {
+      "post": {
+        "tags": [
+          "Verification"
+        ],
+        "summary": "Start verification of my nurse record",
+        "description": "Returns the open request if there is one.",
+        "operationId": "startNurse",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationCaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/verification/nurse/{nurseId}/claim": {
+      "post": {
+        "tags": [
+          "Verification"
+        ],
+        "summary": "Claim a listed nurse profile",
+        "description": "The same as claiming a doctor profile, with a BNMC number.",
+        "operationId": "claimNurse",
+        "parameters": [
+          {
+            "name": "nurseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationClaimRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationCaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/verification/facility/{hospitalId}": {
       "post": {
         "tags": [
@@ -3713,6 +3786,49 @@
         "summary": "Start verification of my doctor record",
         "description": "Returns the open request if there is one.",
         "operationId": "startDoctor",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationCaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/verification/doctor/{doctorId}/claim": {
+      "post": {
+        "tags": [
+          "Verification"
+        ],
+        "summary": "Claim a listed doctor profile",
+        "description": "For a verified mobile number and a login that is not yet a doctor or nurse. Staff check the registration number and documents; approval links the profile to the caller.",
+        "operationId": "claimDoctor",
+        "parameters": [
+          {
+            "name": "doctorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationClaimRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -7318,6 +7434,70 @@
         }
       }
     },
+    "/api/contributions": {
+      "post": {
+        "tags": [
+          "Contributions"
+        ],
+        "summary": "Propose a listing",
+        "description": "At most 5 can wait for a decision at a time. Returns the saved proposal.",
+        "operationId": "submit_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContributionSubmitRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContributionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contributions/{id}/withdraw": {
+      "post": {
+        "tags": [
+          "Contributions"
+        ],
+        "summary": "Withdraw a proposal that is still waiting",
+        "operationId": "withdraw_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContributionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/consents/requests": {
       "post": {
         "tags": [
@@ -8957,6 +9137,89 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/LocationSuggestionBulkResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/contributions/{id}/reject": {
+      "post": {
+        "tags": [
+          "Contribution review (staff)"
+        ],
+        "summary": "Reject with a reason the person will see",
+        "operationId": "reject_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RejectContributionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContributionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/contributions/{id}/approve": {
+      "post": {
+        "tags": [
+          "Contribution review (staff)"
+        ],
+        "summary": "Approve: create the record and award the points",
+        "operationId": "approve_3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApproveContributionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContributionResponse"
                 }
               }
             }
@@ -14288,6 +14551,74 @@
         }
       }
     },
+    "/api/contributions/summary": {
+      "get": {
+        "tags": [
+          "Contributions"
+        ],
+        "summary": "My score and badge",
+        "operationId": "summary_2",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContributionSummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contributions/summary/doctor": {
+      "get": {
+        "tags": [
+          "Contributions"
+        ],
+        "summary": "My doctor contribution score and level",
+        "description": "eligible is false unless the caller is a verified doctor.",
+        "operationId": "doctorSummary",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorContributionSummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contributions/mine": {
+      "get": {
+        "tags": [
+          "Contributions"
+        ],
+        "summary": "My proposals",
+        "description": "Newest first.",
+        "operationId": "mine_8",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContributionResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/contribution-badges": {
       "get": {
         "tags": [
@@ -15350,6 +15681,7 @@
               "type": "string",
               "enum": [
                 "DOCTOR",
+                "NURSE",
                 "HOSPITAL"
               ]
             }
@@ -15696,7 +16028,7 @@
           "Message delivery (staff)"
         ],
         "summary": "Counts per channel and outcome over the last days (1 to 90)",
-        "operationId": "summary_2",
+        "operationId": "summary_3",
         "parameters": [
           {
             "name": "days",
@@ -16222,6 +16554,114 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/PageResponseDataAccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/contributions": {
+      "get": {
+        "tags": [
+          "Contribution review (staff)"
+        ],
+        "summary": "Proposals waiting for a decision",
+        "description": "Pending by default; filter by kind or status.",
+        "operationId": "queue_2",
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DOCTOR",
+                "NURSE",
+                "HOSPITAL",
+                "AMBULANCE",
+                "BLOG",
+                "HOSPITAL_TEST_REVIEW",
+                "MEDICAL_CAMP",
+                "FREE_CONSULTATION"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "APPROVED",
+                "REJECTED",
+                "WITHDRAWN"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseContributionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/contributions/{id}": {
+      "get": {
+        "tags": [
+          "Contribution review (staff)"
+        ],
+        "summary": "One proposal with its details and who sent it",
+        "operationId": "detail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContributionResponse"
                 }
               }
             }
@@ -17116,10 +17556,15 @@
             "type": "integer",
             "format": "int32"
           },
-          "badgeLevel": {
-            "type": "string"
+          "level": {
+            "type": "integer",
+            "format": "int32"
           },
-          "badgeName": {
+          "maxLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "badgeLevel": {
             "type": "string"
           },
           "badgeColor": {
@@ -20956,6 +21401,12 @@
           "claimedRegistrationNo": {
             "type": "string"
           },
+          "recordRegistrationNo": {
+            "type": "string"
+          },
+          "claim": {
+            "type": "boolean"
+          },
           "renewal": {
             "type": "boolean"
           },
@@ -21023,6 +21474,24 @@
             "minLength": 0
           }
         }
+      },
+      "VerificationClaimRequest": {
+        "type": "object",
+        "properties": {
+          "registrationNo": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 0
+          }
+        },
+        "required": [
+          "registrationNo"
+        ]
       },
       "DomainUserRequest": {
         "type": "object",
@@ -21468,10 +21937,10 @@
             "maxLength": 1000,
             "minLength": 0
           },
-          "endDateValid": {
+          "update": {
             "type": "boolean"
           },
-          "update": {
+          "endDateValid": {
             "type": "boolean"
           }
         },
@@ -21580,10 +22049,10 @@
             "maxLength": 1000,
             "minLength": 0
           },
-          "endDateValid": {
+          "update": {
             "type": "boolean"
           },
-          "update": {
+          "endDateValid": {
             "type": "boolean"
           }
         },
@@ -21711,6 +22180,483 @@
             }
           }
         }
+      },
+      "ContributionAmbulanceData": {
+        "type": "object",
+        "properties": {
+          "vehicleNumber": {
+            "type": "string",
+            "maxLength": 20,
+            "minLength": 0
+          },
+          "type": {
+            "type": "string",
+            "pattern": "BASIC|ADVANCED|NEONATAL|PEDIATRIC|AIR_AMBULANCE"
+          },
+          "driverName": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "driverPhone": {
+            "type": "string",
+            "pattern": "^\\+?[0-9]{10,15}$"
+          },
+          "districtId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "upazilaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hospitalId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "districtId",
+          "driverPhone",
+          "type",
+          "vehicleNumber"
+        ]
+      },
+      "ContributionBlogData": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 300,
+            "minLength": 0
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 600,
+            "minLength": 0
+          },
+          "bodyHtml": {
+            "type": "string",
+            "maxLength": 200000,
+            "minLength": 400
+          },
+          "language": {
+            "type": "string",
+            "pattern": "^(bn|en)?$"
+          },
+          "specialityId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 10,
+            "minItems": 0,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "bodyHtml",
+          "title"
+        ]
+      },
+      "ContributionDoctorData": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "bnName": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "gender": {
+            "type": "string",
+            "pattern": "MALE|FEMALE|OTHER"
+          },
+          "bmdcNo": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 0
+          },
+          "specializations": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "degrees": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^(\\+?[0-9]{10,15})?$"
+          },
+          "address": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "districtId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "upazilaId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "bmdcNo",
+          "districtId",
+          "gender",
+          "name",
+          "specializations"
+        ]
+      },
+      "ContributionFreeConsultationData": {
+        "type": "object",
+        "properties": {
+          "consultationDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "place": {
+            "type": "string",
+            "maxLength": 300,
+            "minLength": 0
+          },
+          "districtId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "patientsServed": {
+            "type": "integer",
+            "format": "int32",
+            "maximum": 100000,
+            "minimum": 1
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 0
+          }
+        },
+        "required": [
+          "consultationDate",
+          "patientsServed",
+          "place"
+        ]
+      },
+      "ContributionHospitalData": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "bnName": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "hospitalType": {
+            "type": "string"
+          },
+          "organizationType": {
+            "type": "string"
+          },
+          "numberOfBed": {
+            "type": "integer",
+            "format": "int32",
+            "maximum": 100000,
+            "minimum": 0
+          },
+          "districtId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "upazilaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "address": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^(\\+?[0-9]{10,15})?$"
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "websiteUrl": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0,
+            "pattern": "^(https?://.*)?$"
+          },
+          "lat": {
+            "type": "number",
+            "maximum": 90,
+            "minimum": -90
+          },
+          "lon": {
+            "type": "number",
+            "maximum": 180,
+            "minimum": -180
+          },
+          "registrationCode": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 0
+          }
+        },
+        "required": [
+          "address",
+          "districtId",
+          "hospitalType",
+          "name",
+          "numberOfBed",
+          "organizationType"
+        ]
+      },
+      "ContributionHospitalTestReviewData": {
+        "type": "object",
+        "properties": {
+          "hospitalMedicalTestId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "accepts": {
+            "type": "boolean"
+          },
+          "comment": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 20
+          }
+        },
+        "required": [
+          "accepts",
+          "comment",
+          "hospitalMedicalTestId"
+        ]
+      },
+      "ContributionMedicalCampData": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 0
+          },
+          "campDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "place": {
+            "type": "string",
+            "maxLength": 300,
+            "minLength": 0
+          },
+          "districtId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "upazilaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "patientsServed": {
+            "type": "integer",
+            "format": "int32",
+            "maximum": 100000,
+            "minimum": 1
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 0
+          }
+        },
+        "required": [
+          "campDate",
+          "districtId",
+          "patientsServed",
+          "place",
+          "title"
+        ]
+      },
+      "ContributionNurseData": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "bnName": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "gender": {
+            "type": "string",
+            "pattern": "MALE|FEMALE|OTHER"
+          },
+          "bnmcNo": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 0
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^(\\+?[0-9]{10,15})?$"
+          },
+          "address": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "districtId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "upazilaId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "bnmcNo",
+          "districtId",
+          "gender",
+          "name"
+        ]
+      },
+      "ContributionSubmitRequest": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "DOCTOR",
+              "NURSE",
+              "HOSPITAL",
+              "AMBULANCE",
+              "BLOG",
+              "HOSPITAL_TEST_REVIEW",
+              "MEDICAL_CAMP",
+              "FREE_CONSULTATION"
+            ]
+          },
+          "doctor": {
+            "$ref": "#/components/schemas/ContributionDoctorData"
+          },
+          "nurse": {
+            "$ref": "#/components/schemas/ContributionNurseData"
+          },
+          "hospital": {
+            "$ref": "#/components/schemas/ContributionHospitalData"
+          },
+          "ambulance": {
+            "$ref": "#/components/schemas/ContributionAmbulanceData"
+          },
+          "blog": {
+            "$ref": "#/components/schemas/ContributionBlogData"
+          },
+          "hospitalTestReview": {
+            "$ref": "#/components/schemas/ContributionHospitalTestReviewData"
+          },
+          "medicalCamp": {
+            "$ref": "#/components/schemas/ContributionMedicalCampData"
+          },
+          "freeConsultation": {
+            "$ref": "#/components/schemas/ContributionFreeConsultationData"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 0
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "ContributionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "subjectName": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "createdSubjectId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "decisionReason": {
+            "type": "string"
+          },
+          "pointsAwarded": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "submittedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reviewedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reviewer": {
+            "type": "string"
+          },
+          "contributorProfileId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "contributorName": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/JsonNode"
+          }
+        }
+      },
+      "JsonNode": {
+        "type": "object"
       },
       "ConsentRequestCreateRequest": {
         "type": "object",
@@ -22094,7 +23040,9 @@
               "VERIFICATION_REVIEW_DUE",
               "REVIEW_RECEIVED",
               "REVIEW_PUBLISHED",
-              "REVIEW_REJECTED"
+              "REVIEW_REJECTED",
+              "CONTRIBUTION_APPROVED",
+              "CONTRIBUTION_REJECTED"
             ]
           },
           "recipientProfileId": {
@@ -22177,6 +23125,24 @@
           "stillPending": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "RejectContributionRequest": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 0
+          }
+        }
+      },
+      "ApproveContributionRequest": {
+        "type": "object",
+        "properties": {
+          "confirmNotDuplicate": {
+            "type": "boolean"
           }
         }
       },
@@ -22446,7 +23412,9 @@
               "VERIFICATION_REVIEW_DUE",
               "REVIEW_RECEIVED",
               "REVIEW_PUBLISHED",
-              "REVIEW_REJECTED"
+              "REVIEW_REJECTED",
+              "CONTRIBUTION_APPROVED",
+              "CONTRIBUTION_REJECTED"
             ]
           },
           "title": {
@@ -24221,71 +25189,45 @@
       "LatestHealthVitalProjection": {
         "type": "object",
         "properties": {
-          "isLowOxygen": {
-            "type": "boolean"
-          },
-          "isFever": {
-            "type": "boolean"
-          },
-          "isObesity": {
-            "type": "boolean"
-          },
-          "tcHdlRatio": {
-            "type": "number"
-          },
-          "profileId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "createdBy": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedBy": {
-            "type": "string"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "recordedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "heartRate": {
+          "daysSinceLastRecording": {
             "type": "integer",
             "format": "int32"
           },
-          "ketones": {
-            "type": "number"
+          "isFullMetabolicPanel": {
+            "type": "boolean"
           },
-          "heightCm": {
-            "type": "number"
+          "isRecentContextKnown": {
+            "type": "boolean"
           },
-          "weightKg": {
-            "type": "number"
+          "isObstructiveLungDisease": {
+            "type": "boolean"
           },
-          "boneDensity": {
-            "type": "number"
-          },
-          "painType": {
+          "bloodPressureStatus": {
             "type": "string"
           },
-          "steps24h": {
-            "type": "integer",
-            "format": "int32"
+          "isWidePulsePressure": {
+            "type": "boolean"
           },
-          "symptoms": {
-            "type": "string"
+          "isTachycardia": {
+            "type": "boolean"
           },
-          "notes": {
-            "type": "string"
+          "isBradycardia": {
+            "type": "boolean"
           },
-          "bmi": {
-            "type": "number"
+          "isHypothermia": {
+            "type": "boolean"
+          },
+          "isHyperglycemia": {
+            "type": "boolean"
+          },
+          "isHypoglycemia": {
+            "type": "boolean"
+          },
+          "isUnderweight": {
+            "type": "boolean"
+          },
+          "recentSmoking": {
+            "type": "boolean"
           },
           "bloodPressureSystolic": {
             "type": "integer",
@@ -24302,35 +25244,6 @@
             "type": "number"
           },
           "forcedExpiratoryVolume": {
-            "type": "number"
-          },
-          "restingEnergyExpenditure": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "glucoseMeasurementType": {
-            "type": "string"
-          },
-          "waistCircumferenceCm": {
-            "type": "number"
-          },
-          "hydrationLevelPercentage": {
-            "type": "number"
-          },
-          "urineSpecificGravity": {
-            "type": "number"
-          },
-          "environmentalTemperature": {
-            "type": "number"
-          },
-          "environmentalHumidity": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "cardiovascularRiskScore": {
-            "type": "number"
-          },
-          "metabolicHealthScore": {
             "type": "number"
           },
           "pulsePressure": {
@@ -24497,8 +25410,34 @@
           "recentAlcohol": {
             "type": "boolean"
           },
-          "recentSmoking": {
-            "type": "boolean"
+          "restingEnergyExpenditure": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "glucoseMeasurementType": {
+            "type": "string"
+          },
+          "waistCircumferenceCm": {
+            "type": "number"
+          },
+          "hydrationLevelPercentage": {
+            "type": "number"
+          },
+          "urineSpecificGravity": {
+            "type": "number"
+          },
+          "environmentalTemperature": {
+            "type": "number"
+          },
+          "environmentalHumidity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cardiovascularRiskScore": {
+            "type": "number"
+          },
+          "metabolicHealthScore": {
+            "type": "number"
           },
           "menstrualCycleDay": {
             "type": "integer",
@@ -24510,44 +25449,73 @@
           "followUpPriority": {
             "type": "string"
           },
-          "isIsolatedSystolicHypertension": {
-            "type": "boolean"
+          "bmi": {
+            "type": "number"
           },
-          "daysSinceLastRecording": {
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "profileId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "updatedBy": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "heartRate": {
             "type": "integer",
             "format": "int32"
           },
-          "isFullMetabolicPanel": {
-            "type": "boolean"
+          "ketones": {
+            "type": "number"
           },
-          "isRecentContextKnown": {
-            "type": "boolean"
+          "heightCm": {
+            "type": "number"
           },
-          "isObstructiveLungDisease": {
-            "type": "boolean"
+          "weightKg": {
+            "type": "number"
           },
-          "bloodPressureStatus": {
+          "boneDensity": {
+            "type": "number"
+          },
+          "painType": {
             "type": "string"
           },
-          "isWidePulsePressure": {
+          "steps24h": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "symptoms": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "isLowOxygen": {
             "type": "boolean"
           },
-          "isTachycardia": {
+          "isFever": {
             "type": "boolean"
           },
-          "isBradycardia": {
+          "isObesity": {
             "type": "boolean"
           },
-          "isHypothermia": {
-            "type": "boolean"
+          "tcHdlRatio": {
+            "type": "number"
           },
-          "isHyperglycemia": {
-            "type": "boolean"
-          },
-          "isHypoglycemia": {
-            "type": "boolean"
-          },
-          "isUnderweight": {
+          "isIsolatedSystolicHypertension": {
             "type": "boolean"
           },
           "id": {
@@ -24710,16 +25678,17 @@
       "Page": {
         "type": "object",
         "properties": {
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
           "totalElements": {
             "type": "integer",
             "format": "int64"
           },
-          "pageable": {
-            "$ref": "#/components/schemas/PageableObject"
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
           },
           "first": {
             "type": "boolean"
@@ -24727,9 +25696,8 @@
           "last": {
             "type": "boolean"
           },
-          "numberOfElements": {
-            "type": "integer",
-            "format": "int32"
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
           },
           "size": {
             "type": "integer",
@@ -24756,9 +25724,6 @@
       "PageableObject": {
         "type": "object",
         "properties": {
-          "unpaged": {
-            "type": "boolean"
-          },
           "paged": {
             "type": "boolean"
           },
@@ -24769,6 +25734,9 @@
           "pageSize": {
             "type": "integer",
             "format": "int32"
+          },
+          "unpaged": {
+            "type": "boolean"
           },
           "offset": {
             "type": "integer",
@@ -24782,10 +25750,10 @@
       "SortObject": {
         "type": "object",
         "properties": {
-          "unsorted": {
+          "sorted": {
             "type": "boolean"
           },
-          "sorted": {
+          "unsorted": {
             "type": "boolean"
           },
           "empty": {
@@ -24796,16 +25764,17 @@
       "PageDoctorDegreeResponse": {
         "type": "object",
         "properties": {
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
           "totalElements": {
             "type": "integer",
             "format": "int64"
           },
-          "pageable": {
-            "$ref": "#/components/schemas/PageableObject"
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
           },
           "first": {
             "type": "boolean"
@@ -24813,9 +25782,8 @@
           "last": {
             "type": "boolean"
           },
-          "numberOfElements": {
-            "type": "integer",
-            "format": "int32"
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
           },
           "size": {
             "type": "integer",
@@ -24875,6 +25843,75 @@
           },
           "abbreviatedName": {
             "type": "string"
+          }
+        }
+      },
+      "ContributionSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "points": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pointsToNextLevel": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "approved": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "pending": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "rejected": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "DoctorContributionSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "eligible": {
+            "type": "boolean"
+          },
+          "points": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pointsToNextLevel": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "approved": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "pending": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "rejected": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
@@ -25528,6 +26565,29 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/DuplicateGroup"
+            }
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalItems": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PageResponseContributionResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContributionResponse"
             }
           },
           "currentPage": {
