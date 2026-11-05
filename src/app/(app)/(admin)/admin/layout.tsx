@@ -1,10 +1,9 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AdminSidebar } from "@/components/admin/admin-sidebar";
-import { AdminTopbar } from "@/components/admin/admin-topbar";
+import { useConsoleGroups } from "@/components/admin/admin-sidebar";
+import { AppShell } from "@/components/shell/app-shell";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { SidebarProvider } from "@/components/ui/sidebar";
 import { routeAllowed } from "@/config/navigation-rules";
 import { usePermissions } from "@/hooks/use-permissions";
 
@@ -39,19 +38,10 @@ export default function AdminLayout({
 }: {
 	children: React.ReactNode;
 }) {
+	const groups = useConsoleGroups();
 	return (
-		<>
-			<SidebarProvider>
-				<div className="flex min-h-screen w-full">
-					<AdminSidebar />
-					<main className="flex-1 overflow-hidden">
-						<div className="print:hidden">
-							<AdminTopbar />
-						</div>
-						<RouteGuard>{children}</RouteGuard>
-					</main>
-				</div>
-			</SidebarProvider>
-		</>
+		<AppShell brandTitle="OpenCare Admin" brandSubtitle="Healthcare Management" groups={groups} exact={["/admin"]} notificationsHref="/admin/notifications">
+			<RouteGuard>{children}</RouteGuard>
+		</AppShell>
 	);
 }

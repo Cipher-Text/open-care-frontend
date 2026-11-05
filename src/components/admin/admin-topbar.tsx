@@ -15,7 +15,7 @@ import { WorkspaceSwitcher } from "@/components/common/workspace-switcher";
  * sidebar toggle and the account menu (pages no longer have to remember to include them).
  * Page titles and page actions live in AdminHeader, below this bar.
  */
-export function AdminTopbar() {
+export function AdminTopbar({ notificationsHref = "/admin/notifications" }: { notificationsHref?: string }) {
   // a quiet poll; a failure just shows no badge
   const { data: unread = 0 } = useQuery({ queryKey: [...qk.unreadNotifications], queryFn: fetchUnreadCount, refetchInterval: 60_000, retry: false });
   return (
@@ -27,7 +27,7 @@ export function AdminTopbar() {
         <Search className="h-4 w-4" />
       </Button>
       <Button variant="ghost" size="icon" className="relative" asChild aria-label={unread > 0 ? `Notifications, ${unread} unread` : "Notifications"}>
-        <Link href="/admin/notifications">
+        <Link href={notificationsHref}>
           <Bell className="h-4 w-4" />
           {unread > 0 && (
             <span className="absolute -right-0.5 -top-0.5 flex min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold leading-4 text-primary-foreground">

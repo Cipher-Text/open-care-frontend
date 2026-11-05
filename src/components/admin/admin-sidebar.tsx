@@ -24,18 +24,7 @@ import {
   Salad,
   UserCircle,
 } from "lucide-react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import Link from "next/link";
+import type { ShellGroup } from "@/components/shell/app-sidebar";
 
 // Icons by rule id; the list itself (what is shown, to whom) is in config/navigation-rules.ts
 const ICONS: Record<string, LucideIcon> = {
@@ -61,50 +50,13 @@ const ICONS: Record<string, LucideIcon> = {
   "role-permissions": ShieldCheck,
 };
 
-export function AdminSidebar() {
+/** The console's menu as groups for the shared side menu: what the person's permissions allow, in the order of the rules. */
+export function useConsoleGroups(): ShellGroup[] {
   const { hasPermission, ready } = usePermissions();
   // Nothing is listed until the token has been read, so the menu never flashes entries the person cannot use
   const sections = ready ? groupedMenu(hasPermission) : [];
-
-  return (
-    <Sidebar variant="inset" className="print:hidden">
-      <SidebarHeader>
-        <div className="flex items-center gap-2 px-4 py-2">
-          <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-            <Home className="size-4" />
-          </div>
-          <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold">OpenCare Admin</span>
-            <span className="truncate text-xs">Healthcare Management</span>
-          </div>
-        </div>
-      </SidebarHeader>
-
-      <SidebarContent>
-        {sections.map((section) => (
-          <SidebarGroup key={section.label ?? "top"}>
-            {section.label && <SidebarGroupLabel>{section.label}</SidebarGroupLabel>}
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {section.items.map((item) => (
-                  <SidebarMenuItem key={item.id}>
-                    <Link href={item.url}>
-                      <SidebarMenuButton>
-                        {(() => {
-                          const Icon = ICONS[item.id] ?? Home;
-                          return <Icon />;
-                        })()}
-                        <span>{item.title}</span>
-                      </SidebarMenuButton>
-                    </Link>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
-      </SidebarContent>
-
-    </Sidebar>
-  );
+  return sections.map((section) => ({
+    label: section.label,
+    items: section.items.map((item) => ({ key: item.id, title: item.title, url: item.url, icon: ICONS[item.id] ?? Home })),
+  }));
 }
