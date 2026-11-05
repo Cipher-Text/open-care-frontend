@@ -6324,6 +6324,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/hospitals/{hospitalId}/staff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * The nurses and nutritionists at a hospital
+         * @description With their contact details. For the hospital's administrators and platform staff.
+         */
+        get: operations["list_staff"];
+        put?: never;
+        /**
+         * Add a nurse or a nutritionist to a hospital
+         * @description Give a nurseId or a nutritionistId. For the hospital's administrators and platform staff.
+         */
+        post: operations["add_staff"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff-workplaces/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * End a staff link
+         * @description Sets today as the end date. The hospital's administrators, platform staff, or the nurse or nutritionist themselves.
+         */
+        delete: operations["end_staff"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/staff-workplaces/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Where I work
+         * @description The hospitals the signed-in nurse or nutritionist works at now.
+         */
+        get: operations["mine_staff"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -9823,6 +9887,36 @@ export interface components {
             /** @enum {string} */
             role?: "ADMIN" | "USER";
             position?: string;
+        };
+        StaffWorkplaceRequest: {
+            /** Format: int64 */
+            nurseId?: number;
+            /** Format: int64 */
+            nutritionistId?: number;
+            position?: string;
+            /** Format: date */
+            startDate?: string;
+        };
+        StaffWorkplaceResponse: {
+            /** Format: int64 */
+            id?: number;
+            kind?: string;
+            /** Format: int64 */
+            personId?: number;
+            name?: string;
+            bnName?: string;
+            registrationNo?: string;
+            verified?: boolean;
+            phone?: string;
+            email?: string;
+            /** Format: int32 */
+            hospitalId?: number;
+            hospitalName?: string;
+            position?: string;
+            /** Format: date */
+            startDate?: string;
+            /** Format: date */
+            endDate?: string;
         };
     };
     responses: never;
@@ -19887,6 +19981,94 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["NurseResponse"];
+                };
+            };
+        };
+    };
+    list_staff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                hospitalId: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StaffWorkplaceResponse"][];
+                };
+            };
+        };
+    };
+    add_staff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                hospitalId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StaffWorkplaceRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StaffWorkplaceResponse"];
+                };
+            };
+        };
+    };
+    end_staff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    mine_staff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["StaffWorkplaceResponse"][];
                 };
             };
         };

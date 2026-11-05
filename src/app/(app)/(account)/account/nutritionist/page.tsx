@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { fetchMyNutritionist, updateNutritionist } from "@/api/nutritionists";
+import { MyWorkplaces } from "@/components/account/my-workplaces";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -107,6 +108,7 @@ export default function MyNutritionistPage() {
 					</CardContent>
 				</Card>
 			)}
+			{mine.data && <MyWorkplaces />}
 		</div>
 	);
 }

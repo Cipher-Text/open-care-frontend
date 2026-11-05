@@ -51,10 +51,10 @@ const GROUPS: { label: string; links: NavLink[] }[] = [
 	},
 	{
 		label: "Professional",
-		// the permission is the one the nutritionist group holds, for their own record
+		// by the person's type: the permission is held by hospital admins too, who have no nutritionist record
 		links: [
 			{ href: "/account/nurse", label: "My nurse profile", icon: HeartPulse, userType: "NURSE" },
-			{ href: "/account/nutritionist", label: "My nutritionist profile", icon: Salad, permission: "update-nutritionist" },
+			{ href: "/account/nutritionist", label: "My nutritionist profile", icon: Salad, userType: "NUTRITIONIST" },
 		],
 	},
 ];

@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Building2, Droplets, MessageSquare, Pencil, TrendingUp } from "lucide-react";
 import { fetchEnquiries } from "@/api/enquiries";
 import { KIND_LABEL, ROLE_LABEL } from "@/api/organisation-roles";
+import { HospitalStaffCard } from "@/components/account/hospital-staff-card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -82,6 +83,8 @@ export default function OrganisationHomePage() {
 					<AlertDescription>You are a member of this organisation. Its administrators manage its details.</AlertDescription>
 				</Alert>
 			)}
+
+			{isHospital && admin && <HospitalStaffCard hospitalId={id} />}
 
 			{isHospital && (
 				<Card className="max-w-3xl">

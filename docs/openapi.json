@@ -17002,6 +17002,134 @@
           }
         }
       }
+    },
+    "/api/hospitals/{hospitalId}/staff": {
+      "get": {
+        "tags": [
+          "Hospital staff"
+        ],
+        "summary": "The nurses and nutritionists at a hospital",
+        "description": "With their contact details. For the hospital's administrators and platform staff.",
+        "operationId": "list_staff",
+        "parameters": [
+          {
+            "name": "hospitalId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StaffWorkplaceResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Hospital staff"
+        ],
+        "summary": "Add a nurse or a nutritionist to a hospital",
+        "description": "Give a nurseId or a nutritionistId. For the hospital's administrators and platform staff.",
+        "operationId": "add_staff",
+        "parameters": [
+          {
+            "name": "hospitalId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StaffWorkplaceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffWorkplaceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/staff-workplaces/{id}": {
+      "delete": {
+        "tags": [
+          "Hospital staff"
+        ],
+        "summary": "End a staff link",
+        "description": "Sets today as the end date. The hospital's administrators, platform staff, or the nurse or nutritionist themselves.",
+        "operationId": "end_staff",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/staff-workplaces/me": {
+      "get": {
+        "tags": [
+          "Hospital staff"
+        ],
+        "summary": "Where I work",
+        "description": "The hospitals the signed-in nurse or nutritionist works at now.",
+        "operationId": "mine_staff",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StaffWorkplaceResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -26907,6 +27035,79 @@
           },
           "position": {
             "type": "string"
+          }
+        }
+      },
+      "StaffWorkplaceRequest": {
+        "type": "object",
+        "properties": {
+          "nurseId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nutritionistId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "position": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "StaffWorkplaceResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "personId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "bnName": {
+            "type": "string"
+          },
+          "registrationNo": {
+            "type": "string"
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "hospitalId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hospitalName": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
           }
         }
       }
