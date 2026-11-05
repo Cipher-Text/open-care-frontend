@@ -3,6 +3,7 @@ import { baseUrl } from "@/config/config";
 import type { DoctorDetailsResponse } from "@/types/doctors";
 import type { HospitalDetailsResponse } from "@/types/hospitals";
 import type { NurseResponse } from "@/types/nurses";
+import type { NutritionistResponse } from "@/types/nutritionists";
 import { displayName } from "@/lib/text";
 export { safeUrl } from "@/lib/safe-url";
 
@@ -77,6 +78,19 @@ export async function getNurse(segment: string): Promise<NurseResponse | null> {
 		nurse.profile.bnName = displayName(nurse.profile.bnName);
 	}
 	return nurse;
+}
+
+/** One nutritionist by id. A missing or inactive record is null, so the page shows a 404. */
+export async function getNutritionist(segment: string): Promise<NutritionistResponse | null> {
+	const id = parseId(decodeURIComponent(segment));
+	if (id == null) return null;
+	const nutritionist = await getJson<NutritionistResponse>(`/nutritionists/${id}`);
+	if (!nutritionist || nutritionist.isActive === false) return null;
+	if (nutritionist.profile) {
+		nutritionist.profile.name = displayName(nutritionist.profile.name);
+		nutritionist.profile.bnName = displayName(nutritionist.profile.bnName);
+	}
+	return nutritionist;
 }
 
 export function validEmail(email?: string | null): string | null {

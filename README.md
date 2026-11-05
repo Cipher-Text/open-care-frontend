@@ -218,7 +218,7 @@ npm run start
 npm run lint
 
 # Tests (Node's built-in runner; not run in CI yet)
-npm run test:nav       # menu and guards for all 15 roles (20 tests)
+npm run test:nav       # menu and guards for all 16 roles (21 tests)
 npm run test:i18n      # names, API error messages, en.json/bn.json parity (13 tests)
 npm run test:pricing   # pricing page view, roadmap marks and hidden prices (11 tests)
 npm run test:bff       # the same-origin proxy rules (11 tests)
@@ -234,7 +234,7 @@ npm run test:csp       # the Content-Security-Policy (3 tests)
 npm run test:shapes    # the answer checks: pages, capabilities, open times, consent (5 tests)
 npm run test:dupes     # the duplicate finder's view rules (4 tests)
 npm run test:bulk      # the bulk upload's view rules (4 tests)
-npm run test:contribution  # article text to safe HTML, contribution kinds, level labels (7 tests)
+npm run test:contribution  # article text to safe HTML, contribution kinds, level labels, the nutritionist kind (9 tests)
 
 # Regenerate opencare/docs/reference/ACCESS_MATRIX.md from the menu rules and src/config/role-permissions.fixture.json
 npm run docs:access

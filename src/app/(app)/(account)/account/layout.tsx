@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Award, BadgeCheck, CalendarDays, Eye, FileText, HeartPulse, Home, ShieldCheck, Star, UserCircle } from "lucide-react";
+import { Award, BadgeCheck, CalendarDays, Eye, FileText, HeartPulse, Home, Salad, ShieldCheck, Star, UserCircle } from "lucide-react";
 import { UserMenu } from "@/components/admin/user-menu";
+import { usePermissions } from "@/hooks/use-permissions";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
@@ -19,9 +20,14 @@ const LINKS = [
 	{ href: "/account/contributions", label: "Contribute", icon: Award },
 ];
 
+/** Shown only to a nutritionist: their own record (the permission is the one the nutritionist group holds). */
+const NUTRITIONIST_LINK = { href: "/account/nutritionist", label: "My nutritionist profile", icon: Salad };
+
 /** The area for people who use Open Care but do not manage it: patients, and staff of other organisations' accounts. */
 export default function AccountLayout({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
+	const { hasPermission } = usePermissions();
+	const links = hasPermission("update-nutritionist") ? [...LINKS, NUTRITIONIST_LINK] : LINKS;
 	return (
 		<div className="min-h-screen bg-background">
 			<header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur">
@@ -30,7 +36,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
 						Open Care
 					</Link>
 					<nav aria-label="Account" className="flex flex-1 items-center gap-1 overflow-x-auto">
-						{LINKS.map(({ href, label, icon: Icon }) => {
+						{links.map(({ href, label, icon: Icon }) => {
 							const active = href === "/account" ? pathname === "/account" : pathname.startsWith(href);
 							return (
 								<Link

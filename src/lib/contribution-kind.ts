@@ -6,6 +6,7 @@ export type Track = "GENERAL" | "DOCTOR";
 export const REQUEST_KEY: Record<ContributionKind, string> = {
 	DOCTOR: "doctor",
 	NURSE: "nurse",
+	NUTRITIONIST: "nutritionist",
 	HOSPITAL: "hospital",
 	AMBULANCE: "ambulance",
 	BLOG: "blog",
@@ -17,6 +18,7 @@ export const REQUEST_KEY: Record<ContributionKind, string> = {
 export const KIND_WORDS: Record<ContributionKind, { label: string; points: number; hint: string; track: Track }> = {
 	DOCTOR: { label: "Doctor", points: 30, hint: "A doctor who is not listed yet. You need their BMDC number.", track: "GENERAL" },
 	NURSE: { label: "Nurse", points: 30, hint: "A nurse who is not listed yet. You need their BNMC number.", track: "GENERAL" },
+	NUTRITIONIST: { label: "Nutritionist or dietitian", points: 30, hint: "A nutritionist or dietitian who is not listed yet. You need their degree or qualification.", track: "GENERAL" },
 	HOSPITAL: { label: "Hospital or clinic", points: 30, hint: "A hospital, clinic or diagnostic centre that is not listed yet.", track: "GENERAL" },
 	AMBULANCE: { label: "Ambulance", points: 20, hint: "An ambulance with its vehicle number and the driver's phone.", track: "GENERAL" },
 	BLOG: { label: "Health article", points: 40, hint: "Write a health article. If staff accept it, it is published under your name.", track: "DOCTOR" },

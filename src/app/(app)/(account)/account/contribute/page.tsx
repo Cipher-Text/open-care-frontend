@@ -20,6 +20,7 @@ import { qk } from "@/lib/query-keys";
 import type { ContributionKind, ContributionSubmit } from "@/types/contribution";
 
 const GENDERS = ["MALE", "FEMALE", "OTHER"];
+const TITLES = [{ value: "NUTRITIONIST", label: "Nutritionist" }, { value: "DIETITIAN", label: "Dietitian" }];
 const AMBULANCE_TYPES = ["BASIC", "ADVANCED", "NEONATAL", "PEDIATRIC", "AIR_AMBULANCE"];
 const LANGUAGES = [{ value: "bn", label: "Bangla" }, { value: "en", label: "English" }];
 const YES_NO = [{ value: "yes", label: "Yes, I accept this test" }, { value: "no", label: "No, I do not accept it" }];
@@ -54,6 +55,17 @@ const FIELDS: Record<ContributionKind, FieldSpec[]> = {
 		{ key: "bnName", label: "Name in Bangla" },
 		{ key: "gender", label: "Gender", required: true, type: "select", options: GENDERS },
 		{ key: "bnmcNo", label: "BNMC registration number", required: true },
+		{ key: "description", label: "About", type: "textarea" },
+		{ key: "phone", label: "Phone" },
+		{ key: "address", label: "Address" },
+	],
+	NUTRITIONIST: [
+		{ key: "name", label: "Name", required: true },
+		{ key: "bnName", label: "Name in Bangla" },
+		{ key: "gender", label: "Gender", required: true, type: "select", options: GENDERS },
+		{ key: "title", label: "Nutritionist or dietitian", type: "select", choices: TITLES },
+		{ key: "degrees", label: "Degree or qualification", required: true },
+		{ key: "registrationNo", label: "Registration number (if they have one)" },
 		{ key: "description", label: "About", type: "textarea" },
 		{ key: "phone", label: "Phone" },
 		{ key: "address", label: "Address" },
@@ -104,7 +116,7 @@ const FIELDS: Record<ContributionKind, FieldSpec[]> = {
 
 /** Whether a kind asks for a district: always for listings and camps, optional for a free consultation, never for the rest. */
 const LOCATION: Record<ContributionKind, "required" | "optional" | "none"> = {
-	DOCTOR: "required", NURSE: "required", HOSPITAL: "required", AMBULANCE: "required",
+	DOCTOR: "required", NURSE: "required", NUTRITIONIST: "required", HOSPITAL: "required", AMBULANCE: "required",
 	BLOG: "none", HOSPITAL_TEST_REVIEW: "none", MEDICAL_CAMP: "required", FREE_CONSULTATION: "optional",
 };
 

@@ -1,12 +1,13 @@
 import { apiGet } from "@/lib/api-client";
 
 /** Public directory totals. They are real counts from the API, read with a page size of one. */
-export type CountKey = "hospitals" | "doctors" | "nurses" | "institutions" | "ambulances";
+export type CountKey = "hospitals" | "doctors" | "nurses" | "nutritionists" | "institutions" | "ambulances";
 
 const ENDPOINTS: Record<CountKey, string> = {
 	hospitals: "/hospitals",
 	doctors: "/doctors",
 	nurses: "/nurses",
+	nutritionists: "/nutritionists",
 	institutions: "/institutions",
 	ambulances: "/ambulances",
 };

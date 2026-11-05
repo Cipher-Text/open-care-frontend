@@ -1,4 +1,4 @@
-export type ContributionKind = "DOCTOR" | "NURSE" | "HOSPITAL" | "AMBULANCE" | "BLOG" | "HOSPITAL_TEST_REVIEW" | "MEDICAL_CAMP" | "FREE_CONSULTATION";
+export type ContributionKind = "DOCTOR" | "NURSE" | "NUTRITIONIST" | "HOSPITAL" | "AMBULANCE" | "BLOG" | "HOSPITAL_TEST_REVIEW" | "MEDICAL_CAMP" | "FREE_CONSULTATION";
 export type ContributionStatus = "PENDING" | "APPROVED" | "REJECTED" | "WITHDRAWN";
 
 /** A proposal. The details, the reviewer and the contributor are present only in staff responses. */
@@ -39,6 +39,7 @@ export interface DoctorContributionSummary extends ContributionSummary {
 /** The fields a person may propose for each kind. Required ones are what "enough information" means. */
 export interface DoctorData { name: string; bnName?: string; gender: string; bmdcNo: string; specializations: string; degrees?: string; phone?: string; address?: string; districtId: number; upazilaId?: number }
 export interface NurseData { name: string; bnName?: string; gender: string; bnmcNo: string; description?: string; phone?: string; address?: string; districtId: number; upazilaId?: number }
+export interface NutritionistData { name: string; bnName?: string; gender: string; title?: "NUTRITIONIST" | "DIETITIAN"; registrationNo?: string; degrees: string; description?: string; phone?: string; address?: string; districtId: number; upazilaId?: number }
 export interface HospitalData { name: string; bnName?: string; hospitalType: string; organizationType: string; numberOfBed: number; districtId: number; upazilaId?: number; address: string; phone?: string; email?: string; websiteUrl?: string; lat?: number; lon?: number; registrationCode?: string }
 export interface AmbulanceData { vehicleNumber: string; type: string; driverName?: string; driverPhone: string; districtId: number; upazilaId?: number; hospitalId?: number }
 
@@ -46,6 +47,7 @@ export interface ContributionSubmit {
 	kind: ContributionKind;
 	doctor?: DoctorData;
 	nurse?: NurseData;
+	nutritionist?: NutritionistData;
 	hospital?: HospitalData;
 	ambulance?: AmbulanceData;
 	blog?: Record<string, unknown>;

@@ -10,9 +10,12 @@ export const startDoctorVerification = async () => unwrap<VerificationCase>(awai
 export const startNurseVerification = async () => unwrap<VerificationCase>(await apiPost("/verification/nurse"), "Could not start the request");
 
 /** Asks to take over a listed doctor or nurse profile, with the registration number the person holds (BMDC or BNMC). */
-export const startProfileClaim = async (kind: "doctor" | "nurse", id: number | string, registrationNo: string, note?: string) =>
+export const startNutritionistVerification = async () => unwrap<VerificationCase>(await apiPost("/verification/nutritionist"), "Could not start the request");
+
+/** Registration number: required for a doctor (BMDC) or nurse (BNMC); optional for a nutritionist, who is verified by documents. */
+export const startProfileClaim = async (kind: "doctor" | "nurse" | "nutritionist", id: number | string, registrationNo: string, note?: string) =>
 	unwrap<VerificationCase>(
-		await apiPost(`/verification/${kind}/${id}/claim`, { registrationNo, ...(note ? { note } : {}) }),
+		await apiPost(`/verification/${kind}/${id}/claim`, { ...(registrationNo ? { registrationNo } : {}), ...(note ? { note } : {}) }),
 		"Could not start the claim"
 	);
 

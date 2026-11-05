@@ -25,7 +25,7 @@ const FIELD_LABELS: Record<string, string> = {
 	name: "Name", bnName: "Name in Bangla", gender: "Gender", bmdcNo: "BMDC number", bnmcNo: "BNMC number", specializations: "Speciality",
 	degrees: "Degrees", description: "About", phone: "Phone", address: "Address", districtId: "District id", upazilaId: "Upazila id",
 	hospitalType: "Type", organizationType: "Run by", numberOfBed: "Beds", email: "Email", websiteUrl: "Website", lat: "Latitude", lon: "Longitude",
-	registrationCode: "Registration code", title: "Title", summary: "Summary", bodyHtml: "Article (HTML as sent)", language: "Language", topics: "Topics",
+	registrationCode: "Registration code", registrationNo: "Registration number", title: "Title", summary: "Summary", bodyHtml: "Article (HTML as sent)", language: "Language", topics: "Topics",
 	hospitalMedicalTestId: "Hospital test id", accepts: "Doctor accepts the test", comment: "Review", campDate: "Date of the camp", place: "Place",
 	patientsServed: "Patients served", consultationDate: "Date", vehicleNumber: "Vehicle number", type: "Type", driverName: "Driver", driverPhone: "Driver's phone", hospitalId: "Facility id",
 };
@@ -92,7 +92,7 @@ export default function ContributionReviewPage() {
 								{data.status === "APPROVED" && (
 									<p>
 										{data.createdSubjectId != null ? `Recorded as #${data.createdSubjectId}. ` : ""}The person earned {data.pointsAwarded} points.
-										{["DOCTOR", "NURSE", "HOSPITAL", "AMBULANCE"].includes(data.kind) ? " The listing is not verified: its owner can claim it." : ""}
+										{["DOCTOR", "NURSE", "NUTRITIONIST", "HOSPITAL", "AMBULANCE"].includes(data.kind) ? " The listing is not verified: its owner can claim it." : ""}
 									</p>
 								)}
 								{data.status === "REJECTED" && data.decisionReason && <p><span className="font-medium">Reason: </span>{data.decisionReason}</p>}

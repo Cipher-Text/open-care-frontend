@@ -39,6 +39,7 @@ const NAV_LINKS: { href: string; label: string; match?: string }[] = [
 
 /** `local`: a public page (gets the /bn prefix in Bangla); the others (sign-up) are outside the language scheme. */
 const MORE_LINKS: { href: string; label: string; local: boolean }[] = [
+	{ href: "/nutritionists", label: "nutritionists", local: true },
 	{ href: "/pricing", label: "pricing", local: true },
 	{ href: "/about", label: "about", local: true },
 	{ href: "/contact", label: "contact", local: true },

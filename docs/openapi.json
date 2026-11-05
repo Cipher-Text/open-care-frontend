@@ -25,6 +25,10 @@
       "description": "API for managing advertisement types including listing, creating, updating and deleting"
     },
     {
+      "name": "Nutritionist Administration",
+      "description": "Nutritionist records with private contact details, for administration"
+    },
+    {
       "name": "Authentication",
       "description": "API for user authentication and authorization"
     },
@@ -35,6 +39,10 @@
     {
       "name": "Capabilities",
       "description": "What the signed-in person can do"
+    },
+    {
+      "name": "Nutritionists",
+      "description": "Nutritionists and dietitians (not physicians)"
     },
     {
       "name": "Enquiries",
@@ -944,6 +952,103 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/nutritionists/{id}": {
+      "get": {
+        "tags": [
+          "Nutritionists"
+        ],
+        "summary": "Get a nutritionist",
+        "description": "Public profile only; 404 for an inactive record.",
+        "operationId": "get_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/NutritionistResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Nutritionists"
+        ],
+        "summary": "Change a nutritionist",
+        "description": "Your own record, or any record for staff who manage nutritionists.",
+        "operationId": "update_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NutritionistRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/NutritionistResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Nutritionists"
+        ],
+        "summary": "Delete a nutritionist",
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -2391,7 +2496,7 @@
           "Doctor schedule"
         ],
         "summary": "Change a schedule block",
-        "operationId": "update_2",
+        "operationId": "update_3",
         "parameters": [
           {
             "name": "doctorId",
@@ -2440,7 +2545,7 @@
           "Doctor schedule"
         ],
         "summary": "Remove a schedule block",
-        "operationId": "delete",
+        "operationId": "delete_1",
         "parameters": [
           {
             "name": "doctorId",
@@ -3445,7 +3550,7 @@
           "Blog administration"
         ],
         "summary": "Get a post of any status by id, with its body",
-        "operationId": "get_1",
+        "operationId": "get_2",
         "parameters": [
           {
             "name": "id",
@@ -3475,7 +3580,7 @@
           "Blog administration"
         ],
         "summary": "Edit a post",
-        "operationId": "update_3",
+        "operationId": "update_4",
         "parameters": [
           {
             "name": "id",
@@ -3515,7 +3620,7 @@
           "Blog administration"
         ],
         "summary": "Delete a post",
-        "operationId": "delete_1",
+        "operationId": "delete_2",
         "parameters": [
           {
             "name": "id",
@@ -3644,6 +3749,71 @@
               }
             }
           }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationCaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/verification/nutritionist": {
+      "post": {
+        "tags": [
+          "Verification"
+        ],
+        "summary": "Start verification of my nutritionist record",
+        "description": "Returns the open request if there is one. Verified by documents.",
+        "operationId": "startNutritionist",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationCaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/verification/nutritionist/{nutritionistId}/claim": {
+      "post": {
+        "tags": [
+          "Verification"
+        ],
+        "summary": "Claim a listed nutritionist profile",
+        "description": "The same as claiming a doctor profile, except that a registration number is optional.",
+        "operationId": "claimNutritionist",
+        "parameters": [
+          {
+            "name": "nutritionistId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NutritionistClaimRequest"
+              }
+            }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -5003,6 +5173,106 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/nutritionists": {
+      "get": {
+        "tags": [
+          "Nutritionists"
+        ],
+        "summary": "Search active nutritionists",
+        "description": "Public profile only. Filter by name (English or Bangla), district and upazila.",
+        "operationId": "list_1",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "districtId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "upazilaId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseNutritionistResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Nutritionists"
+        ],
+        "summary": "Create a nutritionist",
+        "description": "Creates an unverified listing with no login; the person claims it later.",
+        "operationId": "create_2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NutritionistRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/NutritionistResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -6839,7 +7109,7 @@
         ],
         "summary": "A doctor's schedule",
         "description": "Own schedule, or any for a doctor administrator.",
-        "operationId": "list_1",
+        "operationId": "list_2",
         "parameters": [
           {
             "name": "doctorId",
@@ -6872,7 +7142,7 @@
           "Doctor schedule"
         ],
         "summary": "Add a schedule block",
-        "operationId": "create_2",
+        "operationId": "create_3",
         "parameters": [
           {
             "name": "doctorId",
@@ -9365,7 +9635,7 @@
           "Blog administration"
         ],
         "summary": "List posts of any status",
-        "operationId": "list_2",
+        "operationId": "list_3",
         "parameters": [
           {
             "name": "page",
@@ -9427,7 +9697,7 @@
           "Blog administration"
         ],
         "summary": "Create a draft",
-        "operationId": "create_3",
+        "operationId": "create_4",
         "requestBody": {
           "content": {
             "application/json": {
@@ -10015,7 +10285,7 @@
           "Verification"
         ],
         "summary": "One of my verification requests",
-        "operationId": "get_2",
+        "operationId": "get_3",
         "parameters": [
           {
             "name": "id",
@@ -11640,6 +11910,28 @@
         }
       }
     },
+    "/api/nutritionists/me": {
+      "get": {
+        "tags": [
+          "Nutritionists"
+        ],
+        "summary": "My nutritionist record",
+        "description": "The complete record of the signed-in nutritionist.",
+        "operationId": "mine_3",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/NutritionistResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/nurses/all": {
       "get": {
         "tags": [
@@ -11671,7 +11963,7 @@
           "Notifications"
         ],
         "summary": "My notifications, newest first",
-        "operationId": "mine_3",
+        "operationId": "mine_4",
         "parameters": [
           {
             "name": "page",
@@ -12069,7 +12361,7 @@
           "Reviews"
         ],
         "summary": "My reviews",
-        "operationId": "mine_4",
+        "operationId": "mine_5",
         "parameters": [
           {
             "name": "page",
@@ -12146,7 +12438,7 @@
         ],
         "summary": "My prescriptions",
         "description": "Newest first. Only prescriptions a doctor wrote for the caller's profile.",
-        "operationId": "mine_5",
+        "operationId": "mine_6",
         "parameters": [
           {
             "name": "page",
@@ -12190,7 +12482,7 @@
         ],
         "summary": "One of my prescriptions",
         "description": "404 for a prescription that is not the caller's.",
-        "operationId": "get_3",
+        "operationId": "get_4",
         "parameters": [
           {
             "name": "id",
@@ -12223,7 +12515,7 @@
         ],
         "summary": "My plan",
         "description": "The signed-in doctor's or patient's plan and the features it unlocks. Other logins get no audience and no features.",
-        "operationId": "mine_6",
+        "operationId": "mine_7",
         "responses": {
           "200": {
             "description": "OK",
@@ -12398,7 +12690,7 @@
           "Appointments"
         ],
         "summary": "My appointments as a patient, newest first",
-        "operationId": "mine_7",
+        "operationId": "mine_8",
         "parameters": [
           {
             "name": "page",
@@ -14325,7 +14617,7 @@
         ],
         "summary": "My proposals",
         "description": "Newest first.",
-        "operationId": "mine_8",
+        "operationId": "mine_9",
         "responses": {
           "200": {
             "description": "OK",
@@ -14879,7 +15171,7 @@
         ],
         "summary": "List published posts",
         "description": "Newest first, without the body. Filter by topic name, language (bn or en), speciality id or a word in the title or summary.",
-        "operationId": "list_3",
+        "operationId": "list_4",
         "parameters": [
           {
             "name": "page",
@@ -15406,6 +15698,7 @@
               "enum": [
                 "DOCTOR",
                 "NURSE",
+                "NUTRITIONIST",
                 "HOSPITAL"
               ]
             }
@@ -15449,7 +15742,7 @@
           "Verification review"
         ],
         "summary": "One request with its history",
-        "operationId": "get_4",
+        "operationId": "get_5",
         "parameters": [
           {
             "name": "id",
@@ -15541,13 +15834,104 @@
         }
       }
     },
+    "/api/admin/nutritionists": {
+      "get": {
+        "tags": [
+          "Nutritionist Administration"
+        ],
+        "summary": "List nutritionists with private details",
+        "operationId": "list_5",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isVerified",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseNutritionistResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/nutritionists/{id}": {
+      "get": {
+        "tags": [
+          "Nutritionist Administration"
+        ],
+        "summary": "Get a nutritionist with private details",
+        "operationId": "get_6",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/NutritionistResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/admin/nurses": {
       "get": {
         "tags": [
           "Nurse Administration"
         ],
         "summary": "List nurses with private details",
-        "operationId": "list_4",
+        "operationId": "list_6",
         "parameters": [
           {
             "name": "name",
@@ -15639,7 +16023,7 @@
         ],
         "summary": "The queue, newest first",
         "description": "Filter by status (PENDING, SENT, FAILED, SKIPPED) and channel (SMS, EMAIL). Shows the recipient by name, never the message text.",
-        "operationId": "list_5",
+        "operationId": "list_7",
         "parameters": [
           {
             "name": "status",
@@ -15808,7 +16192,7 @@
         ],
         "summary": "Proposed places",
         "description": "Pending by default. Filter by status, by confidence (CORROBORATED: the address agrees with the registry) and by district.",
-        "operationId": "list_6",
+        "operationId": "list_8",
         "parameters": [
           {
             "name": "status",
@@ -16042,7 +16426,7 @@
         ],
         "summary": "List doctors with private details",
         "description": "Doctor administrators only.",
-        "operationId": "list_7",
+        "operationId": "list_9",
         "parameters": [
           {
             "name": "name",
@@ -16303,6 +16687,7 @@
               "enum": [
                 "DOCTOR",
                 "NURSE",
+                "NUTRITIONIST",
                 "HOSPITAL",
                 "AMBULANCE",
                 "BLOG",
@@ -16517,7 +16902,7 @@
         ],
         "summary": "Delete one record of a pair that is the same",
         "description": "Only a record that still has another record with the same name or registration number, and that nothing else uses (the answer lists what still does). Needs the delete permission of the kind. Nothing is merged.",
-        "operationId": "delete_2",
+        "operationId": "delete_3",
         "parameters": [
           {
             "name": "type",
@@ -18668,6 +19053,118 @@
             "items": {
               "$ref": "#/components/schemas/Line"
             }
+          }
+        }
+      },
+      "NutritionistRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "bnName": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "gender": {
+            "type": "string",
+            "pattern": "MALE|FEMALE|OTHER"
+          },
+          "title": {
+            "type": "string",
+            "enum": [
+              "NUTRITIONIST",
+              "DIETITIAN"
+            ]
+          },
+          "registrationNo": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "degrees": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "startDate": {
+            "type": "string",
+            "pattern": "^(\\d{4}-\\d{2}-\\d{2})?$"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 0
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^(\\+?[0-9]{10,15})?$"
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "address": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "districtId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "upazilaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "gender",
+          "name"
+        ]
+      },
+      "NutritionistResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "registrationNo": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "degrees": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "yearOfExperience": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isVerified": {
+            "type": "boolean"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ProfileResponse"
           }
         }
       },
@@ -21199,6 +21696,21 @@
           }
         }
       },
+      "NutritionistClaimRequest": {
+        "type": "object",
+        "properties": {
+          "registrationNo": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 0
+          }
+        }
+      },
       "VerificationClaimRequest": {
         "type": "object",
         "properties": {
@@ -21661,10 +22173,10 @@
             "maxLength": 1000,
             "minLength": 0
           },
-          "endDateValid": {
+          "update": {
             "type": "boolean"
           },
-          "update": {
+          "endDateValid": {
             "type": "boolean"
           }
         },
@@ -21773,10 +22285,10 @@
             "maxLength": 1000,
             "minLength": 0
           },
-          "endDateValid": {
+          "update": {
             "type": "boolean"
           },
-          "update": {
+          "endDateValid": {
             "type": "boolean"
           }
         },
@@ -22276,6 +22788,67 @@
           "name"
         ]
       },
+      "ContributionNutritionistData": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "bnName": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "gender": {
+            "type": "string",
+            "pattern": "MALE|FEMALE|OTHER"
+          },
+          "title": {
+            "type": "string",
+            "pattern": "^(NUTRITIONIST|DIETITIAN)?$"
+          },
+          "registrationNo": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "degrees": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 0
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^(\\+?[0-9]{10,15})?$"
+          },
+          "address": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "districtId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "upazilaId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "degrees",
+          "districtId",
+          "gender",
+          "name"
+        ]
+      },
       "ContributionSubmitRequest": {
         "type": "object",
         "properties": {
@@ -22284,6 +22857,7 @@
             "enum": [
               "DOCTOR",
               "NURSE",
+              "NUTRITIONIST",
               "HOSPITAL",
               "AMBULANCE",
               "BLOG",
@@ -22297,6 +22871,9 @@
           },
           "nurse": {
             "$ref": "#/components/schemas/ContributionNurseData"
+          },
+          "nutritionist": {
+            "$ref": "#/components/schemas/ContributionNutritionistData"
           },
           "hospital": {
             "$ref": "#/components/schemas/ContributionHospitalData"
@@ -23906,6 +24483,29 @@
           }
         }
       },
+      "PageResponseNutritionistResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NutritionistResponse"
+            }
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalItems": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "PageResponseNurseResponse": {
         "type": "object",
         "properties": {
@@ -24950,10 +25550,6 @@
             "type": "string",
             "format": "date-time"
           },
-          "profileId": {
-            "type": "integer",
-            "format": "int64"
-          },
           "bloodPressureSystolic": {
             "type": "integer",
             "format": "int32"
@@ -24962,30 +25558,9 @@
             "type": "integer",
             "format": "int32"
           },
-          "meanArterialPressure": {
-            "type": "number"
-          },
-          "heartRateVariability": {
-            "type": "number"
-          },
-          "forcedExpiratoryVolume": {
-            "type": "number"
-          },
-          "restingEnergyExpenditure": {
+          "profileId": {
             "type": "integer",
-            "format": "int32"
-          },
-          "glucoseMeasurementType": {
-            "type": "string"
-          },
-          "waistCircumferenceCm": {
-            "type": "number"
-          },
-          "hydrationLevelPercentage": {
-            "type": "number"
-          },
-          "urineSpecificGravity": {
-            "type": "number"
+            "format": "int64"
           },
           "createdBy": {
             "type": "string"
@@ -25030,6 +25605,31 @@
           "notes": {
             "type": "string"
           },
+          "meanArterialPressure": {
+            "type": "number"
+          },
+          "heartRateVariability": {
+            "type": "number"
+          },
+          "forcedExpiratoryVolume": {
+            "type": "number"
+          },
+          "restingEnergyExpenditure": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "glucoseMeasurementType": {
+            "type": "string"
+          },
+          "waistCircumferenceCm": {
+            "type": "number"
+          },
+          "hydrationLevelPercentage": {
+            "type": "number"
+          },
+          "urineSpecificGravity": {
+            "type": "number"
+          },
           "environmentalTemperature": {
             "type": "number"
           },
@@ -25055,9 +25655,6 @@
           "tcHdlRatio": {
             "type": "number"
           },
-          "isIsolatedSystolicHypertension": {
-            "type": "boolean"
-          },
           "daysSinceLastRecording": {
             "type": "integer",
             "format": "int32"
@@ -25069,6 +25666,9 @@
             "type": "boolean"
           },
           "isObstructiveLungDisease": {
+            "type": "boolean"
+          },
+          "isIsolatedSystolicHypertension": {
             "type": "boolean"
           },
           "id": {

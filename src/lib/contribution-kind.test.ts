@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { KIND_WORDS, REQUEST_KEY, textToHtml } from "./contribution-kind.ts";
 import { levelLabel } from "./level-labels.ts";
+import { publicPathFor, subjectWords } from "./verification-subject.ts";
 
 describe("textToHtml", () => {
 	it("makes a paragraph of each block separated by a blank line", () => {
@@ -24,7 +25,7 @@ describe("textToHtml", () => {
 describe("contribution kinds", () => {
 	it("has a request key and words for every kind, and doctor kinds are on the doctor track", () => {
 		const kinds = Object.keys(KIND_WORDS);
-		assert.equal(kinds.length, 8);
+		assert.equal(kinds.length, 9);
 		for (const kind of kinds) assert.ok(REQUEST_KEY[kind as keyof typeof REQUEST_KEY], kind);
 		assert.deepEqual(
 			kinds.filter((k) => KIND_WORDS[k as keyof typeof KIND_WORDS].track === "DOCTOR").sort(),
@@ -42,5 +43,21 @@ describe("levelLabel", () => {
 
 	it("says there is no level before the first point", () => {
 		assert.equal(levelLabel("contributor", 0), "No level yet");
+	});
+});
+
+describe("the nutritionist kind", () => {
+	it("is a general contribution worth the same as a doctor or nurse listing, and a separate request key", () => {
+		assert.equal(KIND_WORDS.NUTRITIONIST.track, "GENERAL");
+		assert.equal(KIND_WORDS.NUTRITIONIST.points, KIND_WORDS.NURSE.points);
+		assert.equal(REQUEST_KEY.NUTRITIONIST, "nutritionist");
+	});
+
+	it("is its own kind of verification request, with a public page by id", () => {
+		assert.equal(subjectWords.NUTRITIONIST.kind, "Nutritionist");
+		assert.equal(publicPathFor("NUTRITIONIST", null, 7), "/nutritionists/7");
+		assert.equal(publicPathFor("NURSE", null, 3), "/nurses/3");
+		assert.equal(publicPathFor("DOCTOR", "dr-rahman", 1), "/doctors/dr-rahman");
+		assert.equal(publicPathFor("HOSPITAL", "city-hospital", 2), "/hospitals/city-hospital");
 	});
 });

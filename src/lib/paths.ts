@@ -10,6 +10,7 @@ function segment(record: Addressable): string {
 }
 
 export const doctorPath = (doctor: Addressable) => `/doctors/${segment(doctor)}`;
+export const nutritionistPath = (nutritionist: { id: number }) => `/nutritionists/${nutritionist.id}`;
 export const nursePath = (nurse: { id: number }) => `/nurses/${nurse.id}`;
 export const hospitalPath = (hospital: Addressable) => `/hospitals/${segment(hospital)}`;
 export const blogPath = (post: { slug: string }) => `/blog/${encodeURIComponent(post.slug)}`;

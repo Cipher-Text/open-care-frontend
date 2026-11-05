@@ -243,6 +243,31 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/nutritionists/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a nutritionist
+         * @description Public profile only; 404 for an inactive record.
+         */
+        get: operations["get_1"];
+        /**
+         * Change a nutritionist
+         * @description Your own record, or any record for staff who manage nutritionists.
+         */
+        put: operations["update_2"];
+        post?: never;
+        /** Delete a nutritionist */
+        delete: operations["delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/nurses/{id}": {
         parameters: {
             query?: never;
@@ -586,10 +611,10 @@ export interface paths {
         };
         get?: never;
         /** Change a schedule block */
-        put: operations["update_2"];
+        put: operations["update_3"];
         post?: never;
         /** Remove a schedule block */
-        delete: operations["delete"];
+        delete: operations["delete_1"];
         options?: never;
         head?: never;
         patch?: never;
@@ -827,12 +852,12 @@ export interface paths {
             cookie?: never;
         };
         /** Get a post of any status by id, with its body */
-        get: operations["get_1"];
+        get: operations["get_2"];
         /** Edit a post */
-        put: operations["update_3"];
+        put: operations["update_4"];
         post?: never;
         /** Delete a post */
-        delete: operations["delete_1"];
+        delete: operations["delete_2"];
         options?: never;
         head?: never;
         patch?: never;
@@ -889,6 +914,46 @@ export interface paths {
          * @description Needs at least one document.
          */
         post: operations["submit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/verification/nutritionist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start verification of my nutritionist record
+         * @description Returns the open request if there is one. Verified by documents.
+         */
+        post: operations["startNutritionist"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/verification/nutritionist/{nutritionistId}/claim": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Claim a listed nutritionist profile
+         * @description The same as claiming a doctor profile, except that a registration number is optional.
+         */
+        post: operations["claimNutritionist"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1367,6 +1432,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/nutritionists": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Search active nutritionists
+         * @description Public profile only. Filter by name (English or Bangla), district and upazila.
+         */
+        get: operations["list_1"];
+        put?: never;
+        /**
+         * Create a nutritionist
+         * @description Creates an unverified listing with no login; the person claims it later.
+         */
+        post: operations["create_2"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/nurses": {
         parameters: {
             query?: never;
@@ -1779,10 +1868,10 @@ export interface paths {
          * A doctor's schedule
          * @description Own schedule, or any for a doctor administrator.
          */
-        get: operations["list_1"];
+        get: operations["list_2"];
         put?: never;
         /** Add a schedule block */
-        post: operations["create_2"];
+        post: operations["create_3"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2588,10 +2677,10 @@ export interface paths {
             cookie?: never;
         };
         /** List posts of any status */
-        get: operations["list_2"];
+        get: operations["list_3"];
         put?: never;
         /** Create a draft */
-        post: operations["create_3"];
+        post: operations["create_4"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2928,7 +3017,7 @@ export interface paths {
             cookie?: never;
         };
         /** One of my verification requests */
-        get: operations["get_2"];
+        get: operations["get_3"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3723,6 +3812,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/nutritionists/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * My nutritionist record
+         * @description The complete record of the signed-in nutritionist.
+         */
+        get: operations["mine_3"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/nurses/all": {
         parameters: {
             query?: never;
@@ -3751,7 +3860,7 @@ export interface paths {
             cookie?: never;
         };
         /** My notifications, newest first */
-        get: operations["mine_3"];
+        get: operations["mine_4"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3945,7 +4054,7 @@ export interface paths {
             cookie?: never;
         };
         /** My reviews */
-        get: operations["mine_4"];
+        get: operations["mine_5"];
         put?: never;
         post?: never;
         delete?: never;
@@ -3985,7 +4094,7 @@ export interface paths {
          * My prescriptions
          * @description Newest first. Only prescriptions a doctor wrote for the caller's profile.
          */
-        get: operations["mine_5"];
+        get: operations["mine_6"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4005,7 +4114,7 @@ export interface paths {
          * One of my prescriptions
          * @description 404 for a prescription that is not the caller's.
          */
-        get: operations["get_3"];
+        get: operations["get_4"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4025,7 +4134,7 @@ export interface paths {
          * My plan
          * @description The signed-in doctor's or patient's plan and the features it unlocks. Other logins get no audience and no features.
          */
-        get: operations["mine_6"];
+        get: operations["mine_7"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4142,7 +4251,7 @@ export interface paths {
             cookie?: never;
         };
         /** My appointments as a patient, newest first */
-        get: operations["mine_7"];
+        get: operations["mine_8"];
         put?: never;
         post?: never;
         delete?: never;
@@ -5139,7 +5248,7 @@ export interface paths {
          * My proposals
          * @description Newest first.
          */
-        get: operations["mine_8"];
+        get: operations["mine_9"];
         put?: never;
         post?: never;
         delete?: never;
@@ -5416,7 +5525,7 @@ export interface paths {
          * List published posts
          * @description Newest first, without the body. Filter by topic name, language (bn or en), speciality id or a word in the title or summary.
          */
-        get: operations["list_3"];
+        get: operations["list_4"];
         put?: never;
         post?: never;
         delete?: never;
@@ -5733,7 +5842,7 @@ export interface paths {
             cookie?: never;
         };
         /** One request with its history */
-        get: operations["get_4"];
+        get: operations["get_5"];
         put?: never;
         post?: never;
         delete?: never;
@@ -5779,6 +5888,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/nutritionists": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List nutritionists with private details */
+        get: operations["list_5"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/nutritionists/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a nutritionist with private details */
+        get: operations["get_6"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/nurses": {
         parameters: {
             query?: never;
@@ -5787,7 +5930,7 @@ export interface paths {
             cookie?: never;
         };
         /** List nurses with private details */
-        get: operations["list_4"];
+        get: operations["list_6"];
         put?: never;
         post?: never;
         delete?: never;
@@ -5824,7 +5967,7 @@ export interface paths {
          * The queue, newest first
          * @description Filter by status (PENDING, SENT, FAILED, SKIPPED) and channel (SMS, EMAIL). Shows the recipient by name, never the message text.
          */
-        get: operations["list_5"];
+        get: operations["list_7"];
         put?: never;
         post?: never;
         delete?: never;
@@ -5901,7 +6044,7 @@ export interface paths {
          * Proposed places
          * @description Pending by default. Filter by status, by confidence (CORROBORATED: the address agrees with the registry) and by district.
          */
-        get: operations["list_6"];
+        get: operations["list_8"];
         put?: never;
         post?: never;
         delete?: never;
@@ -5961,7 +6104,7 @@ export interface paths {
          * List doctors with private details
          * @description Doctor administrators only.
          */
-        get: operations["list_7"];
+        get: operations["list_9"];
         put?: never;
         post?: never;
         delete?: never;
@@ -6135,7 +6278,7 @@ export interface paths {
          * Delete one record of a pair that is the same
          * @description Only a record that still has another record with the same name or registration number, and that nothing else uses (the answer lists what still does). Needs the delete permission of the kind. Nothing is merged.
          */
-        delete: operations["delete_2"];
+        delete: operations["delete_3"];
         options?: never;
         head?: never;
         patch?: never;
@@ -6894,6 +7037,40 @@ export interface components {
             /** Format: date */
             nextVisitDate?: string;
             medicines?: components["schemas"]["Line"][];
+        };
+        NutritionistRequest: {
+            name: string;
+            bnName?: string;
+            gender: string;
+            /** @enum {string} */
+            title?: "NUTRITIONIST" | "DIETITIAN";
+            registrationNo?: string;
+            degrees?: string;
+            startDate?: string;
+            description?: string;
+            phone?: string;
+            email?: string;
+            address?: string;
+            /** Format: int32 */
+            districtId?: number;
+            /** Format: int32 */
+            upazilaId?: number;
+            isActive?: boolean;
+        };
+        NutritionistResponse: {
+            /** Format: int64 */
+            id?: number;
+            registrationNo?: string;
+            title?: string;
+            degrees?: string;
+            /** Format: date */
+            startDate?: string;
+            /** Format: int32 */
+            yearOfExperience?: number;
+            description?: string;
+            isActive?: boolean;
+            isVerified?: boolean;
+            profile?: components["schemas"]["ProfileResponse"];
         };
         NurseRequest: {
             /** Format: int64 */
@@ -7755,6 +7932,10 @@ export interface components {
         VerificationNoteRequest: {
             note?: string;
         };
+        NutritionistClaimRequest: {
+            registrationNo?: string;
+            note?: string;
+        };
         VerificationClaimRequest: {
             registrationNo: string;
             note?: string;
@@ -7910,8 +8091,8 @@ export interface components {
             /** Format: date */
             endDate?: string;
             description?: string;
-            endDateValid?: boolean;
             update?: boolean;
+            endDateValid?: boolean;
         };
         ScheduleExceptionRequest: {
             /** Format: date */
@@ -7964,8 +8145,8 @@ export interface components {
             endDate?: string;
             grade?: string;
             description?: string;
-            endDateValid?: boolean;
             update?: boolean;
+            endDateValid?: boolean;
         };
         DoctorAssociationBatchRequest: {
             /** Format: int64 */
@@ -8102,11 +8283,27 @@ export interface components {
             /** Format: int32 */
             upazilaId?: number;
         };
+        ContributionNutritionistData: {
+            name: string;
+            bnName?: string;
+            gender: string;
+            title?: string;
+            registrationNo?: string;
+            degrees: string;
+            description?: string;
+            phone?: string;
+            address?: string;
+            /** Format: int32 */
+            districtId: number;
+            /** Format: int32 */
+            upazilaId?: number;
+        };
         ContributionSubmitRequest: {
             /** @enum {string} */
-            kind: "DOCTOR" | "NURSE" | "HOSPITAL" | "AMBULANCE" | "BLOG" | "HOSPITAL_TEST_REVIEW" | "MEDICAL_CAMP" | "FREE_CONSULTATION";
+            kind: "DOCTOR" | "NURSE" | "NUTRITIONIST" | "HOSPITAL" | "AMBULANCE" | "BLOG" | "HOSPITAL_TEST_REVIEW" | "MEDICAL_CAMP" | "FREE_CONSULTATION";
             doctor?: components["schemas"]["ContributionDoctorData"];
             nurse?: components["schemas"]["ContributionNurseData"];
+            nutritionist?: components["schemas"]["ContributionNutritionistData"];
             hospital?: components["schemas"]["ContributionHospitalData"];
             ambulance?: components["schemas"]["ContributionAmbulanceData"];
             blog?: components["schemas"]["ContributionBlogData"];
@@ -8678,6 +8875,15 @@ export interface components {
             /** Format: int32 */
             totalPages?: number;
         };
+        PageResponseNutritionistResponse: {
+            content?: components["schemas"]["NutritionistResponse"][];
+            /** Format: int32 */
+            currentPage?: number;
+            /** Format: int64 */
+            totalItems?: number;
+            /** Format: int32 */
+            totalPages?: number;
+        };
         PageResponseNurseResponse: {
             content?: components["schemas"]["NurseResponse"][];
             /** Format: int32 */
@@ -9068,21 +9274,12 @@ export interface components {
             followUpPriority?: string;
             /** Format: date-time */
             createdAt?: string;
-            /** Format: int64 */
-            profileId?: number;
             /** Format: int32 */
             bloodPressureSystolic?: number;
             /** Format: int32 */
             bloodPressureDiastolic?: number;
-            meanArterialPressure?: number;
-            heartRateVariability?: number;
-            forcedExpiratoryVolume?: number;
-            /** Format: int32 */
-            restingEnergyExpenditure?: number;
-            glucoseMeasurementType?: string;
-            waistCircumferenceCm?: number;
-            hydrationLevelPercentage?: number;
-            urineSpecificGravity?: number;
+            /** Format: int64 */
+            profileId?: number;
             createdBy?: string;
             updatedBy?: string;
             /** Format: date-time */
@@ -9100,6 +9297,15 @@ export interface components {
             steps24h?: number;
             symptoms?: string;
             notes?: string;
+            meanArterialPressure?: number;
+            heartRateVariability?: number;
+            forcedExpiratoryVolume?: number;
+            /** Format: int32 */
+            restingEnergyExpenditure?: number;
+            glucoseMeasurementType?: string;
+            waistCircumferenceCm?: number;
+            hydrationLevelPercentage?: number;
+            urineSpecificGravity?: number;
             environmentalTemperature?: number;
             /** Format: int32 */
             environmentalHumidity?: number;
@@ -9109,12 +9315,12 @@ export interface components {
             isFever?: boolean;
             isObesity?: boolean;
             tcHdlRatio?: number;
-            isIsolatedSystolicHypertension?: boolean;
             /** Format: int32 */
             daysSinceLastRecording?: number;
             isFullMetabolicPanel?: boolean;
             isRecentContextKnown?: boolean;
             isObstructiveLungDisease?: boolean;
+            isIsolatedSystolicHypertension?: boolean;
             /** Format: int64 */
             id?: number;
         };
@@ -10075,6 +10281,74 @@ export interface operations {
                 content: {
                     "*/*": components["schemas"]["PrescriptionResponse"];
                 };
+            };
+        };
+    };
+    get_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["NutritionistResponse"];
+                };
+            };
+        };
+    };
+    update_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NutritionistRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["NutritionistResponse"];
+                };
+            };
+        };
+    };
+    delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -11078,7 +11352,7 @@ export interface operations {
             };
         };
     };
-    update_2: {
+    update_3: {
         parameters: {
             query?: never;
             header?: never;
@@ -11105,7 +11379,7 @@ export interface operations {
             };
         };
     };
-    delete: {
+    delete_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -11831,7 +12105,7 @@ export interface operations {
             };
         };
     };
-    get_1: {
+    get_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -11853,7 +12127,7 @@ export interface operations {
             };
         };
     };
-    update_3: {
+    update_4: {
         parameters: {
             query?: never;
             header?: never;
@@ -11879,7 +12153,7 @@ export interface operations {
             };
         };
     };
-    delete_1: {
+    delete_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -11959,6 +12233,52 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": components["schemas"]["VerificationNoteRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VerificationCaseResponse"];
+                };
+            };
+        };
+    };
+    startNutritionist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VerificationCaseResponse"];
+                };
+            };
+        };
+    };
+    claimNutritionist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                nutritionistId: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NutritionistClaimRequest"];
             };
         };
         responses: {
@@ -12693,6 +13013,56 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    list_1: {
+        parameters: {
+            query?: {
+                name?: string;
+                districtId?: number;
+                upazilaId?: number;
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponseNutritionistResponse"];
+                };
+            };
+        };
+    };
+    create_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NutritionistRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["NutritionistResponse"];
+                };
             };
         };
     };
@@ -13674,7 +14044,7 @@ export interface operations {
             };
         };
     };
-    list_1: {
+    list_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -13696,7 +14066,7 @@ export interface operations {
             };
         };
     };
-    create_2: {
+    create_3: {
         parameters: {
             query?: never;
             header?: never;
@@ -15085,7 +15455,7 @@ export interface operations {
             };
         };
     };
-    list_2: {
+    list_3: {
         parameters: {
             query?: {
                 page?: number;
@@ -15110,7 +15480,7 @@ export interface operations {
             };
         };
     };
-    create_3: {
+    create_4: {
         parameters: {
             query?: never;
             header?: never;
@@ -15514,7 +15884,7 @@ export interface operations {
             };
         };
     };
-    get_2: {
+    get_3: {
         parameters: {
             query?: never;
             header?: never;
@@ -16503,6 +16873,26 @@ export interface operations {
             };
         };
     };
+    mine_3: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["NutritionistResponse"];
+                };
+            };
+        };
+    };
     getAllNurses: {
         parameters: {
             query?: never;
@@ -16523,7 +16913,7 @@ export interface operations {
             };
         };
     };
-    mine_3: {
+    mine_4: {
         parameters: {
             query?: {
                 page?: number;
@@ -16747,7 +17137,7 @@ export interface operations {
             };
         };
     };
-    mine_4: {
+    mine_5: {
         parameters: {
             query?: {
                 page?: number;
@@ -16792,7 +17182,7 @@ export interface operations {
             };
         };
     };
-    mine_5: {
+    mine_6: {
         parameters: {
             query?: {
                 page?: number;
@@ -16815,7 +17205,7 @@ export interface operations {
             };
         };
     };
-    get_3: {
+    get_4: {
         parameters: {
             query?: never;
             header?: never;
@@ -16837,7 +17227,7 @@ export interface operations {
             };
         };
     };
-    mine_6: {
+    mine_7: {
         parameters: {
             query?: never;
             header?: never;
@@ -16963,7 +17353,7 @@ export interface operations {
             };
         };
     };
-    mine_7: {
+    mine_8: {
         parameters: {
             query?: {
                 page?: number;
@@ -18156,7 +18546,7 @@ export interface operations {
             };
         };
     };
-    mine_8: {
+    mine_9: {
         parameters: {
             query?: never;
             header?: never;
@@ -18489,7 +18879,7 @@ export interface operations {
             };
         };
     };
-    list_3: {
+    list_4: {
         parameters: {
             query?: {
                 page?: number;
@@ -18815,7 +19205,7 @@ export interface operations {
             query?: {
                 page?: number;
                 size?: number;
-                type?: "DOCTOR" | "NURSE" | "HOSPITAL";
+                type?: "DOCTOR" | "NURSE" | "NUTRITIONIST" | "HOSPITAL";
                 status?: "NONE" | "DRAFT" | "PENDING" | "UNDER_REVIEW" | "VERIFIED" | "REJECTED" | "REVOKED" | "WITHDRAWN";
             };
             header?: never;
@@ -18835,7 +19225,7 @@ export interface operations {
             };
         };
     };
-    get_4: {
+    get_5: {
         parameters: {
             query?: never;
             header?: never;
@@ -18902,7 +19292,54 @@ export interface operations {
             };
         };
     };
-    list_4: {
+    list_5: {
+        parameters: {
+            query?: {
+                name?: string;
+                isVerified?: boolean;
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponseNutritionistResponse"];
+                };
+            };
+        };
+    };
+    get_6: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["NutritionistResponse"];
+                };
+            };
+        };
+    };
+    list_6: {
         parameters: {
             query?: {
                 name?: string;
@@ -18949,7 +19386,7 @@ export interface operations {
             };
         };
     };
-    list_5: {
+    list_7: {
         parameters: {
             query?: {
                 status?: "PENDING" | "SENT" | "FAILED" | "SKIPPED";
@@ -19039,7 +19476,7 @@ export interface operations {
             };
         };
     };
-    list_6: {
+    list_8: {
         parameters: {
             query?: {
                 status?: "PENDING" | "APPROVED" | "REJECTED" | "SUPERSEDED";
@@ -19117,7 +19554,7 @@ export interface operations {
             };
         };
     };
-    list_7: {
+    list_9: {
         parameters: {
             query?: {
                 name?: string;
@@ -19202,7 +19639,7 @@ export interface operations {
     queue_2: {
         parameters: {
             query?: {
-                kind?: "DOCTOR" | "NURSE" | "HOSPITAL" | "AMBULANCE" | "BLOG" | "HOSPITAL_TEST_REVIEW" | "MEDICAL_CAMP" | "FREE_CONSULTATION";
+                kind?: "DOCTOR" | "NURSE" | "NUTRITIONIST" | "HOSPITAL" | "AMBULANCE" | "BLOG" | "HOSPITAL_TEST_REVIEW" | "MEDICAL_CAMP" | "FREE_CONSULTATION";
                 status?: "PENDING" | "APPROVED" | "REJECTED" | "WITHDRAWN";
                 page?: number;
                 size?: number;
@@ -19337,7 +19774,7 @@ export interface operations {
             };
         };
     };
-    delete_2: {
+    delete_3: {
         parameters: {
             query?: never;
             header?: never;

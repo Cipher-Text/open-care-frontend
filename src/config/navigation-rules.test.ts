@@ -22,7 +22,7 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 	"super-admin": {
 		staff: true,
 		menu: [
-			"dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "contributions", "institutions", "hospitals",
+			"dashboard", "my-figures", "doctors", "nurses", "nutritionists", "profiles", "verification", "contributions", "institutions", "hospitals",
 			"medical-specialities", "medical-tests", "associations", "social-organizations", "ambulances",
 			"constants", "geolocation", "degrees", "bulk-upload", "duplicates", "location-review", "blood", "advertisement", "subscriptions", "notification-deliveries", "data-access", "analytics", "role-permissions", "my-consents",
 		],
@@ -30,21 +30,21 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 	admin: {
 		staff: true,
 		menu: [
-			"dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "contributions", "institutions", "hospitals", "medical-specialities",
+			"dashboard", "my-figures", "doctors", "nurses", "nutritionists", "profiles", "verification", "contributions", "institutions", "hospitals", "medical-specialities",
 			"medical-tests", "associations", "social-organizations", "constants", "geolocation", "degrees", "bulk-upload", "duplicates", "location-review", "blood", "subscriptions", "my-consents",
 		],
 	},
 	moderator: {
 		staff: true,
-		menu: ["dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "contributions", "institutions", "hospitals", "social-organizations", "bulk-upload", "duplicates", "location-review", "blood", "my-consents"],
+		menu: ["dashboard", "my-figures", "doctors", "nurses", "nutritionists", "profiles", "verification", "contributions", "institutions", "hospitals", "social-organizations", "bulk-upload", "duplicates", "location-review", "blood", "my-consents"],
 	},
 	operator: {
 		staff: true,
-		menu: ["dashboard", "my-figures", "doctors", "nurses", "profiles", "hospitals", "social-organizations", "bulk-upload", "duplicates", "location-review", "blood", "my-consents"],
+		menu: ["dashboard", "my-figures", "doctors", "nurses", "nutritionists", "profiles", "hospitals", "social-organizations", "bulk-upload", "duplicates", "location-review", "blood", "my-consents"],
 	},
 	"hospital-admin": {
 		staff: true,
-		menu: ["dashboard", "my-figures", "doctors", "nurses", "hospitals", "ambulances", "duplicates", "blood", "my-consents"],
+		menu: ["dashboard", "my-figures", "doctors", "nurses", "nutritionists", "hospitals", "ambulances", "duplicates", "blood", "my-consents"],
 	},
 	"institution-admin": { staff: true, menu: ["dashboard", "institutions", "my-consents"] },
 	"social-organization-admin": { staff: true, menu: ["dashboard", "social-organizations", "ambulances", "duplicates", "my-consents"] },
@@ -57,6 +57,8 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 		menu: ["dashboard", "my-doctor-profile", "my-figures", "appointments", "reviews", "my-schedule", "doctors", "institutions", "medicines", "associations", "prescriptions", "my-consents"],
 	},
 	nurse: { staff: true, menu: ["dashboard", "nurses", "my-consents"] },
+	// holds only update-nutritionist for their own record: no console menu, so they use the account area
+	nutritionist: { staff: false, menu: EVERYONE },
 	user: { staff: false, menu: EVERYONE },
 	// a plain user whose facility claim was approved joins this group, which holds the facility permissions only
 	"hospital-user": { staff: true, menu: ["dashboard", "my-figures", "hospitals", "my-consents"] },

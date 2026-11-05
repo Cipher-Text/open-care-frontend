@@ -67,7 +67,7 @@ export default function VerificationReviewPage() {
 	// A doctor request can be approved only after the BMDC register check matched (the server enforces it too)
 	const needsRegisterCheck = data?.subjectType === "DOCTOR";
 	const mayApprove = !needsRegisterCheck || data?.registerResult === "MATCH";
-	const publicPath = data ? publicPathFor(data.subjectType, data.subjectSlug) : null;
+	const publicPath = data ? publicPathFor(data.subjectType, data.subjectSlug, data.subjectId) : null;
 
 	return (
 		<div className="flex flex-col">

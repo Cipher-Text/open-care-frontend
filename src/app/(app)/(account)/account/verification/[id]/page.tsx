@@ -80,7 +80,7 @@ export default function VerificationCasePage() {
 							<VerificationStatusBadge status={data.status} />
 						</CardTitle>
 						<CardDescription>
-							{data.claimedRegistrationNo ? `${words.number}: ${data.claimedRegistrationNo}` : "No registration number is recorded for this " + words.kind.toLowerCase() + " yet."}
+							{data.claimedRegistrationNo ? `${words.number}: ${data.claimedRegistrationNo}` : data.subjectType === "NUTRITIONIST" ? "No registration number is needed: staff check your documents." : "No registration number is recorded for this " + words.kind.toLowerCase() + " yet."}
 						</CardDescription>
 					</CardHeader>
 					<CardContent className="space-y-4 text-sm">
@@ -92,7 +92,7 @@ export default function VerificationCasePage() {
 						{data.status === "DRAFT" && (
 							<>
 								<p>
-									Add a clear copy of {isFacility ? "the facility's registration certificate or licence" : data?.subjectType === "NURSE" ? "your BNMC registration certificate (and licence, if you have one)" : "your BMDC registration certificate (and licence, if you have one)"}. JPG, PNG, WebP or PDF,
+									Add a clear copy of {isFacility ? "the facility's registration certificate or licence" : data?.subjectType === "NURSE" ? "your BNMC registration certificate (and licence, if you have one)" : data?.subjectType === "NUTRITIONIST" ? "your degree certificate, and any registration or membership certificate you hold" : "your BMDC registration certificate (and licence, if you have one)"}. JPG, PNG, WebP or PDF,
 									images up to 5 MB and PDF up to 10 MB, at most {MAX_DOCUMENTS} files. Only Open Care staff who review verification can open them.
 								</p>
 								<div className="flex flex-wrap items-center gap-3">

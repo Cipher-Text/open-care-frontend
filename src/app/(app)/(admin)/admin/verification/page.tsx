@@ -44,6 +44,7 @@ export default function VerificationQueuePage() {
 							<option value="">All kinds</option>
 							<option value="DOCTOR">Doctors</option>
 							<option value="NURSE">Nurses</option>
+							<option value="NUTRITIONIST">Nutritionists</option>
 							<option value="HOSPITAL">Facilities</option>
 						</NativeSelect>
 					</div>

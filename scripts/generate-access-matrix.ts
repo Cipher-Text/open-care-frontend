@@ -52,7 +52,7 @@ out("## Actions by role (buttons and API)");
 out();
 out("`C` create, `U` update, `D` delete. Each is enforced by the API with the permission of the same name.");
 out();
-const resources = ["doctor", "nurse", "hospital", "hospital-amenity", "hospital-medical-test", "institution", "social-organization", "ambulance", "master-data", "advertisement", "advertisement-type", "profile"];
+const resources = ["doctor", "nurse", "nutritionist", "hospital", "hospital-amenity", "hospital-medical-test", "institution", "social-organization", "ambulance", "master-data", "advertisement", "advertisement-type", "profile"];
 out(`| Resource | ${roles.join(" | ")} |`);
 out(`|---|${roles.map(() => ":-:").join("|")}|`);
 for (const resource of resources) {

@@ -11,11 +11,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-type Target = { kind: "hospital" | "doctor" | "nurse"; id: string };
+type Target = { kind: "hospital" | "doctor" | "nurse" | "nutritionist"; id: string };
 
 /** The page is opened from a listing: ?hospital=ID, ?doctor=ID or ?nurse=ID. */
 function targetFrom(params: URLSearchParams): Target | null {
-	for (const kind of ["hospital", "doctor", "nurse"] as const) {
+	for (const kind of ["hospital", "doctor", "nurse", "nutritionist"] as const) {
 		const id = params.get(kind);
 		if (id && /^\d+$/.test(id)) return { kind, id };
 	}
@@ -23,6 +23,15 @@ function targetFrom(params: URLSearchParams): Target | null {
 }
 
 const WORDS = {
+	nutritionist: {
+		title: "Claim this nutritionist profile",
+		description:
+			"Use this only if the profile is you. Add your qualifications next (your degree certificate, and any registration or membership certificate you hold). Staff check them; if approved, the profile is linked to your account and you can keep it up to date. A registration number is optional: no register is checked. You need a verified mobile number.",
+		numberLabel: "Your registration number (if you have one)",
+		notePlaceholder: "Your degree, where you work, anything that helps staff check it is you",
+		noteLabel: "Note for the reviewer (optional)",
+		start: "Start the claim",
+	},
 	hospital: {
 		title: "Claim this facility",
 		description:
@@ -67,7 +76,9 @@ function ClaimForm() {
 	}
 
 	const words = WORDS[target.kind];
-	const needsNumber = target.kind !== "hospital";
+	// Doctors (BMDC) and nurses (BNMC) must give their number; a nutritionist may leave it out
+	const asksNumber = target.kind !== "hospital";
+	const needsNumber = asksNumber && target.kind !== "nutritionist";
 
 	const start = async () => {
 		setBusy(true);
@@ -90,7 +101,7 @@ function ClaimForm() {
 				<CardDescription>{words.description}</CardDescription>
 			</CardHeader>
 			<CardContent className="space-y-4">
-				{needsNumber && "numberLabel" in words && (
+				{asksNumber && "numberLabel" in words && (
 					<div className="space-y-1">
 						<Label htmlFor="claim-number">{words.numberLabel}</Label>
 						<Input id="claim-number" value={registrationNo} onChange={(e) => setRegistrationNo(e.target.value)} maxLength={100} autoComplete="off" />

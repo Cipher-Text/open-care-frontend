@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Building2, FileText, HeartPulse, Stethoscope, Truck, Upload } from "lucide-react";
+import { ArrowRight, Building2, FileText, HeartPulse, Salad, Stethoscope, Truck, Upload } from "lucide-react";
 import { fetchPendingConsents } from "@/api/consents";
 import { fetchCounts, type CountKey } from "@/api/dashboard-counts";
 import { AdminHeader } from "@/components/admin/admin-header";
@@ -17,6 +17,7 @@ const COUNTS: { key: CountKey; label: string; menuId: string; icon: typeof Build
 	{ key: "hospitals", label: "Hospitals and clinics", menuId: "hospitals", icon: Building2 },
 	{ key: "doctors", label: "Doctors", menuId: "doctors", icon: Stethoscope },
 	{ key: "nurses", label: "Nurses", menuId: "nurses", icon: HeartPulse },
+	{ key: "nutritionists", label: "Nutritionists", menuId: "nutritionists", icon: Salad },
 	{ key: "institutions", label: "Institutions", menuId: "institutions", icon: Building2 },
 	{ key: "ambulances", label: "Ambulances", menuId: "ambulances", icon: Truck },
 ];

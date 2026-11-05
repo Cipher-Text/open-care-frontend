@@ -34,7 +34,8 @@
       "about": "About",
       "contact": "Contact",
       "faq": "Help and FAQ",
-      "professionals": "For doctors and facilities"
+      "professionals": "For doctors and facilities",
+      "nutritionists": "Nutritionists"
     }
   },
   "footer": {
@@ -434,5 +435,35 @@
     "claimHint": "Claiming lets you ask Open Care to link this profile to your account after checking your BNMC registration. You need a verified mobile number.",
     "notListed": "Not on the list?",
     "notListedLink": "Add yourself or another nurse"
+  },
+  "nutritionists": {
+    "metaListTitle": "Find nutritionists and dietitians in Bangladesh | Open Care",
+    "metaListDescription": "Search nutritionists and dietitians across Bangladesh by name and district.",
+    "notFound": "Nutritionist not found | Open Care",
+    "metaDetailFallback": "{name} on Open Care.",
+    "heroTitle": "Find a nutritionist",
+    "heroSubtitle": "Search nutritionists and dietitians by name and district",
+    "filterForm": "Filter nutritionists",
+    "searchByName": "Search by name",
+    "district": "District",
+    "allDistricts": "All districts",
+    "clear": "Clear",
+    "found": "{count, plural, one {# nutritionist found} other {# nutritionists found}}",
+    "searching": "Searching",
+    "unnamed": "Unnamed",
+    "registration": "Registration {number}",
+    "experience": "{count, plural, one {# year experience} other {# years experience}}",
+    "back": "All nutritionists",
+    "about": "About",
+    "qualifications": "Qualifications",
+    "notPhysician": "Nutritionists and dietitians are not physicians and do not prescribe medicines.",
+    "claim": "Is this your profile? Claim it",
+    "claimHint": "Claiming lets you ask Open Care to link this profile to your account after checking your qualifications. You need a verified mobile number.",
+    "notListed": "Not on the list?",
+    "notListedLink": "Add yourself or another nutritionist",
+    "title": {
+      "NUTRITIONIST": "Nutritionist",
+      "DIETITIAN": "Dietitian"
+    }
   }
 }

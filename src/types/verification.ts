@@ -1,4 +1,4 @@
-export type VerificationSubject = "DOCTOR" | "NURSE" | "HOSPITAL";
+export type VerificationSubject = "DOCTOR" | "NURSE" | "NUTRITIONIST" | "HOSPITAL";
 export type RegisterCheckResult = "MATCH" | "MISMATCH" | "NOT_FOUND";
 export type VerificationStatus = "NONE" | "DRAFT" | "PENDING" | "UNDER_REVIEW" | "VERIFIED" | "REJECTED" | "REVOKED" | "WITHDRAWN";
 
