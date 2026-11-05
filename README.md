@@ -234,6 +234,7 @@ npm run test:csp       # the Content-Security-Policy (3 tests)
 npm run test:shapes    # the answer checks: pages, capabilities, open times, consent (5 tests)
 npm run test:dupes     # the duplicate finder's view rules (4 tests)
 npm run test:bulk      # the bulk upload's view rules (4 tests)
+npm run test:contribution  # article text to safe HTML, contribution kinds, level labels (7 tests)
 
 # Regenerate opencare/docs/reference/ACCESS_MATRIX.md from the menu rules and src/config/role-permissions.fixture.json
 npm run docs:access
@@ -294,7 +295,7 @@ Read-only viewer. Hospital, institution and association forms label the field "U
 
 ### Testing
 
-Only small pure-logic tests exist (`test:nav`, `test:i18n`, `test:pricing`, `test:bff`, `test:vitals`, `test:url`, `test:blood`, `test:void`, `test:trend`, `test:profile`, `test:cover`, `test:consent`, `test:csp`, `test:shapes`, `test:dupes`, `test:bulk`, on Node's built-in runner); there is no component, browser or `type-check` script yet, and CI runs these tests and the build. See `docs/testing-frontend.md`. Type errors surface through `npm run build`.
+Only small pure-logic tests exist (`test:nav`, `test:i18n`, `test:pricing`, `test:bff`, `test:vitals`, `test:url`, `test:blood`, `test:void`, `test:trend`, `test:profile`, `test:cover`, `test:consent`, `test:csp`, `test:shapes`, `test:dupes`, `test:bulk`, `test:contribution`, on Node's built-in runner); there is no component, browser or `type-check` script yet, and CI runs these tests and the build. See `docs/testing-frontend.md`. Type errors surface through `npm run build`.
 
 ## 📖 Documentation
 
