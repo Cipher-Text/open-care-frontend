@@ -182,6 +182,15 @@ export default async function DoctorDetailPage({ params }: Props) {
 				</CardContent>
 			</Card>
 
+			{!doctor.isVerified && (
+				<p className="text-sm text-muted-foreground">
+					<NextLink href={`/account/verification/claim?doctor=${doctor.id}`} className="font-medium text-primary hover:underline">
+						{t("claim")}
+					</NextLink>{" "}
+					{t("claimHint")}
+				</p>
+			)}
+
 			{doctor.description && (
 				<DetailSection title={t("about")}>
 					<p className="whitespace-pre-line leading-relaxed text-muted-foreground">{doctor.description}</p>

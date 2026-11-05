@@ -1,5 +1,6 @@
 "use client";
 
+import { subjectWords } from "@/lib/verification-subject";
 import Link from "next/link";
 import { qk } from "@/lib/query-keys";
 import { useParams } from "next/navigation";
@@ -53,7 +54,8 @@ export default function VerificationCasePage() {
 		}
 	};
 
-	const isDoctor = data?.subjectType === "DOCTOR";
+	const words = subjectWords[data?.subjectType ?? "DOCTOR"];
+	const isFacility = data?.subjectType === "HOSPITAL";
 	return (
 		<div className="space-y-4 p-4 md:p-8">
 			<Button variant="ghost" asChild>
@@ -73,12 +75,12 @@ export default function VerificationCasePage() {
 					<CardHeader>
 						<CardTitle className="flex flex-wrap items-center justify-between gap-2 text-base">
 							<span>
-								{isDoctor ? "Doctor profile" : "Facility claim"}: {data.subjectName ?? `#${data.subjectId}`}
+								{isFacility ? "Facility claim" : data.claim ? `${words.profile} claim` : words.profile}: {data.subjectName ?? `#${data.subjectId}`}
 							</span>
 							<VerificationStatusBadge status={data.status} />
 						</CardTitle>
 						<CardDescription>
-							{data.claimedRegistrationNo ? `${isDoctor ? "BMDC number" : "Registration number"}: ${data.claimedRegistrationNo}` : "No registration number is recorded for this " + (isDoctor ? "doctor" : "facility") + " yet."}
+							{data.claimedRegistrationNo ? `${words.number}: ${data.claimedRegistrationNo}` : "No registration number is recorded for this " + words.kind.toLowerCase() + " yet."}
 						</CardDescription>
 					</CardHeader>
 					<CardContent className="space-y-4 text-sm">
@@ -90,7 +92,7 @@ export default function VerificationCasePage() {
 						{data.status === "DRAFT" && (
 							<>
 								<p>
-									Add a clear copy of {isDoctor ? "your BMDC registration certificate (and licence, if you have one)" : "the facility's registration certificate or licence"}. JPG, PNG, WebP or PDF,
+									Add a clear copy of {isFacility ? "the facility's registration certificate or licence" : data?.subjectType === "NURSE" ? "your BNMC registration certificate (and licence, if you have one)" : "your BMDC registration certificate (and licence, if you have one)"}. JPG, PNG, WebP or PDF,
 									images up to 5 MB and PDF up to 10 MB, at most {MAX_DOCUMENTS} files. Only Open Care staff who review verification can open them.
 								</p>
 								<div className="flex flex-wrap items-center gap-3">

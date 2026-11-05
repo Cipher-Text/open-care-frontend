@@ -7,6 +7,15 @@ import type { RegisterCheckResult, VerificationCase, VerificationStats, Verifica
 
 export const startDoctorVerification = async () => unwrap<VerificationCase>(await apiPost("/verification/doctor"), "Could not start the request");
 
+export const startNurseVerification = async () => unwrap<VerificationCase>(await apiPost("/verification/nurse"), "Could not start the request");
+
+/** Asks to take over a listed doctor or nurse profile, with the registration number the person holds (BMDC or BNMC). */
+export const startProfileClaim = async (kind: "doctor" | "nurse", id: number | string, registrationNo: string, note?: string) =>
+	unwrap<VerificationCase>(
+		await apiPost(`/verification/${kind}/${id}/claim`, { registrationNo, ...(note ? { note } : {}) }),
+		"Could not start the claim"
+	);
+
 export const startFacilityClaim = async (hospitalId: number | string, note?: string) =>
 	unwrap<VerificationCase>(await apiPost(`/verification/facility/${hospitalId}`, note ? { note } : undefined), "Could not start the claim");
 

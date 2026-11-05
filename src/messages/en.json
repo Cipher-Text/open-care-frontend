@@ -296,7 +296,29 @@
     "PARAMETER_MISSING": "Something required is missing from the request.",
     "STORAGE_UNAVAILABLE": "File storage is not available right now. Please try again in a moment.",
     "UPSTREAM_UNAVAILABLE": "A service we depend on did not answer. Please try again.",
-    "UPSTREAM_TIMEOUT": "The service took too long to answer. Please try again."
+    "UPSTREAM_TIMEOUT": "The service took too long to answer. Please try again.",
+    "PHONE_NOT_VERIFIED": "Verify your mobile number first, then try again.",
+    "ALREADY_LINKED": "Your account is already linked to a doctor or nurse profile.",
+    "PROFILE_ALREADY_CLAIMED": "This profile already belongs to someone. If it is yours, contact us.",
+    "CLAIM_NUMBER_MISMATCH": "The registration number does not match the one on the record.",
+    "CLAIM_NEEDS_REGISTRATION_NO": "Enter your registration number.",
+    "CONTRIBUTION_TOO_MANY_PENDING": "You already have 5 proposals waiting. Wait for a decision, or withdraw one.",
+    "CONTRIBUTION_DATA_REQUIRED": "Fill in the details of what you are adding.",
+    "CONTRIBUTION_WRONG_STATE": "This proposal has already been decided.",
+    "CONTRIBUTION_REASON_REQUIRED": "Give a reason.",
+    "CONTRIBUTION_NEEDS_VERIFIED_DOCTOR": "Only a verified doctor can add this. Verify your doctor profile first.",
+    "CONTRIBUTION_TEST_NOT_FOUND": "That test was not found.",
+    "CONTRIBUTION_ALREADY_REVIEWED": "You have already reviewed this test.",
+    "ALREADY_VERIFIED": "This is already verified.",
+    "REGISTER_CHECK_ONLY_FOR_DOCTORS": "The BMDC register check is for doctor requests only.",
+    "REGISTER_CHECK_REQUIRED": "Look the doctor's number up in the BMDC register and record that it matches before approving.",
+    "VERIFICATION_DOCUMENT_REQUIRED": "Add at least one document (a licence or registration certificate) before you submit.",
+    "VERIFICATION_NEEDS_REGISTRATION_NO": "Add your registration number to your record before asking to be verified.",
+    "VERIFICATION_NOT_A_DRAFT": "Documents can only be added while the request is a draft.",
+    "VERIFICATION_REASON_REQUIRED": "Give a reason.",
+    "VERIFICATION_TOO_MANY_DOCUMENTS": "At most 6 documents can be added to one request.",
+    "VERIFICATION_TOO_MANY_OPEN": "You have too many open requests. Finish or withdraw one first.",
+    "VERIFICATION_WRONG_STATE": "This request has already moved on and cannot be changed this way."
   },
   "doctors": {
     "metaListTitle": "Find doctors in Bangladesh | Open Care",
@@ -327,7 +349,9 @@
     "associations": "Associations",
     "periodRange": "{from} to {to}",
     "periodUnknown": "?",
-    "periodPresent": "present"
+    "periodPresent": "present",
+    "claim": "Is this your profile? Claim it",
+    "claimHint": "Claiming lets you ask Open Care to link this profile to your account after checking your BMDC registration. You need a verified mobile number."
   },
   "reviews": {
     "heading": "Patient reviews",
@@ -370,5 +394,18 @@
     "reference": "Reference: {id}",
     "notFoundTitle": "Page not found",
     "notFoundBody": "The address does not exist, or it has moved."
+  },
+  "bloodDonor": {
+    "level": "Blood Donor level {level}",
+    "newDonor": "New donor",
+    "topLevel": "Top level reached",
+    "toNext": "{count} more donations to level {next}",
+    "donations": "{count} donations"
+  },
+  "levels": {
+    "contributor": "Contributor level {level}",
+    "bloodDonor": "Blood Donor level {level}",
+    "healthPartner": "Health Partner level {level}",
+    "none": "No level yet"
   }
 }

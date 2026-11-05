@@ -14,7 +14,7 @@ const ENDPOINTS: Record<CountKey, string> = {
 export async function fetchCounts(keys: CountKey[]): Promise<Partial<Record<CountKey, number>>> {
 	const entries = await Promise.all(
 		keys.map(async (key) => {
-			const response = await apiGet<{ totalItems?: number }>(`${ENDPOINTS[key]}?page=0&size=1`, { includeAuth: false });
+			const response = await apiGet<{ totalItems?: number }>(`${ENDPOINTS[key]}?page=0&size=1`, { throwOnError: false });
 			return [key, response.ok ? response.data?.totalItems ?? 0 : undefined] as const;
 		})
 	);

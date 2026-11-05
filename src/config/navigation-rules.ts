@@ -44,6 +44,7 @@ export const CONSOLE_RULES: NavRule[] = [
 	{ id: "nurses", group: "People", title: "Nurses", url: "/admin/nurses", anyOf: crud("nurse") },
 	{ id: "profiles", group: "People", title: "Profiles", url: "/admin/profiles", anyOf: ["view-profile"] },
 	{ id: "verification", group: "People", title: "Verification", url: "/admin/verification", anyOf: ["verify-doctor", "verify-facility"] },
+	{ id: "contributions", group: "People", title: "Contributions", url: "/admin/contributions", anyOf: ["verify-doctor", "verify-facility"] },
 	{ id: "institutions", group: "Facilities", title: "Institutions", url: "/admin/institutions", anyOf: [...crud("institution"), DOCTOR_PANEL] },
 	{
 		id: "hospitals",

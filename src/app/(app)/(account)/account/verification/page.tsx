@@ -1,5 +1,6 @@
 "use client";
 
+import { subjectWords } from "@/lib/verification-subject";
 import Link from "next/link";
 import { qk } from "@/lib/query-keys";
 import { useRouter } from "next/navigation";
@@ -78,7 +79,7 @@ export default function VerificationPage() {
 						<li key={c.id} className="flex flex-wrap items-center justify-between gap-3 rounded-md border p-3">
 							<div>
 								<Link href={`/account/verification/${c.id}`} className="font-medium text-primary hover:underline">
-									{c.subjectType === "DOCTOR" ? "Doctor profile" : "Facility"}: {c.subjectName ?? `#${c.subjectId}`}
+									{subjectWords[c.subjectType].profile}{c.claim ? " (claim)" : ""}: {c.subjectName ?? `#${c.subjectId}`}
 								</Link>
 								<p className="text-xs text-muted-foreground">{c.renewal ? "Renewal. " : ""}Started {dateTime(c.createdAt)}</p>
 							</div>

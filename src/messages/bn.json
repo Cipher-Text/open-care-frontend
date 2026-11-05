@@ -296,7 +296,29 @@
     "PARAMETER_MISSING": "অনুরোধে প্রয়োজনীয় কিছু বাদ পড়েছে।",
     "STORAGE_UNAVAILABLE": "ফাইল সংরক্ষণ সেবা এখন পাওয়া যাচ্ছে না। একটু পরে আবার চেষ্টা করুন।",
     "UPSTREAM_UNAVAILABLE": "আমাদের একটি সেবা সাড়া দেয়নি। আবার চেষ্টা করুন।",
-    "UPSTREAM_TIMEOUT": "সেবাটি উত্তর দিতে বেশি সময় নিয়েছে। আবার চেষ্টা করুন।"
+    "UPSTREAM_TIMEOUT": "সেবাটি উত্তর দিতে বেশি সময় নিয়েছে। আবার চেষ্টা করুন।",
+    "PHONE_NOT_VERIFIED": "আগে আপনার মোবাইল নম্বর যাচাই করুন, তারপর আবার চেষ্টা করুন।",
+    "ALREADY_LINKED": "আপনার অ্যাকাউন্ট ইতিমধ্যে একটি ডাক্তার বা নার্স প্রোফাইলের সঙ্গে যুক্ত।",
+    "PROFILE_ALREADY_CLAIMED": "এই প্রোফাইলটি ইতিমধ্যে অন্য কারও। এটি আপনার হলে আমাদের সঙ্গে যোগাযোগ করুন।",
+    "CLAIM_NUMBER_MISMATCH": "নিবন্ধন নম্বরটি রেকর্ডে থাকা নম্বরের সঙ্গে মেলেনি।",
+    "CLAIM_NEEDS_REGISTRATION_NO": "আপনার নিবন্ধন নম্বর লিখুন।",
+    "CONTRIBUTION_TOO_MANY_PENDING": "আপনার ৫টি প্রস্তাব ইতিমধ্যে অপেক্ষায় আছে। সিদ্ধান্তের জন্য অপেক্ষা করুন, অথবা একটি প্রত্যাহার করুন।",
+    "CONTRIBUTION_DATA_REQUIRED": "যা যোগ করছেন তার বিবরণ পূরণ করুন।",
+    "CONTRIBUTION_WRONG_STATE": "এই প্রস্তাবে ইতিমধ্যে সিদ্ধান্ত হয়ে গেছে।",
+    "CONTRIBUTION_REASON_REQUIRED": "একটি কারণ লিখুন।",
+    "CONTRIBUTION_NEEDS_VERIFIED_DOCTOR": "শুধু যাচাইকৃত ডাক্তার এটি যোগ করতে পারেন। আগে আপনার ডাক্তার প্রোফাইল যাচাই করুন।",
+    "CONTRIBUTION_TEST_NOT_FOUND": "টেস্টটি খুঁজে পাওয়া যায়নি।",
+    "CONTRIBUTION_ALREADY_REVIEWED": "আপনি এই টেস্টের রিভিউ ইতিমধ্যে দিয়েছেন।",
+    "ALREADY_VERIFIED": "এটি ইতিমধ্যে যাচাই করা হয়েছে।",
+    "REGISTER_CHECK_ONLY_FOR_DOCTORS": "BMDC রেজিস্টার যাচাই শুধু ডাক্তারের অনুরোধের জন্য।",
+    "REGISTER_CHECK_REQUIRED": "অনুমোদনের আগে BMDC রেজিস্টারে ডাক্তারের নম্বর দেখে মিল আছে বলে নথিভুক্ত করুন।",
+    "VERIFICATION_DOCUMENT_REQUIRED": "জমা দেওয়ার আগে অন্তত একটি নথি (লাইসেন্স বা নিবন্ধন সনদ) যোগ করুন।",
+    "VERIFICATION_NEEDS_REGISTRATION_NO": "যাচাইয়ের অনুরোধ করার আগে আপনার রেকর্ডে নিবন্ধন নম্বর যোগ করুন।",
+    "VERIFICATION_NOT_A_DRAFT": "অনুরোধটি খসড়া থাকা অবস্থায় শুধু নথি যোগ করা যায়।",
+    "VERIFICATION_REASON_REQUIRED": "একটি কারণ লিখুন।",
+    "VERIFICATION_TOO_MANY_DOCUMENTS": "একটি অনুরোধে সর্বোচ্চ ৬টি নথি যোগ করা যায়।",
+    "VERIFICATION_TOO_MANY_OPEN": "আপনার অনেক অনুরোধ খোলা আছে। আগে একটি শেষ করুন বা প্রত্যাহার করুন।",
+    "VERIFICATION_WRONG_STATE": "এই অনুরোধ ইতিমধ্যে পরের ধাপে গেছে, তাই এভাবে বদলানো যায় না।"
   },
   "doctors": {
     "metaListTitle": "বাংলাদেশের ডাক্তার খুঁজুন | Open Care",
@@ -327,7 +349,9 @@
     "associations": "সংগঠন",
     "periodRange": "{from} থেকে {to}",
     "periodUnknown": "?",
-    "periodPresent": "বর্তমান"
+    "periodPresent": "বর্তমান",
+    "claim": "এটি কি আপনার প্রোফাইল? দাবি করুন",
+    "claimHint": "দাবি করলে আপনার BMDC নিবন্ধন যাচাইয়ের পর ওপেন কেয়ার এই প্রোফাইলটি আপনার অ্যাকাউন্টের সঙ্গে যুক্ত করবে। এর জন্য আপনার যাচাইকৃত মোবাইল নম্বর লাগবে।"
   },
   "reviews": {
     "heading": "রোগীদের রিভিউ",
@@ -370,5 +394,18 @@
     "reference": "রেফারেন্স: {id}",
     "notFoundTitle": "পাতাটি পাওয়া যায়নি",
     "notFoundBody": "ঠিকানাটি নেই, অথবা সরে গেছে।"
+  },
+  "bloodDonor": {
+    "level": "রক্তদাতা লেভেল {level}",
+    "newDonor": "নতুন দাতা",
+    "topLevel": "সর্বোচ্চ লেভেলে পৌঁছেছেন",
+    "toNext": "লেভেল {next}-এর জন্য আরও {count}টি রক্তদান",
+    "donations": "{count}টি রক্তদান"
+  },
+  "levels": {
+    "contributor": "অবদানকারী লেভেল {level}",
+    "bloodDonor": "রক্তদাতা লেভেল {level}",
+    "healthPartner": "স্বাস্থ্য সহযোগী লেভেল {level}",
+    "none": "এখনও কোনো লেভেল নেই"
   }
 }

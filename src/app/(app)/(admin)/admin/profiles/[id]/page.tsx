@@ -1,5 +1,6 @@
 "use client";
 
+import { donorLevelLabel } from "@/lib/donor-level";
 import { useParams, useRouter } from "next/navigation";
 import { qk } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
@@ -265,7 +266,7 @@ export default function ProfileDetailsPage() {
                         </div>
                         <div className="flex-1">
                           <h3 className="text-xl font-bold mb-1">
-                            {profile.bloodDonationBadge.badgeName}
+                            {donorLevelLabel(profile.bloodDonationBadge)}
                           </h3>
                           <Badge
                             className="text-xs"
@@ -277,7 +278,7 @@ export default function ProfileDetailsPage() {
                                 profile.bloodDonationBadge.badgeColor,
                             }}
                           >
-                            {profile.bloodDonationBadge.badgeLevel}
+                            {profile.bloodDonationBadge.level} / {profile.bloodDonationBadge.maxLevel}
                           </Badge>
                         </div>
                       </div>
@@ -305,7 +306,7 @@ export default function ProfileDetailsPage() {
                       </div>
 
                       {/* Progress Bar */}
-                      {profile.bloodDonationBadge.nextLevelMinDonations > 0 && (
+                      {profile.bloodDonationBadge.nextLevelMinDonations != null && (
                         <div className="space-y-2">
                           <div className="flex items-center justify-between text-sm">
                             <span className="text-muted-foreground">

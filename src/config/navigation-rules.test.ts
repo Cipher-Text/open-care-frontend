@@ -22,7 +22,7 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 	"super-admin": {
 		staff: true,
 		menu: [
-			"dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals",
+			"dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "contributions", "institutions", "hospitals",
 			"medical-specialities", "medical-tests", "associations", "social-organizations", "ambulances",
 			"constants", "geolocation", "degrees", "bulk-upload", "duplicates", "location-review", "blood", "advertisement", "subscriptions", "notification-deliveries", "data-access", "analytics", "role-permissions", "my-consents",
 		],
@@ -30,13 +30,13 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 	admin: {
 		staff: true,
 		menu: [
-			"dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals", "medical-specialities",
+			"dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "contributions", "institutions", "hospitals", "medical-specialities",
 			"medical-tests", "associations", "social-organizations", "constants", "geolocation", "degrees", "bulk-upload", "duplicates", "location-review", "blood", "subscriptions", "my-consents",
 		],
 	},
 	moderator: {
 		staff: true,
-		menu: ["dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals", "social-organizations", "bulk-upload", "duplicates", "location-review", "blood", "my-consents"],
+		menu: ["dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "contributions", "institutions", "hospitals", "social-organizations", "bulk-upload", "duplicates", "location-review", "blood", "my-consents"],
 	},
 	operator: {
 		staff: true,

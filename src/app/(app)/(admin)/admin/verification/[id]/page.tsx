@@ -1,5 +1,6 @@
 "use client";
 
+import { publicPathFor, subjectWords } from "@/lib/verification-subject";
 import Link from "next/link";
 import { qk } from "@/lib/query-keys";
 import { useParams } from "next/navigation";
@@ -66,11 +67,11 @@ export default function VerificationReviewPage() {
 	// A doctor request can be approved only after the BMDC register check matched (the server enforces it too)
 	const needsRegisterCheck = data?.subjectType === "DOCTOR";
 	const mayApprove = !needsRegisterCheck || data?.registerResult === "MATCH";
-	const publicPath = data?.subjectSlug ? (data.subjectType === "DOCTOR" ? `/doctors/${data.subjectSlug}` : `/hospitals/${data.subjectSlug}`) : null;
+	const publicPath = data ? publicPathFor(data.subjectType, data.subjectSlug) : null;
 
 	return (
 		<div className="flex flex-col">
-			<AdminHeader title="Verification request" description={data ? `${data.subjectType === "DOCTOR" ? "Doctor" : "Facility"}: ${data.subjectName ?? data.subjectId}` : undefined}>
+			<AdminHeader title="Verification request" description={data ? `${subjectWords[data.subjectType].kind}${data.claim ? " claim" : ""}: ${data.subjectName ?? data.subjectId}` : undefined}>
 				<Button variant="outline" asChild>
 					<Link href="/admin/verification">
 						<ArrowLeft className="mr-1.5 size-4" aria-hidden="true" />
@@ -100,9 +101,18 @@ export default function VerificationReviewPage() {
 							</CardHeader>
 							<CardContent className="space-y-3 text-sm">
 								<p>
-									<span className="font-medium">{data.subjectType === "DOCTOR" ? "BMDC number" : "Registration number"} on the record: </span>
+									<span className="font-medium">{subjectWords[data.subjectType].number} {data.claim ? "the person gave" : "on the record"}: </span>
 									{data.claimedRegistrationNo ?? "none"}
 								</p>
+								{data.claim && (
+									<p>
+										<span className="font-medium">{subjectWords[data.subjectType].number} on the listed record: </span>
+										{data.recordRegistrationNo ?? "none yet"}
+										{data.recordRegistrationNo && data.claimedRegistrationNo && data.recordRegistrationNo.trim().toLowerCase() !== data.claimedRegistrationNo.trim().toLowerCase() && (
+											<span className="ml-2 font-medium text-destructive">The numbers differ</span>
+										)}
+									</p>
+								)}
 								{data.note && (
 									<p>
 										<span className="font-medium">Note from the person: </span>

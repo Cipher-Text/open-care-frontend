@@ -1,5 +1,6 @@
 "use client";
 
+import { subjectWords } from "@/lib/verification-subject";
 import Link from "next/link";
 import { qk } from "@/lib/query-keys";
 import { useState } from "react";
@@ -42,6 +43,7 @@ export default function VerificationQueuePage() {
 						<NativeSelect aria-label="Kind" value={type} onChange={(e) => { setType(e.target.value as VerificationSubject | ""); setPage(1); }}>
 							<option value="">All kinds</option>
 							<option value="DOCTOR">Doctors</option>
+							<option value="NURSE">Nurses</option>
 							<option value="HOSPITAL">Facilities</option>
 						</NativeSelect>
 					</div>
@@ -84,7 +86,7 @@ export default function VerificationQueuePage() {
 													{c.subjectName ?? `#${c.subjectId}`}
 												</Link>
 											</TableCell>
-											<TableCell>{c.subjectType === "DOCTOR" ? "Doctor" : "Facility"}</TableCell>
+											<TableCell>{subjectWords[c.subjectType].kind}{c.claim ? " (claim)" : ""}</TableCell>
 											<TableCell>{c.claimedRegistrationNo ?? "-"}</TableCell>
 											<TableCell className="whitespace-nowrap">{dateTime(c.submittedAt)}</TableCell>
 											<TableCell>

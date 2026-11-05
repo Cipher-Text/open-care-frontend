@@ -1,4 +1,4 @@
-export type VerificationSubject = "DOCTOR" | "HOSPITAL";
+export type VerificationSubject = "DOCTOR" | "NURSE" | "HOSPITAL";
 export type RegisterCheckResult = "MATCH" | "MISMATCH" | "NOT_FOUND";
 export type VerificationStatus = "NONE" | "DRAFT" | "PENDING" | "UNDER_REVIEW" | "VERIFIED" | "REJECTED" | "REVOKED" | "WITHDRAWN";
 
@@ -25,6 +25,10 @@ export interface VerificationCase {
 	subjectSlug: string | null;
 	status: VerificationStatus;
 	claimedRegistrationNo: string | null;
+	/** The number on the listed record itself, to compare with the claimed one. */
+	recordRegistrationNo?: string | null;
+	/** The person asks to take over a profile that is already listed. */
+	claim?: boolean;
 	/** A verified doctor asking again when the review is nearly due: the badge stays until staff decide. */
 	renewal?: boolean;
 	note: string | null;

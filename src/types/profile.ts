@@ -53,12 +53,15 @@ export interface Union {
 
 export interface BloodDonationBadge {
   bloodDonationCount: number;
+  /** 0 before the first donation, up to maxLevel */
+  level: number;
+  maxLevel: number;
+  /** NONE, or LEVEL_1 to LEVEL_10 */
   badgeLevel: string;
-  badgeName: string;
   badgeColor: string;
   donationsToNextLevel: number;
   currentLevelMinDonations: number;
-  nextLevelMinDonations: number;
+  nextLevelMinDonations: number | null;
   progressPercentage: number;
   lastDonationDate: string | null;
   isEligibleToDonate: boolean;

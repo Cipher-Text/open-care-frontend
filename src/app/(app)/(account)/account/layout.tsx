@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BadgeCheck, CalendarDays, Eye, FileText, HeartPulse, Home, ShieldCheck, Star, UserCircle } from "lucide-react";
+import { Award, BadgeCheck, CalendarDays, Eye, FileText, HeartPulse, Home, ShieldCheck, Star, UserCircle } from "lucide-react";
 import { UserMenu } from "@/components/admin/user-menu";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +16,7 @@ const LINKS = [
 	{ href: "/account/reviews", label: "Reviews", icon: Star },
 	{ href: "/account/data-access", label: "Who looked", icon: Eye },
 	{ href: "/account/verification", label: "Verification", icon: BadgeCheck },
+	{ href: "/account/contributions", label: "Contribute", icon: Award },
 ];
 
 /** The area for people who use Open Care but do not manage it: patients, and staff of other organisations' accounts. */
