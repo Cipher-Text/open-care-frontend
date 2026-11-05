@@ -24,23 +24,23 @@ const EXPECTED: Record<string, { staff: boolean; menu: string[] }> = {
 		menu: [
 			"dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals",
 			"medical-specialities", "medical-tests", "associations", "social-organizations", "ambulances",
-			"constants", "geolocation", "degrees", "blood", "advertisement", "subscriptions", "notification-deliveries", "data-access", "analytics", "role-permissions", "my-consents",
+			"constants", "geolocation", "degrees", "location-review", "blood", "advertisement", "subscriptions", "notification-deliveries", "data-access", "analytics", "role-permissions", "my-consents",
 		],
 	},
 	admin: {
 		staff: true,
 		menu: [
 			"dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals", "medical-specialities",
-			"medical-tests", "associations", "social-organizations", "constants", "geolocation", "degrees", "blood", "subscriptions", "my-consents",
+			"medical-tests", "associations", "social-organizations", "constants", "geolocation", "degrees", "location-review", "blood", "subscriptions", "my-consents",
 		],
 	},
 	moderator: {
 		staff: true,
-		menu: ["dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals", "social-organizations", "blood", "my-consents"],
+		menu: ["dashboard", "my-figures", "doctors", "nurses", "profiles", "verification", "institutions", "hospitals", "social-organizations", "location-review", "blood", "my-consents"],
 	},
 	operator: {
 		staff: true,
-		menu: ["dashboard", "my-figures", "doctors", "nurses", "profiles", "hospitals", "social-organizations", "blood", "my-consents"],
+		menu: ["dashboard", "my-figures", "doctors", "nurses", "profiles", "hospitals", "social-organizations", "location-review", "blood", "my-consents"],
 	},
 	"hospital-admin": {
 		staff: true,

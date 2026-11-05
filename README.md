@@ -147,7 +147,8 @@ open-care-frontend/
 - **Geolocation** - Divisions, districts, upazilas
 - **Prescriptions** (`/admin/prescriptions`, `/new`, `/[id]`, `/[id]/edit`) and **My consents** (`/admin/consents`)
 - **My doctor profile** (`/admin/doctors/me`, `view-doctor-panel`) opens the signed-in doctor's own record to edit (found through `GET /api/me/doctor`). The edit button in the Doctors list shows only on their own row, and `/admin/doctors/[id]` refuses another doctor's id, unless they administer doctors (`src/config/doctor-access.ts`, the same rule as the API's `DoctorAccess`). Doctors also get read-only **Institutions**, **Associations** and **Medicines** (`/admin/medicines`: search plus a searchable company dropdown) from `view-doctor-panel`
-- **Verification, Notifications, Message delivery, Appointments, My schedule, Reviews, Review moderation, My page figures, Data access log, Plans, Blog**: see the Admin Dashboard list above
+- **Location review** (`/admin/location-review`, Facilities menu, `create-hospital` or `delete-hospital`): approve or refuse proposed upazilas and thanas for hospitals that have none, one by one or "Approve all address-confirmed"; a hospital that already has a place is never changed (`../opencare/docs/proposals/THANA_MAPPING.md` section 14).
+- **Verification, Notifications, Message delivery (with the list of addresses not mailed), Appointments, My schedule, Reviews, Review moderation, My page figures, Data access log, Plans, Blog**: see the Admin Dashboard list above
 - **Roles & Permissions** (`/admin/role-permissions`, needs `manage-role-permissions`)
 - **Advertisement, Health vitals, Profile(s), Settings, Constants**
 
