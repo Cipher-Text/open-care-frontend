@@ -14430,8 +14430,8 @@
         "tags": [
           "Degree Management"
         ],
-        "summary": "Get all degrees",
-        "description": "Retrieves all degrees without pagination.",
+        "summary": "Get degrees",
+        "description": "Retrieves the degrees of one audience without pagination: the medical degrees by default, the nutrition degrees with audience=NUTRITION, or all of them.",
         "operationId": "getAllDegrees",
         "responses": {
           "200": {
@@ -14444,7 +14444,19 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "audience",
+            "in": "query",
+            "required": false,
+            "description": "MEDICAL (default, what doctors pick from), NUTRITION (nutritionists and dietitians) or ALL",
+            "schema": {
+              "type": "string",
+              "default": "MEDICAL"
+            }
+          }
+        ]
       }
     },
     "/api/degrees/{id}": {
@@ -18041,6 +18053,9 @@
           },
           "degreeType": {
             "$ref": "#/components/schemas/DegreeTypeResponse"
+          },
+          "audience": {
+            "type": "string"
           }
         }
       },
@@ -23119,10 +23134,16 @@
           "upazilaId": {
             "type": "integer",
             "format": "int32"
+          },
+          "degreeList": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "$ref": "#/components/schemas/NutritionistDegreeRequest"
+            }
           }
         },
         "required": [
-          "degrees",
           "districtId",
           "gender",
           "name"
@@ -27203,9 +27224,7 @@
       },
       "NutritionistDegreeRequest": {
         "type": "object",
-        "required": [
-          "degreeName"
-        ],
+        "required": [],
         "properties": {
           "degreeName": {
             "type": "string",
@@ -27224,6 +27243,14 @@
           "grade": {
             "type": "string",
             "maxLength": 50
+          },
+          "degreeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "institutionId": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -27246,6 +27273,14 @@
           },
           "grade": {
             "type": "string"
+          },
+          "degreeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "institutionId": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       }

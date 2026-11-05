@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { fetchMyNutritionist, fetchNutritionistDegrees, updateNutritionist } from "@/api/nutritionists";
 import { DegreeListEditor } from "@/components/account/degree-list-editor";
-import { degreeProblem, degreesToRequest, type DegreeRow } from "@/lib/degree-rows";
+import { degreeProblem, degreesToRequest, rowFromSaved, type DegreeRow } from "@/lib/degree-rows";
 import { MyWorkplaces } from "@/components/account/my-workplaces";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -34,7 +34,7 @@ export default function MyNutritionistPage() {
 	const saved = useQuery({ queryKey: ["my-nutritionist-degrees", mine.data?.id], queryFn: () => fetchNutritionistDegrees((mine.data as { id: number }).id), enabled: !!mine.data, retry: false });
 	useEffect(() => {
 		if (!saved.data || degrees) return;
-		setDegrees(saved.data.map((d) => ({ degreeName: d.degreeName, institutionName: d.institutionName ?? "", passingYear: d.passingYear ? String(d.passingYear) : "", grade: d.grade ?? "" })));
+		setDegrees(saved.data.map(rowFromSaved));
 	}, [saved.data, degrees]);
 
 	useEffect(() => {

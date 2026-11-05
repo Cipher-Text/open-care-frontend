@@ -15,6 +15,8 @@ export interface Degree {
 	name: string;
 	abbreviation: string;
 	degreeType: DegreeType;
+	/** MEDICAL (what doctors pick from) or NUTRITION. */
+	audience?: string;
 }
 
 /**

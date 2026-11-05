@@ -5108,8 +5108,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get all degrees
-         * @description Retrieves all degrees without pagination.
+         * Get degrees
+         * @description Retrieves the degrees of one audience without pagination: the medical degrees by default, the nutrition degrees with audience=NUTRITION, or all of them.
          */
         get: operations["getAllDegrees"];
         put?: never;
@@ -6699,6 +6699,7 @@ export interface components {
             bnName?: string;
             abbreviation?: string;
             degreeType?: components["schemas"]["DegreeTypeResponse"];
+            audience?: string;
         };
         DegreeTypeResponse: {
             value?: string;
@@ -8418,7 +8419,7 @@ export interface components {
             gender: string;
             title?: string;
             registrationNo?: string;
-            degrees: string;
+            degrees?: string;
             description?: string;
             phone?: string;
             address?: string;
@@ -8426,6 +8427,7 @@ export interface components {
             districtId: number;
             /** Format: int32 */
             upazilaId?: number;
+            degreeList?: components["schemas"]["NutritionistDegreeRequest"][];
         };
         ContributionSubmitRequest: {
             /** @enum {string} */
@@ -9944,11 +9946,15 @@ export interface components {
             endDate?: string;
         };
         NutritionistDegreeRequest: {
-            degreeName: string;
+            degreeName?: string;
             institutionName?: string;
             /** Format: int32 */
             passingYear?: number;
             grade?: string;
+            /** Format: int32 */
+            degreeId?: number;
+            /** Format: int32 */
+            institutionId?: number;
         };
         NutritionistDegreeResponse: {
             /** Format: int64 */
@@ -9958,6 +9964,10 @@ export interface components {
             /** Format: int32 */
             passingYear?: number;
             grade?: string;
+            /** Format: int32 */
+            degreeId?: number;
+            /** Format: int32 */
+            institutionId?: number;
         };
     };
     responses: never;
@@ -18580,7 +18590,10 @@ export interface operations {
     };
     getAllDegrees: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description MEDICAL (default, what doctors pick from), NUTRITION (nutritionists and dietitians) or ALL */
+                audience?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;

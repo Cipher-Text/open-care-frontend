@@ -27,6 +27,8 @@ export interface NutritionistDegree {
 	institutionName: string | null;
 	passingYear: number | null;
 	grade: string | null;
+	degreeId?: number | null;
+	institutionId?: number | null;
 }
 
 /** What a nutritionist may change on their own record. */
@@ -38,7 +40,7 @@ export interface NutritionistInput {
 	registrationNo?: string;
 	degrees?: string;
 	/** The degrees as a list; when sent it replaces the saved ones (at most 10). */
-	degreeList?: { degreeName: string; institutionName?: string; passingYear?: number; grade?: string }[];
+	degreeList?: { degreeId?: number; degreeName?: string; institutionId?: number; institutionName?: string; passingYear?: number; grade?: string }[];
 	startDate?: string;
 	description?: string;
 	phone?: string;

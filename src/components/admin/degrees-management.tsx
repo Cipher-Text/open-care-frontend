@@ -45,7 +45,7 @@ const DegreesManagement: React.FC = () => {
     setError("");
 
     try {
-      const response = await fetch(`${baseUrl}/degrees`);
+      const response = await fetch(`${baseUrl}/degrees?audience=ALL`);
       if (!response.ok) throw new Error("Failed to fetch");
       const result = await response.json();
       setData(result);

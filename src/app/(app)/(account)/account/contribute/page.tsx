@@ -16,6 +16,8 @@ import { Label } from "@/components/ui/label";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
 import { KIND_WORDS, REQUEST_KEY, textToHtml } from "@/lib/contribution-kind";
+import { DegreeListEditor } from "@/components/account/degree-list-editor";
+import { degreeProblem, degreesToRequest, emptyDegree, type DegreeRow } from "@/lib/degree-rows";
 import { qk } from "@/lib/query-keys";
 import type { ContributionKind, ContributionSubmit } from "@/types/contribution";
 
@@ -25,7 +27,7 @@ const AMBULANCE_TYPES = ["BASIC", "ADVANCED", "NEONATAL", "PEDIATRIC", "AIR_AMBU
 const LANGUAGES = [{ value: "bn", label: "Bangla" }, { value: "en", label: "English" }];
 const YES_NO = [{ value: "yes", label: "Yes, I accept this test" }, { value: "no", label: "No, I do not accept it" }];
 
-type FieldType = "text" | "select" | "number" | "textarea" | "date" | "article" | "test";
+type FieldType = "text" | "select" | "number" | "textarea" | "date" | "article" | "test" | "degrees";
 interface FieldSpec {
 	key: string;
 	label: string;
@@ -64,7 +66,7 @@ const FIELDS: Record<ContributionKind, FieldSpec[]> = {
 		{ key: "bnName", label: "Name in Bangla" },
 		{ key: "gender", label: "Gender", required: true, type: "select", options: GENDERS },
 		{ key: "title", label: "Nutritionist or dietitian", type: "select", choices: TITLES },
-		{ key: "degrees", label: "Degree or qualification", required: true },
+		{ key: "degreeList", label: "Degrees and qualifications", required: true, type: "degrees" },
 		{ key: "registrationNo", label: "Registration number (if they have one)" },
 		{ key: "description", label: "About", type: "textarea" },
 		{ key: "phone", label: "Phone" },
@@ -156,6 +158,8 @@ export default function ContributePage() {
 	const [upazilaId, setUpazilaId] = useState("");
 	const [note, setNote] = useState("");
 	const [busy, setBusy] = useState(false);
+	// a nutritionist's degrees are a list of their own, kept apart from the one-value fields
+	const [degreeRows, setDegreeRows] = useState<DegreeRow[]>([emptyDegree()]);
 
 	const doctorScore = useQuery({ queryKey: [...qk.doctorContributionSummary], queryFn: fetchDoctorContributionSummary, retry: false });
 	const eligible = doctorScore.data?.eligible === true;
@@ -174,7 +178,10 @@ export default function ContributePage() {
 	const spec = FIELDS[kind];
 	const location = LOCATION[kind];
 	const set = (key: string, value: string) => setFields((f) => ({ ...f, [key]: value }));
-	const missing = spec.some((f) => f.required && !(fields[f.key] ?? "").trim()) || (location === "required" && districtId === "");
+	const missing =
+		spec.some((f) => f.required && (f.type === "degrees" ? degreesToRequest(degreeRows).length === 0 : !(fields[f.key] ?? "").trim())) ||
+		(location === "required" && districtId === "") ||
+		(spec.some((f) => f.type === "degrees") && degreeProblem(degreeRows) !== null);
 
 	const send = async () => {
 		setBusy(true);
@@ -187,6 +194,7 @@ export default function ContributePage() {
 				else if (k === "accepts") data[k] = text === "yes";
 				else data[k] = NUMERIC.includes(k) ? Number(text) : text;
 			}
+			if (spec.some((f) => f.type === "degrees")) data.degreeList = degreesToRequest(degreeRows);
 			if (location !== "none" && districtId) data.districtId = Number(districtId);
 			if (location !== "none" && upazilaId) data.upazilaId = Number(upazilaId);
 			const body = { kind, [REQUEST_KEY[kind]]: data, ...(note.trim() ? { note: note.trim() } : {}) } as unknown as ContributionSubmit;
@@ -233,7 +241,9 @@ export default function ContributePage() {
 					{spec.map((f) => (
 						<div key={f.key} className="space-y-1">
 							<Label htmlFor={`f-${f.key}`}>{f.label}{f.required ? " *" : ""}</Label>
-							{f.type === "test" ? (
+							{f.type === "degrees" ? (
+								<DegreeListEditor rows={degreeRows} onChange={setDegreeRows} idPrefix="c-degree" />
+							) : f.type === "test" ? (
 								<TestPicker value={fields[f.key] ?? ""} onChange={(id) => set(f.key, id)} />
 							) : f.type === "select" ? (
 								<NativeSelect id={`f-${f.key}`} value={fields[f.key] ?? ""} onChange={(e) => set(f.key, e.target.value)}>

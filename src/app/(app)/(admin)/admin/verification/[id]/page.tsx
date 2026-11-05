@@ -19,6 +19,7 @@ import {
 	startVerificationReview,
 } from "@/api/verification";
 import { AdminHeader } from "@/components/admin/admin-header";
+import { NutritionistDegreesCard } from "@/components/verification/nutritionist-degrees";
 import { RegisterCheckCard } from "@/components/verification/register-check";
 import { dateTime, VerificationStatusBadge } from "@/components/verification/status-badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -145,6 +146,8 @@ export default function VerificationReviewPage() {
 								</div>
 							</CardContent>
 						</Card>
+
+						{data.subjectType === "NUTRITIONIST" && <NutritionistDegreesCard nutritionistId={data.subjectId} />}
 
 						{needsRegisterCheck && open && (
 							<RegisterCheckCard verification={data} disabled={busy} onRecord={(result, note) => registerCheck.mutate({ result, note })} />
