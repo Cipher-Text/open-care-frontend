@@ -144,7 +144,7 @@ export default function ProfilePage() {
 							<div className="relative">
 								<Avatar className="h-24 w-24">
 									<AvatarImage
-										src={profile.photoUrl || ""}
+										src={profile.imageUrl || profile.photoUrl || ""}
 										alt={profile.name}
 									/>
 									<AvatarFallback className="text-lg">

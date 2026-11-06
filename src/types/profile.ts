@@ -73,7 +73,9 @@ export interface UserProfile {
   username: string | null;
   userType: UserType;
   keycloakUserId: string | null;
-  photoUrl: string | null;
+  /** The picture, ready to show (the server turns the stored path into a link). `photoUrl` is the old name and is never sent. */
+  imageUrl?: string | null;
+  photoUrl?: string | null;
   phone: string | null;
   email: string | null;
   name: string;

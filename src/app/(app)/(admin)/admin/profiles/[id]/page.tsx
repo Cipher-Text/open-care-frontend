@@ -137,7 +137,7 @@ export default function ProfileDetailsPage() {
                 <div className="flex flex-col md:flex-row gap-6">
                   <Avatar className="h-32 w-32">
                     <AvatarImage
-                      src={profile.photoUrl || undefined}
+                      src={profile.imageUrl || profile.photoUrl || undefined}
                       alt={profile.name}
                     />
                     <AvatarFallback className="text-4xl">

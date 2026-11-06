@@ -53,7 +53,7 @@ export function UserMenu() {
           aria-label={`Account menu for ${name}`}
         >
           <Avatar className="h-9 w-9">
-            {profile?.photoUrl && <AvatarImage src={profile.photoUrl} alt="" />}
+            {(profile?.imageUrl || profile?.photoUrl) && <AvatarImage src={profile.imageUrl || profile.photoUrl || undefined} alt="" />}
             <AvatarFallback>{initials(name)}</AvatarFallback>
           </Avatar>
         </Button>
