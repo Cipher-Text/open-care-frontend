@@ -13,14 +13,15 @@ import { HealthDataConsent } from "@/components/account/health-data-consent";
 import { MessageLanguageChoice } from "@/components/account/message-language-choice";
 import { PublicPhoneChoice } from "@/components/account/public-phone-choice";
 import { VerificationCard } from "@/components/account/verification-card";
+import { useQuery } from "@tanstack/react-query";
+import { qk } from "@/lib/query-keys";
+import { fetchMyVerifications } from "@/api/verification";
+import { SocialLinksForm } from "@/components/account/social-links-form";
 import { getSelfProfile } from "@/api/profile";
 import { UserProfile } from "@/types/profile";
 import {
-	User,
 	Phone,
 	Mail,
-	MapPin,
-	Calendar,
 	Droplets,
 	Heart,
 	Shield,
@@ -31,11 +32,23 @@ import {
 import { format } from "date-fns";
 import { SafeLink } from "@/components/common/SafeLink";
 
+const OTHER_LINKS = [
+	{ key: "facebookPageUrl", label: "Facebook page" },
+	{ key: "instagramProfileUrl", label: "Instagram" },
+	{ key: "youtubeChannelUrl", label: "YouTube" },
+	{ key: "websiteUrl", label: "Website" },
+	{ key: "blogUrl", label: "Blog" },
+] as const;
+
 export default function ProfilePage() {
 	const [profile, setProfile] = useState<UserProfile | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [uploadModalOpen, setUploadModalOpen] = useState(false);
+
+	// A doctor is verified when one of their requests has been approved; the badge stays through a renewal
+	const myVerifications = useQuery({ queryKey: [...qk.myVerifications], queryFn: fetchMyVerifications, retry: false, enabled: profile?.userType?.value === "DOCTOR" });
+	const doctorVerified = (myVerifications.data ?? []).some((c) => c.subjectType === "DOCTOR" && c.status === "VERIFIED");
 
 	const fetchProfile = async () => {
 		try {
@@ -154,6 +167,7 @@ export default function ProfilePage() {
 									<Badge variant="secondary" className="w-fit">
 										{profile.userType.displayName}
 									</Badge>
+									{!profile.isActive && <Badge variant="outline" className="w-fit">Inactive</Badge>}
 								</div>
 								<p className="text-muted-foreground">@{profile.username}</p>
 								<div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
@@ -165,10 +179,19 @@ export default function ProfilePage() {
 										<Phone className="h-4 w-4" />
 										{profile.phone}
 									</div>
+									{profile.bloodGroup && (
+										<div className="flex items-center gap-1">
+											<Droplets className="h-4 w-4 text-destructive" />
+											{profile.bloodGroup.displayName}
+										</div>
+									)}
 								</div>
 							</div>
 
-							<Button className="flex items-center gap-2">
+							<Button
+								className="flex items-center gap-2"
+								onClick={() => document.getElementById("profile-details")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+							>
 								<Edit className="h-4 w-4" />
 								Edit Profile
 							</Button>
@@ -176,129 +199,10 @@ export default function ProfilePage() {
 					</CardContent>
 				</Card>
 
-				{/* Personal Information */}
-				<Card>
-					<CardHeader>
-						<CardTitle className="flex items-center gap-2">
-							<User className="h-5 w-5" />
-							Personal Information
-						</CardTitle>
-					</CardHeader>
-					<CardContent className="space-y-4">
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-							<div>
-								<label className="text-sm font-medium text-muted-foreground">
-									Full Name
-								</label>
-								<p className="mt-1">{profile.name}</p>
-							</div>
-							<div>
-								<label className="text-sm font-medium text-muted-foreground">
-									Bangla Name
-								</label>
-								<p className="mt-1">{profile.bnName || "N/A"}</p>
-							</div>
-							<div>
-								<label className="text-sm font-medium text-muted-foreground">
-									Gender
-								</label>
-								<p className="mt-1">{profile.gender?.displayName || "N/A"}</p>
-							</div>
-							<div>
-								<label className="text-sm font-medium text-muted-foreground">
-									Date of Birth
-								</label>
-								<p className="mt-1 flex items-center gap-1">
-									<Calendar className="h-4 w-4" />
-									{formatDate(profile.dateOfBirth || "")}
-								</p>
-							</div>
-							<div>
-								<label className="text-sm font-medium text-muted-foreground">
-									Blood Group
-								</label>
-								<p className="mt-1 flex items-center gap-1">
-									<Droplets className="h-4 w-4 text-destructive" />
-									{profile.bloodGroup?.displayName || "N/A"}
-								</p>
-							</div>
-							<div>
-								<label className="text-sm font-medium text-muted-foreground">
-									Status
-								</label>
-								<div className="mt-1">
-									<Badge variant={profile.isActive ? "default" : "secondary"}>
-										{profile.isActive ? "Active" : "Inactive"}
-									</Badge>
-								</div>
-							</div>
-						</div>
-
-						{profile.address && (
-							<div>
-								<label className="text-sm font-medium text-muted-foreground">
-									Address
-								</label>
-								<p className="mt-1 flex items-start gap-1">
-									<MapPin className="h-4 w-4 mt-0.5" />
-									{profile.address}
-								</p>
-							</div>
-						)}
-					</CardContent>
-				</Card>
-
-				{/* Location Information */}
-				{(profile.district || profile.upazila || profile.union) && (
-					<Card>
-						<CardHeader>
-							<CardTitle className="flex items-center gap-2">
-								<MapPin className="h-5 w-5" />
-								Location Information
-							</CardTitle>
-						</CardHeader>
-						<CardContent>
-							<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-								{profile.district && (
-									<div>
-										<label className="text-sm font-medium text-muted-foreground">
-											District
-										</label>
-										<p className="mt-1">{profile.district.name}</p>
-										<p className="text-sm text-muted-foreground">
-											{profile.district.bnName}
-										</p>
-									</div>
-								)}
-								{profile.upazila && (
-									<div>
-										<label className="text-sm font-medium text-muted-foreground">
-											Upazila
-										</label>
-										<p className="mt-1">{profile.upazila.name}</p>
-										<p className="text-sm text-muted-foreground">
-											{profile.upazila.bnName}
-										</p>
-									</div>
-								)}
-								{profile.union && (
-									<div>
-										<label className="text-sm font-medium text-muted-foreground">
-											Union
-										</label>
-										<p className="mt-1">{profile.union.name}</p>
-										<p className="text-sm text-muted-foreground">
-											{profile.union.bnName}
-										</p>
-									</div>
-								)}
-							</div>
-						</CardContent>
-					</Card>
-				)}
-
 				{/* The person's own details: name, phone, date of birth, gender, address and place */}
-				<ProfileDetailsForm profile={profile} onSaved={(next) => setProfile(next)} />
+				<div id="profile-details" className="scroll-mt-20">
+					<ProfileDetailsForm profile={profile} onSaved={(next) => setProfile(next)} />
+				</div>
 
 				{/* Blood donor choice (the person's own) */}
 				<BloodDonorChoice profile={profile} onSaved={(next) => setProfile({ ...profile, ...next })} />
@@ -309,7 +213,7 @@ export default function ProfilePage() {
 				)}
 
 				{/* Verification (doctors only) */}
-				{profile.userType?.value === "DOCTOR" && <VerificationCard verified={false} />}
+				{profile.userType?.value === "DOCTOR" && <VerificationCard verified={doctorVerified} />}
 
 				{/* Language of text messages (the person's own) */}
 				<MessageLanguageChoice profile={profile} onSaved={(next) => setProfile({ ...profile, ...next })} />
@@ -327,12 +231,6 @@ export default function ProfilePage() {
 							</CardTitle>
 						</CardHeader>
 						<CardContent className="space-y-3">
-							<div className="flex items-center justify-between">
-								<span className="text-sm font-medium">Listed as a donor</span>
-								<Badge variant={profile.isBloodDonor && profile.bloodDonorConsentAt ? "default" : "secondary"}>
-									{profile.isBloodDonor && profile.bloodDonorConsentAt ? "Yes" : "No"}
-								</Badge>
-							</div>
 							{profile.isBloodDonor && (
 								<>
 									<div className="flex items-center justify-between">
@@ -368,97 +266,34 @@ export default function ProfilePage() {
 									{profile.isVolunteer ? "Yes" : "No"}
 								</Badge>
 							</div>
-							<div className="flex items-center justify-between">
-								<span className="text-sm font-medium">Health Data Consent</span>
-								<Badge
-									variant={profile.healthDataConsent ? "default" : "secondary"}
-								>
-									{profile.healthDataConsent ? "Given" : "Not Given"}
-								</Badge>
-							</div>
 						</CardContent>
 					</Card>
 				</div>
 
-				{/* Social Media Links */}
-				{(profile.facebookProfileUrl?.trim() ||
-					profile.linkedinProfileUrl?.trim() ||
-					profile.researchGateProfileUrl?.trim() ||
-					profile.xprofileUrl?.trim()) && (
+				{/* Social links (the person's own) */}
+				<SocialLinksForm profile={profile} onSaved={(next) => setProfile(next)} />
+
+				{/* Other links on the record, shown but not editable here */}
+				{OTHER_LINKS.some(({ key }) => profile[key]?.trim()) && (
 					<Card>
 						<CardHeader>
 							<CardTitle className="flex items-center gap-2">
 								<ExternalLink className="h-5 w-5" />
-								Social Media Links
+								Other links
 							</CardTitle>
 						</CardHeader>
-						<CardContent>
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-								{profile.facebookProfileUrl?.trim() && (
-									<div>
-										<label className="text-sm font-medium text-muted-foreground">
-											Facebook
-										</label>
-										<p className="mt-1">
-											<SafeLink
-												href={profile.facebookProfileUrl}
-												className="text-primary hover:underline flex items-center gap-1"
-											>
-												View Profile
-												<ExternalLink className="h-3 w-3" />
-											</SafeLink>
-										</p>
-									</div>
-								)}
-								{profile.linkedinProfileUrl?.trim() && (
-									<div>
-										<label className="text-sm font-medium text-muted-foreground">
-											LinkedIn
-										</label>
-										<p className="mt-1">
-											<SafeLink
-												href={profile.linkedinProfileUrl}
-												className="text-primary hover:underline flex items-center gap-1"
-											>
-												View Profile
-												<ExternalLink className="h-3 w-3" />
-											</SafeLink>
-										</p>
-									</div>
-								)}
-								{profile.researchGateProfileUrl?.trim() && (
-									<div>
-										<label className="text-sm font-medium text-muted-foreground">
-											ResearchGate
-										</label>
-										<p className="mt-1">
-											<SafeLink
-												href={profile.researchGateProfileUrl}
-												className="text-primary hover:underline flex items-center gap-1"
-											>
-												View Profile
-												<ExternalLink className="h-3 w-3" />
-											</SafeLink>
-										</p>
-									</div>
-								)}
-								{profile.xprofileUrl?.trim() && (
-									<div>
-										<label className="text-sm font-medium text-muted-foreground">
-											X (Twitter)
-										</label>
-										<p className="mt-1">
-											<SafeLink
-												href={profile.xprofileUrl}
-												className="text-primary hover:underline flex items-center gap-1"
-											>
-												View Profile
-												<ExternalLink className="h-3 w-3" />
-											</SafeLink>
-										</p>
-									</div>
-								)}
-							</div>
+						<CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+							{OTHER_LINKS.filter(({ key }) => profile[key]?.trim()).map(({ key, label }) => (
+								<div key={key}>
+									<span className="text-sm font-medium text-muted-foreground">{label}</span>
+									<p className="mt-1">
+										<SafeLink href={profile[key]} className="text-primary hover:underline flex items-center gap-1">
+											View
+											<ExternalLink className="h-3 w-3" />
+										</SafeLink>
+									</p>
+								</div>
+							))}
 						</CardContent>
 					</Card>
 				)}

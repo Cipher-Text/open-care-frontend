@@ -222,3 +222,12 @@ export const updateOwnDetails = async (payload: import("@/lib/profile-form").Det
 	const response = await apiPut<UserProfile>("/profiles/self/details", payload);
 	return response.data as UserProfile;
 };
+
+/**
+ * Saves the person's own social links (Facebook, LinkedIn, ResearchGate, X). Only these four fields are sent; the server
+ * ignores consent and donor fields on this route anyway. A cleared link is an empty string.
+ */
+export const updateSocialLinks = async (links: import("@/lib/social-links").SocialForm): Promise<void> => {
+	const response = await apiPut("/profiles/self", links);
+	if (!response.ok) throw new Error(response.error || "Failed to save your links");
+};
