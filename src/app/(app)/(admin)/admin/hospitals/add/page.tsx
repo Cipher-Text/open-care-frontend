@@ -402,19 +402,7 @@ export default function AddHospitalPage() {
 									</FormItem>
 								)}
 							/>
-							<FormField
-								control={form.control}
-								name="imageUrl"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Image URL (Optional)</FormLabel>
-										<FormControl>
-											<Input placeholder="https://..." {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+							<p className="text-sm text-muted-foreground">You can add a picture after the hospital is saved, from its edit page.</p>
 						</CardContent>
 					</Card>
 

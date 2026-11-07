@@ -1,5 +1,6 @@
 "use client";
 
+import { HospitalImageUpload } from "@/components/admin/hospital-image-upload";
 import { useState, useEffect } from "react";
 import { qk } from "@/lib/query-keys";
 import { useForm } from "react-hook-form";
@@ -301,7 +302,8 @@ export default function HospitalFormPage() {
       setIsLoading(true);
 
       if (isEditing) {
-        await updateHospital(hospitalId!, data);
+        // The picture is saved by its own upload; sending the link back would only replace the stored file name
+        await updateHospital(hospitalId!, { ...data, imageUrl: undefined });
         toast.success("Hospital updated successfully!");
       } else {
         await addHospital(data);
@@ -598,19 +600,9 @@ export default function HospitalFormPage() {
                       </FormItem>
                     )}
                   />
-                  <FormField
-                    control={form.control}
-                    name="imageUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Image URL (Optional)</FormLabel>
-                        <FormControl>
-                          <Input placeholder="https://..." {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  {isEditing && hospitalId ? (
+                    <HospitalImageUpload hospitalId={hospitalId} imageUrl={form.getValues("imageUrl") || null} />
+                  ) : null}
                 </CardContent>
               </Card>
 

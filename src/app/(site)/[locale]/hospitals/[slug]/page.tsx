@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import NextLink from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -65,6 +66,7 @@ export default async function HospitalDetailPage({ params }: Props) {
 	if (hospital.slug && hospital.slug !== decodeURIComponent(slug)) redirect({ href: hospitalPath(hospital), locale });
 
 	const names = localizedNames(locale, hospital.name, hospital.bnName);
+	const image = safeUrl(hospital.imageUrl);
 	const hospitalType = enumName(locale, hospital.hospitalType);
 	const organizationType = enumName(locale, hospital.organizationType);
 
@@ -113,8 +115,12 @@ export default async function HospitalDetailPage({ params }: Props) {
 			<Card className="gap-0 py-0">
 				<CardContent className="space-y-5 p-5 sm:p-8">
 					<div className="flex gap-4">
-						<div className="flex size-16 shrink-0 items-center justify-center rounded-xl border-2 border-primary bg-primary/10 text-primary sm:size-20">
-							<Building2 className="size-8 sm:size-10" aria-hidden="true" />
+						<div className="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-primary bg-primary/10 text-primary sm:size-20">
+							{image ? (
+								<Image src={image} alt="" width={80} height={80} className="size-full object-cover" unoptimized />
+							) : (
+								<Building2 className="size-8 sm:size-10" aria-hidden="true" />
+							)}
 						</div>
 						<div className="min-w-0">
 							<h1 lang={names.primaryLang} className="flex flex-wrap items-center gap-x-2 text-2xl font-bold leading-tight text-foreground sm:text-3xl">

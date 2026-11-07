@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
 	Ambulance,
 	BadgeCheck,
@@ -26,6 +27,7 @@ export default function HospitalCard({ hospital }: { hospital: Hospital }) {
 	const locale = useLocale();
 	const names = localizedNames(locale, hospital.name, hospital.bnName);
 	const website = safeUrl(hospital.websiteUrl);
+	const image = safeUrl(hospital.imageUrl);
 	const phone = hospital.phone?.trim();
 	// Email is the contact detail most listings have; ignore malformed values
 	const email = hospital.email?.trim();
@@ -38,8 +40,12 @@ export default function HospitalCard({ hospital }: { hospital: Hospital }) {
 		<Card className="relative h-full gap-0 py-0 transition-colors hover:border-primary/50">
 			<CardContent className="flex h-full flex-col gap-4 p-5 sm:p-6">
 				<div className="flex gap-4">
-					<div className="flex size-14 shrink-0 items-center justify-center rounded-lg border-2 border-primary bg-primary/10 text-primary">
-						<Building2 className="size-7" aria-hidden="true" />
+					<div className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border-2 border-primary bg-primary/10 text-primary">
+						{image ? (
+							<Image src={image} alt="" width={56} height={56} className="size-full object-cover" unoptimized />
+						) : (
+							<Building2 className="size-7" aria-hidden="true" />
+						)}
 					</div>
 					<div className="min-w-0">
 						<h3 lang={names.primaryLang} className="flex flex-wrap items-center gap-x-2 text-lg font-bold leading-snug text-foreground">
